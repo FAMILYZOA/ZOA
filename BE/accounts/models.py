@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (
-    AbstractUser)
+    AbstractUser
+    )
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
@@ -27,6 +28,7 @@ class User(AbstractUser) :
                 default='user/profile/profile_default1.png',
                 null=True,blank=True)
     
+    # 로그인 아이디
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['name']
 
