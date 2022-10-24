@@ -17,9 +17,10 @@ class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id',
+            'phone',
             'password',
-            ''
+            'name',
+            'birth',
             ]
 
     def create(self, validated_data):
@@ -32,15 +33,10 @@ class SignupSerializer(serializers.ModelSerializer):
 
     # 중복 체크
     def validate(self, attrs):
-        user_id = attrs['user_id']
-        password = attrs['password']
-        email = attrs['email']
+        phone = attrs['phone']
 
-        if User.objects.filter(user_id=user_id).exists():
-            raise serializers.ValidationError("user_id already exists")
-
-        elif User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("email already exists") 
+        if User.objects.filter(phone=phone).exists():
+            raise serializers.ValidationError("핸드폰 번호가 존재합니다.")
 
         return attrs
 

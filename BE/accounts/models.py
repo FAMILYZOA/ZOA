@@ -28,6 +28,7 @@ class User(AbstractUser) :
                 default='user/profile/profile_default1.png',
                 null=True,blank=True)
     
+    # 로그인 아이디
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['name']
 

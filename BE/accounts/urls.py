@@ -1,6 +1,5 @@
 from django.urls import path
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView, 
     TokenVerifyView,
 )
@@ -14,8 +13,6 @@ from .views import (
 app_name = 'accounts'
 
 urlpatterns = [
-    # 토큰 생성
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # 토큰 갱신
     path('token_refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # 토큰 검증
