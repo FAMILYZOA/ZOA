@@ -12,15 +12,24 @@ class CustomUserManager(BaseUserManager):
         Create and save a User with the given email and password.
         """
         if not phone:
-            raise ValueError('The Phonenumber must be set')
-
+            raise ValueError('The Phone number must be set')
+        if len(phone) != 11 :
+            raise ValueError('The Phone number is 11 digits.')
+        
         if not name :
             raise ValueError('The name must be set')
+        if len(name) < 2 :
+            raise ValueError('Please enter a name with at least 2 characters')
+        if len(name) > 8 :
+            raise ValueError('Please enter a name of 8 characters or less')
 
         if not password :
             raise ValueError('The password must be set')
+        if 'birth' in extra_fields :
+            if len(extra_fields['birth'])!= 8 : 
+                raise ValueError('Please enter your date of birth in 8 digits')
         
-        user = self.model(phone=phone, **extra_fields)
+        user = self.model(phone=phone, name=name,**extra_fields)
         user.set_password(password)
         user.save()
         
