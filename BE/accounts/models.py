@@ -21,12 +21,12 @@ class User(AbstractUser) :
 
 #-------------사용할 필드 ---------------------------------------
     id = models.AutoField(primary_key=True)
-    phone = models.CharField(max_length=11, unique=True, validators=[MinLengthValidator(11)])
-    name = models.CharField(max_length=8, validators=[MinLengthValidator(2)])
-    birth = models.CharField(max_length=8, validators=[MinLengthValidator(8)])
+    phone = models.CharField(max_length=11, unique=True, validators=[MinLengthValidator(10)],verbose_name='휴대폰 번호' )
+    name = models.CharField(max_length=30, validators=[MinLengthValidator(2)],verbose_name='이름')
+    birth = models.DateField(verbose_name='생년월일')
     image = models.ImageField(upload_to='user/profile/',
                 default='user/profile/profile_default1.png',
-                null=True,blank=True)
+                null=True,blank=True,verbose_name='프로필 사진')
     
     # 로그인 아이디
     USERNAME_FIELD = 'phone'
