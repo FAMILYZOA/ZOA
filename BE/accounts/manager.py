@@ -2,6 +2,8 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
 
+first_phone_number = ['010','011','016','017','018','019']
+
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -9,25 +11,28 @@ class CustomUserManager(BaseUserManager):
     """
     def create_user(self, phone, password, name,**extra_fields):
         """
-        Create and save a User with the given email and password.
+        Create and save a User with the given phone number and password.
         """
         if not phone:
             raise ValueError('The Phone number must be set')
-        if len(phone) != 11 :
-            raise ValueError('The Phone number is 11 digits.')
+        if not phone.isdecimal() :
+            raise ValueError('The Phone number is in numerical form.')
+        if not 10 <= len(phone) <= 11  :
+            raise ValueError('The Phone number is 10 or 11 digits.')
+        if not phone[:3] in first_phone_number :
+            raise ValueError('The first three digits of the Phone number do not fit the format.')
         
         if not name :
             raise ValueError('The name must be set')
         if len(name) < 2 :
             raise ValueError('Please enter a name with at least 2 characters')
-        if len(name) > 8 :
-            raise ValueError('Please enter a name of 8 characters or less')
-
+        if len(name) > 30 :
+            raise ValueError('Please enter a name of 30 characters or less')
+        if not name.isalpha() :
+            raise ValueError('The name must be a string.')
+    
         if not password :
             raise ValueError('The password must be set')
-        if 'birth' in extra_fields :
-            if len(extra_fields['birth'])!= 8 : 
-                raise ValueError('Please enter your date of birth in 8 digits')
         
         user = self.model(phone=phone, name=name,**extra_fields)
         user.set_password(password)
