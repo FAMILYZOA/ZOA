@@ -1,0 +1,33 @@
+from django.urls import path
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView, 
+    TokenVerifyView,
+)
+from .views import (
+    SignupAPIView,
+    LoginAPIView,
+    ProfileAPIView,
+    PasswordAPIView,
+)
+
+app_name = 'accounts'
+
+urlpatterns = [
+    # 토큰 생성
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # 토큰 갱신
+    path('token_refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # 토큰 검증
+    path('token_verify/', TokenVerifyView.as_view(), name='token_verify'),
+    
+    # 회원가입
+    path('signup/', SignupAPIView.as_view(), name="signup"),
+    # 로그인
+    path('login/', LoginAPIView.as_view(), name="login"),
+    # 회원정보 수정/조회
+    path('profile/', ProfileAPIView.as_view(), name="profile"),
+    # 비밀번호 재설정/변경
+    path('password/', PasswordAPIView.as_view(), name="password"),
+
+]
