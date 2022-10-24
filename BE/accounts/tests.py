@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from accounts.models import User 
 
+#모델 생성 테스트 
 class UserCreateTestModel(APITestCase) :
 
     #유저 객체 생성 
@@ -22,7 +23,10 @@ class UserCreateTestModel(APITestCase) :
         self.assertIsInstance(user,User) 
         self.assertTrue(user.is_staff) 
         self.assertEqual(user.phone,'01000000000') 
+        self.assertEqual(user.name,'김조아')
 
+#필수 조건 미입력 오류 테스트
+class UserBlankTestModel(APITestCase) :
     #이름 미입력 오류 테스트
     def test_raise_error_when_no_name_is_supplied(self) :
         self.assertRaises(ValueError,
@@ -36,7 +40,7 @@ class UserCreateTestModel(APITestCase) :
         self.assertRaises(ValueError,
         User.objects.create_user,phone='',password='password123!@#',name='김조아')
 
-        self.assertRaisesMessage(ValueError,'The Phonenumber must be set',
+        self.assertRaisesMessage(ValueError,'The Phone number must be set',
         User.objects.create_user,phone='',password='password123!@#',name='김조아')
 
     #패스워드 미입력 오류 테스트
