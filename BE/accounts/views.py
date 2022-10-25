@@ -19,9 +19,9 @@ from .serializers import (
 # 회원가입
 class SignupAPIView(APIView):
     permission_classes = [ AllowAny ]
-
+    serializer_class = SignupSerializer
     def post(self, request):
-        serializer = SignupSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             if user:
@@ -38,6 +38,7 @@ class SignupAPIView(APIView):
    생성된 refresh_token은 httpOnly=True 속성을 가진채로 cookie에 삽입된다.
 """
 class LoginAPIView(APIView):
+    serializer_class = LoginSerializer
     permission_classes = [ AllowAny ]
     def post(self, request):
         phone = request.data.get('phone')
@@ -51,7 +52,7 @@ class LoginAPIView(APIView):
             password=password
         )
         if user:
-            login_serializer = LoginSerializer(user)
+            login_serializer = self.serializer_class(user)
             token = TokenObtainPairSerializer.get_token(user)
             refresh_token = str(token)
             access_token = str(token.access_token)
@@ -109,7 +110,7 @@ class ProfileAPIView(APIView):
 # 비밀번호 재설정/변경
 class PasswordAPIView(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
-
+    serializer_class = ChangePasswordSerializer
     def get_object(self, queryset=None):
         obj = self.request.user
         return obj
@@ -119,7 +120,7 @@ class PasswordAPIView(UpdateAPIView):
 
     def put(self, request, *args, **kwargs):
         self.object = self.get_object()
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             # Check old password

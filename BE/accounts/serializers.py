@@ -22,6 +22,7 @@ class SignupSerializer(serializers.ModelSerializer):
             'name',
             'birth',
             ]
+        read_only_fields = ['image']
 
     def create(self, validated_data):
         """
@@ -50,16 +51,17 @@ class SignupSerializer(serializers.ModelSerializer):
 
         REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
-            raise serializers.ValidationError("비밀번호는 숫자, 문자, 특수문자를 사용해야 합니다.")
+            raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.")
 
         return attrs
 
 
 # 로그인
 class LoginSerializer(serializers.ModelSerializer):
+    # password = serializers.CharField(max_length=128,min_length=6,write_only=True)
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ('phone','password')
 
 
 # 로그아웃

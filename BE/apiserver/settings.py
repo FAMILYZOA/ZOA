@@ -151,7 +151,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer','JWT',),
-    'ALGORITHM': 'HS256',
+    'ALGORITHM': env('Algorithm'),
     'SIGNING_KEY': SECRET_KEY,
     'ROTATE_REFRESH_TOKENS': True,
     'UPDATE_LAST_LOGIN': True,
