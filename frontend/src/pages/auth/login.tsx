@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BiUser, BiWindows } from "react-icons/bi";
+import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 
 import { customAxios } from "../../api/customAxios";
@@ -12,11 +12,13 @@ export interface ILoginState {
   password: string;
 }
 
+// header의 아래 경계선을 넣기 위한 styled component
 const HeaderStyle = styled.div`
   border-bottom: 2px solid #000000;
 `;
 
-const Paragraph = styled.p`
+// ZOA 로고에 그라데이션을 넣기 위한 styled component
+const LogoStyled = styled.p`
   background: rgb(255, 120, 127);
   background-image: linear-gradient(
     90deg,
@@ -38,6 +40,7 @@ const Paragraph = styled.p`
   margin: 0%;
 `;
 
+// 자체 로그인 버튼에 관한 styled component
 const InhouseLoginBtn = styled.button`
   background-color: #ff787f;
   border: none;
@@ -48,6 +51,7 @@ const InhouseLoginBtn = styled.button`
   border-radius: 10px;
 `;
 
+// 카카오 로그인 버튼에 관한 styled component
 const KakaoLoginBtn = styled.button`
   background-color: #ffcd00;
   color: #471a00;
@@ -61,18 +65,21 @@ const KakaoLoginBtn = styled.button`
   border-radius: 10px;
 `;
 
+// 각 인풋 박스에 테두리를 넣기 위한 styled component
 const InputLayout = styled.div`
-  border: 5px solid rgba(244, 175, 168, 0.5);
+  border: 5px solid rgb(250, 215, 212);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
 `;
 
+// InputLayout 내부의 input 테두리를 없에기 위한 styled component
 const InputStyle = styled.input`
   border: none;
 `;
 
+// input과 button 양 옆에 마진을 주기 위한 styled component
 const BodyStyle = styled.div`
   margin-left: 10%;
   margin-right: 10%;
@@ -83,13 +90,13 @@ class Header extends React.Component<ILoginProps> {
   public render() {
     return (
       <HeaderStyle>
-        <Paragraph>ZOA</Paragraph>
+        <LogoStyled>ZOA</LogoStyled>
       </HeaderStyle>
     );
   }
 }
 
-// 안내문과 입력 폼
+// 안내문 + 입력폼 + 전송 버튼
 class Form extends React.Component<ILoginProps, ILoginState> {
   constructor(props: any) {
     super(props);
@@ -98,22 +105,28 @@ class Form extends React.Component<ILoginProps, ILoginState> {
       password: "",
     };
   }
-
-  handleId = (e: React.FormEvent<HTMLInputElement>) => {
+  
+  // 전화번호 입력 업데이트
+  handlePhone = (e: React.FormEvent<HTMLInputElement>) => {
     this.setState({
-      phone: e.currentTarget.value,
+      phone: e.currentTarget.value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, ""),
     });
   };
 
+  // 비밀번호 입력 업데이트
   handlePw = (e: React.FormEvent<HTMLInputElement>) => {
     this.setState({
       password: e.currentTarget.value,
     });
   };
 
+  // signup 클릭 시 이동
   handleClick = () => {
-    window.location.href = "/signUp"
-  }
+    window.location.href = "/signUp";
+  };
 
   public render() {
     return (
@@ -124,8 +137,10 @@ class Form extends React.Component<ILoginProps, ILoginState> {
           <InputStyle
             type="text"
             value={this.state.phone}
+            maxLength={13}
             placeholder="Phone"
-            onChange={this.handleId}
+            onChange={this.handlePhone}
+            
           ></InputStyle>
         </InputLayout>
         <InputLayout>
@@ -150,6 +165,7 @@ class Form extends React.Component<ILoginProps, ILoginState> {
 }
 
 const AxiosTest = async (phone: string, password: string) => {
+  // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요.
   const tempForm = new FormData();
   tempForm.append("phone", phone);
   tempForm.append("password", password);
