@@ -7,22 +7,12 @@ import re
 
 # 회원가입
 class SignupSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        max_length = 16,
-        min_length = 8,
-        # write_only :  password를 updating, creating 할 때는 사용되지만, serializing 할 때는 포함되지 않도록 하기 위해서
-        write_only = True
-    ),
+    password = serializers.CharField(max_length=16,min_length=6,write_only=True)
 
     class Meta:
         model = User
-        fields = [
-            'phone',
-            'password',
-            'name',
-            'birth',
-            ]
-        read_only_fields = ['image']
+        fields = ('id','phone', 'password', 'name','birth',)
+        read_only_fields = ('id','image')
 
     def create(self, validated_data):
         """
@@ -58,10 +48,10 @@ class SignupSerializer(serializers.ModelSerializer):
 
 # 로그인
 class LoginSerializer(serializers.ModelSerializer):
-    # password = serializers.CharField(max_length=128,min_length=6,write_only=True)
+    password = serializers.CharField(max_length=16,min_length=6,write_only=True)
     class Meta:
         model = User
-        fields = ('phone','password')
+        fields = ('id','phone','password')
 
 
 # 로그아웃
