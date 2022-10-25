@@ -106,3 +106,9 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     def validate_new_password(self, value):
         validate_password(value)
         return value
+
+class UserSerializer(serializers.ModelSerializer) :
+
+    class Meta: 
+        model = User 
+        fields = ('id','name','image',)

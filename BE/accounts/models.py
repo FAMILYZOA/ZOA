@@ -27,10 +27,10 @@ class User(AbstractUser) :
     image = models.ImageField(upload_to='user/profile/',
                 default='user/profile/profile_default1.png',
                 null=True,blank=True,verbose_name='프로필 사진')
-    family_id = models.ForeignKey(Family,on_delete=models.SET_NULL,null=True,db_column='family_id')
+    family_id = models.ForeignKey(Family,related_name='users',on_delete=models.SET_NULL,null=True,blank=True,db_column='family_id')
     # 로그인 아이디
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['name','birth']
 
     objects = CustomUserManager()
 
