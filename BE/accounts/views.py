@@ -17,7 +17,7 @@ from .serializers import (
 
 
 # 회원가입
-class SignupAPIView(APIView):
+class SignupAPIView(GenericAPIView):
     permission_classes = [ AllowAny ]
     serializer_class = SignupSerializer
     def post(self, request):
@@ -37,7 +37,7 @@ class SignupAPIView(APIView):
 4. 생성된 access_token은 {"access_token": access_token}형태의 json으로 클라이언트에 전달되고, 
    생성된 refresh_token은 httpOnly=True 속성을 가진채로 cookie에 삽입된다.
 """
-class LoginAPIView(APIView):
+class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [ AllowAny ]
     def post(self, request):
@@ -89,7 +89,7 @@ class LogoutAPIView(GenericAPIView):
 
 
 # 회원정보 수정/조회
-class ProfileAPIView(APIView):
+class ProfileAPIView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
