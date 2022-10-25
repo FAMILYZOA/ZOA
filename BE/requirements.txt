@@ -1,0 +1,14 @@
+asgiref==3.5.2
+coverage==6.5.0
+Django==3.2.16
+django-environ==0.9.0
+django-extensions==3.2.1
+django-filter==22.1
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
+pilkit==2.0
+Pillow==9.1.1
+PyJWT==2.6.0
+pytz==2022.5
+sqlparse==0.4.3
+typing_extensions==4.4.0
