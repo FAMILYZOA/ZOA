@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # 회원
     path('api/v1/accounts/', include('accounts.urls')),
+    path('api/v1/family/', include('families.urls')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
