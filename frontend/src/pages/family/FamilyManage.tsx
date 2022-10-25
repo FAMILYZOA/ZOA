@@ -5,7 +5,6 @@ import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { GrHomeRounded } from "react-icons/gr";
 
-import { mdiHomeOutline } from "@mdi/js";
 import { FamilyMember } from "../../components/family";
 
 import styled, { css, keyframes } from "styled-components";
@@ -69,7 +68,7 @@ const IconBox = styled.div`
 
 const MessageBox20 = styled.div`
   font-size: 2.5vh;
-  margin-bottom: 1.5vh;
+  margin-bottom: 0.5vh;
 `;
 const MessageBox12 = styled.div`
   font-size: 1.5vh;
@@ -89,28 +88,71 @@ const FamilyMembersEdit = styled.div`
 
 const FamilyManage = () => {
   const [familyName, setFamilyName] = useState<string>("패밀리명");
+  const [userName, setUserName] = useState<string>("사용자명");
   const [familyMembersList, setFamilyMemberList] = useState<any>([
     {
-      customName: '나',
-      name: '신짱아',
-      profileImg: 'https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png',
+      customName: "나",
+      name: "신짱아",
+      profileImg:
+        "https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png",
     },
     {
-      customName: '동생',
-      name: '신짱구',
-      profileImg: 'https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png',
+      customName: "동생",
+      name: "신짱구",
+      profileImg:
+        "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
     },
     {
-      customName: '',
-      name: '봉미선',
-      profileImg: 'https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png',
-    }
+      customName: "",
+      name: "봉미선",
+      profileImg:
+        "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
+    },
   ]); // member는 object. 예시 이미지 입력
+
+  const inviteLink: string = "(초대링크)";
+  const userAgent = navigator.userAgent.toLocaleLowerCase(); // 기기 확인
+  let smsUrl: string;
+
+  if (userAgent.search("android") > -1) {
+    // android 기기 여부 확인
+    smsUrl = `sms:?body=${userName}님이 ZOA앱 초대장을 보내셨어요! /n 다음 링크를 통해 참여해 보세요! /n ${inviteLink}`;
+  } else if (userAgent.search("iphone") > -1 || userAgent.search("ipad") > -1) {
+    // ios 기기 여부 확인
+    smsUrl = `sms:&body=${userName}님이 ZOA앱 초대장을 보내셨어요! /n 다음 링크를 통해 참여해 보세요! /n ${inviteLink}`;
+  }
 
   const navigate = useNavigate();
   const navigateToEdit = () => {
-    navigate("/family/edit")
-  }
+    navigate("/family/edit");
+  };
+  const sendMessage = () => {
+    window.location.href = smsUrl;
+  };
+  const shareKakao = () => {
+    window.Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: `ZOA에서 초대장이 왔습니다!`,
+        description: `${userName}님이 함께하고 싶어하셔요!`,
+        imageUrl:
+          "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
+        link: {
+          mobileWebUrl: "https://developers.kakao.com",
+          webUrl: "https://developers.kakao.com",
+        },
+      },
+      buttons: [
+        {
+          title: "ZOA에 참여하기",
+          link: {
+            mobileWebUrl: "https://developers.kakao.com",
+            webUrl: "https://developers.kakao.com",
+          },
+        },
+      ],
+    });
+  };
 
   return (
     <>
@@ -127,7 +169,7 @@ const FamilyManage = () => {
           </div>
           <div>가족 초대하기</div>
         </FamilyManageGuide>
-        <FamilyInviteBox>
+        <FamilyInviteBox onClick={shareKakao}>
           <IconBox>
             <ImLink />
           </IconBox>
@@ -136,7 +178,7 @@ const FamilyManage = () => {
             <MessageBox12>메신저로 공유하세요.</MessageBox12>
           </div>
         </FamilyInviteBox>
-        <FamilyInviteBox>
+        <FamilyInviteBox onClick={sendMessage}>
           <IconBox>
             <ImAddressBook />
           </IconBox>
@@ -154,7 +196,7 @@ const FamilyManage = () => {
           </FamilyMembersEdit>
         </FamilyMembersTitle>
         {familyMembersList.map((member: any, index: any) => (
-          <FamilyMember member={member}></FamilyMember>
+          <FamilyMember member={member} key={index}></FamilyMember>
         ))}
       </FamilyManageBody>
     </>

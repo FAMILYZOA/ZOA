@@ -7,6 +7,10 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+window.Kakao.init('ed853493ffff6403ed0ee70ea375527c');
+console.log(window.Kakao.isInitialized());
+
 root.render(
   <React.StrictMode>
     <App />
