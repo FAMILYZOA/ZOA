@@ -90,7 +90,7 @@ class LogoutAPIView(GenericAPIView):
 
 # 회원정보 수정/조회
 class ProfileAPIView(GenericAPIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
     def get(self, request):
