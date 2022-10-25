@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import os, environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 env = environ.Env(
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -147,6 +149,17 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer','JWT',),
+    'ALGORITHM': env('Algorithm'),
+    'SIGNING_KEY': SECRET_KEY,
+    'ROTATE_REFRESH_TOKENS': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
+
 
 
 STATIC_URL = '/static/'
