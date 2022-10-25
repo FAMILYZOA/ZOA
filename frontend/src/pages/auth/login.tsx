@@ -10,15 +10,19 @@ const HeaderStyle = styled.div`
 `;
 
 const Paragraph = styled.p`
-  background: rgb(255,120,127);
-  background-image: linear-gradient(90deg, rgba(255,120,127,1) 0%, rgba(254,199,134,1) 100%);
+  background: rgb(255, 120, 127);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 120, 127, 1) 0%,
+    rgba(254, 199, 134, 1) 100%
+  );
 
   background-size: 100%;
   background-repeat: repeat;
 
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: transparent; 
+  -webkit-text-fill-color: transparent;
   -moz-background-clip: text;
   -moz-text-fill-color: transparent;
 
@@ -31,12 +35,9 @@ const InhouseLoginBtn = styled.button`
   background-color: #ff787f;
   border: none;
   color: white;
-  padding: 10px 48px;
   text-align: center;
   font-weight: bold;
-  display: inline-block;
   font-size: 16px;
-  margin-bottom: 20px;
   border-radius: 10px;
 `;
 
@@ -59,12 +60,15 @@ const InputLayout = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  margin-left: 20%;
-  margin-right: 20%;
 `;
 
 const InputStyle = styled.input`
   border: none;
+`;
+
+const BodyStyle = styled.div`
+  margin-left: 10%;
+  margin-right: 10%;
 `;
 
 // ZOA 로고가 들어갈 헤더
@@ -84,8 +88,14 @@ class Form extends React.Component<ILoginProps> {
     return (
       <div>
         <p>이메일과 비밀번호를 입력해주세요</p>
-        <InputLayout><p>이메일</p><InputStyle></InputStyle></InputLayout>
-        <InputLayout><p>비밀번호</p><InputStyle></InputStyle></InputLayout>
+        <InputLayout>
+          <label>아이디</label>
+          <InputStyle type="text" placeholder="Email"></InputStyle>
+        </InputLayout>
+        <InputLayout>
+          <label>비밀번호</label>
+          <InputStyle type="password" placeholder="Password"></InputStyle>
+        </InputLayout>
       </div>
     );
   }
@@ -116,8 +126,10 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     return (
       <div>
         <Header></Header>
-        <Form></Form>
-        <Buttons></Buttons>
+        <BodyStyle>
+          <Form></Form>
+          <Buttons></Buttons>
+        </BodyStyle>
         <p>Copyright ⓒB103</p>
       </div>
     );
