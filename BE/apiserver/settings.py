@@ -41,6 +41,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     # myapp 
     'accounts',
+    'families',
 
     # default
     'django.contrib.admin',

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinLengthValidator
 from .manager import CustomUserManager
-
+from families.models import Family
 # Create your models here.
 class User(AbstractUser) :
 
@@ -20,14 +20,14 @@ class User(AbstractUser) :
     email = None
 
 #-------------사용할 필드 ---------------------------------------
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     phone = models.CharField(max_length=11, unique=True, validators=[MinLengthValidator(10)],verbose_name='휴대폰 번호' )
     name = models.CharField(max_length=30, validators=[MinLengthValidator(2)],verbose_name='이름')
     birth = models.DateField(verbose_name='생년월일')
     image = models.ImageField(upload_to='user/profile/',
                 default='user/profile/profile_default1.png',
                 null=True,blank=True,verbose_name='프로필 사진')
-    
+    family_id = models.ForeignKey(Family,on_delete=models.SET_NULL,null=True,db_column='family_id')
     # 로그인 아이디
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['name']
