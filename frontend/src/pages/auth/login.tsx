@@ -1,9 +1,16 @@
 import * as React from "react";
 import styled from "styled-components";
+import { BiUser, BiWindows } from "react-icons/bi";
+import { MdOutlineLock } from "react-icons/md";
+
+import { customAxios } from "../../api/customAxios";
 
 export interface ILoginProps {}
 
-export interface ILoginState {}
+export interface ILoginState {
+  phone: string;
+  password: string;
+}
 
 const HeaderStyle = styled.div`
   border-bottom: 2px solid #000000;
@@ -83,52 +90,82 @@ class Header extends React.Component<ILoginProps> {
 }
 
 // 안내문과 입력 폼
-class Form extends React.Component<ILoginProps> {
+class Form extends React.Component<ILoginProps, ILoginState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      phone: "",
+      password: "",
+    };
+  }
+
+  handleId = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({
+      phone: e.currentTarget.value,
+    });
+  };
+
+  handlePw = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({
+      password: e.currentTarget.value,
+    });
+  };
+
+  handleClick = () => {
+    window.location.href = "/signUp"
+  }
+
   public render() {
     return (
       <div>
         <p>이메일과 비밀번호를 입력해주세요</p>
         <InputLayout>
-          <label>아이디</label>
-          <InputStyle type="text" placeholder="Email"></InputStyle>
+          <BiUser />
+          <InputStyle
+            type="text"
+            value={this.state.phone}
+            placeholder="Phone"
+            onChange={this.handleId}
+          ></InputStyle>
         </InputLayout>
         <InputLayout>
-          <label>비밀번호</label>
-          <InputStyle type="password" placeholder="Password"></InputStyle>
+          <MdOutlineLock />
+          <InputStyle
+            type="password"
+            value={this.state.password}
+            placeholder="Password"
+            onChange={this.handlePw}
+          ></InputStyle>
         </InputLayout>
+        <InhouseLoginBtn
+          onClick={() => AxiosTest(this.state.phone, this.state.password)}
+        >
+          Sign in
+        </InhouseLoginBtn>
+        <KakaoLoginBtn>카카오 계정으로 시작하기</KakaoLoginBtn>
+        <p onClick={this.handleClick}>sign up</p>
       </div>
     );
   }
 }
 
-// 로그인 버튼들 : 자체 / 카카오 로그인
-class Buttons extends React.Component<ILoginProps> {
-  public render() {
-    return (
-      <div>
-        <InhouseLoginBtn>Sign in</InhouseLoginBtn>
-        <br></br>
-        <KakaoLoginBtn>카카오 계정으로 시작하기</KakaoLoginBtn>
-        <p>sign up</p>
-      </div>
-    );
-  }
-}
+const AxiosTest = async (phone: string, password: string) => {
+  const tempForm = new FormData();
+  tempForm.append("phone", phone);
+  tempForm.append("password", password);
+
+  const response = await customAxios.post("accounts/login/", tempForm);
+
+  console.log(response);
+};
 
 export default class Login extends React.Component<ILoginProps, ILoginState> {
-  constructor(props: ILoginProps) {
-    super(props);
-
-    this.state = {};
-  }
-
   public render() {
     return (
       <div>
         <Header></Header>
         <BodyStyle>
           <Form></Form>
-          <Buttons></Buttons>
         </BodyStyle>
         <p>Copyright ⓒB103</p>
       </div>
