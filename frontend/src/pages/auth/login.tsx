@@ -12,13 +12,14 @@ export interface ILoginState {
   password: string;
 }
 
-// header의 아래 경계선을 넣기 위한 styled component
-const HeaderStyle = styled.div`
-  border-bottom: 2px solid #000000;
+const HeaderStyled = styled.div`
+  background: #ffffff;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  height: 56px;
 `;
 
 // ZOA 로고에 그라데이션을 넣기 위한 styled component
-const LogoStyled = styled.p`
+const HeaderLogoStyled = styled.p`
   background: rgb(255, 120, 127);
   background-image: linear-gradient(
     90deg,
@@ -40,58 +41,124 @@ const LogoStyled = styled.p`
   margin: 0%;
 `;
 
-// 자체 로그인 버튼에 관한 styled component
-const InhouseLoginBtn = styled.button`
-  background-color: #ff787f;
-  border: none;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-  font-size: 16px;
-  border-radius: 10px;
+const FormStyled = styled.div`
+  display: block;
+
+  margin-top: 20vh;
+  margin-left: 10vw;
+  margin-right: 10vw;
 `;
 
-// 카카오 로그인 버튼에 관한 styled component
-const KakaoLoginBtn = styled.button`
-  background-color: #ffcd00;
-  color: #471a00;
-  border: none;
-  padding: 10px 48px;
-  text-align: center;
-  font-weight: bold;
-  display: inline-block;
-  font-size: 16px;
-  margin: auto;
-  border-radius: 10px;
-`;
-
-// 각 인풋 박스에 테두리를 넣기 위한 styled component
-const InputLayout = styled.div`
-  border: 5px solid rgb(250, 215, 212);
+const FormDescStyled = styled.p`
   display: flex;
   align-items: center;
-  justify-content: center;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  /* or 16px */
+
+  margin-bottom: 4vh;
+  
+  letter-spacing: -0.01em;
+
+  color: #000000;
+`;
+
+const InnerFormStyled = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6vh;
+  width: 80vw;
+
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+
+  border: 1px solid #fad7d4;
+  box-shadow: 0px 0px 4px #bebebe;
   border-radius: 10px;
 `;
 
-// InputLayout 내부의 input 테두리를 없에기 위한 styled component
+const IconStyled = styled.div`
+  margin: 3vw;
+`;
+
 const InputStyle = styled.input`
+  width: 65vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 100%;
+  /* or 20px */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.01em;
+
+  color: #000000;
+
   border: none;
 `;
 
-// input과 button 양 옆에 마진을 주기 위한 styled component
-const BodyStyle = styled.div`
-  margin-left: 10%;
-  margin-right: 10%;
+// 자체 로그인 버튼에 관한 styled component
+const InhouseLoginBtnStyled = styled.button`
+  height: 6vh;
+  width: 80vw;
+
+  margin-top: 2vh;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  /* or 20px */
+
+  letter-spacing: -0.01em;
+
+  color: #ffffff;
+
+  background: #ff787f;
+  border-radius: 10px;
+  border: none;
+`;
+
+
+// 카카오 로그인 버튼에 관한 styled component
+const KakaoLoginBtnStyled = styled.button`
+  height: 6vh;
+  width: 80vw;
+
+  margin-top: 2vh;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  /* identical to box height, or 16px */
+
+  color: #471a00;
+
+  background: #ffcd00;
+  border-radius: 10px;
+  border: none;
 `;
 
 // ZOA 로고가 들어갈 헤더
 class Header extends React.Component<ILoginProps> {
   public render() {
     return (
-      <HeaderStyle>
-        <LogoStyled>ZOA</LogoStyled>
-      </HeaderStyle>
+      <HeaderStyled>
+        <HeaderLogoStyled>ZOA</HeaderLogoStyled>
+      </HeaderStyled>
     );
   }
 }
@@ -105,7 +172,7 @@ class Form extends React.Component<ILoginProps, ILoginState> {
       password: "",
     };
   }
-  
+
   // 전화번호 입력 업데이트
   handlePhone = (e: React.FormEvent<HTMLInputElement>) => {
     this.setState({
@@ -130,42 +197,47 @@ class Form extends React.Component<ILoginProps, ILoginState> {
 
   public render() {
     return (
-      <div>
-        <p>이메일과 비밀번호를 입력해주세요</p>
-        <InputLayout>
-          <BiUser />
+      <FormStyled>
+        <FormDescStyled>이메일과 비밀번호를 입력해주세요</FormDescStyled>
+        <InnerFormStyled>
+          <IconStyled>
+            <BiUser size={"8vw"} />
+          </IconStyled>
+
           <InputStyle
             type="text"
             value={this.state.phone}
             maxLength={13}
             placeholder="Phone"
             onChange={this.handlePhone}
-            
           ></InputStyle>
-        </InputLayout>
-        <InputLayout>
-          <MdOutlineLock />
+        </InnerFormStyled>
+        <InnerFormStyled>
+          <IconStyled>
+            <MdOutlineLock size={"8vw"} />
+          </IconStyled>
+
           <InputStyle
             type="password"
             value={this.state.password}
             placeholder="Password"
             onChange={this.handlePw}
           ></InputStyle>
-        </InputLayout>
-        <InhouseLoginBtn
+        </InnerFormStyled>
+        <InhouseLoginBtnStyled
           onClick={() => AxiosTest(this.state.phone, this.state.password)}
         >
           Sign in
-        </InhouseLoginBtn>
-        <KakaoLoginBtn>카카오 계정으로 시작하기</KakaoLoginBtn>
+        </InhouseLoginBtnStyled>
+        <KakaoLoginBtnStyled>카카오 계정으로 시작하기</KakaoLoginBtnStyled>
         <p onClick={this.handleClick}>sign up</p>
-      </div>
+      </FormStyled>
     );
   }
 }
 
 const AxiosTest = async (phone: string, password: string) => {
-  // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요.
+  // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요. -> 제거해서 전송
   const tempForm = new FormData();
   tempForm.append("phone", phone);
   tempForm.append("password", password);
@@ -180,9 +252,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     return (
       <div>
         <Header></Header>
-        <BodyStyle>
-          <Form></Form>
-        </BodyStyle>
+        <Form></Form>
         <p>Copyright ⓒB103</p>
       </div>
     );
