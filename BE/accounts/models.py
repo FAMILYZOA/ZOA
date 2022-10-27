@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinLengthValidator
 from .manager import CustomUserManager
 from families.models import Family
+from django.core.exceptions import ValidationError
+
 # Create your models here.
 class User(AbstractUser) :
 
