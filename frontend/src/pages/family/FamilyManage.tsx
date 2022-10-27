@@ -132,23 +132,26 @@ const FamilyManage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_BACK_HOST}/family/${id}`,
-      headers: {
-        Authorization: token, // 토큰 값
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-        console.log(process.env.REACT_APP_BACK_HOST);
-        console.log(token);
-        setFamilyMemberList(res.data.users);
+    if (token) {
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/family/${id}`,
+        headers: {
+          Authorization: token, // 토큰 값
+        },
       })
-      .catch((err) => {
-        console.log(err);
-        console.log(process.env.REACT_APP_BACK_HOST);
-      });
+        .then((res) => {
+          console.log(res.data);
+          console.log(process.env.REACT_APP_BACK_HOST);
+          console.log(token);
+          setFamilyMemberList(res.data.users);
+          setFamilyName(res.data.name);
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(process.env.REACT_APP_BACK_HOST);
+        });
+    }
   }, [id, token]);
 
   const inviteLink: string = "(초대링크)";
