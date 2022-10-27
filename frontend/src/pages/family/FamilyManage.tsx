@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
@@ -87,28 +89,52 @@ const FamilyMembersEdit = styled.div`
 `;
 
 const FamilyManage = () => {
+  const { id } = useParams();
   const [familyName, setFamilyName] = useState<string>("패밀리명");
   const [userName, setUserName] = useState<string>("사용자명");
   const [familyMembersList, setFamilyMemberList] = useState<any>([
     {
       customName: "나",
       name: "신짱아",
-      profileImg:
+      image:
         "https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png",
     },
     {
       customName: "동생",
       name: "신짱구",
-      profileImg:
+      image:
         "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
     },
     {
       customName: "",
       name: "봉미선",
-      profileImg:
+      image:
         "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
     },
   ]); // member는 object. 예시 이미지 입력
+
+  /*
+----------- 이하, 가족 생성, 구성원 초대가 완료되는것 확인 후 연결 할 것 ----------
+*/
+
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_BACK_HOST}/family/${id}`,
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY2ODUxNDg5LCJpYXQiOjE2NjY4NDQyODksImp0aSI6Ijc4ZWI0YWM4ZWZlNjRlMzRiNjM5ZTEzOGI5Y2RmMjcxIiwidXNlcl9pZCI6MX0.yjOrtuzD-0jTiMN3VfY1Ajx28EO3mzOEPPwZXorbMl8`,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        console.log(process.env.REACT_APP_BACK_HOST);
+        setFamilyMemberList(res.data.users);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(process.env.REACT_APP_BACK_HOST);
+      });
+  }, [id]);
 
   const inviteLink: string = "(초대링크)";
   const userAgent = navigator.userAgent.toLocaleLowerCase(); // 기기 확인
@@ -125,6 +151,9 @@ const FamilyManage = () => {
   const navigate = useNavigate();
   const navigateToEdit = () => {
     navigate("/family/edit");
+  };
+  const navigateToHome = () => {
+    navigate("/");
   };
   const sendMessage = () => {
     window.location.href = smsUrl;
@@ -157,7 +186,7 @@ const FamilyManage = () => {
   return (
     <>
       <FamilyManageHeader>
-        <HomeButton>
+        <HomeButton onClick={navigateToHome}>
           <GrHomeRounded />
         </HomeButton>
         <FamilyManageHeaderTitle>멤버관리</FamilyManageHeaderTitle>

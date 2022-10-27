@@ -9,7 +9,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/family/manage" element={ <FamilyManage /> }></Route>
+          <Route path="/family/manage/:id" element={ <FamilyManage /> }></Route>
         </Routes>
       </BrowserRouter>
     </div>
