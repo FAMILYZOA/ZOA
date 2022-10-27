@@ -37,8 +37,10 @@ class SignupSerializer(serializers.ModelSerializer):
         password = attrs['password']
 
         if User.objects.filter(phone=phone).exists():
-            raise serializers.ValidationError("핸드폰 번호가 존재합니다.")
+            raise serializers.ValidationError("이미 존재하는 휴대폰 번호 입니다.")
 
+        if not phone.isdecimal() :
+            raise serializers.ValidationError('휴대폰 번호는 숫자 형식이어야 합니다.')
         REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
             raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",'regex')
@@ -52,7 +54,6 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','phone','password')
-
 
 # 로그아웃
 class RefreshTokenSerializer(serializers.Serializer):
@@ -74,10 +75,9 @@ class RefreshTokenSerializer(serializers.Serializer):
 # 회원정보 조회/수정
 class ProfileSerializer(serializers.ModelSerializer):
 
-    password = password_field
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ('phone','name','image')
         read_only_fields = ('token', )
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
