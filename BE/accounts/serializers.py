@@ -37,8 +37,10 @@ class SignupSerializer(serializers.ModelSerializer):
         password = attrs['password']
 
         if User.objects.filter(phone=phone).exists():
-            raise serializers.ValidationError("핸드폰 번호가 존재합니다.")
+            raise serializers.ValidationError("이미 존재하는 휴대폰 번호 입니다.")
 
+        if not phone.isdecimal() :
+            raise serializers.ValidationError('휴대폰 번호는 숫자 형식이어야 합니다.')
         REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
             raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",'regex')
@@ -52,7 +54,6 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','phone','password')
-
 
 # 로그아웃
 class RefreshTokenSerializer(serializers.Serializer):
@@ -74,10 +75,9 @@ class RefreshTokenSerializer(serializers.Serializer):
 # 회원정보 조회/수정
 class ProfileSerializer(serializers.ModelSerializer):
 
-    password = password_field
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ('phone','name','image')
         read_only_fields = ('token', )
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
@@ -91,15 +91,32 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    old_password = password_field
-    new_password = password_field
+    password = serializers.CharField(max_length=12,min_length=8,write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+    old_password = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+
     class Meta:
         model = User
-        fields = ('old_password', 'new_password')
+        fields = ('old_password', 'password', 'password2')
 
-    def validate_new_password(self, value):
-        validate_password(value)
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "패스워드 필드들이 일치하지 않습니다."})
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "이전 비밀번호가 일치하지 않습니다."})
         return value
+
+    def update(self, instance, validated_data):
+
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
 
 class UserSerializer(serializers.ModelSerializer) :
 

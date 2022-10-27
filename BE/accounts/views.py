@@ -2,11 +2,12 @@ from urllib import response
 from .models import User
 from django.contrib.auth import authenticate
 from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import ErrorDetail 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from .serializers import (
@@ -22,16 +23,20 @@ from .serializers import (
 class SignupAPIView(GenericAPIView):
     permission_classes = [ AllowAny ]
     serializer_class = SignupSerializer
-    @swagger_auto_schema(responses={
+    @swagger_auto_schema(
+        responses={
         "400": openapi.Response(
         description="Signup 400 Exception",
         examples={
             "application/json": {
-                "phone": "핸드폰 번호가 존재합니다.",
-                "password": "비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",
+                "휴대폰 번호 중복": {'phone': [ErrorDetail(string='사용자의 휴대폰 번호은/는 이미 존재합니다.', code='unique')]},
+                "휴대폰 번호에 문자열 포함":{'non_field_errors': [ErrorDetail(string='휴대폰 번호는 숫자 형식이어야 합니다.', code='invalid')]} ,
+                "비밀번호 정규식 불일치":{'non_field_errors': [ErrorDetail(string='비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.', code='regex')]} ,
+                "비밀번호 제한 숫자 불일치": {'password': [ErrorDetail(string='이 필드의 글자 수가  적어도 8 이상인지 확인하십시오.', code='min_length')]},
             }
         }
-    )})
+    )
+    })
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -53,12 +58,12 @@ class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [ AllowAny ]
     def post(self, request):
-        phone = request.data.get('phone')
-        password = request.data.get('password')
-        if phone is None:
-            return Response("아이디를 입력하세요.")
-        if password is None:
-            return Response("비밀번호를 입력하세요.")
+        phone = request.data.get('phone',None)
+        password = request.data.get('password',None)
+        if phone is None or not phone:
+            return Response({'phone':"휴대폰 번호를 입력하세요"},status=status.HTTP_400_BAD_REQUEST)
+        if password is None  or not password:
+            return Response({'password':"비밀번호를 입력하세요"},status=status.HTTP_400_BAD_REQUEST)
         user = authenticate( 
             phone=phone, 
             password=password
@@ -80,7 +85,7 @@ class LoginAPIView(GenericAPIView):
             )
             return response
         if user is None:
-            return Response("로그인에 실패하였습니다.", status=status.HTTP_400_BAD_REQUEST)
+            return Response({'login':"로그인에 실패했습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 로그아웃
@@ -126,23 +131,5 @@ class PasswordAPIView(UpdateAPIView):
     def get_object(self, queryset=None):
         obj = self.request.user
         return obj
-
-    def post(self, request):
-        return response()
-
-    def put(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        serializer = self.serializer_class(data=request.data)
-
-        if serializer.is_valid():
-            # Check old password
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-            # set_password also hashes the password that the user will get
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-            response = {
-                "성공적으로 변경되었습니다."
-            }
-            return Response(response, status=status.HTTP_200_OK,)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
