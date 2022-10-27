@@ -12,6 +12,12 @@ export interface ILoginState {
   password: string;
 }
 
+const LoginStyled = styled.div`
+  @media screen and (min-width: 720px) {
+    width: 70vh;
+  }
+`;
+
 const HeaderStyled = styled.div`
   background: #ffffff;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
@@ -61,7 +67,7 @@ const FormDescStyled = styled.p`
   /* or 16px */
 
   margin-bottom: 4vh;
-  
+
   letter-spacing: -0.01em;
 
   color: #000000;
@@ -129,7 +135,6 @@ const InhouseLoginBtnStyled = styled.button`
   border-radius: 10px;
   border: none;
 `;
-
 
 // 카카오 로그인 버튼에 관한 styled component
 const KakaoLoginBtnStyled = styled.button`
@@ -238,23 +243,26 @@ class Form extends React.Component<ILoginProps, ILoginState> {
 
 const AxiosTest = async (phone: string, password: string) => {
   // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요. -> 제거해서 전송
-  const tempForm = new FormData();
-  tempForm.append("phone", phone);
-  tempForm.append("password", password);
+  const loginForm = new FormData();
+  loginForm.append("phone", phone.replaceAll('-', ''));
+  loginForm.append("password", password);
 
-  const response = await customAxios.post("accounts/login/", tempForm);
+  console.log(loginForm.get('phone'))
 
+  const response = await customAxios.post("accounts/login/", loginForm);
+
+  // 추후 처리
   console.log(response);
 };
 
 export default class Login extends React.Component<ILoginProps, ILoginState> {
   public render() {
     return (
-      <div>
+      <LoginStyled>
         <Header></Header>
         <Form></Form>
         <p>Copyright ⓒB103</p>
-      </div>
+      </LoginStyled>
     );
   }
 }
