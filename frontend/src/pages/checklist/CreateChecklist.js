@@ -8,7 +8,7 @@ function CreateChecklist(){
     return(
         <div>
             <Header label="할 일 등록" back="true"></Header>
-
+            
         </div>
     )
 }

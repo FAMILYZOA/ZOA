@@ -321,7 +321,7 @@ class Form extends React.Component<ISignUpProps, IFormStates> {
     if (!this.state.year || !this.state.month || !this.state.day) {
       alert("날짜가 없습니다.");
     } else {
-      customAxios.post("accounts/signup/", signupForm).then((response) => {console.log(response.data)}).catch((error) => {console.log(error.data)});
+      customAxios.post("accounts/signup/", signupForm).then((response:any) => {console.log(response.data)}).catch((error:any) => {console.log(error.data)});
     }
   };
 
