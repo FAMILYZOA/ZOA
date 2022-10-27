@@ -1,22 +1,29 @@
-import React from "react";
+import React from 'react';
 import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
 import Signup from "./pages/auth/signup";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./App.css";
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { FamilyManage } from './pages/family'
+import FamilyCreate from './pages/family/FamilyCreate';
+import FamilyNameEdit from './pages/family/FamilyNameEdit';
+import "./pages/page";
 
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
+    <div>
+      <BrowserRouter>
         <Routes>
+          <Route path="/family/manage/:id" element={ <FamilyManage /> }></Route>
+          <Route path="/family/create" element={ <FamilyCreate /> }></Route>
+          <Route path="/family/edit" element={ <FamilyNameEdit /> }></Route>
           <Route path="/" element={<Prelogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
-      </div>
-    </Router>
+      </BrowserRouter>
+    </div>
   );
 }
 
