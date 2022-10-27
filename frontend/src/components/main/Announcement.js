@@ -4,9 +4,29 @@ import './slick-theme.css';
 import './slick.css';
 import styled from "styled-components";
 
+const Contents = styled.div`
+    margin: 16px 8px;
+`
+const Text = styled.div`
+    font-size: 16px;
+    margin: 0 4px 0 0;
+    width: 90%;
+    height: 3vh;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+`
+const From = styled.p`
+  text-align: end;
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #444444;
+  width: 95%;
+`;
 
 function Announcement() {
     const settings = {
+        slide: 'Contents',
         dots: false,
         arrows: false,
         infinite: true,
@@ -20,12 +40,10 @@ function Announcement() {
     }
     return (
         <Slider {...settings}>
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-            <div>5</div>
-            <div>6</div>
+            <Contents>
+                <Text>📢오늘 저녁 밖에서 먹고 들어갈게 dddddddddddddddddddddddddddddddddd</Text>
+                <From>From.아빠(신형식)</From>
+            </Contents>
                     
         </Slider>
 

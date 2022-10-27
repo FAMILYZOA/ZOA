@@ -1,9 +1,9 @@
 @charset 'UTF-8';
 /* Slider */
 .slick-slider{
-    margin: 16px;
-  width: 88%;
-  height: 80px;
+    margin: 5%;
+  width: 90%;
+  height: 10vh;
   background-color: #FDE7C9;
   border-radius: 10px;
 }
