@@ -4,6 +4,7 @@ import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 
 import { customAxios } from "../../api/customAxios";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 export interface ILoginProps {}
 
@@ -12,20 +13,20 @@ export interface ILoginState {
   password: string;
 }
 
-const LoginStyled = styled.div`
+const LoginStyle = styled.div`
   @media screen and (min-width: 720px) {
     width: 70vh;
   }
 `;
 
-const HeaderStyled = styled.div`
+const HeaderStyle = styled.div`
   background: #ffffff;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   height: 56px;
 `;
 
 // ZOA 로고에 그라데이션을 넣기 위한 styled component
-const HeaderLogoStyled = styled.p`
+const HeaderLogoStyle = styled.p`
   background: rgb(255, 120, 127);
   background-image: linear-gradient(
     90deg,
@@ -47,7 +48,7 @@ const HeaderLogoStyled = styled.p`
   margin: 0%;
 `;
 
-const FormStyled = styled.div`
+const FormStyle = styled.div`
   display: block;
 
   margin-top: 20vh;
@@ -55,7 +56,7 @@ const FormStyled = styled.div`
   margin-right: 10vw;
 `;
 
-const FormDescStyled = styled.p`
+const FormDescStyle = styled.p`
   display: flex;
   align-items: center;
 
@@ -73,7 +74,7 @@ const FormDescStyled = styled.p`
   color: #000000;
 `;
 
-const InnerFormStyled = styled.div`
+const InnerFormStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,7 +89,7 @@ const InnerFormStyled = styled.div`
   border-radius: 10px;
 `;
 
-const IconStyled = styled.div`
+const IconStyle = styled.div`
   margin: 3vw;
 `;
 
@@ -114,7 +115,7 @@ const InputStyle = styled.input`
 `;
 
 // 자체 로그인 버튼에 관한 styled component
-const InhouseLoginBtnStyled = styled.button`
+const InhouseLoginBtnStyle = styled.button`
   height: 6vh;
   width: 80vw;
 
@@ -137,7 +138,7 @@ const InhouseLoginBtnStyled = styled.button`
 `;
 
 // 카카오 로그인 버튼에 관한 styled component
-const KakaoLoginBtnStyled = styled.button`
+const KakaoLoginBtnStyle = styled.button`
   height: 6vh;
   width: 80vw;
 
@@ -157,13 +158,26 @@ const KakaoLoginBtnStyled = styled.button`
   border: none;
 `;
 
+const SignupStyle = styled(Link)`
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  text-decoration: none;
+  /* or 16px */
+
+  letter-spacing: -0.01em;
+
+  color: #707070;
+`;
+
 // ZOA 로고가 들어갈 헤더
 class Header extends React.Component<ILoginProps> {
   public render() {
     return (
-      <HeaderStyled>
-        <HeaderLogoStyled>ZOA</HeaderLogoStyled>
-      </HeaderStyled>
+      <HeaderStyle>
+        <HeaderLogoStyle>ZOA</HeaderLogoStyle>
+      </HeaderStyle>
     );
   }
 }
@@ -195,19 +209,14 @@ class Form extends React.Component<ILoginProps, ILoginState> {
     });
   };
 
-  // signup 클릭 시 이동
-  handleClick = () => {
-    window.location.href = "/signUp";
-  };
-
   public render() {
     return (
-      <FormStyled>
-        <FormDescStyled>이메일과 비밀번호를 입력해주세요</FormDescStyled>
-        <InnerFormStyled>
-          <IconStyled>
+      <FormStyle>
+        <FormDescStyle>이메일과 비밀번호를 입력해주세요</FormDescStyle>
+        <InnerFormStyle>
+          <IconStyle>
             <BiUser size={"8vw"} />
-          </IconStyled>
+          </IconStyle>
 
           <InputStyle
             type="text"
@@ -216,11 +225,11 @@ class Form extends React.Component<ILoginProps, ILoginState> {
             placeholder="Phone"
             onChange={this.handlePhone}
           ></InputStyle>
-        </InnerFormStyled>
-        <InnerFormStyled>
-          <IconStyled>
+        </InnerFormStyle>
+        <InnerFormStyle>
+          <IconStyle>
             <MdOutlineLock size={"8vw"} />
-          </IconStyled>
+          </IconStyle>
 
           <InputStyle
             type="password"
@@ -228,15 +237,16 @@ class Form extends React.Component<ILoginProps, ILoginState> {
             placeholder="Password"
             onChange={this.handlePw}
           ></InputStyle>
-        </InnerFormStyled>
-        <InhouseLoginBtnStyled
+        </InnerFormStyle>
+        <InhouseLoginBtnStyle
           onClick={() => AxiosTest(this.state.phone, this.state.password)}
         >
           Sign in
-        </InhouseLoginBtnStyled>
-        <KakaoLoginBtnStyled>카카오 계정으로 시작하기</KakaoLoginBtnStyled>
-        <p onClick={this.handleClick}>sign up</p>
-      </FormStyled>
+        </InhouseLoginBtnStyle>
+        <KakaoLoginBtnStyle>카카오 계정으로 시작하기</KakaoLoginBtnStyle>
+
+        <SignupStyle to={"/signup"}>sign up</SignupStyle>
+      </FormStyle>
     );
   }
 }
@@ -244,10 +254,10 @@ class Form extends React.Component<ILoginProps, ILoginState> {
 const AxiosTest = async (phone: string, password: string) => {
   // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요. -> 제거해서 전송
   const loginForm = new FormData();
-  loginForm.append("phone", phone.replaceAll('-', ''));
+  loginForm.append("phone", phone.replaceAll("-", ""));
   loginForm.append("password", password);
 
-  console.log(loginForm.get('phone'))
+  console.log(loginForm.get("phone"));
 
   const response = await customAxios.post("accounts/login/", loginForm);
 
@@ -258,11 +268,11 @@ const AxiosTest = async (phone: string, password: string) => {
 export default class Login extends React.Component<ILoginProps, ILoginState> {
   public render() {
     return (
-      <LoginStyled>
+      <LoginStyle>
         <Header></Header>
         <Form></Form>
         <p>Copyright ⓒB103</p>
-      </LoginStyled>
+      </LoginStyle>
     );
   }
 }
