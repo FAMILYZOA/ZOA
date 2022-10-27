@@ -91,15 +91,32 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    old_password = password_field
-    new_password = password_field
+    password = serializers.CharField(max_length=12,min_length=8,write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+    old_password = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+
     class Meta:
         model = User
-        fields = ('old_password', 'new_password')
+        fields = ('old_password', 'password', 'password2')
 
-    def validate_new_password(self, value):
-        validate_password(value)
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "패스워드 필드들이 일치하지 않습니다."})
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "이전 비밀번호가 일치하지 않습니다."})
         return value
+
+    def update(self, instance, validated_data):
+
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
 
 class UserSerializer(serializers.ModelSerializer) :
 
