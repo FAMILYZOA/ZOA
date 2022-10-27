@@ -81,7 +81,7 @@ const FamilyCreate = () => {
           maxLength={12}
           placeholder="우리 가족의 이름을 입력해주세요"
           type="string"
-          name="familyname"
+          name="familyName"
           onChange={handleFamilyNameInput}
         ></FamilyNameInput>
         <div>
