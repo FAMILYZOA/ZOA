@@ -43,7 +43,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/accounts/', include('accounts.urls')),
     path('api/v1/family/', include('families.urls')),
-    path('api/v1/main/', include('main.urls')),
+    path('api/v1/checklist/', include('checklist.urls')),
 
     #swagger
     path('api/v1/swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),

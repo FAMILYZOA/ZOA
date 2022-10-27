@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     # myapp 
     'accounts',
     'families',
-    'main',
+    'checklist',
 
     # default
     'django.contrib.admin',
