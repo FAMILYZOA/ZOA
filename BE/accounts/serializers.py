@@ -5,9 +5,11 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import re
 
 
+password_field = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+
 # 회원가입
 class SignupSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=16,min_length=6,write_only=True)
+    password = password_field
 
     class Meta:
         model = User
@@ -36,19 +38,17 @@ class SignupSerializer(serializers.ModelSerializer):
 
         if User.objects.filter(phone=phone).exists():
             raise serializers.ValidationError("핸드폰 번호가 존재합니다.")
-        if not 8 <= len(password) <= 12:
-            raise serializers.ValidationError("비밀번호는 8 ~ 12자리여야 합니다.")
 
         REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
-            raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.")
+            raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",'regex')
 
         return attrs
 
 
 # 로그인
 class LoginSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=16,min_length=6,write_only=True)
+    password = password_field
     class Meta:
         model = User
         fields = ('id','phone','password')
@@ -74,11 +74,7 @@ class RefreshTokenSerializer(serializers.Serializer):
 # 회원정보 조회/수정
 class ProfileSerializer(serializers.ModelSerializer):
 
-    password = serializers.CharField(
-        max_length=16,
-        min_length=8,
-        write_only=True
-    )
+    password = password_field
     class Meta:
         model = User
         fields = "__all__"
@@ -95,13 +91,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+    old_password = password_field
+    new_password = password_field
     class Meta:
         model = User
         fields = ('old_password', 'new_password')
-        extra_kwargs = {'new_password': {'write_only': True, 'required': True},
-                        'old_password': {'write_only': True, 'required': True}}
 
     def validate_new_password(self, value):
         validate_password(value)
