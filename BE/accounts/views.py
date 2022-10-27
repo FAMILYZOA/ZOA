@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from .serializers import (
     SignupSerializer,
     LoginSerializer,
@@ -20,6 +22,16 @@ from .serializers import (
 class SignupAPIView(GenericAPIView):
     permission_classes = [ AllowAny ]
     serializer_class = SignupSerializer
+    @swagger_auto_schema(responses={
+        "400": openapi.Response(
+        description="Signup 400 Exception",
+        examples={
+            "application/json": {
+                "phone": "핸드폰 번호가 존재합니다.",
+                "password": "비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",
+            }
+        }
+    )})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
