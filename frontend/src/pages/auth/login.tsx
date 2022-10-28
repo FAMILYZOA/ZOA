@@ -4,7 +4,7 @@ import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 
 import { customAxios } from "../../api/customAxios";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export interface ILoginProps {}
 
@@ -14,15 +14,22 @@ export interface ILoginState {
 }
 
 const LoginStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   @media screen and (min-width: 720px) {
     width: 70vh;
   }
 `;
 
 const HeaderStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: #ffffff;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   height: 56px;
+  width: 100%;
 `;
 
 // ZOA 로고에 그라데이션을 넣기 위한 styled component
@@ -49,7 +56,7 @@ const HeaderLogoStyle = styled.p`
 `;
 
 const FormStyle = styled.div`
-  display: block;
+  display: inline-block;
 
   margin-top: 20vh;
   margin-left: 10vw;
@@ -157,8 +164,15 @@ const KakaoLoginBtnStyle = styled.button`
   border-radius: 10px;
   border: none;
 `;
+const SignupOuterStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const SignupStyle = styled(Link)`
+  align-items: center;
+
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
@@ -169,6 +183,27 @@ const SignupStyle = styled(Link)`
   letter-spacing: -0.01em;
 
   color: #707070;
+`;
+
+const FooterStyle = styled.p`
+  position: absolute;
+  width: 158px;
+  height: 20px;
+  top: 90vh;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 200;
+  font-size: 20px;
+  line-height: 100%;
+  /* identical to box height, or 20px */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.02em;
+
+  color: #000000;
 `;
 
 // ZOA 로고가 들어갈 헤더
@@ -244,8 +279,9 @@ class Form extends React.Component<ILoginProps, ILoginState> {
           Sign in
         </InhouseLoginBtnStyle>
         <KakaoLoginBtnStyle>카카오 계정으로 시작하기</KakaoLoginBtnStyle>
-
-        <SignupStyle to={"/signup"}>sign up</SignupStyle>
+        <SignupOuterStyle>
+          <SignupStyle to={"/signup"}>sign up</SignupStyle>
+        </SignupOuterStyle>
       </FormStyle>
     );
   }
@@ -271,7 +307,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
       <LoginStyle>
         <Header></Header>
         <Form></Form>
-        <p>Copyright ⓒB103</p>
+        <FooterStyle>Copyright ⓒB103</FooterStyle>
       </LoginStyle>
     );
   }
