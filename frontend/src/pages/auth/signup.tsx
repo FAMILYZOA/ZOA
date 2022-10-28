@@ -4,6 +4,7 @@ import { customAxios } from "../../api/customAxios";
 import Header from "../../components/header";
 import DefaultProfile from "../../assets/defaultProfile.png";
 
+
 export interface ISignUpProps {}
 
 export interface IInnerFormProps {
