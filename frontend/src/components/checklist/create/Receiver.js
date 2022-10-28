@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import jjangu from "../../../assets/jjangu.png"
-import bong from "../../../assets/bong.png"
-import userDefault from "../../../assets/defaultProfile.png"
+import jjangu from "../../../assets/jjangu.png";
+import bong from "../../../assets/bong.png";
+import userDefault from "../../../assets/defaultProfile.png";
 
 
 const Container = styled.div`
@@ -17,14 +17,26 @@ const MainText = styled.div`
 `
 
 const UserContainer = styled.div`
-    display: flex;
-    margin: 16px 8px;
-    width: 90%-32px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    white-space: nowrap;
-
-`
+  display: flex;
+  margin: 16px 8px;
+  width: 90%-32px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  @media screen and (min-width: 520px) {
+    &::-webkit-scrollbar {
+      width: auto;
+      height: 5px;
+      border-radius: 3px;
+      background-color: #ffcdbe;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #ff787f;
+      height: 3px;
+      border-radius: 3px;
+    }
+  }
+`;
 
 const UserBox = styled.div`
     opacity: ${(props) => props.rc.includes(props.user) ? 1 : 0.5};
@@ -66,7 +78,7 @@ function Receiver () {
     return (
       <Container>
         <MainText>
-          받는 사람<span color="red">*</span>
+          받는 사람<span style={{ color: "red" }}>*</span>
         </MainText>
         <UserContainer>
           <UserBox onClick={() => active(user1)} rc={receiver} user={user1}>
