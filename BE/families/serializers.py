@@ -22,29 +22,28 @@ class FamilyNameSetSerializer(serializers.ModelSerializer) :
         return instance
 
 class UserSerializer(serializers.ModelSerializer) :
-    # to_family_name = FamilyNameSetSerializer(many=True,read_only=True)
+    set_name = serializers.SerializerMethodField()
     class Meta :
         model = User 
-        fields = ('id','name','image',)
+        fields = ('id','name','image','set_name')
 
-class FamilyUserSerializer(serializers.ModelSerializer) :
-    users = UserSerializer(many=True,read_only=True)
-    class Meta: 
-        model = Family
-        fields= ('id','name','created_at','users')
-
-class FamilyNameSerializer(serializers.ModelSerializer) :
-    class Meta :
-        model = FamilyInteractionName
-        fields = ('to_user','name')
+    def get_set_name(self,obj) :
+        from_user = self.context.get('request').user
+        to_user = obj
+        if to_user == from_user :
+            return '나'
+        
+        if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
+            return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
+        else :
+            return False
+    
 
 class FamilyRetriveSerializer(serializers.ModelSerializer) :
-    family_id = FamilyUserSerializer(read_only=True)
-    from_family_name = FamilyNameSerializer(many=True,read_only=True)
+    users = UserSerializer(many=True,read_only=True)
     class Meta: 
-        model = User 
-        fields = ('family_id','from_family_name')
-
+        model = Family 
+        fields =('id','name','created_at','users')
 
 
 class FamilyUpdateSerializer(serializers.ModelSerializer) :
