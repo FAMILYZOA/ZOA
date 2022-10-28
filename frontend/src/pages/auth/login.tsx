@@ -4,14 +4,14 @@ import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 
 import { customAxios } from "../../api/customAxios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export interface ILoginProps {}
-
-export interface ILoginState {
-  phone: string;
-  password: string;
-}
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setToken } from "../../features/token/tokenSlice";
+import { ListFormat } from "typescript";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 const LoginStyle = styled.div`
   display: flex;
@@ -207,108 +207,106 @@ const FooterStyle = styled.p`
 `;
 
 // ZOA 로고가 들어갈 헤더
-class Header extends React.Component<ILoginProps> {
-  public render() {
-    return (
-      <HeaderStyle>
-        <HeaderLogoStyle>ZOA</HeaderLogoStyle>
-      </HeaderStyle>
-    );
-  }
-}
+const Header = () => {
+  return (
+    <HeaderStyle>
+      <HeaderLogoStyle>ZOA</HeaderLogoStyle>
+    </HeaderStyle>
+  );
+};
 
 // 안내문 + 입력폼 + 전송 버튼
-class Form extends React.Component<ILoginProps, ILoginState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      phone: "",
-      password: "",
-    };
-  }
+const Form = () => {
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [userToken, setUserToken] = useState<string>("");
 
   // 전화번호 입력 업데이트
-  handlePhone = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({
-      phone: e.currentTarget.value
+  const handlePhone = (e: React.FormEvent<HTMLInputElement>) => {
+    setPhone(
+      e.currentTarget.value
         .replace(/[^0-9]/g, "")
         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
-        .replace(/(\-{1,2})$/g, ""),
-    });
+        .replace(/(\-{1,2})$/g, "")
+    );
   };
 
   // 비밀번호 입력 업데이트
-  handlePw = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({
-      password: e.currentTarget.value,
-    });
+  const handlePw = (e: React.FormEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value);
   };
 
-  public render() {
-    return (
-      <FormStyle>
-        <FormDescStyle>이메일과 비밀번호를 입력해주세요</FormDescStyle>
-        <InnerFormStyle>
-          <IconStyle>
-            <BiUser size={"8vw"} />
-          </IconStyle>
+  const token = useAppSelector((state) => state.token.value); // redux로 중앙으로부터 token값을 가져온다.
+  const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
 
-          <InputStyle
-            type="text"
-            value={this.state.phone}
-            maxLength={13}
-            placeholder="Phone"
-            onChange={this.handlePhone}
-          ></InputStyle>
-        </InnerFormStyle>
-        <InnerFormStyle>
-          <IconStyle>
-            <MdOutlineLock size={"8vw"} />
-          </IconStyle>
+  useEffect(() => {
+    if (!token) {
+      dispatch(setToken(userToken));
+    }
+  }, [userToken]);
+  // login
+  const login = async (phone: string, password: string) => {
+    // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요. -> 제거해서 전송
+    const loginForm = new FormData();
+    loginForm.append("phone", phone.replaceAll("-", ""));
+    loginForm.append("password", password);
 
-          <InputStyle
-            type="password"
-            value={this.state.password}
-            placeholder="Password"
-            onChange={this.handlePw}
-          ></InputStyle>
-        </InnerFormStyle>
-        <InhouseLoginBtnStyle
-          onClick={() => AxiosTest(this.state.phone, this.state.password)}
-        >
-          Sign in
-        </InhouseLoginBtnStyle>
-        <KakaoLoginBtnStyle>카카오 계정으로 시작하기</KakaoLoginBtnStyle>
-        <SignupOuterStyle>
-          <SignupStyle to={"/signup"}>sign up</SignupStyle>
-        </SignupOuterStyle>
-      </FormStyle>
-    );
-  }
-}
+    console.log(loginForm.get("phone"));
 
-const AxiosTest = async (phone: string, password: string) => {
-  // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요. -> 제거해서 전송
-  const loginForm = new FormData();
-  loginForm.append("phone", phone.replaceAll("-", ""));
-  loginForm.append("password", password);
+    const response = await customAxios.post("accounts/login/", loginForm);
 
-  console.log(loginForm.get("phone"));
+    setUserToken(response.data.token);
 
-  const response = await customAxios.post("accounts/login/", loginForm);
+    //alert("로그인 성공!");
+  };
 
-  // 추후 처리
-  console.log(response);
+  return (
+    <FormStyle>
+      <FormDescStyle>이메일과 비밀번호를 입력해주세요</FormDescStyle>
+      <InnerFormStyle>
+        <IconStyle>
+          <BiUser size={"8vw"} />
+        </IconStyle>
+
+        <InputStyle
+          type="text"
+          value={phone}
+          maxLength={13}
+          placeholder="Phone"
+          onChange={handlePhone}
+        ></InputStyle>
+      </InnerFormStyle>
+      <InnerFormStyle>
+        <IconStyle>
+          <MdOutlineLock size={"8vw"} />
+        </IconStyle>
+
+        <InputStyle
+          type="password"
+          value={password}
+          placeholder="Password"
+          onChange={handlePw}
+        ></InputStyle>
+      </InnerFormStyle>
+      <InhouseLoginBtnStyle onClick={() => login(phone, password)}>
+        Sign in
+      </InhouseLoginBtnStyle>
+      <KakaoLoginBtnStyle>카카오 계정으로 시작하기</KakaoLoginBtnStyle>
+      <SignupOuterStyle>
+        <SignupStyle to={"/signup"}>sign up</SignupStyle>
+      </SignupOuterStyle>
+    </FormStyle>
+  );
 };
 
-export default class Login extends React.Component<ILoginProps, ILoginState> {
-  public render() {
-    return (
-      <LoginStyle>
-        <Header></Header>
-        <Form></Form>
-        <FooterStyle>Copyright ⓒB103</FooterStyle>
-      </LoginStyle>
-    );
-  }
-}
+const Login = () => {
+  return (
+    <LoginStyle>
+      <Header></Header>
+      <Form></Form>
+      <FooterStyle>Copyright ⓒB103</FooterStyle>
+    </LoginStyle>
+  );
+};
+
+export default Login;
