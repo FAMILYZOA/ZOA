@@ -11,10 +11,7 @@ COPY ./ /var/jenkins_home/workspace/ssafy_server_developbranch_deploy/Backend/
 WORKDIR /var/jenkins_home/workspace/ssafy_server_developbranch_deploy/Backend/
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
-
+RUN python manage.py test
 EXPOSE 8000
 
-CMD ["python", "manage.py", "test"]
-
-CMD ["gunicorn", "apiserver.wsgi", "--bind", "0.0.0.0:8000"]
-
+CMD ["bash", "-c", "python manage.py test && python manage.py collectstatic --noinput && gunicorn apiserver.wsgi --bind 0.0.0.0:8000"]
