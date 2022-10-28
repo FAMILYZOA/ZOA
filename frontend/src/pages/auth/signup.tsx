@@ -273,9 +273,9 @@ class Form extends React.Component<ISignUpProps, IFormStates> {
       if (this.state.passwordSame) {
         //console.log(this.state.password.match(REGEX_PASSWORD))
         //if (this.state.password.match(REGEX_PASSWORD)) {
-          this.setState({
-            nextPage: true,
-          });
+        this.setState({
+          nextPage: true,
+        });
         //} else {
         //  console.log(this.state.password)
         //  alert(
@@ -321,7 +321,14 @@ class Form extends React.Component<ISignUpProps, IFormStates> {
     if (!this.state.year || !this.state.month || !this.state.day) {
       alert("날짜가 없습니다.");
     } else {
-      customAxios.post("accounts/signup/", signupForm).then((response) => {console.log(response.data)}).catch((error) => {console.log(error.data)});
+      customAxios
+        .post("accounts/signup/", signupForm)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error.data);
+        });
     }
   };
 
