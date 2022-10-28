@@ -14,7 +14,7 @@ RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 RUN python3 manage.py test
 
-RUN python3 manage.py collectstatic -yes
+RUN python3 manage.py collectstatic -y
 
 EXPOSE 8000
 
