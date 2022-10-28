@@ -32,24 +32,10 @@ class FamilyAPIView(RetrieveUpdateDestroyAPIView) :
     queryset=Family.objects.all()
     lookup_field = 'id'
     
-    def retrieve(self, request, id,*args, **kwargs):
-        # instance = self.get_object()
-        instance = get_object_or_404(User,id=self.request.user.id)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
         serializer = self.get_serializer(instance)
-
-        candidate = []
-        dic = dict()
-        for j in serializer.data['from_family_name'] :
-            dic[j['to_user']] = j['name']
-            candidate.append(j['to_user'])
-        for user in serializer.data['family_id']['users'] :
-            if user['id'] == request.user.id :
-                user['family_name'] = '나'
-            elif user['id'] in candidate :
-                user['family_name'] = dic[user['id']]
-            else :
-                user['family_name'] = False
-        return Response(serializer.data['family_id'])
+        return Response(serializer.data)
 
 
     @swagger_auto_schema(request_body=FamilyUpdateSerializer, responses={200: FamilyUpdateSerializer})
