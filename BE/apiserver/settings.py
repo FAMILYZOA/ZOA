@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # myapp 
     'accounts',
     'families',
+    'scrums',
 
     # default
     'django.contrib.admin',
@@ -107,6 +108,11 @@ DATABASES = {
         'PASSWORD': env('MYSQL_PASSWORD'), 
         'HOST': 'k7b103.p.ssafy.io', 
         'PORT': '3306', 
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
      } 
 }
 
