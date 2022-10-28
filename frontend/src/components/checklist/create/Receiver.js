@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import jjangu from "../../../assets/jjangu.png"
-import bong from "../../../assets/bong.png"
-import userDefault from "../../../assets/defaultProfile.png"
+import jjangu from "../../../assets/jjangu.png";
+import bong from "../../../assets/bong.png";
+import userDefault from "../../../assets/defaultProfile.png";
 
 
 const Container = styled.div`
