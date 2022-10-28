@@ -117,9 +117,3 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-class UserSerializer(serializers.ModelSerializer) :
-
-    class Meta: 
-        model = User 
-        fields = ('id','name','image',)
