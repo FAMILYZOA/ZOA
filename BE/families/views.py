@@ -10,11 +10,23 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions
+
+class IsFamilyorBadRequestPermission(permissions.BasePermission) :
+    def has_permission(self,request,view) :
+        return request.user.is_authenticated 
+    def has_object_permission(self, request, view, obj):
+        if request.user.family_id == obj :
+            return True 
+
+        return False
+
 
 class FamilyCreateAPIView(CreateAPIView) :
     serializer_class = FamilySerializer
     queryset = Family.objects.all()
 
+    @swagger_auto_schema(operation_summary="가족 생성")
     def create(self, request, *args, **kwargs):
         if request.user.family_id :
             return Response({'user님은 이미 가족에 가입되어 있습니다.'},status=status.HTTP_400_BAD_REQUEST)
@@ -31,20 +43,16 @@ class FamilyAPIView(RetrieveUpdateDestroyAPIView) :
     serializer_class = FamilyRetriveSerializer
     queryset=Family.objects.all()
     lookup_field = 'id'
-    
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    permission_classes = [IsFamilyorBadRequestPermission]
+    @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-
-    @swagger_auto_schema(request_body=FamilyUpdateSerializer, responses={200: FamilyUpdateSerializer})
+    @swagger_auto_schema(operation_summary="가족 이름 수정",request_body=FamilyUpdateSerializer, responses={200: FamilyUpdateSerializer})
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        if request.user.family_id != self.get_object():
-            return Response({'변경 권한이 없습니다.'},status=status.HTTP_403_FORBIDDEN)
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = FamilyUpdateSerializer(instance, data=request.data, partial=partial)
@@ -52,62 +60,70 @@ class FamilyAPIView(RetrieveUpdateDestroyAPIView) :
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(operation_summary="가족 삭제")
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 @swagger_auto_schema(
         method='post',
+        operation_summary="가족에 가입",
      responses={
-        200: openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'success' : openapi.Schema('user님이 family에 가입되었습니다.',type=openapi.TYPE_STRING)
-            }
+        200: openapi.Schema(type=openapi.TYPE_OBJECT,
+            properties={'success' : openapi.Schema('user님이 family에 가입되었습니다.',type=openapi.TYPE_STRING)}
         ),
-
-        400: openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'fail' : openapi.Schema('user님은 이미 가족에 가입되어 있습니다.',type=openapi.TYPE_STRING)
-            }
-        )
-
-     }
-)
+        400: openapi.Schema(type=openapi.TYPE_OBJECT,
+        properties={'fail' : openapi.Schema('user님은 이미 가족에 가입되어 있습니다.',type=openapi.TYPE_STRING)}
+        )})
 @api_view(['POST'])
 def UserJoinFamily(request,family_id) :
     user = request.user
     family = get_object_or_404(Family,id=family_id)
     if request.user.is_authenticated :
         if user.family_id :
-            context = {
-                'fail' : f'{user.name}님은 이미 가족에 가입되어 있습니다.'
-            }
+            context = {'fail' : f'{user.name}님은 이미 가족에 가입되어 있습니다.'}
             return JsonResponse(context,status=status.HTTP_400_BAD_REQUEST)
         else :
             family.users.add(user)
-            context = {
-                'success' : f'{user.name}님이 {family.name}에 가입되었습니다.'
-            }
+            context = {'success' : f'{user.name}님이 {family.name}에 가입되었습니다.'}
             return JsonResponse(context,status=status.HTTP_200_OK)
-
 
 class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
 
     serializer_class = FamilyNameSetSerializer
-    queryset = User.objects.all()
+    queryset = Family.objects.all()
     lookup_field = 'id'
+    permission_classes = [IsFamilyorBadRequestPermission]
 
+    def get_user(self) :
+        lookup_url_kwarg =  self.lookup_field
+        queryset = User.objects.all()
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+
+        return obj
+
+    @swagger_auto_schema(operation_summary="가족 구성원 이름 설정")
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="가족 구성원 이름 변경")
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
     def create(self, request, *args, **kwargs):
-        to_user = self.get_object()
+        to_user = self.get_user()
         from_user=self.request.user
+        if to_user == from_user :
+            return Response({f'자신의 이름은 설정할 수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
+        
         if not from_user.family_id or not to_user.family_id or from_user.family_id != to_user.family_id :
             return Response({f'우리 가족이 아닙니다.'},status=status.HTTP_403_FORBIDDEN)
+        
         if FamilyInteractionName.objects.filter(to_user=to_user,from_user=from_user).exists() :
             return Response({f'이미 {to_user}님의 이름을 설정했습니다. 이름 수정만 가능합니다.'},status=status.HTTP_400_BAD_REQUEST)
         
@@ -116,12 +132,13 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
     def perform_create(self, serializer):
-        serializer.save(to_user=self.get_object(),from_user=self.request.user,family=self.request.user.family_id)
+        serializer.save(to_user=self.get_user(),from_user=self.request.user,family=self.request.user.family_id)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        instance = get_object_or_404(FamilyInteractionName,to_user=self.get_object(),from_user=self.request.user)
+        instance = get_object_or_404(FamilyInteractionName,to_user=self.get_user(),from_user=self.request.user)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)

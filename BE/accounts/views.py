@@ -4,12 +4,13 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework import serializers
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView, UpdateAPIView
+from rest_framework.generics import GenericAPIView, UpdateAPIView,RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import ErrorDetail 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser
 from .serializers import (
     SignupSerializer,
     LoginSerializer,
@@ -18,12 +19,12 @@ from .serializers import (
     ChangePasswordSerializer,
     )
 
-
 # 회원가입
 class SignupAPIView(GenericAPIView):
     permission_classes = [ AllowAny ]
     serializer_class = SignupSerializer
     @swagger_auto_schema(
+        operation_summary="회원가입",
         responses={
         "400": openapi.Response(
         description="Signup 400 Exception",
@@ -57,6 +58,7 @@ class SignupAPIView(GenericAPIView):
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [ AllowAny ]
+    @swagger_auto_schema(operation_summary="로그인")
     def post(self, request):
         phone = request.data.get('phone',None)
         password = request.data.get('password',None)
@@ -97,7 +99,7 @@ class LoginAPIView(GenericAPIView):
 class LogoutAPIView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = RefreshTokenSerializer
-
+    @swagger_auto_schema(operation_summary="로그아웃")
     def post(self, request, *args):
         sz = self.get_serializer(data=request.data)
         sz.is_valid(raise_exception=True)
@@ -106,30 +108,25 @@ class LogoutAPIView(GenericAPIView):
 
 
 # 회원정보 수정/조회
-class ProfileAPIView(GenericAPIView):
+class ProfileAPIView(RetrieveUpdateAPIView):
     # permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
-
-    def get(self, request):
-        serializer = self.serializer_class(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self, request):
-        serializer_data = request.data
-        serializer = self.serializer_class(
-            request.user, data=serializer_data, partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+    parser_classes = (MultiPartParser,)
+    queryset = User.objects.all()
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+    @swagger_auto_schema(operation_summary="회원정보 조회")
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    @swagger_auto_schema(operation_summary="회원정보 수정")
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 # 비밀번호 재설정/변경
 class PasswordAPIView(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-    
+    @swagger_auto_schema(operation_summary="비밀번호 변경")
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
     
