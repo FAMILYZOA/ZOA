@@ -6,9 +6,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { FamilyManage } from './pages/family'
 import FamilyCreate from './pages/family/FamilyCreate';
 import FamilyNameEdit from './pages/family/FamilyNameEdit';
-import CreateChecklist from "./pages/checklist/CreateChecklist";
-import ReadChecklist from "./pages/checklist/ReadChecklist";
-import "./pages/page";
+import { ReadChecklist, CreateChecklist } from "./pages/checklist"
 
 import './App.css';
 
@@ -24,7 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} /> 
           <Route path="/createChecklist" element={<CreateChecklist />} /> 
-          <Route path="/Checklist" element={<ReadChecklist />} /> 
+          <Route path="/checklist" element={<ReadChecklist />} /> 
         </Routes>
       </BrowserRouter>
     </div>
