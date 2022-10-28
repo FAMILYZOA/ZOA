@@ -27,6 +27,9 @@ export interface IFormStates {
 }
 
 const FormStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 4vh;
 `;
 
@@ -67,6 +70,7 @@ const SignupNextStyle = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-top: 4vh;
 `;
 
 const FormImgDescStyle = styled.p`
@@ -164,7 +168,15 @@ const ButtonStyle = styled.button`
   border: none;
 `;
 
+const FooterOuterStyle = styled.div`
+  position: absolute;
+  top: 90vh;
+  width: 100%;
+  text-align: center;
+`;
+
 const FooterStyle = styled.p`
+
   font-family: "Inter";
   font-style: normal;
   font-weight: 200;
@@ -172,6 +184,7 @@ const FooterStyle = styled.p`
   line-height: 100%;
   /* identical to box height, or 20px */
 
+  margin: auto;
   letter-spacing: -0.02em;
 
   color: #000000;
@@ -328,7 +341,7 @@ class Form extends React.Component<ISignUpProps, IFormStates> {
 
   public render() {
     return (
-      <FormStyle>
+      <div>
         {this.state.nextPage ? (
           <SignupNextStyle>
             <FormImgDescStyle>프로필 사진을 변경해보세요</FormImgDescStyle>
@@ -494,7 +507,7 @@ class Form extends React.Component<ISignUpProps, IFormStates> {
             <ButtonStyle onClick={this.signUp}>회원가입</ButtonStyle>
           </SignupNextStyle>
         ) : (
-          <div>
+          <FormStyle>
             <InnerForm
               formName="이름"
               formType="text"
@@ -517,9 +530,9 @@ class Form extends React.Component<ISignUpProps, IFormStates> {
               formEvent={this.handlePasswordConfirm}
             ></InnerForm>
             <ButtonStyle onClick={this.goNext}>다음</ButtonStyle>
-          </div>
+          </FormStyle>
         )}
-      </FormStyle>
+      </div>
     );
   }
 }
@@ -530,7 +543,9 @@ export default class Signup extends React.Component<ISignUpProps, IFormStates> {
       <div>
         <Header label="회원가입" back={true}></Header>
         <Form></Form>
-        <FooterStyle>Copyright ⓒB103</FooterStyle>
+        <FooterOuterStyle>
+          <FooterStyle>Copyright ⓒB103</FooterStyle>
+        </FooterOuterStyle>
       </div>
     );
   }
