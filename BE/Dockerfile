@@ -12,9 +12,9 @@ WORKDIR /var/jenkins_home/workspace/ssafyServer/BE/
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
-RUN python manage.py test
+RUN python3 manage.py test
 
-RUN python manage.py collectstatic
+RUN python3 manage.py collectstatic
 
 EXPOSE 8000
 
