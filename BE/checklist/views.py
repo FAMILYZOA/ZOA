@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer
+from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
 from .models import Checklist
 
 
@@ -22,12 +22,15 @@ class ChecklistSearchAPIView(GenericAPIView):
 
 class ChecklistCreateAPIView(GenericAPIView):
     # TODO: Checklist 부여할 때 같은 가족방에 속한 사람에게만 부여할 수 있도록하기
-    # TODO: from_user_id 자동으로 자신으로 설정
-    # TODO: to_user_id 선택할 수 있도록 만들기
 
-    serializer_class = ChecklistDetailSerializer
+    serializer_class = ChecklistCreateSerializer
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        context = {
+            'text': request.data.get('text'),
+            'to_user_id': request.data.get('to_user_id'),
+            'from_user_id': request.user.id,
+        }
+        serializer = ChecklistDetailSerializer(data=context)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -41,7 +44,8 @@ class ChecklistDetailAPIView(GenericAPIView):
         serializer = self.get_serializer_class(checklist)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
-    put_serializer_class = ChecklistStateChangeSerializer
+
+    serializer_class = ChecklistStateChangeSerializer
     def put(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
         serializer = self.put_serializer_class(checklist, data=request.data)
@@ -49,6 +53,7 @@ class ChecklistDetailAPIView(GenericAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK) 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def delete(self, request, checklist_id):
         checklist = get_object_or_404(Checklist, id=checklist_id)

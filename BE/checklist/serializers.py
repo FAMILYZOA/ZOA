@@ -8,6 +8,12 @@ class  ChecklistSerializer(serializers.ModelSerializer):
         fields= ('id', 'text', 'status', 'to_user_id',)
 
 
+class ChecklistCreateSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Checklist
+        fields= ('text', 'to_user_id')
+
+
 class  ChecklistDetailSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Checklist
