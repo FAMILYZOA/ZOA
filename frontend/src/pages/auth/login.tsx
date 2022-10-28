@@ -264,7 +264,7 @@ const Form = () => {
 
   return (
     <FormStyle>
-      <FormDescStyle>이메일과 비밀번호를 입력해주세요</FormDescStyle>
+      <FormDescStyle>전화번호와 비밀번호를 입력해주세요</FormDescStyle>
       <InnerFormStyle>
         <IconStyle>
           <BiUser size={"8vw"} />
