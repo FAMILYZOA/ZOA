@@ -9,7 +9,6 @@ import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setToken } from "../../features/token/tokenSlice";
-import { ListFormat } from "typescript";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
@@ -238,14 +237,10 @@ const Form = () => {
 
   const token = useAppSelector((state) => state.token.value); // redux로 중앙으로부터 token값을 가져온다.
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!token) {
-      dispatch(setToken(userToken));
-    }
-  }, [userToken]);
   // login
-  const login = async (phone: string, password: string) => {
+  const login = (phone: string, password: string) => {
     // 전화번호의 하이픈을 제거해야할지 말아야할지 상의 필요. -> 제거해서 전송
     const loginForm = new FormData();
     loginForm.append("phone", phone.replaceAll("-", ""));
@@ -253,11 +248,18 @@ const Form = () => {
 
     console.log(loginForm.get("phone"));
 
-    const response = await customAxios.post("accounts/login/", loginForm);
+    customAxios.post("accounts/login/", loginForm).then((response) => {
+      setUserToken(response.data.token);
+      dispatch(setToken(response.data.token));
+      alert("로그인 성공!");
+      navigate('/family/create', {replace: true});
+    }).catch((err) => {
+      console.log(err);
+      alert("로그인이 실패하였습니다.")
+    });
 
-    setUserToken(response.data.token);
-
-    //alert("로그인 성공!");
+    
+    
   };
 
   return (
