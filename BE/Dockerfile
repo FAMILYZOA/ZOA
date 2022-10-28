@@ -6,9 +6,9 @@ RUN apt-get -y update
 
 RUN apt-get -y install vim
 
-COPY ./ /var/jenkins_home/workspace/ssafy_server_developbranch_deploy/Backend/
+COPY ./ /var/jenkins_home/workspace/ssafyServer/BE/
 
-WORKDIR /var/jenkins_home/workspace/ssafy_server_developbranch_deploy/Backend/
+WORKDIR /var/jenkins_home/workspace/ssafyServer/BE/
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
