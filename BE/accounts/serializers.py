@@ -74,20 +74,26 @@ class RefreshTokenSerializer(serializers.Serializer):
 
 # 회원정보 조회/수정
 class ProfileSerializer(serializers.ModelSerializer):
-
+    image = serializers.ImageField(required=False)
     class Meta:
         model = User
         fields = ('phone','name','image')
-        read_only_fields = ('token', )
+        extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
+
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         for (key, value) in validated_data.items():
             setattr(instance, key, value)
         if password is not None:
             instance.set_password(password)
+    
+        image = validated_data.pop('image',None)
+
+        if image is not None :
+            instance.image = image
+
         instance.save()
         return instance
-
 
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):

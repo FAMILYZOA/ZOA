@@ -1,16 +1,26 @@
-from django.shortcuts import get_list_or_404, render
 from rest_framework.generics import ListCreateAPIView
 from scrums.models import Scrum
 from rest_framework import status
 from scrums.serializers import ScrumSerializer
 from rest_framework.response import Response
 from datetime import datetime
-from rest_framework import filters
+from rest_framework import filters,permissions
+from drf_yasg.utils import swagger_auto_schema
 # Create your views here.
+
 class ScrumAPIView(ListCreateAPIView) :
     serializer_class = ScrumSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['created_at']
+
+    @swagger_auto_schema(operation_summary="가족 스크럼 조회")
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    @swagger_auto_schema(operation_summary="가족 스크럼 작성")
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(Scrum.objects.filter(family=self.request.user.family_id))
         serializer = self.get_serializer(queryset, many=True)
