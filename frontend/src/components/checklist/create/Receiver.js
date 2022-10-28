@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import userImg from "../../../assets/jjangu.png"
+import jjangu from "../../../assets/jjangu.png"
+import bong from "../../../assets/bong.png"
+import userDefault from "../../../assets/defaultProfile.png"
 
 
 const Container = styled.div`
@@ -25,7 +27,7 @@ const UserContainer = styled.div`
 `
 
 const UserBox = styled.div`
-    opacity: ${(props) => props.active == "active" ? 0.5 : 0};
+    opacity: ${(props) => props.rc.includes(props.user) ? 1 : 0.5};
     display: inline-block;
     width: 64px;
     height: 80px;
@@ -67,17 +69,17 @@ function Receiver () {
           받는 사람<span color="red">*</span>
         </MainText>
         <UserContainer>
-          <UserBox onClick={() => active(user1)}>
-            <img src={userImg} alt="user" />
+          <UserBox onClick={() => active(user1)} rc={receiver} user={user1}>
+            <img src={jjangu} alt="user" />
             <p>짱구</p>
           </UserBox>
-          <UserBox onClick={() => active(user2)}>
-            <img src={userImg} alt="user" />
-            <p>짱구</p>
+          <UserBox onClick={() => active(user2)} rc={receiver} user={user2}>
+            <img src={bong} alt="user" />
+            <p>봉</p>
           </UserBox>
-          <UserBox onClick={() => active(user3)}>
-            <img src={userImg} alt="user" />
-            <p>짱구</p>
+          <UserBox onClick={() => active(user3)} rc={receiver} user={user3}>
+            <img src={userDefault} alt="user" />
+            <p>아빠</p>
           </UserBox>
         </UserContainer>
       </Container>
