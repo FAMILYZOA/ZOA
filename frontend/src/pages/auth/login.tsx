@@ -252,7 +252,7 @@ const Form = () => {
       setUserToken(response.data.token);
       dispatch(setToken(response.data.token));
       alert("로그인 성공!");
-      navigate('/family/create', {replace: true});
+      navigate('/scrum/create', {replace: true});
     }).catch((err) => {
       console.log(err);
       alert("로그인이 실패하였습니다.")

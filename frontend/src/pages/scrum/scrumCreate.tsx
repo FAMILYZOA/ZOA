@@ -1,4 +1,3 @@
-import { NONAME } from "dns";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -9,6 +8,8 @@ import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "react-modal";
 import styled from "styled-components";
+import { customAxios } from "../../api/customAxios";
+import { useAppSelector } from "../../app/hooks";
 import Header from "../../components/header";
 import TextBox from "../../components/textBox";
 
@@ -199,10 +200,38 @@ const FamilyTalk = () => {
   );
 };
 
+const EMOJI:string = "";
+const YESTERDAY:string = "";
+const TODAY:string = "";
+
 const RegistBtn = () => {
+  // 나중에 저장 방식 바뀌면 수정 예정
+  const [isRegist, toggleResigt] = useState<boolean>(false);
+  const tokens: any = useAppSelector((state) => state.token.value);
+
+  const regist = () => {
+    if (tokens) {
+      const scrumData = new FormData();
+      scrumData.append("emoji", EMOJI);
+      scrumData.append("yesterday", YESTERDAY);
+      scrumData.append("today", TODAY);
+      customAxios
+        .post("/scrums", scrumData)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      alert("잘못된 접근! token이 없습니다!");
+    }
+  };
+
   return (
     <RegistStyle>
-      <RegistBtnStyle>완료</RegistBtnStyle>
+      {/* 현재 disable 상태일 떄 css가 변화하지 않음 */}
+      <RegistBtnStyle onClick={regist} disabled={true}>완료</RegistBtnStyle>
     </RegistStyle>
   );
 };
