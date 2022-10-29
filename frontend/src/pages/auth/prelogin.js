@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { useEffect } from "react";
 import styled from "styled-components";
 import symbol from "../../assets/symbol.png";
 import {RiKakaoTalkFill} from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom';
 
-export interface IAppProps {
-}
-;
+/*global Kakao*/
+
 
 const Prelogin = styled.div`
     display: grid;
@@ -71,22 +69,25 @@ const TextBox = styled.div`
 
 
 
-
 function Btns(){
     const navigate = useNavigate();
-    
-    useEffect(()=> {
-        const code = new URL(window.location.href).searchParams.get("code");
-
-    })
     const NavZoa = () => {
         navigate(`/login`)
     }
+
+    const clickKakaoLogin = () => {
+      Kakao.Auth.authorize({
+        redirectUri: "http://localhost:3000/",
+      })
+      .then(
+        
+      )
+    };
+
+
     return (
       <BtnBox>
-        <KakaoBtn
-          
-        >
+        <KakaoBtn onClick={clickKakaoLogin}>
           <IconBox>
             <RiKakaoTalkFill size="28" color="#471A00" />
           </IconBox>
@@ -107,13 +108,13 @@ function Btns(){
     );
 }
 
-export default class App extends React.Component<IAppProps> {
-  public render() {
-    return (
-      <Prelogin>
+function prelogin() {
+  return(
+    <Prelogin>
         <ImgBox>이미지넣어죠</ImgBox>
         <Btns></Btns>
       </Prelogin>
-    );
-  }
+  )
 }
+
+export default prelogin;
