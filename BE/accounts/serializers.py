@@ -47,7 +47,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
 
 class KaKaoSignupSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField()
+    image = serializers.CharField()
     kakao_id = serializers.CharField(required=True)
     class Meta:
         model = User
@@ -55,6 +55,9 @@ class KaKaoSignupSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def create(self, validated_data):
+        
+        # if validated_data['kakao_id']
+
         instance = self.Meta.model(**validated_data)
         instance.set_password(password_creator())
         image = validated_data.pop('image',None)
@@ -63,6 +66,14 @@ class KaKaoSignupSerializer(serializers.ModelSerializer):
             instance.image = image
         instance.save()
         return instance
+    def validate(self, attrs):
+        kakao_id = attrs['kakao_id']
+
+        if User.objects.filter(kakao_id=kakao_id).exists():
+            raise serializers.ValidationError('이미 가입된 kakao 회원입니다.')
+
+        return attrs
+
 
 # 로그인
 class LoginSerializer(serializers.ModelSerializer):
