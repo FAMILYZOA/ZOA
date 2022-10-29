@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import symbol from "../../assets/symbol.png";
 import {RiKakaoTalkFill} from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom';
-import { KakaoLogin } from 'react-kakao-login';
 
 /*global Kakao*/
 

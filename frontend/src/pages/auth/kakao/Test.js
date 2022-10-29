@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import axios from "axios";
 
-/*global Kakao*/
 
 
 function Test() {
@@ -53,7 +52,10 @@ function Test() {
                   url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/`,
                   data: data,
                 }).then((result) => {
-                  console.log('로그인 완료');
+                    if (result.response.status === 201) {
+                        console.log('로그인 완료');
+                        
+                    }
                 }).catch((err) => {
                     if (err.response.status === 401) {
                         setInfo({
@@ -62,6 +64,7 @@ function Test() {
                           profile:
                             res.data.kakao_account.profile.profile_image_url,
                         });
+    
                     } else{
                         console.log('예상치 못한 에러군,,,');
                     }
@@ -77,7 +80,9 @@ function Test() {
     }, [])
 
     useEffect(()=>{
-        console.log(info);
+        if (info.id !== "") {
+          navigate('/kakaoSignup', { state: info });
+        }
     },[info])
 
 

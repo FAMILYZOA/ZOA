@@ -7,8 +7,8 @@ import { FamilyManage } from './pages/family'
 // import ScrumCreate from './pages/scrum/scrumCreate';
 import FamilyCreate from './pages/family/FamilyCreate';
 import FamilyNameEdit from './pages/family/FamilyNameEdit';
-import KakaoSignup from "./pages/auth/kakao/kakaoSignUp";
 import Test from "./pages/auth/kakao/Test";
+import KakaoSignup from './pages/auth/kakao/KakaoSignup';
 import './App.css';
 
 function App() {
@@ -23,8 +23,8 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/kakao" element={<KakaoSignup />} />
           <Route path="/" element={<Test />} />
+          <Route path="/kakaoSignup" element={<KakaoSignup />} />
         </Routes>
       </BrowserRouter>
     </div>
