@@ -1,3 +1,4 @@
+from accounts.manager import password_creator
 from accounts.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -36,9 +37,6 @@ class SignupSerializer(serializers.ModelSerializer):
         phone = attrs['phone']
         password = attrs['password']
 
-        if User.objects.filter(phone=phone).exists():
-            raise serializers.ValidationError("이미 존재하는 휴대폰 번호 입니다.")
-
         if not phone.isdecimal() :
             raise serializers.ValidationError('휴대폰 번호는 숫자 형식이어야 합니다.')
         REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
@@ -48,12 +46,36 @@ class SignupSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class KaKaoSignupSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    kakao_id = serializers.CharField(required=True)
+    class Meta:
+        model = User
+        fields = ('id','phone','name','birth','kakao_id','image')
+        read_only_fields = ('id',)
+
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.set_password(password_creator())
+        image = validated_data.pop('image',None)
+
+        if image is not None :
+            instance.image = image
+        instance.save()
+        return instance
+
 # 로그인
 class LoginSerializer(serializers.ModelSerializer):
     password = password_field
     class Meta:
         model = User
         fields = ('id','phone','password')
+
+class KaKaoLoginSerializer(serializers.ModelSerializer) :
+    kakao_id = serializers.CharField(required=True)
+    class Meta :
+        model = User 
+        fields = ('kakao_id',)
 
 # 로그아웃
 class RefreshTokenSerializer(serializers.Serializer):
