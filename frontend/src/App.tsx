@@ -8,7 +8,7 @@ import { FamilyManage } from './pages/family'
 import FamilyCreate from './pages/family/FamilyCreate';
 import FamilyNameEdit from './pages/family/FamilyNameEdit';
 import Test from "./pages/auth/kakao/Test";
-import KakaoSignup from './pages/auth/kakao/KakaoSignup';
+import KakaoSignup from './pages/auth/kakao/kakaoSignUp';
 import './App.css';
 
 function App() {
