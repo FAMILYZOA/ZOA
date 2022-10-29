@@ -126,6 +126,10 @@ class ProfileAPIView(RetrieveUpdateAPIView):
 class PasswordAPIView(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
     @swagger_auto_schema(operation_summary="비밀번호 변경")
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
