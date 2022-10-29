@@ -186,6 +186,28 @@ function ReadChecklist() {
     setUnSelectedMember(tempMember);
   };
 
+  const getDetailSelect = (index: number) => {
+    if (index < unCheckedList.length) {
+      if (onDetail !== -1) {
+        // onDetail에 해당하는 모달 off
+      } 
+    } else if (index < todayCheckedList.length + unCheckedList.length) {
+      if (onDetail !== -1) {
+        // onDetail에 해당하는 모달 off
+      } 
+      //
+    } else {
+      if (onDetail !== -1) {
+        //
+      }
+    }
+    setOnDetail(index);
+  }
+
+  const detailOff = () => {
+    setOnDetail(-1);
+  }
+
   return (
     <div>
       <Header label="할 일 목록" back="true"></Header>
@@ -196,16 +218,16 @@ function ReadChecklist() {
           getSelect={getSelect}
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
-        {unCheckedList.map((item: any) => (
-          <CheckItem item={item} key={item.id} />
+        {unCheckedList.map((item: any, i: number) => (
+          <CheckItem item={item} index={i} key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
         ))}
         {!viewMore &&
-          todayCheckedList.map((item: any) => (
-            <CheckItem item={item} key={item.id} />
+          todayCheckedList.map((item: any, i: number) => (
+            <CheckItem item={item} index={i + unCheckedList.length} key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
           ))}
         {viewMore &&
-          checkedList.map((item: any) => (
-            <CheckItem item={item} key={item.id} />
+          checkedList.map((item: any, i: number) => (
+            <CheckItem item={item} index={i + todayCheckedList.length + unCheckedList.length } key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
           ))}
         {!viewMore && (
           <ViewMore onClick={() => setViewMore(true)}>+ 더보기</ViewMore>

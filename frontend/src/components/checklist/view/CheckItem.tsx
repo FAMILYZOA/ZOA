@@ -76,22 +76,38 @@ const CheckTitle = styled.div<propStyle>`
 
 type CheckItemProps = {
   item: { id: number; text: string; status: boolean; to_user_id: number };
+  index: number,
+  getDetailSelect: (index: number) => void,
+  detailOff: () => void,
+  onDetail: number,
 };
 
-function CheckItem({ item }: CheckItemProps) {
+function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckItemProps) {
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
   };
 
   const onToggle = () => {
-    setToggle(true);
+    if (toggle) {
+      detailOff();
+    } else {
+      getDetailSelect(index);
+    }
   };
 
   const offToggle = () => {
     setToggle(false);
+    detailOff();
   }
-
   const [toggle, setToggle] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (onDetail === index) {
+      setToggle(true);
+    } else {
+      setToggle(false);
+    }
+  },[onDetail])
 
   return (
     <>
