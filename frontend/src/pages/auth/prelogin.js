@@ -79,9 +79,6 @@ function Btns(){
       Kakao.Auth.authorize({
         redirectUri: "http://localhost:3000/",
       })
-      .then(
-        
-      )
     };
 
 
