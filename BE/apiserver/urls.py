@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/v1/accounts/', include('accounts.urls')),
     path('api/v1/family/', include('families.urls')),
     path('api/v1/scrums/', include('scrums.urls')),
+    path('api/v1/event/', include('event.urls')),
 
     #swagger
     path('api/v1/swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),

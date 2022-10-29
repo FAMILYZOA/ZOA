@@ -1,10 +1,19 @@
-from rest_framework import serializers
+from rest_framework.serializers import ValidationError
+from rest_framework import status
 import hmac, hashlib, base64
 import time
 import requests,json
 import random
 from django.conf import settings
 from event.models import PhoneAuthentication 
+from rest_framework import serializers
+class ValidationError403(ValidationError) :
+    status_code = status.HTTP_403_FORBIDDEN
+class ValidationError406(ValidationError) :
+    status_code = status.HTTP_406_NOT_ACCEPTABLE
+class ValidationError408(ValidationError) :
+    status_code = status.HTTP_408_REQUEST_TIMEOUT
+
 
 ServerId = settings.SMS_SECRET['SMSServiceId']
 sms_uri = f'/sms/v2/services/{ServerId}/messages'
@@ -14,7 +23,7 @@ def	make_signature(uri):
     timestamp = str(timestamp)
 
     #access key
-    access_key = settings.SMS_SECRET['SMSServiceId']	# access key id (from portal or Sub Account)
+    access_key = settings.SMS_SECRET['SMSAccessKey']	# access key id (from portal or Sub Account)
 	#secret_key
     secret_key = settings.SMS_SECRET['SMSSecretKey']
 	
@@ -52,33 +61,39 @@ def sms(phone) :
                 }
             ]
         }
-
         response = requests.post(sms_url, data=json.dumps(body),headers=headers)
-    
         if response.status_code == 202 :
-            pass
+            return Certification_Number
         if response.status_code == 400 :
-            pass
-        if response.status_code == 401 :
-            pass
-        if response.status_code == 403 :
-            pass
-        if response.status_code == 404 :
-            pass
+            raise ValidationError('올바르지 않은 휴대폰 번호 형식이거나, 입력값이 휴대폰 번호가 아닙니다.')
+        if response.status_code in (401,403,404) :
+            raise ValidationError403('서버의 인증에 문제가 있습니다...')
         if response.status_code == 429 :
-            pass
+            raise ValidationError408('요청을 너무 많이 보냈습니다. 잠시 후 시도해주세요.')
         if response.status_code == 500 :
-            pass
-        return Certification_Number
+            raise ValidationError406('SMS 인증 API 서버 에러')
+
 class PhoneAuthenticationSerializer(serializers.ModelSerializer) :
 
     class Meta :
         model = PhoneAuthentication
-        fields = ('phone',)
+        fields = ('phone','certification')
+        read_only_fields = ('certification',)
 
     def create(self, validated_data):
         phone = validated_data['phone']
         certification = sms(phone)
+        if PhoneAuthentication.objects.filter(phone=phone).exists() :
+            instance = PhoneAuthentication.objects.get(phone=phone)
+            instance.certification = certification 
+            instance.save()
+            return instance
         instance = PhoneAuthentication.objects.create(phone=phone,certification=certification)
         instance.save()
         return instance
+
+class PhoneAuthenticationAcceptSerializer(serializers.ModelSerializer) :
+
+    class Meta :
+        model = PhoneAuthentication
+        fields = ('phone','certification')
