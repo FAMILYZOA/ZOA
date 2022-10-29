@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts',
     'families',
     'scrums',
+    'event',
 
     # default
     'django.contrib.admin',
@@ -194,7 +195,12 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
-
+SMS_SECRET = {
+    'SMSServiceId' : env('SMSServiceId'),
+    'SMSAccessKey' : env('SMSAccessKey'),
+    'SMSSecretKey' : env('SMSSecretKey'),
+    'FromUser' : env('FromUser'),
+}
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
