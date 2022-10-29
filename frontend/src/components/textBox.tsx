@@ -30,6 +30,7 @@ const TextAreaStyle = styled.textarea`
   font-size: 20px;
   margin-left: 5px;
   border: none;
+  resize: none;
 `;
 const TextAreaInnerStyle = styled.textarea`
   width: 75vw;
@@ -38,6 +39,7 @@ const TextAreaInnerStyle = styled.textarea`
   font-size: 20px;
   margin-left: 5px;
   border: none;
+  resize: none;
 `;
 
 const TextBox = (props: BoxProps) => {
