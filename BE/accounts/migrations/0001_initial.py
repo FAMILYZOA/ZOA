@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=30, validators=[django.core.validators.MinLengthValidator(2)], verbose_name='이름')),
                 ('birth', models.DateField(verbose_name='생년월일')),
                 ('image', models.ImageField(blank=True, default='user/profile/profile_default1.png', null=True, upload_to='user/profile/', verbose_name='프로필 사진')),
+                ('kakao_id', models.CharField(blank=True, max_length=30, null=True, unique=True)),
             ],
             options={
                 'verbose_name': 'user',
