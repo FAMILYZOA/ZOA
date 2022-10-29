@@ -1,10 +1,6 @@
-from urllib import response
-
-from accounts.manager import password_creator
 from .models import User
 from django.contrib.auth import authenticate
 from rest_framework import status
-from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, UpdateAPIView,RetrieveUpdateAPIView,CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated

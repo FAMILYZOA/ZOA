@@ -1,10 +1,10 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
     CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView)
 from accounts.models import User
 from django.http import JsonResponse
 from families.models import Family, FamilyInteractionName
-from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUpdateSerializer, UserSerializer
+from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -12,15 +12,13 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 
-class IsFamilyorBadRequestPermission(permissions.BasePermission) :
+class IsFamilyorBadResponsePermission(permissions.BasePermission) :
     def has_permission(self,request,view) :
         return request.user.is_authenticated 
     def has_object_permission(self, request, view, obj):
         if request.user.family_id == obj :
             return True 
-
         return False
-
 
 class FamilyCreateAPIView(CreateAPIView) :
     serializer_class = FamilySerializer
@@ -43,7 +41,7 @@ class FamilyAPIView(RetrieveUpdateDestroyAPIView) :
     serializer_class = FamilyRetriveSerializer
     queryset=Family.objects.all()
     lookup_field = 'id'
-    permission_classes = [IsFamilyorBadRequestPermission]
+    permission_classes = [IsFamilyorBadResponsePermission]
     @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -97,7 +95,6 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
     serializer_class = FamilyNameSetSerializer
     queryset = Family.objects.all()
     lookup_field = 'id'
-    permission_classes = [IsFamilyorBadRequestPermission]
 
     def get_user(self) :
         lookup_url_kwarg =  self.lookup_field

@@ -10,7 +10,7 @@ class ScrumSerializer(serializers.ModelSerializer) :
     set_name = serializers.SerializerMethodField()
     class Meta: 
         model = Scrum
-        fields= ('emoji','yesterday','today','name','image','set_name')
+        fields= ('id','emoji','yesterday','today','name','image','set_name')
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
@@ -22,3 +22,8 @@ class ScrumSerializer(serializers.ModelSerializer) :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
         else :
             return False
+            
+class MainScrumSerializer(ScrumSerializer) :
+    class Meta :
+        model = Scrum
+        fields= ('id','emoji','today','name','image','set_name')
