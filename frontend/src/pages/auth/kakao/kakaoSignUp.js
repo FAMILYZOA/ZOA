@@ -163,8 +163,15 @@ function KakaoSignup() {
             data: data,
         })
         .then((res) => {
-            if (res.response.status === 201) {
+            if (res.status === 201) {
                 navigate("/");
+            }
+        }).catch((err) => {
+            if (err.response.status === 400) {
+              alert('이미 가입된 회원입니다. 로그인을 해주세요.');
+              navigate("/intro");
+            } else {
+              console.log("예상치 못한 에러군,,,");
             }
         })
     }

@@ -52,7 +52,7 @@ function Test() {
                   url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/`,
                   data: data,
                 }).then((result) => {
-                    if (result.response.status === 201) {
+                    if (result.status === 201) {
                         console.log('로그인 완료');
                         
                     }
