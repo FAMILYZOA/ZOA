@@ -4,6 +4,8 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 from .views import (
+    KaKaoLoginAPIView,
+    KaKaoSignupAPIView,
     SignupAPIView,
     LoginAPIView,
     LogoutAPIView,
@@ -29,5 +31,7 @@ urlpatterns = [
     path('profile/', ProfileAPIView.as_view(), name="profile"),
     # 비밀번호 재설정/변경
     path('password/', PasswordAPIView.as_view(), name="password"),
+    path('kakao/', KaKaoLoginAPIView.as_view(), name="kakao"),
+    path('kakao/sign/', KaKaoSignupAPIView.as_view(), name="kakao_signup"),
 
 ]

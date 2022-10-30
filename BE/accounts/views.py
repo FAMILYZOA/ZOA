@@ -1,16 +1,17 @@
-from urllib import response
 from .models import User
 from django.contrib.auth import authenticate
 from rest_framework import status
-from rest_framework import serializers
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView, UpdateAPIView
+from rest_framework.generics import GenericAPIView, UpdateAPIView,RetrieveUpdateAPIView,CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import ErrorDetail 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser
 from .serializers import (
+    KaKaoLoginSerializer,
+    KaKaoSignupSerializer,
     SignupSerializer,
     LoginSerializer,
     RefreshTokenSerializer,
@@ -18,12 +19,12 @@ from .serializers import (
     ChangePasswordSerializer,
     )
 
-
 # 회원가입
 class SignupAPIView(GenericAPIView):
     permission_classes = [ AllowAny ]
     serializer_class = SignupSerializer
     @swagger_auto_schema(
+        operation_summary="회원가입",
         responses={
         "400": openapi.Response(
         description="Signup 400 Exception",
@@ -57,6 +58,7 @@ class SignupAPIView(GenericAPIView):
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [ AllowAny ]
+    @swagger_auto_schema(operation_summary="로그인")
     def post(self, request):
         phone = request.data.get('phone',None)
         password = request.data.get('password',None)
@@ -97,7 +99,7 @@ class LoginAPIView(GenericAPIView):
 class LogoutAPIView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = RefreshTokenSerializer
-
+    @swagger_auto_schema(operation_summary="로그아웃")
     def post(self, request, *args):
         sz = self.get_serializer(data=request.data)
         sz.is_valid(raise_exception=True)
@@ -106,30 +108,83 @@ class LogoutAPIView(GenericAPIView):
 
 
 # 회원정보 수정/조회
-class ProfileAPIView(GenericAPIView):
+class ProfileAPIView(RetrieveUpdateAPIView):
     # permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
-
-    def get(self, request):
-        serializer = self.serializer_class(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self, request):
-        serializer_data = request.data
-        serializer = self.serializer_class(
-            request.user, data=serializer_data, partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+    parser_classes = (MultiPartParser,)
+    queryset = User.objects.all()
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+    @swagger_auto_schema(operation_summary="회원정보 조회")
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    @swagger_auto_schema(operation_summary="회원정보 수정")
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 # 비밀번호 재설정/변경
 class PasswordAPIView(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
     def get_object(self, queryset=None):
         obj = self.request.user
         return obj
-    
-    
+    @swagger_auto_schema(operation_summary="비밀번호 변경")
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+class KaKaoSignupAPIView(GenericAPIView):
+    permission_classes = [ AllowAny ]
+    serializer_class = KaKaoSignupSerializer
+    parser_classes = (MultiPartParser,)
+
+    @swagger_auto_schema(operation_summary="카카오 회원가입")
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class KaKaoLoginAPIView(CreateAPIView) :
+    permission_classes = [ AllowAny ]
+    serializer_class = KaKaoLoginSerializer
+
+    def get_object(self):
+        if User.objects.filter(kakao_id=self.request.data['kakao_id']) :
+            return User.objects.get(kakao_id=self.request.data['kakao_id'])
+        return None
+
+    @swagger_auto_schema(operation_summary="카카오 로그인",
+        operation_description=
+        """
+        카카오에서 인증(200)이 된 유저면 클라이언트를 임의의 페이지로 보낸다.
+         임의의 페이지에서 유저 정보를 받아온다. 
+         유저 정보 중 카카오 id를 담아서 accounts/kakao에 보낸다.
+         201 응답이 뜨면, 클라이언트를 메인페이지로 redirect
+         401 응답이 뜨면, 클라이언트를 카카오 회원가입 페이지로 redirect
+        """)
+    def post(self,request) :
+
+        user = self.get_object()
+        if not user :
+            return Response({'카카오 회원가입이 필요합니다.'},status=status.HTTP_401_UNAUTHORIZED)
+        token = TokenObtainPairSerializer.get_token(user)
+        refresh_token = str(token)
+        access_token = str(token.access_token)
+        response = Response(
+            {
+                "user": {
+                    'id' : user.id ,
+                    "phone" : user.phone
+                },
+                "token": {
+                    "access": access_token,
+                    "refresh": refresh_token,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+        return response

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from accounts.models import User
-from accounts.serializers import UserSerializer
-from families.models import Family
+from families.models import Family, FamilyInteractionName
 
 class FamilySerializer(serializers.ModelSerializer) :
 
@@ -9,8 +8,46 @@ class FamilySerializer(serializers.ModelSerializer) :
         model = Family
         fields= '__all__'
 
+
+class FamilyNameSetSerializer(serializers.ModelSerializer) :
+
+    class Meta :
+        model = FamilyInteractionName
+        fields = ('from_user','name','to_user')
+        read_only_fields = ('from_user','to_user')
+
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+
+class UserSerializer(serializers.ModelSerializer) :
+    set_name = serializers.SerializerMethodField()
+    class Meta :
+        model = User 
+        fields = ('id','name','image','set_name')
+
+    def get_set_name(self,obj) :
+        from_user = self.context.get('request').user
+        to_user = obj
+        if to_user == from_user :
+            return '나'
+        
+        if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
+            return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
+        else :
+            return False
+    
+
 class FamilyRetriveSerializer(serializers.ModelSerializer) :
     users = UserSerializer(many=True,read_only=True)
+    class Meta: 
+        model = Family 
+        fields =('id','name','created_at','users')
+
+
+class FamilyUpdateSerializer(serializers.ModelSerializer) :
+
     class Meta :
         model = Family 
-        fields=('id','name','users',)
+        fields = ('id','name')
