@@ -44,7 +44,7 @@ class ChecklistCreateAPIView(GenericAPIView):
             'from_user_id': request.user.id,
         }
         if not request.user.family_id:
-            return Response("가족에 가입되어 있지 않습니다", status=status.HTTP_400_BAD_REQUEST)
+            return Response("가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
         
         for id in member:
             family_num = User.objects.get(id=id).family_id.id
@@ -76,7 +76,7 @@ class ChecklistDetailAPIView(GenericAPIView):
             if request.user in checklist.to_users_id.all():
                 serializer.save()
                 return Response("성공적으로 변경되었습니다.", status=status.HTTP_200_OK) 
-        return Response("부여된 사용자가 아닙니다.", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Todo가 부여된 사용자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
 
 
     def delete(self, request, checklist_id):
@@ -84,4 +84,4 @@ class ChecklistDetailAPIView(GenericAPIView):
         if request.user.pk == checklist.from_user_id.id:
             checklist.delete()
             return Response("해당 Todo를 삭제하였습니다.", status=status.HTTP_200_OK)     
-        return Response("Todo 부여자가 아닙니다.", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Todo 부여자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
