@@ -178,7 +178,8 @@ class KaKaoLoginAPIView(CreateAPIView) :
             {
                 "user": {
                     'id' : user.id ,
-                    "phone" : user.phone
+                    "phone" : user.phone,
+                    'kakao_id' : user.kakao_id
                 },
                 "token": {
                     "access": access_token,
