@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Header from "../../../components/header";
-import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 const Container = styled.div`
-  margin: 20% 5%;
+  margin: 8px 0 8px;
+  height: 88px;
 `;
-
-const Info = styled.p`
-  margin: 64px 0;
-  font-size: 16px;
-`;
-
-const InputBox = styled.div`
-  margin: 32px 0;
+const PwContainer = styled.div`
+  margin: 16px 0;
+  height: 120px;
 `;
 const Title = styled.p`
   font-size: 16px;
-  margin: 0 0 8px 8px;
+  margin: 0 0 4px 8px;
 `;
 const Warning = styled.p`
-    font-size: 12px;
-    margin: 4px 0 8px 8px;
-    color: red;
-    display: ${props => props.active == false ? 'none': 'block'}
-`
+  font-size: 12px;
+  margin: 4px 0 8px 8px;
+  color: red;
+  display: ${(props) => (props.active == false ? "none" : "block")};
+`;
 const Confirm = styled.p`
   font-size: 12px;
   margin: 4px 0 8px 8px;
   color: #3db9a4;
   display: ${(props) => (props.active == false ? "none" : "block")};
 `;
-const PhoneInputBox = styled.div`
+const PwInfo = styled.p`
+  font-size: 12px;
+  margin: 4px 0 0px 8px;
+  color: #707070;
+  display: ${(props) => (props.active == false ? "none" : "block")};
+`;
+const InputBox = styled.div`
   width: 90%;
   height: 44px;
   border-radius: 20px;
@@ -44,7 +45,7 @@ const PhoneInputBox = styled.div`
   align-items: center;
 `;
 
-const PhoneInput = styled.input`
+const Input = styled.input`
   width: 60%;
   height: 40px;
   border: none;
@@ -53,21 +54,23 @@ const PhoneInput = styled.input`
   outline: none;
 `;
 const CheckText = styled.p`
-    font-size: 14px;
-    font-weight: bold;
-    margin: 0;
-`
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+`;
 
 const AgeSelectors = styled.div`
   margin: 8px 0;
   width: 100%;
+  display: flex;
+  justify-content: space-around;
 `;
 
 const AgeSelector = styled.select`
-  width: 30%;
+  width: 32.5%;
   height: 44px;
 
-  margin-left: 2%;
+  /* margin-left: 2%; */
 
   font-family: "Inter";
   font-style: normal;
@@ -83,7 +86,7 @@ const AgeSelector = styled.select`
   text-align: center;
   color: #707070;
 
-  background: #ffffff;
+  background: rgba(255,255,255,0.2);
   border: 1px solid #ff787f;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border-radius: 20px;
@@ -105,188 +108,156 @@ const Btn = styled.button`
   font-size: 20px;
   font-weight: bold;
   color: white;
+  opacity: ${(props) => (props.active ? "1" : "0.5")};
 `;
 
+function PageTwo({twoInfo}) {
+    const [pw, setPw] = useState("");
+    const [confirmPw, setConfirmPw] = useState("");
+    const [year, setYear] = useState("");
+    const [month, setMonth] = useState("");
+    const [day, setDay] = useState("");
+
+    const [pwWarn, setPwWarn] = useState(false);
+    const [confirmPwWarn, setconrirmPwWarn] = useState(false);
+    const [birthWarn, setBirthWarn] = useState(false);
+
+    const [pwConfirm, setPwConfirm] = useState(false);
+    const [pwCheck, setPwCheck] = useState(false);
+
+    const [btnActive, setBtnActive] = useState(false);
 
 
-
-function KakaoSignup() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const preinfo = location.state;
-  const [info, setInfo] = useState({
-    kakao_id: String(preinfo.id),
-    name: preinfo.name,
-    image: preinfo.profile,
-    phone: '',
-    birth: '',
-  });
-
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
-  const [phone, setPhone] = useState('');
-  
-
-  const onPhoneChange = (e) => {
-        setPhone(e.currentTarget.value
-        .replace(/[^0-9]/g, "")
-        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
-        .replace(/(\-{1,2})$/g, "")
-    )}
-    useEffect(()=> {
-        if(phone.length === 13){
-            setInfo((pre)=>{return{
-                ...pre, phone:phone
-            }})
-        } else{
-            setInfo((pre)=> {
-                return{...pre, phone:''}
-            })
-        }
-    },[phone])
-    const onCertChange = (e) => {
-        setNum(e.currentTarget.value);
-    }
-    
-    const selectYear = (e) => {
-        setYear(e.target.value);
-    }
-    const selectMonth = (e) => {
-        setMonth(e.target.value);
-    }
-    const selectDay = (e) => {
-        setDay(e.target.value);
-    }
-    const [pwarn, setPwarn] = useState(false);
-  const [bwarn, setBwarn] = useState(false);
-  const [nwarn, setNwarn] = useState(false);
-  const [nconfirm, setNconfirm] = useState(false);
-  const [cconfirm, setCconfirm] = useState(false);
-  // 유저가 입력한 인증번호
-  const [certifiNum, setNum] = useState("");
-  // 인증 성공 여부
-  const [cerCheck, setCheck] = useState(false);
-  
-
-  const pushNum = (phone) => {
-    setNconfirm(true);
-    const data = new FormData();
-    data.append("phone", phone.replaceAll("-", ""));
-    axios({
-      method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/event/`,
-      data: data,
-    })
-  }
-  
-  const clickCheck = (certifiNum) => {
-    const data = new FormData();
-    data.append("phone", phone.replaceAll("-", ""));
-    data.append("certification", certifiNum);
-    axios({
-      method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/event/check/`,
-      data: data,
-    }).then((res) => {
-        if (res.status === 200) {
-            setNwarn(false);
-            setCconfirm(true);
-            setCheck(true);
-        } 
-    }).catch((err) => {
-        if (err.response.status === 401) {
-            setCconfirm(false);
-            setNwarn(true);
-        }else if (err.response.status === 404) {
-            setCconfirm(false);
-            setNwarn(true);
-        } else if (err.response.status === 429) {
-          console.log("짧은 시간안에 너무 많은 요청을 보냈습니다.");
-        } else if (err.response.status === 500) {
-          console.log("server error");
-        }
-    })
-  }
-
-
-  const push = () => {
-    if(cerCheck == false) {
-        setNwarn(true);
-    } else {
-        if (info.phone === '') {
-            setNconfirm(false);
-            setPwarn(true);
-        } else if(year === '' || month === '' || day===''){
-            setPwarn(false);
-            setBwarn(true);
+    const onChangePw = (e) => {
+      setPw(e.currentTarget.value);
+    };
+    useEffect(() => {
+      var regPw =
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$/;
+      if (pw === "") {
+        setPwConfirm(false);
+        setPwWarn(false);
+      } else {
+        if (!regPw.test(pw)) {
+          setPwConfirm(false);
+          setPwWarn(true);
         } else {
-            const birth = String(year) + '-' + String(month) + '-' + String(day);
-            setInfo((pre) => {return{...pre, birth: birth}})
-            const data = new FormData();
-            data.append("kakao_id", info.kakao_id);
-            data.append("name", info.name);
-            data.append("image", info.image);
-            data.append("phone", info.phone.replaceAll("-", ""));
-            data.append("birth", info.birth);
-            axios({
-                method: "POST",
-                url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
-                data: data,
-            })
-            .then((res) => {
-                if (res.status === 201) {
-                    navigate("/");
-                }
-            }).catch((err) => {
-                if (err.response.status === 400) {
-                    console.log(err)
-                    alert('이미 가입된 회원입니다. 로그인을 해주세요.');
-                    navigate("/intro");
-                } else {
-                console.log("예상치 못한 에러군,,,");
-                }
-            })
+          setPwWarn(false);
+          setPwConfirm(true);
         }
+      }
+    }, [pw]);
+    const onChangeConfirmPw = (e) => {
+      setConfirmPw(e.currentTarget.value);
+    };
+    useEffect(() => {
+      if (confirmPw === "") {
+        setPwCheck(false);
+        setconrirmPwWarn(false);
+      } else {
+        if (confirmPw !== pw) {
+          setPwCheck(false);
+          setconrirmPwWarn(true);
+        } else {
+          setconrirmPwWarn(false);
+          setPwCheck(true);
+        }
+      }
+    }, [confirmPw]);
 
-    }
-  }
-  return (
-    <div>
-      <Header label={"회원가입"} back="false"></Header>
-      <Container>
-        <Info>추가 정보를 입력해주세요🙂</Info>
-        <InputBox>
-          <Title>휴대폰 번호</Title>
-          <PhoneInputBox>
-            <PhoneInput
-                type="tel"
-                placeholder="휴대폰 11자리"
-                maxLength="13"
-                onChange={onPhoneChange}
-                value={phone}
-            ></PhoneInput>
-            <CheckText onClick={()=> pushNum(phone)}>인증번호 받기</CheckText>
-          </PhoneInputBox>
-          <Warning active={pwarn}>휴대폰 번호를 확인해주세요.</Warning>
-          <Confirm active={nconfirm}>인증번호를 전송하였습니다.</Confirm>
-        </InputBox>
-        <InputBox>
-          <Title>인증번호</Title>
-          <PhoneInputBox>
-            <PhoneInput
-                type="number"
-                placeholder="인증 번호 입력"
-                maxLength="6"
-                onChange={onCertChange}
-                value={certifiNum}
-            ></PhoneInput>
-            <CheckText onClick={() => clickCheck(certifiNum)}>확인</CheckText>
-          </PhoneInputBox>
-          <Warning active={nwarn}>인증번호가 잘못되었습니다.</Warning>
-          <Confirm active={cconfirm}>인증번호가 확인되었습니다.</Confirm>
-        </InputBox>
-        <InputBox>
+    useEffect(() => {
+      if (
+        pwWarn === false &&
+        pwConfirm === true &&
+        pwCheck === true &&
+        confirmPwWarn === false
+      ) {
+        setBtnActive(true);
+      } else {
+        setBtnActive(false);
+      }
+    }, [
+      pwWarn,
+      pwConfirm,
+      pwCheck,
+      confirmPwWarn,
+    ]);
+
+    const selectYear = (e) => {
+      setYear(e.target.value);
+    };
+    const selectMonth = (e) => {
+      setMonth(e.target.value);
+    };
+    const selectDay = (e) => {
+      setDay(e.target.value);
+    };
+
+    useEffect(()=> {
+        if (year === "" && month === "" && day === "") {
+            setBirthWarn(false);
+        } else {
+            if (year === "" || month === "" || day==="") {
+                setBirthWarn(true);
+            } else {
+                setBirthWarn(false);
+            }
+        }
+    }, [year, month, day])
+
+
+    const nextBtn = () => {
+      if (
+        pwWarn === false &&
+        pwConfirm === true &&
+        pwCheck === true &&
+        confirmPwWarn === false
+      ) {
+         const birth = String(year) + '-' + String(month) + '-' + String(day);
+        twoInfo({
+        password: pw,
+        birth: birth,
+        });
+      }
+    };
+
+
+    return (
+      <div>
+        <PwContainer>
+          <Title>비밀번호</Title>
+          <InputBox>
+            <Input
+              type={"password"}
+              placeholder="비밀번호 입력"
+              onChange={onChangePw}
+              value={pw}
+            ></Input>
+          </InputBox>
+          <PwInfo>
+            비밀번호는 영문 대소문자, 숫자, 특수기호를 모두 포함아혀 8~20자로
+            입력해주세요.
+          </PwInfo>
+          <Warning active={pwWarn}>비밀번호를 확인해주세요.</Warning>
+          <Confirm active={pwConfirm}>안전한 비밀번호입니다.</Confirm>
+        </PwContainer>
+
+        <Container>
+          <Title>비밀번호 확인</Title>
+          <InputBox>
+            <Input
+              type={"password"}
+              placeholder="비밀번호 확인"
+              onChange={onChangeConfirmPw}
+              value={confirmPw}
+            ></Input>
+            <CheckText></CheckText>
+          </InputBox>
+          <Warning active={confirmPwWarn}>비밀번호가 다릅니다.</Warning>
+          <Confirm active={pwCheck}>비밀번호가 확인되었습니다.</Confirm>
+        </Container>
+
+        <Container>
           <Title>생년월일</Title>
           <AgeSelectors>
             <AgeSelector onChange={selectYear}>
@@ -443,14 +414,16 @@ function KakaoSignup() {
               <option value="31">31일</option>
             </AgeSelector>
           </AgeSelectors>
-          <Warning active={bwarn}>생년월일을 확인해주세요.</Warning>
-        </InputBox>
+          <Warning active={birthWarn}>생년월일을 모두 선택해주세요.</Warning>
+        </Container>
+
         <BtnBox>
-          <Btn onClick={push}>회원가입</Btn>
+          <Btn onClick={nextBtn} active={btnActive}>
+            회원가입
+          </Btn>
         </BtnBox>
-      </Container>
-    </div>
-  );
+      </div>
+    );
 }
 
-export default KakaoSignup;
+export default PageTwo;
