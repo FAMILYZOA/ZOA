@@ -5,13 +5,13 @@ from checklist.models import Checklist
 class  ChecklistSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Checklist
-        fields= ('id', 'text', 'status', 'to_user_id',)
+        fields= ('id', 'text', 'status', 'created_at', 'to_users_id')
 
 
 class ChecklistCreateSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Checklist
-        fields= ('text', 'to_user_id')
+        fields= ('text', 'to_users_id')
 
 
 class  ChecklistDetailSerializer(serializers.ModelSerializer):
