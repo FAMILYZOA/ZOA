@@ -9,7 +9,6 @@ class Checklist(models.Model) :
                 default='checklist/photo/photo_default1.png',
                 null=True, blank=True, verbose_name='체크리스트 사진')
     created_at = models.DateTimeField(auto_now_add=True)
-    # users = models.ManyToManyField(User, through='UserChecklist', related_name='checklists')
     from_user_id = models.ForeignKey(User, related_name='fromUser', on_delete=models.CASCADE, db_column='from_user_id')
     to_users_id = models.ManyToManyField(User, related_name='checklists', db_column='to_user_id')
 
