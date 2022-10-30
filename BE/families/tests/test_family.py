@@ -10,6 +10,9 @@ class TestCaseSetUp(APITestCase) :
         self.client.post(reverse("accounts:signup"),{"phone":"01046509260","name":"김조아","password":"Password123!","birth":"1999-11-11"})
         response=self.client.post(reverse('accounts:login'),{"phone":"01046509260","password":"Password123!"})
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['token']['access']}")
+    def create_family(self) :
+        self.authenticate()
+        self.client.post(reverse('families:family'),{"name":'family'})
 
 class FamliyCreateTestCase(TestCaseSetUp) :
 
