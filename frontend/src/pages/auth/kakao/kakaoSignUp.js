@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Container = styled.div`
-  margin: 30% 5%;
+  margin: 20% 5%;
 `;
 
 const Info = styled.p`
@@ -22,22 +22,41 @@ const Title = styled.p`
 `;
 const Warning = styled.p`
     font-size: 14px;
-    margin: 0 0 8px 8px;
+    margin: 4px 0 8px 8px;
     color: red;
     display: ${props => props.active == false ? 'none': 'block'}
-
 `
-
-const PhoneInput = styled.input`
+const Confirm = styled.p`
+  font-size: 14px;
+  margin: 4px 0 8px 8px;
+  color: #3db9a4;
+  display: ${(props) => (props.active == false ? "none" : "block")};
+`;
+const PhoneInputBox = styled.div`
   width: 90%;
   height: 44px;
-  border: solid 1px #ff787f;
   border-radius: 20px;
-  font-size: 20px;
+  border: solid 1px #ff787f;
   padding: 0 5%;
-  outline: none;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
+
+const PhoneInput = styled.input`
+  width: 60%;
+  height: 40px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  outline: none;
+`;
+const CheckText = styled.p`
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+`
 
 const AgeSelectors = styled.div`
   margin: 8px 0;
@@ -48,12 +67,12 @@ const AgeSelector = styled.select`
   width: 30%;
   height: 44px;
 
-  margin-right: 3%;
+  margin-left: 2%;
 
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 100%;
   /* or 20px */
 
@@ -102,9 +121,7 @@ function KakaoSignup() {
     phone: '',
     birth: '',
   });
-  useEffect(()=> {
-    console.log(info);
-  }, [info])
+
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
@@ -128,52 +145,110 @@ function KakaoSignup() {
             })
         }
     },[phone])
-  
-  const selectYear = (e) => {
-    setYear(e.target.value);
-  }
-  const selectMonth = (e) => {
-    setMonth(e.target.value);
-  }
-  const selectDay = (e) => {
-    setDay(e.target.value);
-  }
-  const [pwarn, setPwarn] = useState(false);
+    const onCertChange = (e) => {
+        setNum(e.currentTarget.value);
+    }
+    
+    const selectYear = (e) => {
+        setYear(e.target.value);
+    }
+    const selectMonth = (e) => {
+        setMonth(e.target.value);
+    }
+    const selectDay = (e) => {
+        setDay(e.target.value);
+    }
+    const [pwarn, setPwarn] = useState(false);
   const [bwarn, setBwarn] = useState(false);
+  const [nwarn, setNwarn] = useState(false);
+  const [nconfirm, setNconfirm] = useState(false);
+  const [cconfirm, setCconfirm] = useState(false);
+  // 유저가 입력한 인증번호
+  const [certifiNum, setNum] = useState("");
+  // 인증 성공 여부
+  const [cerCheck, setCheck] = useState(false);
+  
+
+  const pushNum = (phone) => {
+    setNconfirm(true);
+    const data = new FormData();
+    data.append("phone", phone.replaceAll("-", ""));
+    axios({
+      method: "POST",
+      url: `https://k7b103.p.ssafy.io/api/v1/event/`,
+      data: data,
+    })
+  }
+  
+  const clickCheck = (certifiNum) => {
+    const data = new FormData();
+    data.append("phone", phone.replaceAll("-", ""));
+    data.append("certification", certifiNum);
+    axios({
+      method: "POST",
+      url: `https://k7b103.p.ssafy.io/api/v1/event/check/`,
+      data: data,
+    }).then((res) => {
+        if (res.status === 200) {
+            setNwarn(false);
+            setCconfirm(true);
+            setCheck(true);
+        } 
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            setCconfirm(false);
+            setNwarn(true);
+        }else if (err.response.status === 404) {
+            setCconfirm(false);
+            setNwarn(true);
+        } else if (err.response.status === 429) {
+          console.log("짧은 시간안에 너무 많은 요청을 보냈습니다.");
+        } else if (err.response.status === 500) {
+          console.log("server error");
+        }
+    })
+  }
 
 
   const push = () => {
-    if (info.phone === '') {
-        setPwarn(true);
-    } else if(year === '' || month === '' || day===''){
-        setPwarn(false);
-        setBwarn(true);
+    if(cerCheck == false) {
+        setNwarn(true);
     } else {
-        const birth = String(year) + '-' + String(month) + '-' + String(day);
-        setInfo((pre) => {return{...pre, birth: birth}})
-        const data = new FormData();
-        data.append("kakao_id", info.kakao_id);
-        data.append("name", info.name);
-        data.append("image", info.image);
-        data.append("phone", info.phone.replaceAll("-", ""));
-        data.append("birth", info.birth);
-        axios({
-            method: "POST",
-            url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
-            data: data,
-        })
-        .then((res) => {
-            if (res.status === 201) {
-                navigate("/");
-            }
-        }).catch((err) => {
-            if (err.response.status === 400) {
-              alert('이미 가입된 회원입니다. 로그인을 해주세요.');
-              navigate("/intro");
-            } else {
-              console.log("예상치 못한 에러군,,,");
-            }
-        })
+        if (info.phone === '') {
+            setNconfirm(false);
+            setPwarn(true);
+        } else if(year === '' || month === '' || day===''){
+            setPwarn(false);
+            setBwarn(true);
+        } else {
+            const birth = String(year) + '-' + String(month) + '-' + String(day);
+            setInfo((pre) => {return{...pre, birth: birth}})
+            const data = new FormData();
+            data.append("kakao_id", info.kakao_id);
+            data.append("name", info.name);
+            data.append("image", info.image);
+            data.append("phone", info.phone.replaceAll("-", ""));
+            data.append("birth", info.birth);
+            axios({
+                method: "POST",
+                url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
+                data: data,
+            })
+            .then((res) => {
+                if (res.status === 201) {
+                    navigate("/");
+                }
+            }).catch((err) => {
+                if (err.response.status === 400) {
+                    console.log(err)
+                    alert('이미 가입된 회원입니다. 로그인을 해주세요.');
+                    navigate("/intro");
+                } else {
+                console.log("예상치 못한 에러군,,,");
+                }
+            })
+        }
+
     }
   }
   return (
@@ -183,14 +258,33 @@ function KakaoSignup() {
         <Info>추가 정보를 입력해주세요🙂</Info>
         <InputBox>
           <Title>휴대폰 번호</Title>
-          <PhoneInput
-            type="tel"
-            placeholder="010-0000-0000"
-            maxLength="13"
-            onChange={onPhoneChange}
-            value={phone}
-          ></PhoneInput>
+          <PhoneInputBox>
+            <PhoneInput
+                type="tel"
+                placeholder="휴대폰 11자리"
+                maxLength="13"
+                onChange={onPhoneChange}
+                value={phone}
+            ></PhoneInput>
+            <CheckText onClick={()=> pushNum(phone)}>인증번호 받기</CheckText>
+          </PhoneInputBox>
           <Warning active={pwarn}>휴대폰 번호를 확인해주세요.</Warning>
+          <Confirm active={nconfirm}>인증번호를 전송하였습니다.</Confirm>
+        </InputBox>
+        <InputBox>
+          <Title>인증번호</Title>
+          <PhoneInputBox>
+            <PhoneInput
+                type="number"
+                placeholder="인증 번호 입력"
+                maxLength="6"
+                onChange={onCertChange}
+                value={certifiNum}
+            ></PhoneInput>
+            <CheckText onClick={() => clickCheck(certifiNum)}>확인</CheckText>
+          </PhoneInputBox>
+          <Warning active={nwarn}>인증번호가 잘못되었습니다.</Warning>
+          <Confirm active={cconfirm}>인증번호가 확인되었습니다.</Confirm>
         </InputBox>
         <InputBox>
           <Title>생년월일</Title>
@@ -352,8 +446,8 @@ function KakaoSignup() {
           <Warning active={bwarn}>생년월일을 확인해주세요.</Warning>
         </InputBox>
         <BtnBox>
-            <Btn onClick={push}>회원가입</Btn>
-      </BtnBox>
+          <Btn onClick={push}>회원가입</Btn>
+        </BtnBox>
       </Container>
     </div>
   );
