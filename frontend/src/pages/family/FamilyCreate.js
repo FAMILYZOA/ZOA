@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import { customAxios } from "../../api/customAxios";
 import axios from "axios";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { access } from "fs";
 
 const FamilyName = styled.div`
   display: flex;
@@ -80,12 +82,14 @@ const FamilyCreate = () => {
   //     });
   // }
 
+  const accessToken = useAppSelector((state) => state.token.access);
+
   const onPostFam = () => {
     axios({
       method: "post",
       url: 'https://k7b103.p.ssafy.io/api/v1/family/',
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3MTk2MjAxLCJpYXQiOjE2NjcxMDk4MDEsImp0aSI6ImZhYmY4OTA4YmI0NjRkZGY4YWMxZTFmYTM2ZjAwYzg4IiwidXNlcl9pZCI6MjJ9.10bBY_OlYzH9K4Ct35oelsEBCZrmlnawsiBsqDVNFNU'
+        Authorization: accessToken,
       },
       data: {
         name: familyName
