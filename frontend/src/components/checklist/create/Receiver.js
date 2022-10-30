@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import jjangu from "../../../assets/jjangu.png";
 import bong from "../../../assets/bong.png";
@@ -58,44 +58,48 @@ const UserBox = styled.div`
 `
 
 
-function Receiver () {
-    const [receiver, setReceiver] = useState([]);
-    console.log(receiver);
-    const active = (user) => {
-        console.log('user', user);
-        if (receiver.includes(user)) {
-          let newReceiver = [...receiver];
-          newReceiver.splice(receiver.indexOf(user), 1);
-          setReceiver([...newReceiver]);
-        } else {
-          setReceiver([user, ...receiver]);
-        }
+function Receiver({receivers}) {
+  const [receiver, setReceiver] = useState([]);
+  console.log(receiver);
+  const active = (user) => {
+    console.log("user", user);
+    if (receiver.includes(user)) {
+      let newReceiver = [...receiver];
+      newReceiver.splice(receiver.indexOf(user), 1);
+      setReceiver([...newReceiver]);
+    } else {
+      setReceiver([user, ...receiver]);
     }
+  };
 
-    const user1 = "user1";
-    const user2 = "user2"; 
-    const user3 = "user3"; 
-    return (
-      <Container>
-        <MainText>
-          받는 사람<span style={{ color: "red" }}>*</span>
-        </MainText>
-        <UserContainer>
-          <UserBox onClick={() => active(user1)} rc={receiver} user={user1}>
-            <img src={jjangu} alt="user" />
-            <p>짱구</p>
-          </UserBox>
-          <UserBox onClick={() => active(user2)} rc={receiver} user={user2}>
-            <img src={bong} alt="user" />
-            <p>봉</p>
-          </UserBox>
-          <UserBox onClick={() => active(user3)} rc={receiver} user={user3}>
-            <img src={userDefault} alt="user" />
-            <p>아빠</p>
-          </UserBox>
-        </UserContainer>
-      </Container>
-    );
+  useEffect(() => {
+    receivers({ receiver: receiver });
+  }, [receiver]);
+
+  const user1 = "user1";
+  const user2 = "user2";
+  const user3 = "user3";
+  return (
+    <Container>
+      <MainText>
+        받는 사람<span style={{ color: "red" }}>*</span>
+      </MainText>
+      <UserContainer>
+        <UserBox onClick={() => active(user1)} rc={receiver} user={user1}>
+          <img src={jjangu} alt="user" />
+          <p>짱구</p>
+        </UserBox>
+        <UserBox onClick={() => active(user2)} rc={receiver} user={user2}>
+          <img src={bong} alt="user" />
+          <p>봉</p>
+        </UserBox>
+        <UserBox onClick={() => active(user3)} rc={receiver} user={user3}>
+          <img src={userDefault} alt="user" />
+          <p>아빠</p>
+        </UserBox>
+      </UserContainer>
+    </Container>
+  );
 }
 
 export default Receiver;
