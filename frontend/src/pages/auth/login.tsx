@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setToken } from "../../features/token/tokenSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import store from "../../app/store";
+import { saveTokens } from "../../features/token/localstorage";
 
 const LoginStyle = styled.div`
   display: flex;
@@ -258,7 +260,9 @@ const Form = () => {
       alert("로그인이 실패하였습니다.")
     });
 
-    
+    store.subscribe(() =>{
+      saveTokens(store.getState());
+    })
     
   };
 
