@@ -3,8 +3,9 @@ import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
 import Signup from "./pages/auth/signup";
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { FamilyManage } from './pages/family'
-import ScrumCreate from './pages/scrum/scrumCreate';
+import { FamilyManage } from './pages/family';
+import { Settings } from './pages/settings';
+// import ScrumCreate from './pages/scrum/scrumCreate';
 import FamilyCreate from './pages/family/FamilyCreate';
 import FamilyNameEdit from './pages/family/FamilyNameEdit';
 import Test from "./pages/auth/kakao/Test";
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/resister" element={<Resister />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </div>
