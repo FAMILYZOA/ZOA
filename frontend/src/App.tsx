@@ -10,6 +10,7 @@ import FamilyNameEdit from './pages/family/FamilyNameEdit';
 import Test from "./pages/auth/kakao/Test";
 import KakaoSignup from './pages/auth/kakao/kakaoSignUp';
 import './App.css';
+import Resister from './pages/auth/Resister';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
+          <Route path="/resister" element={<Resister />} />
         </Routes>
       </BrowserRouter>
     </div>
