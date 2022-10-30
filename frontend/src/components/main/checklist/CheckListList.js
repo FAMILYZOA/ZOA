@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import CheckListItem from "./CheckListItem";
+import CheckListDetail from "./CheckListDetail";
 import { FaPlusCircle } from "react-icons/fa";
-import { AiFillPlusCircle } from "react-icons/ai"
 
 const CheckListNameWrapper = styled.div`
   color: #ff787f;
@@ -17,31 +18,32 @@ const CheckListPlusButton = styled.button`
   -webkit-text-fill-color: transparent; */
 `
 
+
 const CheckListWrapper = styled.div`
   border: 4px solid;
   border-radius: 12px;
   width: 80vw;
 `
 
-const CheckList = () => {
-  
+
+const CheckListList = () => {
+
   return(
     <>
-      <div>
         <div style={{display: "flex"}}>
           <CheckListNameWrapper> 체크리스트</CheckListNameWrapper>
           <CheckListPlusButton>
             <FaPlusCircle size="24"/>
           </CheckListPlusButton>
-      </div>
-      <div>
+        </div>
         <CheckListWrapper>
-          리스트 쫘라락
+        <CheckListItem/>
+        <CheckListItem/>
+        <CheckListItem/>
+        <CheckListDetail/>
         </CheckListWrapper>
-      </div>
-      </div>
     </>
   )
 };
 
-export default CheckList;
+export default CheckListList;
