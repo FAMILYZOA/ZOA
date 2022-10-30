@@ -5,10 +5,13 @@ import Receiver from "../../components/checklist/create/Receiver";
 import TodoInput from "../../components/checklist/create/TodoInput";
 import AddPhoto from "../../components/checklist/create/AddPhoto";
 import Button from "../../components/Button";
+import axios from "axios";
+import { useNavigate } from 'react-router';
 
 
 
 function CreateChecklist(){
+    const navigate = useNavigate();
     
     const [info, setInfo] = useState({
         to_users_id: [],
@@ -19,7 +22,7 @@ function CreateChecklist(){
     const receivers = (data) => {
         setInfo((pre)=> {return {...pre, to_users_id:data.receiver}});
     }
-    const todo = (data) => {
+    const todos = (data) => {
         setInfo((pre) => {
           return { ...pre, text: data.todo };
         });
@@ -29,10 +32,26 @@ function CreateChecklist(){
           return { ...pre, photo: data.photo };
         });
     }
-    
-    
+
+
     const event = () => {
-        console.log('등록');
+        const data = new FormData();
+        data.append("text", info.text);
+        data.append("to_users_id", info.to_users_id);
+
+        axios({
+          method: "POST",
+          url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          data: {
+            "text" : info.text,
+            "to_users_id" :info.to_users_id
+          }
+        }).then((res)=> {
+            navigate("/checklist")
+        })
     }
     
 
@@ -40,11 +59,12 @@ function CreateChecklist(){
         <div>
             <Header label="할 일 등록" back="true"></Header>
             <Receiver receivers = {receivers}></Receiver>
-            <TodoInput todo= {todo}></TodoInput>
+            <TodoInput todos= {todos}></TodoInput>
             <AddPhoto getPhoto={getPhoto}></AddPhoto> 
             <Button label='등록하기' click={event} active={true} ></Button>
             
         </div>
     )
 }
+
 export default CreateChecklist;
