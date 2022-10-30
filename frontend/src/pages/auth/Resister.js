@@ -44,7 +44,7 @@ function Resister() {
                 })
                 .then((res) => {
                     if(res.status === 201) {
-                        navigate('/');
+                        navigate('/login');
                     }
                 })
                 .catch((err) => {
