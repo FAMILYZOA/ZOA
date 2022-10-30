@@ -295,7 +295,7 @@ const Form = () => {
       </InhouseLoginBtnStyle>
       <KakaoLoginBtnStyle>카카오 계정으로 시작하기</KakaoLoginBtnStyle>
       <SignupOuterStyle>
-        <SignupStyle to={"/signup"}>sign up</SignupStyle>
+        <SignupStyle to={"/register"}>sign up</SignupStyle>
       </SignupOuterStyle>
     </FormStyle>
   );

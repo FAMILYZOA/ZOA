@@ -10,6 +10,9 @@ import FamilyNameEdit from './pages/family/FamilyNameEdit';
 import Test from "./pages/auth/kakao/Test";
 import KakaoSignup from './pages/auth/kakao/kakaoSignUp';
 import './App.css';
+import Resister from './pages/auth/Resister';
+
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -25,7 +28,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
+          <Route path="/register" element={<Resister />} />
         </Routes>
+        <Navbar></Navbar>
       </BrowserRouter>
     </div>
   );
