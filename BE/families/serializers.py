@@ -3,11 +3,9 @@ from accounts.models import User
 from families.models import Family, FamilyInteractionName
 
 class FamilySerializer(serializers.ModelSerializer) :
-
     class Meta: 
         model = Family
         fields= '__all__'
-
 
 class FamilyNameSetSerializer(serializers.ModelSerializer) :
 

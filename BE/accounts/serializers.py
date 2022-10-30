@@ -81,6 +81,7 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','phone','password','kakao_id')
+        read_only_fields = ('kakao_id',)
 
 class KaKaoLoginSerializer(serializers.ModelSerializer) :
     kakao_id = serializers.CharField(required=True)

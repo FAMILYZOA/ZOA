@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
-    CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView)
+    CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView,GenericAPIView)
+from rest_framework import mixins
 from accounts.models import User
 from django.http import JsonResponse
 from families.models import Family, FamilyInteractionName
@@ -20,11 +21,12 @@ class IsFamilyorBadResponsePermission(permissions.BasePermission) :
             return True 
         return False
 
-class FamilyCreateAPIView(CreateAPIView) :
+class FamilyCreateAPIView(GenericAPIView,mixins.CreateModelMixin) :
     serializer_class = FamilySerializer
     queryset = Family.objects.all()
-
     @swagger_auto_schema(operation_summary="가족 생성")
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
     def create(self, request, *args, **kwargs):
         if request.user.family_id :
             return Response({'user님은 이미 가족에 가입되어 있습니다.'},status=status.HTTP_400_BAD_REQUEST)
