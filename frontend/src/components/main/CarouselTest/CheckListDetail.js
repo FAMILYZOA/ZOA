@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { FaPlusSquare } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 const ButtonWrapper = styled.div`
   color: #ff787f;
@@ -9,8 +8,6 @@ const ButtonWrapper = styled.div`
 `
 
 const CheckListDetail = () => {
-
-    const navigate = useNavigate();
 
   return(
     <>
