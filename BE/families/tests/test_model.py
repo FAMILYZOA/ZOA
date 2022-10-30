@@ -1,12 +1,8 @@
-from multiprocessing.sharedctypes import Value
 from rest_framework.test import APITestCase
-
 from families.models import Family,FamilyInteractionName
 from accounts.models import User
-from django.urls import reverse
-from rest_framework import status
 from django.db import DataError
-# from django.db.utils import DataError
+
 #모델 생성 테스트 
 class FamilyCreateTestModel(APITestCase) :
     
@@ -17,7 +13,7 @@ class FamilyCreateTestModel(APITestCase) :
         self.assertIsInstance(family,Family)
         self.assertEqual(family.name,'Family')
         self.assertTrue(user in family.users.all(),True)
-
+    #가족 모델 생성 시 이름 제약을 위반 
     def test_family_invalid_character_length_create(self) :
         family = Family(name='FamilyFamilyFamily')
         with self.assertRaises(Exception) as raised :
@@ -25,6 +21,7 @@ class FamilyCreateTestModel(APITestCase) :
         self.assertEqual(DataError,type(raised.exception))
 
 class FamilyNameCreateTestModel(APITestCase) :
+    #가족 간 상호 이름 설정 
     def test_family_interaction_name_success_create(self) :
         user1 = User.objects.create_user('01000000000','password123!@#','김조아',birth='1997-11-19')
         user2= User.objects.create_user('01000000001','password123!@#','이조아',birth='1997-11-19')
