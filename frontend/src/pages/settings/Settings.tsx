@@ -2,6 +2,8 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { TbLogout } from "react-icons/tb"
+import FontModal from "../../components/setting/FontModal";
+import LogoutModal from "../../components/setting/LogoutModal";
 
 const SettingsHeader = styled.div`
   display: flex;
@@ -101,6 +103,8 @@ const Settings = () => {
   }) // 유저 프로필 정보
   const [version, setVersion] = useState<string>("1.0.0")
   const [fontSize, setFontSize] = useState<number>(2)
+  const [isFontModal, toggleFontModal] = useState<boolean>(false)
+  const [isLogoutModal, toggleLogoutModal] = useState<boolean>(false)
   const fontLetter = [
     "아주 작음",
     "작음",
@@ -134,7 +138,7 @@ const Settings = () => {
                 <SettingItemTitle>푸시알림</SettingItemTitle>
                 <SettingItemContent></SettingItemContent>
               </SettingItem>
-              <SettingItem>
+              <SettingItem onClick={() => toggleFontModal(true)}>
                 <SettingItemTitle>글자크기</SettingItemTitle>
                 <SettingItemContent>{fontLetter[fontSize]}</SettingItemContent>
               </SettingItem>
@@ -142,7 +146,7 @@ const Settings = () => {
                 <SettingItemTitle>버전정보</SettingItemTitle>
                 <SettingItemContent>{version}</SettingItemContent>
               </SettingItem>
-              <SettingItem>
+              <SettingItem onClick={() => toggleLogoutModal(true)}>
                 <SettingItemTitle>로그아웃</SettingItemTitle>
                 <SettingItemContent>
                   <SettingLogoutIcon>
@@ -152,6 +156,8 @@ const Settings = () => {
               </SettingItem>
             </SettingMenu>
           </SettingsBody>
+          {isFontModal? <FontModal isOpen={isFontModal} toggle={toggleFontModal} /> : <div></div>}
+          {isLogoutModal? <LogoutModal isOpen={isLogoutModal} toggle={toggleLogoutModal} /> : <div></div>}
           <SettingCopyright>
             <div>Copyright ⓒB103</div>
           </SettingCopyright>
