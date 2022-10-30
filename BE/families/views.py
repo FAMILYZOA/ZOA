@@ -134,6 +134,8 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
         serializer.save(to_user=self.get_user(),from_user=self.request.user,family=self.request.user.family_id)
 
     def update(self, request, *args, **kwargs):
+        if self.get_user() == self.request.user :
+            return Response({f'자신의 이름은 설정할 수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
         partial = kwargs.pop('partial', False)
         instance = get_object_or_404(FamilyInteractionName,to_user=self.get_user(),from_user=self.request.user)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
