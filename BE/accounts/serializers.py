@@ -80,7 +80,8 @@ class LoginSerializer(serializers.ModelSerializer):
     password = password_field
     class Meta:
         model = User
-        fields = ('id','phone','password','kakao_id')
+        fields = ('id','phone','password','kakao_id','family_id')
+        read_only_fields=('kakao_id','family_id')
 
 class KaKaoLoginSerializer(serializers.ModelSerializer) :
     kakao_id = serializers.CharField(required=True)
@@ -110,9 +111,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)
     class Meta:
         model = User
-        fields = ('phone','name','image')
+        fields = ('phone','name','birth','image','family_id')
         extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
-
+        read_only_fields = ('family_id','birth',)
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         for (key, value) in validated_data.items():
