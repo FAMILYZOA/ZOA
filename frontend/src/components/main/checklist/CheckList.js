@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { FaPlusCircle } from "react-icons/fa";
 import CheckListList from "./CheckListList";
+import { useNavigate } from "react-router-dom";
 
 const CheckListNameWrapper = styled.div`
   color: #ff787f;
@@ -23,13 +24,7 @@ const CheckListWrapper = styled.div`
 
 const CheckList = () => {
   
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
+  const navigate = useNavigate();
 
   return(
     <>
@@ -37,14 +32,12 @@ const CheckList = () => {
         <div style={{display: "flex", justifyContent: "space-between", width: "80%"}}>
           <CheckListNameWrapper style={{margin: "0px 0px 0px 20px"}}>체크리스트</CheckListNameWrapper>
           {/* 플러스 버튼에 나중에 체크리스트 추가하는 페이지 걸어놓기 */}
-          <CheckListPlusButton>
+          <CheckListPlusButton onClick={() => navigate("/checklist")}>
             <FaPlusCircle size="24"/>
           </CheckListPlusButton>
       </div>
       <div>
-          <CheckListWrapper>
-            <CheckListList></CheckListList>
-          </CheckListWrapper>
+            <CheckListList/>
       </div>
       </div>
     </>

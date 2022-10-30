@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Header from "../../components/main/Header";
 import Emojis from "../../components/main/Emoji";
 import Announcement from "../../components/main/Announcement";
-import CheckListList from "../../components/main/checklist/CheckListList";
+import CheckList from "../../components/main/checklist/CheckList";
 
 const MainBox = styled.div`
     @media screen and (min-width: 720px) {
@@ -17,7 +17,7 @@ function Main() {
     <Header></Header>
     <Emojis></Emojis>
     <Announcement></Announcement>
-    <CheckListList/>
+    <CheckList/>
   </MainBox>;
 }
 

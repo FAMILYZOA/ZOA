@@ -1,47 +1,37 @@
-import styled from "styled-components";
 import CheckListItem from "./CheckListItem";
 import CheckListDetail from "./CheckListDetail";
-import { FaPlusCircle } from "react-icons/fa";
-
-const CheckListNameWrapper = styled.div`
-  color: #ff787f;
-  font-weight: bold;
-`;
-
-const CheckListPlusButton = styled.button`
-  border: none;
-  cursor: pointer;
-  background-color: transparent;
-  color: white;
-  background: linear-gradient(to left, #FE9B7C, #fec786);
-  /* -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; */
-`
-
-
-const CheckListWrapper = styled.div`
-  border: 4px solid;
-  border-radius: 12px;
-  width: 80vw;
-`
-
+import { useEffect } from "react";
+import axios from "axios";
 
 const CheckListList = () => {
 
+
+    useEffect(() => 
+        axios({
+            method: "get",
+            url: "https://k7b103.p.ssafy.io/api/v1/checklist/22",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              }
+        })
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err))  
+    );
+
   return(
     <>
-        <div style={{display: "flex"}}>
+        {/* <div style={{display: "flex"}}>
           <CheckListNameWrapper> 체크리스트</CheckListNameWrapper>
-          <CheckListPlusButton>
+          <CheckListPlusButton onClick={() => navigate("/checklist")}>
             <FaPlusCircle size="24"/>
           </CheckListPlusButton>
-        </div>
-        <CheckListWrapper>
-        <CheckListItem/>
-        <CheckListItem/>
-        <CheckListItem/>
-        <CheckListDetail/>
-        </CheckListWrapper>
+        </div> */}
+        {/* <CheckListWrapper> */}
+            <CheckListItem/>
+            <CheckListItem/>
+            <CheckListItem/>
+            <CheckListDetail/>
+        {/* </CheckListWrapper> */}
     </>
   )
 };
