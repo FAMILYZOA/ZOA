@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Header from "../../components/header";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import axios from "axios";
 import PageOne from "../../components/resister/PageOne";
 import PageTwo from "../../components/resister/PageTwo";
@@ -13,6 +13,7 @@ const Container = styled.div`
 
 
 function Resister() {
+    const navigate = useNavigate();
     const [info, setInfo] = useState({
         phone : "",
         password: "",
@@ -42,7 +43,12 @@ function Resister() {
                   data: data,
                 })
                 .then((res) => {
-                    console.log(res)
+                    if(res.status === 201) {
+                        navigate('/');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
                 })
             }
         } 
