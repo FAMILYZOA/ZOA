@@ -11,7 +11,7 @@ const Container = styled.div`
   @media screen and (min-width: 720px) {
     width: 720px;
   }
-  position: sticky;
+  position: fixed;
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 20px 20px 0 0;
