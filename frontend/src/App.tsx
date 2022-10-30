@@ -28,7 +28,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
-          <Route path="/resister" element={<Resister />} />
+          <Route path="/register" element={<Resister />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
