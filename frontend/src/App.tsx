@@ -5,7 +5,7 @@ import Signup from "./pages/auth/signup";
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { FamilyManage } from './pages/family';
 import { Settings } from './pages/settings';
-// import ScrumCreate from './pages/scrum/scrumCreate';
+import ScrumCreate from './pages/scrum/scrumCreate';
 import FamilyCreate from './pages/family/FamilyCreate';
 import FamilyNameEdit from './pages/family/FamilyNameEdit';
 import Test from "./pages/auth/kakao/Test";
