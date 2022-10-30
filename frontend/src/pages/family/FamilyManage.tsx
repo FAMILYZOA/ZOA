@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setToken } from "../../features/token/tokenSlice";
+import { setAccessToken } from "../../features/token/tokenSlice";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
@@ -114,7 +114,7 @@ const FamilyManage = () => {
         "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
     },
   ]); // member는 object. 예시 이미지 입력
-  const token = useAppSelector((state) => state.token.value); // redux로 중앙으로부터 token값을 가져온다.
+  const token = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
 
   /*
@@ -123,7 +123,7 @@ const FamilyManage = () => {
 
   useEffect(() => { // 최초 token값은 비워져 있다. token값 갱신을 위해 사용되는 useEffect. 추후에는 로그인 기능과 연동시켜서 토큰값 지정할 것.
     dispatch(
-      setToken(
+      setAccessToken(
         `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY2ODYyOTMzLCJpYXQiOjE2NjY4NTU3MzMsImp0aSI6ImYyZmI1NWEzZjM3NTQ4NjU5ZTZlYmJiNmY1ZDM0YWEyIiwidXNlcl9pZCI6MX0.jMbReJBRMGRxsNWaRU_UflFOElBuCN7Ewikr5FB-c9A`
       )
     ); 
