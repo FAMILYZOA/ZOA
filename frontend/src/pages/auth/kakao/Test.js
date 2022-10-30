@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
+
+
 
 function Test() {
   const params = new URL(document.location).searchParams;
@@ -81,9 +84,7 @@ function Test() {
 
   return (
     <div>
-      왜!!!
-      <p>{kakao_code}</p>
-      <p>{token}</p>
+      
     </div>
   );
 }
