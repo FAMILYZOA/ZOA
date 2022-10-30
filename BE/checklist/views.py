@@ -36,13 +36,16 @@ class ChecklistTodayAPIView(GenericAPIView):
 class ChecklistCreateAPIView(GenericAPIView):
     serializer_class = ChecklistCreateSerializer
     def post(self, request):
+        giver = request.user.family_id.id
+        member = request.data.get('to_users_id')
         context = {
             'text': request.data.get('text'),
-            'to_users_id': request.data.getlist('to_users_id'),
+            'to_users_id': member,
             'from_user_id': request.user.id,
         }
-        giver = request.user.family_id.id
-        member = request.data.getlist('to_users_id')
+        if not request.user.family_id:
+            return Response("가족에 가입되어 있지 않습니다", status=status.HTTP_400_BAD_REQUEST)
+        
         for id in member:
             family_num = User.objects.get(id=id).family_id.id
             if giver != family_num:
@@ -54,7 +57,7 @@ class ChecklistCreateAPIView(GenericAPIView):
         serializer = ChecklistDetailSerializer(data=context)
         if serializer.is_valid():
             serializer.save()
-            return Response("todo가 부여 되었습니다.", status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ChecklistDetailAPIView(GenericAPIView):
