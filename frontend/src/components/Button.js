@@ -11,7 +11,7 @@ const Btn = styled.button`
   margin: auto;
   background: linear-gradient(45deg, #fec786, #fe9b7c);
   border: none;
-  border-radius: 15px;
+  border-radius: 30px;
   font-size: 20px;
   font-weight: bold;
   color: white;

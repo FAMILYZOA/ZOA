@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 
@@ -31,11 +31,15 @@ const InputTag = styled.textarea`
 `
 
 
-function TodoInput(){
+function TodoInput({todos}){
     const [todo, setTodo] = useState('');
     const onChange = (e) => {
         setTodo(e.target.value);
     };
+
+    useEffect(()=> {
+      todos({todo: todo})
+    }, [todo])
     return (
       <Container>
         <MainText>

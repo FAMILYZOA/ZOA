@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import plus from "../../../assets/plus.png"
 import {BsTrashFill} from "react-icons/bs"
@@ -26,7 +26,7 @@ const DelBtn = styled.div`
 `
 
 
-function AddPhoto(){
+function AddPhoto({getPhoto}){
     //미리보기용
     const [file, setFile] = useState(plus);
     const saveFile = (e) => {
@@ -40,6 +40,10 @@ function AddPhoto(){
     const handleClick = () => {
         photoInput.current.click();
     }
+
+    useEffect(()=> {
+      getPhoto({photo: file})
+    }, [file])
     return (
       <Container>
         <div style={{display: "flex", justifyContent:'space-between', width:'100%', alignItems:'center'}}>
