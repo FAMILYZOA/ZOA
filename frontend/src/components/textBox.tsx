@@ -1,12 +1,13 @@
 import { Emoji } from "emoji-picker-react";
-import React, { useState } from "react";
 import styled from "styled-components";
 
 type BoxProps = {
   children?: React.ReactNode;
   isEmoji: boolean;
   emojiCode?: string | undefined;
-  textValue: string;
+  preview: string;
+  value: string;
+  setter: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const TextBoxStyle = styled.div`
@@ -43,10 +44,8 @@ const TextAreaInnerStyle = styled.textarea`
 `;
 
 const TextBox = (props: BoxProps) => {
-  const [value, setValue] = useState<string>("");
-
-  const handleValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.currentTarget.value);
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    props.setter(e.currentTarget.value);
   };
   return (
     <TextBoxStyle>
@@ -54,17 +53,17 @@ const TextBox = (props: BoxProps) => {
         <TextAreaEmojiStyle>
           <Emoji unified={props.emojiCode} />
           <TextAreaInnerStyle
-            value={value}
-            placeholder={props.textValue}
-            onChange={handleValue}
+            value={props.value}
+            placeholder={props.preview}
+            onChange={onChange}
           />
         </TextAreaEmojiStyle>
       ) : (
         <TextAreaEmojiStyle>
           <TextAreaStyle
-            value={value}
-            placeholder={props.textValue}
-            onChange={handleValue}
+            value={props.value}
+            placeholder={props.preview}
+            onChange={onChange}
           />
         </TextAreaEmojiStyle>
       )}

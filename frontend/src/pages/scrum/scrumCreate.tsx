@@ -1,9 +1,12 @@
+import { AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
   EmojiClickData,
 } from "emoji-picker-react";
+import { method } from "lodash";
 import * as React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "react-modal";
@@ -91,6 +94,27 @@ const RegistBtnStyle = styled.button`
   border: none;
 `;
 
+type EmojiProps = {
+  selectedEmoji: string;
+  setSelectedEmoji: any;
+  isModal: boolean;
+  toggleModal: any;
+  emojiClick: any;
+  emojiSelect: any;
+};
+
+type InputProps = {
+  value: string;
+  // 자료형 변환 예정
+  setter: any;
+};
+
+type registBtnPRops = {
+  emoji: string;
+  yesterday: string;
+  today: string;
+};
+
 const DateSelector = () => {
   const [date, setDate] = useState<Date>(new Date());
 
@@ -118,17 +142,11 @@ const DateSelector = () => {
   );
 };
 
-const EmojiSelector = () => {
+const ScrumCreateBody = () => {
   const [selectedEmoji, setSelectedEmoji] = useState<string>("1f600");
   const [isModal, toggleModal] = useState<boolean>(false);
-
-  const modalStyle = {
-    content: {
-      padding: 0,
-      border: "none",
-      top: "40%",
-    },
-  };
+  const [yesterdayValue, setYesterdayValue] = useState<string>("");
+  const [todayValue, setTodayValue] = useState<string>("");
 
   const emojiClick = () => {
     toggleModal(true);
@@ -140,25 +158,56 @@ const EmojiSelector = () => {
   };
 
   return (
+    <div>
+      <EmojiSelector
+        selectedEmoji={selectedEmoji}
+        setSelectedEmoji={setSelectedEmoji}
+        isModal={isModal}
+        toggleModal={toggleModal}
+        emojiClick={emojiClick}
+        emojiSelect={emojiSelect}
+      />
+      <YesterdayWork value={yesterdayValue} setter={setYesterdayValue} />
+      <Today value={todayValue} setter={setTodayValue} />
+      {/*추후에 따로 만든 컴포넌트로 대체 예정*/}
+      <RegistBtn
+        emoji={selectedEmoji}
+        yesterday={yesterdayValue}
+        today={todayValue}
+      />
+    </div>
+  );
+};
+
+const EmojiSelector = (props: EmojiProps) => {
+  const modalStyle = {
+    content: {
+      padding: 0,
+      border: "none",
+      top: "40%",
+    },
+  };
+
+  return (
     <EmojiSelectorStyle>
       <div>오늘의 나는?</div>
-      <EmojiOuterStyle onClick={emojiClick}>
+      <EmojiOuterStyle onClick={props.emojiClick}>
         <Emoji
-          unified={selectedEmoji}
+          unified={props.selectedEmoji}
           emojiStyle={EmojiStyle.APPLE}
           size={84}
         />
       </EmojiOuterStyle>
       <Modal
-        isOpen={isModal}
+        isOpen={props.isModal}
         style={modalStyle}
         ariaHideApp={false}
         onRequestClose={() => {
-          toggleModal(false);
+          props.toggleModal(false);
         }}
       >
         <EmojiPicker
-          onEmojiClick={emojiSelect}
+          onEmojiClick={props.emojiSelect}
           skinTonesDisabled={true}
           width={"99%"}
           height={"99%"}
@@ -168,7 +217,7 @@ const EmojiSelector = () => {
   );
 };
 
-const YesterdayWork = () => {
+const YesterdayWork = (props: InputProps) => {
   return (
     <div>
       <DescStyle>
@@ -177,14 +226,16 @@ const YesterdayWork = () => {
       </DescStyle>
       <TextBox
         isEmoji={true}
+        value={props.value}
+        setter={props.setter}
         emojiCode={"1f60e"}
-        textValue={"어제 한 일"}
+        preview={"어제 한 일"}
       ></TextBox>
     </div>
   );
 };
 
-const FamilyTalk = () => {
+const Today = (props: InputProps) => {
   return (
     <div>
       <DescStyle>
@@ -193,36 +244,53 @@ const FamilyTalk = () => {
       </DescStyle>
       <TextBox
         isEmoji={true}
+        value={props.value}
+        setter={props.setter}
         emojiCode={"1f4e2"}
-        textValue={"가족에게 한 마디"}
+        preview={"가족에게 한 마디"}
       ></TextBox>
     </div>
   );
 };
 
-const EMOJI:string = "";
-const YESTERDAY:string = "";
-const TODAY:string = "";
-
-const RegistBtn = () => {
+const RegistBtn = (props: registBtnPRops) => {
   // 나중에 저장 방식 바뀌면 수정 예정
-  const [isRegist, toggleResigt] = useState<boolean>(false);
+  const [isRegist, toggleResigt] = useState<boolean>(true);
   const tokens: any = useAppSelector((state) => state.token.value);
 
+  useEffect(() => {
+    if (!props.emoji || !props.yesterday || !props.today) {
+      toggleResigt(true);
+    } else {
+      toggleResigt(false);
+    }
+  }, [props.emoji, props.yesterday, props.today]);
+
   const regist = () => {
+    // 0. token 파싱
+    console.log(props.emoji);
+    console.log(props.yesterday);
+    console.log(props.today)
+    const accessToken = `Bearer ${tokens.access}`;
+    console.log(accessToken);
+    const config = {
+      headers: { Authorization: accessToken },
+    };
     if (tokens) {
       const scrumData = new FormData();
-      scrumData.append("emoji", EMOJI);
-      scrumData.append("yesterday", YESTERDAY);
-      scrumData.append("today", TODAY);
+      scrumData.append("emoji", props.emoji);
+      scrumData.append("yesterday", props.yesterday);
+      scrumData.append("today", props.today);
       customAxios
-        .post("/scrums", scrumData)
-        .then((res) => {
+        .post("scrums/", scrumData, config)
+        .then((res: AxiosResponse) => {
+          
           console.log(res);
-        })
-        .catch((err) => {
+        }).catch((err) => {
+          // 현재 가족이 없기 떄문에 500에러 발생.
+          // 가족 생성이 마무리 되면 처리할 것
           console.log(err);
-        });
+        })
     } else {
       alert("잘못된 접근! token이 없습니다!");
     }
@@ -231,7 +299,9 @@ const RegistBtn = () => {
   return (
     <RegistStyle>
       {/* 현재 disable 상태일 떄 css가 변화하지 않음 */}
-      <RegistBtnStyle onClick={regist} disabled={true}>완료</RegistBtnStyle>
+      <RegistBtnStyle onClick={regist} disabled={isRegist}>
+        완료
+      </RegistBtnStyle>
     </RegistStyle>
   );
 };
@@ -242,11 +312,7 @@ const ScrumCreate = () => {
       <Header label="데일리스크럼" back={true} />
       <div>
         <DateSelector />
-        <EmojiSelector />
-        <YesterdayWork />
-        <FamilyTalk />
-        {/*추후에 따로 만든 컴포넌트로 대체 예정*/}
-        <RegistBtn />
+        <ScrumCreateBody />
       </div>
       <div>푸터 자리</div>
     </div>
