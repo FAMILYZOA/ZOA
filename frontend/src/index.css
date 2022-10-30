@@ -8,6 +8,10 @@
 body {
   height: 100vh;
   margin: 0;
+  @media screen and (min-width: 720px){
+    width: 70vh;
+    margin:auto;
+  }
   font-family: "Pretendard-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19,9 +23,3 @@ code {
     monospace;
 }
 
-@media screen and (min-width: 720px) {
-  body {
-    width: 70vh;
-    margin: auto;
-  }
-}

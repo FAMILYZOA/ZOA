@@ -50,41 +50,44 @@ const UnSelectBox = styled.div`
 function Navbar() {
     const location = useLocation();
     return (
-      <Container>
-        <Link to="/">
-          {location.pathname === "/" ? (
-            <SelectBox>
-              <AiOutlineHome size={28} color={"white"} />
-            </SelectBox>
-          ) : (
-            <UnSelectBox>
-              <AiOutlineHome size={28} color={"#BEBEBE"} />
-            </UnSelectBox>
-          )}
-        </Link>
-        <Link to="/zoa">
-          {location.pathname.includes("/zoa" )? (
-            <SelectBox>
-              <FaRegSmile size={28} color={"white"} />
-            </SelectBox>
-          ) : (
-            <UnSelectBox>
-              <FaRegSmile size={28} color={"#BEBEBE"} />
-            </UnSelectBox>
-          )}
-        </Link>
-        <Link to="/settings">
-          {location.pathname.includes ("/settings") ? (
-            <SelectBox>
-              <FaRegUser size={28} color={"white"} />
-            </SelectBox>
-          ) : (
-            <UnSelectBox>
-              <FaRegUser size={28} color={"#BEBEBE"} />
-            </UnSelectBox>
-          )}
-        </Link>
-      </Container>
+        <div>
+
+        <Container>
+            <Link to="/">
+            {location.pathname === "/" ? (
+                <SelectBox>
+                <AiOutlineHome size={28} color={"white"} />
+                </SelectBox>
+            ) : (
+                <UnSelectBox>
+                <AiOutlineHome size={28} color={"#BEBEBE"} />
+                </UnSelectBox>
+            )}
+            </Link>
+            <Link to="/zoa">
+            {location.pathname.includes("/zoa" )? (
+                <SelectBox>
+                <FaRegSmile size={28} color={"white"} />
+                </SelectBox>
+            ) : (
+                <UnSelectBox>
+                <FaRegSmile size={28} color={"#BEBEBE"} />
+                </UnSelectBox>
+            )}
+            </Link>
+            <Link to="/settings">
+            {location.pathname.includes ("/settings") ? (
+                <SelectBox>
+                <FaRegUser size={28} color={"white"} />
+                </SelectBox>
+            ) : (
+                <UnSelectBox>
+                <FaRegUser size={28} color={"#BEBEBE"} />
+                </UnSelectBox>
+            )}
+            </Link>
+        </Container>
+        </div>
     );
 }
 
