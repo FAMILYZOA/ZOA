@@ -37,7 +37,7 @@ class ChecklistCreateAPIView(GenericAPIView):
     serializer_class = ChecklistCreateSerializer
     def post(self, request):
         giver = request.user.family_id.id
-        member = request.data.get('to_users_id')
+        member = request.data['to_users_id']
         context = {
             'text': request.data.get('text'),
             'to_users_id': member,
