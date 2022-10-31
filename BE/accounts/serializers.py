@@ -1,3 +1,4 @@
+from accounts.manager import password_creator
 from accounts.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -5,9 +6,11 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import re
 
 
+password_field = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+
 # 회원가입
 class SignupSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=16,min_length=6,write_only=True)
+    password = password_field
 
     class Meta:
         model = User
@@ -34,25 +37,57 @@ class SignupSerializer(serializers.ModelSerializer):
         phone = attrs['phone']
         password = attrs['password']
 
-        if User.objects.filter(phone=phone).exists():
-            raise serializers.ValidationError("핸드폰 번호가 존재합니다.")
-        if not 8 <= len(password) <= 12:
-            raise serializers.ValidationError("비밀번호는 8 ~ 12자리여야 합니다.")
-
+        if not phone.isdecimal() :
+            raise serializers.ValidationError('휴대폰 번호는 숫자 형식이어야 합니다.')
         REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
-            raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.")
+            raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",'regex')
+
+        return attrs
+
+
+class KaKaoSignupSerializer(serializers.ModelSerializer):
+    image = serializers.CharField()
+    kakao_id = serializers.CharField(required=True)
+    class Meta:
+        model = User
+        fields = ('id','phone','name','birth','kakao_id','image')
+        read_only_fields = ('id',)
+
+    def create(self, validated_data):
+        
+        # if validated_data['kakao_id']
+
+        instance = self.Meta.model(**validated_data)
+        instance.set_password(password_creator())
+        image = validated_data.pop('image',None)
+
+        if image is not None :
+            instance.image = image
+        instance.save()
+        return instance
+    def validate(self, attrs):
+        kakao_id = attrs['kakao_id']
+
+        if User.objects.filter(kakao_id=kakao_id).exists():
+            raise serializers.ValidationError('이미 가입된 kakao 회원입니다.')
 
         return attrs
 
 
 # 로그인
 class LoginSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=16,min_length=6,write_only=True)
+    password = password_field
     class Meta:
         model = User
-        fields = ('id','phone','password')
+        fields = ('id','phone','password','kakao_id','family_id')
+        read_only_fields=('kakao_id','family_id')
 
+class KaKaoLoginSerializer(serializers.ModelSerializer) :
+    kakao_id = serializers.CharField(required=True)
+    class Meta :
+        model = User 
+        fields = ('kakao_id',)
 
 # 로그아웃
 class RefreshTokenSerializer(serializers.Serializer):
@@ -73,42 +108,53 @@ class RefreshTokenSerializer(serializers.Serializer):
 
 # 회원정보 조회/수정
 class ProfileSerializer(serializers.ModelSerializer):
-
-    password = serializers.CharField(
-        max_length=16,
-        min_length=8,
-        write_only=True
-    )
+    image = serializers.ImageField(required=False)
     class Meta:
         model = User
-        fields = "__all__"
-        read_only_fields = ('token', )
+        fields = ('id','phone','name','birth','image','family_id')
+        extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
+        read_only_fields = ('id','family_id','birth',)
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         for (key, value) in validated_data.items():
             setattr(instance, key, value)
         if password is not None:
             instance.set_password(password)
+    
+        image = validated_data.pop('image',None)
+
+        if image is not None :
+            instance.image = image
+
         instance.save()
         return instance
 
-
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+    password = serializers.CharField(max_length=12,min_length=8,write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+    old_password = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+
     class Meta:
         model = User
-        fields = ('old_password', 'new_password')
-        extra_kwargs = {'new_password': {'write_only': True, 'required': True},
-                        'old_password': {'write_only': True, 'required': True}}
+        fields = ('old_password', 'password', 'password2')
 
-    def validate_new_password(self, value):
-        validate_password(value)
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "패스워드 필드들이 일치하지 않습니다."})
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "이전 비밀번호가 일치하지 않습니다."})
         return value
 
-class UserSerializer(serializers.ModelSerializer) :
+    def update(self, instance, validated_data):
 
-    class Meta: 
-        model = User 
-        fields = ('id','name','image',)
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
+
