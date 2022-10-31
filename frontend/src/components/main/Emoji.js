@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import user from "../../assets/test/jjanga.png"
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 
 const Container = styled.div`
@@ -69,8 +68,6 @@ function Emojis(){
     const family = useAppSelector((state) => state.family.id);
     const [scrum, setScrum] = useState([]);
 
-
-
     useEffect(()=> {
       axios({
         method: "GET",
@@ -95,7 +92,6 @@ function Emojis(){
               </Emoji>
               <UserImg src={item.image} alt="userimg"></UserImg>
             </EmojiBox>
-
           ))}
         </EContainer>
       </Container>
