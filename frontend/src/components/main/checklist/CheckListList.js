@@ -4,6 +4,7 @@ import CheckListDetail from "./CheckListDetail";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useSelector } from "react-redux";
 
 const CheckListWrapper = styled.div`
   border-radius: 12px;
@@ -16,6 +17,8 @@ const CheckListList = () => {
 
   const [list, setList] = useState([]);
   const accessToken = useAppSelector((state) => state.token.access);
+  const user = useSelector((state) => state.user);
+  console.log(user)
 
   useEffect(() => {
     axios({
