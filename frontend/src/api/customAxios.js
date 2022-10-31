@@ -21,6 +21,6 @@ export const AuthRefresh = async (refresh:any) => {
 };
 
 
-export const customAxios: AxiosInstance = axios.create({
+export const customAxios = axios.create({
     baseURL: `${SERVER}`
 });

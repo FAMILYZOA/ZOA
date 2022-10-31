@@ -9,7 +9,7 @@ interface FamilyState { // 타입 지정
     id: number,
     name: string,
     image: string,
-    setName: string,
+    set_name: string,
   }[],
 }
 
@@ -22,7 +22,7 @@ const initialState: FamilyState = { // 초기 상태
     id: -1,
     name: "",
     image: "",
-    setName: "",
+    set_name: "",
   }],
 }
 
@@ -43,7 +43,7 @@ export const familySlice = createSlice({
       id: number,
       name: string,
       image: string,
-      setName: string,
+      set_name: string,
     }>>) => {
       state.users = action.payload;
     }
