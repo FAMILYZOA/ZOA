@@ -69,14 +69,7 @@ function ReadChecklist() {
   }); // 선택된 인원
   const [unSelectedMember, setUnSelectedMember] = useState<
     { id: number; name: string; image: string; set_name: string }[]
-  >([
-    {
-      id: -1,
-      name: "",
-      image: "",
-      set_name: "",
-    },
-  ]); // 선택되지 않은 인원
+  >([]); // 선택되지 않은 인원
   const FamilyMembers = useAppSelector((state) => state.family.users);
   const [checkList, setCheckList] = useState<
     {
@@ -87,76 +80,42 @@ function ReadChecklist() {
       created_at: string;
       to_user_id: number[];
     }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
+  >([]);
+/* 
+----- 체크리스트 api 완성시 다시 활성화 -----
+*/
+  // const [unCheckedList, setUnCheckedList] = useState<
+  //   {
+  //     id: number;
+  //     text: string;
+  //     status: boolean;
+  //     photo: string;
+  //     created_at: string;
+  //     to_user_id: number[];
+  //   }[]
+  // >([]);
 
-  const [unCheckedList, setUnCheckedList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
+  // const [checkedList, setCheckedList] = useState<
+  //   {
+  //     id: number;
+  //     text: string;
+  //     status: boolean;
+  //     photo: string;
+  //     created_at: string;
+  //     to_user_id: number[];
+  //   }[]
+  // >([]);
 
-  const [checkedList, setCheckedList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
-
-  const [todayCheckedList, setTodayCheckedList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
+  // const [todayCheckedList, setTodayCheckedList] = useState<
+  //   {
+  //     id: number;
+  //     text: string;
+  //     status: boolean;
+  //     photo: string;
+  //     created_at: string;
+  //     to_user_id: number[];
+  //   }[]
+  // >([]);
   const [viewMore, setViewMore] = useState<boolean>(false);
   const [onDetail, setOnDetail] = useState<number>(-1);
 
@@ -179,7 +138,7 @@ function ReadChecklist() {
     setIsModal(false);
   };
 
-  const refreshCheckLists = (to_users_id: number) => {
+  const refreshCheckList = (to_users_id: number) => { // 체크리스트 갱신 함수
     axios({
       method: "get",
       url: `${process.env.REACT_APP_BACK_HOST}/checklist/${to_users_id}`,
@@ -201,36 +160,44 @@ function ReadChecklist() {
     const tempMember = [...FamilyMembers];
     tempMember.splice(0, 1);
     setUnSelectedMember(tempMember);
-  });
+  },[FamilyMembers]);
 
-  useEffect(() => {
-    const tempCheckedList: Array<{
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }> = [];
-    const tempUnCheckedList: Array<{
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }> = [];
+  // useEffect(() => { // 체크리스트 분류
+  //   const tempCheckedList: Array<{
+  //     id: number;
+  //     text: string;
+  //     status: boolean;
+  //     photo: string;
+  //     created_at: string;
+  //     to_user_id: number[];
+  //   }> = [];
+  //   const tempUnCheckedList: Array<{
+  //     id: number;
+  //     text: string;
+  //     status: boolean;
+  //     photo: string;
+  //     created_at: string;
+  //     to_user_id: number[];
+  //   }> = [];
+  //   const tempTodayCheckedList: Array<{
+  //     id: number;
+  //     text: string;
+  //     status: boolean;
+  //     photo: string;
+  //     created_at: string;
+  //     to_user_id: number[];
+  //   }> = [];
 
-    checkList.forEach((value) => {
-      if (value.status) {
-        tempCheckedList.push(value);
-      } else {
-        tempUnCheckedList.push(value);
-      }
-    });
-    setCheckedList(tempCheckedList);
-    setUnCheckedList(tempUnCheckedList);
-  }, [checkList]);
+  //   checkList.forEach((value) => {
+  //     if (value.status) {
+  //       tempCheckedList.push(value);
+  //     } else {
+  //       tempUnCheckedList.push(value);
+  //     }
+  //   });
+  //   setCheckedList(tempCheckedList);
+  //   setUnCheckedList(tempUnCheckedList);
+  // }, [checkList]);
 
   const getModal = () => {
     setIsModal(true);
@@ -267,7 +234,7 @@ function ReadChecklist() {
           getModal={getModal}
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
-        {unCheckedList.map((item: any, i: number) => (
+        {/* {unCheckedList.map((item: any, i: number) => (
           <CheckItem
             item={item}
             index={i}
@@ -298,8 +265,30 @@ function ReadChecklist() {
               detailOff={detailOff}
               onDetail={onDetail}
             />
-          ))}
-        {!viewMore && (
+          ))} */}
+        {(viewMore || checkList.length <= 5) && checkList.map((item: any, i: number) => (
+          <CheckItem
+            item={item}
+            index={i}
+            key={item.id}
+            getDetailSelect={getDetailSelect}
+            detailOff={detailOff}
+            onDetail={onDetail}
+            refreshCheckList={refreshCheckList}
+          />
+        ))}
+        {(!viewMore && checkList.length > 5) && checkList.map((item: any, i: number) => (
+          <CheckItem
+            item={item}
+            index={i}
+            key={item.id}
+            getDetailSelect={getDetailSelect}
+            detailOff={detailOff}
+            onDetail={onDetail}
+            refreshCheckList={refreshCheckList}
+          />
+        ))}
+        {(!viewMore && checkList.length > 5) && (
           <ViewMore onClick={() => setViewMore(true)}>+ 더보기</ViewMore>
         )}
       </CheckListViewBody>
