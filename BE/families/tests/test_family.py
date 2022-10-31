@@ -11,9 +11,10 @@ class TestCaseSetUp(APITestCase) :
         response=self.client.post(reverse('accounts:login'),{"phone":"01046509260","password":"Password123!"})
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['token']['access']}")
     def create_family(self) :
+        global family_id
         self.authenticate()
-        self.client.post(reverse('families:family'),{"name":'family'})
-
+        response = self.client.post(reverse('families:family'),{"name":'family'})
+        family_id = response.data['id']
     def other_authenticate(self) :
         self.create_family()
         self.client.post(reverse("accounts:signup"),{"phone":"01046509261","name":"이조아","password":"Password123!","birth":"1999-11-11"})
@@ -48,30 +49,30 @@ class FamliyGetTestCase(TestCaseSetUp) :
     #가족 구성원이 정보 조회
     def test_1_family_get_info(self) :
         self.create_family()
-        response = self.client.get(reverse('families:info',kwargs={'id':2}))
+        response = self.client.get(reverse('families:info',kwargs={'id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
     #가족 구성원이 아닌 사람이 가족 조회
     def test_2_family_get_not_member(self) :
         self.other_authenticate()
-        response = self.client.get(reverse('families:info',kwargs={'id':3}))
+        response = self.client.get(reverse('families:info',kwargs={'id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_403_FORBIDDEN)
 
     #없는 가족 조회
     def test_3_family_get_not_found(self) :
         self.authenticate()
-        response = self.client.get(reverse('families:info',kwargs={'id':3}))
+        response = self.client.get(reverse('families:info',kwargs={'id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
     #가족 이름 변경
     def test_4_change_family_name(self) :
         self.create_family()
-        response = self.client.put(reverse('families:info',kwargs={'id':4}),{"name":'family_edit'})
+        response = self.client.put(reverse('families:info',kwargs={'id':family_id}),{"name":'family_edit'})
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['name'],'family_edit')
     #가족 삭제 
     def test_5_family_get_not_found(self) :
         self.create_family()
-        response = self.client.delete(reverse('families:info',kwargs={'id':5}))
+        response = self.client.delete(reverse('families:info',kwargs={'id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
     
 
@@ -79,13 +80,13 @@ class FamliySignTestCase(TestCaseSetUp) :
     #가족 에 가입 
     def test_1_family_success_sign(self) :
         self.other_authenticate()
-        response = self.client.post(reverse('families:join_family',kwargs={'family_id':6}))
+        response = self.client.post(reverse('families:join_family',kwargs={'family_id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['success'],'이조아님이 family에 가입되었습니다.')
     #가족이 있을 때, 가입 요청 보낼 때
     def test_2_family_get_not_found(self) :
         self.create_family()
-        response = self.client.post(reverse('families:join_family',kwargs={'family_id':7}))
+        response = self.client.post(reverse('families:join_family',kwargs={'family_id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['fail'],'김조아님은 이미 가족에 가입되어 있습니다.')
 
