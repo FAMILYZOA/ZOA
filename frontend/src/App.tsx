@@ -129,7 +129,7 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/createChecklist" element={<CreateChecklist />} />
+          <Route path="/checklist/create" element={<CreateChecklist />} />
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
