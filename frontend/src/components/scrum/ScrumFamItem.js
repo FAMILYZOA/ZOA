@@ -23,9 +23,10 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumFamItem = () => {
+const ScrumFamItem = ({scrums}) => {
 
     const navigate = useNavigate();
+    console.log(scrums)
 
     return(
         <> 

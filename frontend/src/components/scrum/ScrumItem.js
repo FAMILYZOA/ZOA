@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
@@ -29,9 +29,12 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumItem = () => {
+const ScrumItem = ({scrums}) => {
 
   const navigate = useNavigate();
+  useEffect(()=>{
+    console.log(scrums);
+  },[scrums])
 
   return(
     <>
@@ -43,17 +46,17 @@ const ScrumItem = () => {
         </ProfileWrapper>
         <ItemWrapper>
           <div style={{margin: "1vh"}}>
-           🙋‍♂️ 오늘은 금요일
+           {/* 🙋‍♂️ {scrums.yesterday} */}
           </div>
           <div style={{margin: "1vh"}}>
-           📢 하지만 내겐 많은 잔업이 있소
+           {/* 📢 {scrums.today} */}
           </div>
         </ItemWrapper>
       </ScrumWrapper>
       <div
         style={{color: "#ff787f", margin: "0px 0px 0px 20vw", cursor: "pointer"}}
         onClick={() => {
-          navigate(`/`)
+          navigate(`/scrum/create/`)
         }}
         >
         스크럼 작성하러 가기
