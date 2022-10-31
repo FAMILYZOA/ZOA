@@ -2,14 +2,32 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import user from "../../assets/test/jjanga.png"
 
+
+const Container = styled.div`
+  margin: 5%;
+  border-bottom: 1px solid #d9d9d9;
+`
+
 const EContainer = styled.div`
-  margin: 16px;
-  height: 80px;
-  width: 100vw-32;
+  display: flex;
+  margin: 16px 8px;
+  width: 90%-32px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  border-bottom: 1px solid #d9d9d9;
+  @media screen and (min-width: 520px) {
+    &::-webkit-scrollbar {
+      width: auto;
+      height: 5px;
+      border-radius: 3px;
+      background-color: #ffcdbe;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #ff787f;
+      height: 3px;
+      border-radius: 3px;
+    }
+  }
 `;
 const EmojiBox = styled.div`
     display: inline-block;
@@ -48,34 +66,41 @@ const EmojiText = styled.p`
 function Emojis(){
     
     return (
-      <EContainer>
-        {/* 데이터 받아오면 EmojiBox를 .map해서 반복문처리 */}
-        <EmojiBox>
-          <Emoji>
-            <EmojiText>😀</EmojiText>
-          </Emoji>
-          <UserImg src={user} alt="userimg"></UserImg>
-        </EmojiBox>
-        <EmojiBox>
-          <Emoji>
-            <EmojiText>😀</EmojiText>
-          </Emoji>
-          <UserImg src={user} alt="userimg"></UserImg>
-        </EmojiBox>
-        <EmojiBox>
-          <Emoji>
-            <EmojiText>😀</EmojiText>
-          </Emoji>
-          <UserImg src={user} alt="userimg"></UserImg>
-        </EmojiBox>
-        <EmojiBox>
-          <Emoji>
-            <EmojiText>😀</EmojiText>
-          </Emoji>
-          <UserImg src={user} alt="userimg"></UserImg>
-        </EmojiBox>
-        
-      </EContainer>
+      <Container>
+        <EContainer>
+          {/* 데이터 받아오면 EmojiBox를 .map해서 반복문처리 */}
+          <EmojiBox>
+            <Emoji>
+              <EmojiText>😀</EmojiText>
+            </Emoji>
+            <UserImg src={user} alt="userimg"></UserImg>
+          </EmojiBox>
+          <EmojiBox>
+            <Emoji>
+              <EmojiText>😀</EmojiText>
+            </Emoji>
+            <UserImg src={user} alt="userimg"></UserImg>
+          </EmojiBox>
+          <EmojiBox>
+            <Emoji>
+              <EmojiText>😀</EmojiText>
+            </Emoji>
+            <UserImg src={user} alt="userimg"></UserImg>
+          </EmojiBox>
+          <EmojiBox>
+            <Emoji>
+              <EmojiText>😀</EmojiText>
+            </Emoji>
+            <UserImg src={user} alt="userimg"></UserImg>
+          </EmojiBox>
+          <EmojiBox>
+            <Emoji>
+              <EmojiText>😀</EmojiText>
+            </Emoji>
+            <UserImg src={user} alt="userimg"></UserImg>
+          </EmojiBox>
+        </EContainer>
+      </Container>
     );
 }
 
