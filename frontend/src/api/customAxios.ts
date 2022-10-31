@@ -1,7 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-import { useAppSelector } from "../app/hooks";
-import { RootState } from "../app/store";
-import { setAccessToken } from "../features/token/tokenSlice";
 
 // .env 파일에 담아야 할까요
 const SERVER = "https://k7b103.p.ssafy.io/api/v1/";
@@ -17,6 +14,8 @@ export const AuthRefresh = async (refresh:any) => {
 
     if(response.status === 200){
       return response.data;
+    }else if(response.status === 401){
+      return undefined;
     }
   }
 };
