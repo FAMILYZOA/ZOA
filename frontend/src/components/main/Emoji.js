@@ -70,8 +70,6 @@ const EmojiText = styled.p`
     margin: auto;
 `
 
-
-
 function Emojis({scrum}){
     return (
       <Container>

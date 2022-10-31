@@ -39,7 +39,6 @@ function Announcement({scrum}) {
         draggable: true,
     }
     return (
-
         <Slider {...settings}>
             {scrum.map((item, index) => (
                  item.today.length>1
