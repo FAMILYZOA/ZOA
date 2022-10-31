@@ -31,6 +31,7 @@ function KakaoLogin() {
         if (data.access_token) {
           localStorage.setItem("token", data.access_token);
         } else {
+          console.log("실패");
           navigate("/intro");
         }
         axios({

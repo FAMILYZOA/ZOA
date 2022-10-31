@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Main from "./pages/main/main";
 import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
-import Signup from "./pages/auth/signup";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
@@ -128,14 +127,12 @@ function App() {
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
           <Route path="/scrum/create" element={<ScrumCreate />}></Route>
           <Route path="/intro" element={<Prelogin />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Main />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
-          <Route path="/newLogin" element={<NewLogin />} />
+          <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
         </Routes>
         <Navbar></Navbar>
