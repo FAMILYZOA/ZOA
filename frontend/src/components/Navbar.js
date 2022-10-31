@@ -9,7 +9,7 @@ const Container = styled.div`
   height: 64px;
   width: 100vw;
   @media screen and (min-width: 720px) {
-    width: 720px;
+    width: 70vh;
   }
   position: fixed;
   bottom: 0;
