@@ -27,32 +27,32 @@ const ModalBack = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 2;
-  background-color: rgba(102,102,102,0.5);
-`
+  background-color: rgba(102, 102, 102, 0.5);
+`;
 const ModalDiv = styled.div`
   position: absolute;
   top: 13vh;
   right: 2vh;
   z-index: 3;
-`
+`;
 const ModalItem = styled.div`
   display: flex;
   align-items: center;
   z-index: 4;
   margin-bottom: 1vh;
   margin-left: auto;
-`
+`;
 const ModalItemName = styled.div`
   margin-right: 1vh;
   font-weight: 700;
   font-size: 2vh;
-`
+`;
 const ModalItemImg = styled.img`
   width: 8vh;
   height: 8vh;
   border-radius: 4vh;
   object-fit: fill;
-`
+`;
 
 function ReadChecklist() {
   const [isModal, setIsModal] = useState(false);
@@ -68,17 +68,25 @@ function ReadChecklist() {
     set_name: "",
   }); // 선택된 인원
   const [unSelectedMember, setUnSelectedMember] = useState<
-    { id: number; name: string; image: string, set_name: string }[]
+    { id: number; name: string; image: string; set_name: string }[]
   >([
     {
       id: -1,
       name: "",
       image: "",
       set_name: "",
-    },]); // 선택되지 않은 인원
+    },
+  ]); // 선택되지 않은 인원
   const FamilyMembers = useAppSelector((state) => state.family.users);
   const [checkList, setCheckList] = useState<
-    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
   >([
     {
       id: -1,
@@ -91,7 +99,14 @@ function ReadChecklist() {
   ]);
 
   const [unCheckedList, setUnCheckedList] = useState<
-    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
   >([
     {
       id: -1,
@@ -104,7 +119,14 @@ function ReadChecklist() {
   ]);
 
   const [checkedList, setCheckedList] = useState<
-    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
   >([
     {
       id: -1,
@@ -117,7 +139,14 @@ function ReadChecklist() {
   ]);
 
   const [todayCheckedList, setTodayCheckedList] = useState<
-    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
   >([
     {
       id: -1,
@@ -129,8 +158,9 @@ function ReadChecklist() {
     },
   ]);
   const [viewMore, setViewMore] = useState<boolean>(false);
+  const [onDetail, setOnDetail] = useState<number>(-1);
 
-  const accessToken = useAppSelector((state) => state.token.access)
+  const accessToken = useAppSelector((state) => state.token.access);
 
   const getSelect = (id: number) => {
     let index: number = 0;
@@ -159,23 +189,37 @@ function ReadChecklist() {
     })
       .then((res) => {
         setCheckList(res.data);
-        console.log("get checklist success")
+        console.log("get checklist success");
       })
       .catch((err) => {
         console.error(err);
-      })
-  }
+      });
+  };
 
   useEffect(() => {
     setSelectedMember(FamilyMembers[0]);
     const tempMember = [...FamilyMembers];
     tempMember.splice(0, 1);
     setUnSelectedMember(tempMember);
-  })
+  });
 
   useEffect(() => {
-    const tempCheckedList: Array<{ id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }> = [];
-    const tempUnCheckedList: Array<{ id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }> = [];
+    const tempCheckedList: Array<{
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }> = [];
+    const tempUnCheckedList: Array<{
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }> = [];
 
     checkList.forEach((value) => {
       if (value.status) {
@@ -183,36 +227,39 @@ function ReadChecklist() {
       } else {
         tempUnCheckedList.push(value);
       }
-    })
+    });
     setCheckedList(tempCheckedList);
     setUnCheckedList(tempUnCheckedList);
-  },[checkList])
+  }, [checkList]);
 
   const getModal = () => {
     setIsModal(true);
-  }
+  };
 
   const getDetailSelect = (index: number) => {
     setOnDetail(index);
-  }
+  };
 
   const detailOff = () => {
     setOnDetail(-1);
-  }
+  };
 
   return (
     <div>
       <Header label="할 일 목록" back="true"></Header>
-      {isModal && <ModalBack onClick={() => (setIsModal(false))}/>}
-      {isModal && 
+      {isModal && <ModalBack onClick={() => setIsModal(false)} />}
+      {isModal && (
         <ModalDiv>
           {unSelectedMember.map((member: any) => (
-            <ModalItem onClick={() => (getSelect(member.id))}>
+            <ModalItem onClick={() => getSelect(member.id)}>
               <ModalItemName>{member.name}</ModalItemName>
-              <div><ModalItemImg src={member.image}/></div>
+              <div>
+                <ModalItemImg src={member.image} />
+              </div>
             </ModalItem>
           ))}
-        </ModalDiv>}
+        </ModalDiv>
+      )}
       <CheckListViewBody>
         <SelectMember
           selectedMember={selectedMember}
@@ -221,15 +268,36 @@ function ReadChecklist() {
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
         {unCheckedList.map((item: any, i: number) => (
-          <CheckItem item={item} index={i} key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
+          <CheckItem
+            item={item}
+            index={i}
+            key={item.id}
+            getDetailSelect={getDetailSelect}
+            detailOff={detailOff}
+            onDetail={onDetail}
+          />
         ))}
         {!viewMore &&
           todayCheckedList.map((item: any, i: number) => (
-            <CheckItem item={item} index={i + unCheckedList.length} key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
+            <CheckItem
+              item={item}
+              index={i + unCheckedList.length}
+              key={item.id}
+              getDetailSelect={getDetailSelect}
+              detailOff={detailOff}
+              onDetail={onDetail}
+            />
           ))}
         {viewMore &&
           checkedList.map((item: any, i: number) => (
-            <CheckItem item={item} index={i + todayCheckedList.length + unCheckedList.length } key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
+            <CheckItem
+              item={item}
+              index={i + todayCheckedList.length + unCheckedList.length}
+              key={item.id}
+              getDetailSelect={getDetailSelect}
+              detailOff={detailOff}
+              onDetail={onDetail}
+            />
           ))}
         {!viewMore && (
           <ViewMore onClick={() => setViewMore(true)}>+ 더보기</ViewMore>
