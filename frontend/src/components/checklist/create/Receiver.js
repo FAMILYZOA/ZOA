@@ -1,8 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
-import jjangu from "../../../assets/jjangu.png"
-import bong from "../../../assets/bong.png"
-import userDefault from "../../../assets/defaultProfile.png"
+import axios from "axios";
 
 
 const Container = styled.div`
@@ -17,17 +15,29 @@ const MainText = styled.div`
 `
 
 const UserContainer = styled.div`
-    display: flex;
-    margin: 16px 8px;
-    width: 90%-32px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    white-space: nowrap;
-
-`
+  display: flex;
+  margin: 16px 8px;
+  width: 90%-32px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  @media screen and (min-width: 520px) {
+    &::-webkit-scrollbar {
+      width: auto;
+      height: 5px;
+      border-radius: 3px;
+      background-color: #ffcdbe;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #ff787f;
+      height: 3px;
+      border-radius: 3px;
+    }
+  }
+`;
 
 const UserBox = styled.div`
-    opacity: ${(props) => props.rc.includes(props.user) ? 1 : 0.5};
+    opacity: ${(props) => props.rc.includes(props.id) ? 1 : 0.5};
     display: inline-block;
     width: 64px;
     height: 80px;
@@ -46,44 +56,80 @@ const UserBox = styled.div`
 `
 
 
-function Receiver () {
-    const [receiver, setReceiver] = useState([]);
-    console.log(receiver);
-    const active = (user) => {
-        console.log('user', user);
-        if (receiver.includes(user)) {
-          let newReceiver = [...receiver];
-          newReceiver.splice(receiver.indexOf(user), 1);
-          setReceiver([...newReceiver]);
-        } else {
-          setReceiver([user, ...receiver]);
-        }
-    }
+function Receiver({receivers}) {
+  const [familyId, setId] = useState("");
+  const [family, setFamily] = useState([]);
+  useEffect(()=> {
+    axios({
+      method: "GET",
+      url: `https://k7b103.p.ssafy.io/api/v1/accounts/profile/`,
+      headers: {Authorization: `Bearer ${localStorage.getItem('access_token')}`}
+    }).then((res) => {
+      setId(res.data.family_id)
+    })
+  }, [])
 
-    const user1 = "user1";
-    const user2 = "user2"; 
-    const user3 = "user3"; 
-    return (
-      <Container>
-        <MainText>
-          받는 사람<span color="red">*</span>
-        </MainText>
-        <UserContainer>
-          <UserBox onClick={() => active(user1)} rc={receiver} user={user1}>
-            <img src={jjangu} alt="user" />
-            <p>짱구</p>
+  useEffect(()=> {
+    if (familyId.length !== 0) {
+      axios({
+        method: "GET",
+        url: `https://k7b103.p.ssafy.io/api/v1/family/${familyId}/`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }).then((res) => {
+        setFamily(res.data.users);
+        setFamily(
+          res.data.users.map((item) => (
+            item ? {...item, active:false} : family
+          ))
+        )
+      });
+    }
+  }, [familyId])
+
+  useEffect(()=>{
+    console.log(family);
+  },[family])
+
+  
+  const [receiver, setReceiver] = useState([]);
+  const active = (active, id, index) => {
+    if (receiver.includes(id)) {
+      let newReceiver = [...receiver];
+      newReceiver.splice(receiver.indexOf(id), 1);
+      setReceiver([...newReceiver]);
+    } else {
+      setReceiver([id, ...receiver]);
+    }
+  };
+
+  useEffect(() => {
+    receivers({ receiver: receiver });
+  }, [receiver]);
+
+
+  return (
+    <Container>
+      <MainText>
+        받는 사람<span style={{ color: "red" }}>*</span>
+      </MainText>
+      <UserContainer>
+        {family.map((item, index) => (
+          <UserBox
+            key={index}
+            onClick={() => active(item.active, item.id, index)}
+            rc={receiver}
+            id={item.id}
+          >
+            <img src={item.image} alt="" />
+            <p>{item.name}</p>
           </UserBox>
-          <UserBox onClick={() => active(user2)} rc={receiver} user={user2}>
-            <img src={bong} alt="user" />
-            <p>봉</p>
-          </UserBox>
-          <UserBox onClick={() => active(user3)} rc={receiver} user={user3}>
-            <img src={userDefault} alt="user" />
-            <p>아빠</p>
-          </UserBox>
-        </UserContainer>
-      </Container>
-    );
+        ))}
+        
+      </UserContainer>
+    </Container>
+  );
 }
 
 export default Receiver;
