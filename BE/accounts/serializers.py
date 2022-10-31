@@ -111,9 +111,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)
     class Meta:
         model = User
-        fields = ('phone','name','birth','image','family_id')
+        fields = ('id','phone','name','birth','image','family_id')
         extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
-        read_only_fields = ('family_id','birth',)
+        read_only_fields = ('id','family_id','birth',)
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         for (key, value) in validated_data.items():
@@ -157,3 +157,4 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
