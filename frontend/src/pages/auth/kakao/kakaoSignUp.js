@@ -1,139 +1,78 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { customAxios } from "../../api/customAxios";
-import Header from "../../components/header";
-import DefaultProfile from "../../assets/defaultProfile.png";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import Header from "../../../components/header";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export interface ISignUpProps {}
-
-export interface IInnerFormProps {
-  formName: string;
-  formType: string;
-  formValue?: string;
-  formEvent: React.ChangeEventHandler<HTMLInputElement>;
-}
-
-export interface IFormStates {
-  name: string;
-  phone: string;
-  password: string;
-  passwordConfirm: string;
-  passwordSame: boolean;
-  year: string;
-  month: string;
-  day: string;
-  nextPage: boolean;
-  isSignup: boolean;
-}
-
-const FormStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 4vh;
+const Container = styled.div`
+  margin: 20% 5%;
 `;
 
-const InnerFormStyle = styled.div`
-  display: inline-block;
-  margin-top: 2vh;
-`;
-
-const FormNameStyle = styled.p`
-  font-weight: 400;
+const Info = styled.p`
+  margin: 64px 0;
   font-size: 16px;
-  line-height: 100%;
-  /* or 16px */
-  margin-top: 8px;
-  margin-bottom: 8px;
-
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.01em;
 `;
 
-const FormInputStyle = styled.input`
-  box-sizing: border-box;
-
-  width: 80vw;
-  height: 6vh;
-
-  font-size: 24px;
-
-  background: #ffffff;
-  border: 2px solid #ff787f;
-  box-shadow: 0px 0px 4px #bebebe;
-  border-radius: 10px;
+const InputBox = styled.div`
+  margin: 32px 0;
 `;
-
-const SignupNextStyle = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-top: 4vh;
-`;
-
-const FormImgDescStyle = styled.p`
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
+const Title = styled.p`
   font-size: 16px;
-  line-height: 100%;
-  /* or 16px */
-
-  letter-spacing: -0.01em;
-
-  color: #000000;
+  margin: 0 0 8px 8px;
 `;
-
-const ProfileStyle = styled.div`
+const Warning = styled.p`
+    font-size: 12px;
+    margin: 4px 0 8px 8px;
+    color: red;
+    display: ${props => props.active == false ? 'none': 'block'}
+`
+const Confirm = styled.p`
+  font-size: 12px;
+  margin: 4px 0 8px 8px;
+  color: #3db9a4;
+  display: ${(props) => (props.active == false ? "none" : "block")};
+`;
+const PhoneInputBox = styled.div`
+  width: 90%;
+  height: 44px;
+  border-radius: 20px;
+  border: solid 1px #ff787f;
+  padding: 0 5%;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  width: 50vw;
-  height: 50vw;
-
-  border-radius: 50%;
 `;
 
-const ProfileImgStyle = styled.img`
-  max-width: 100%;
-  clip-path: circle(25vw at center);
+const PhoneInput = styled.input`
+  width: 60%;
+  height: 40px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  outline: none;
 `;
-
-const AgeDescStyle = styled.p`
-  width: 80vw;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 100%;
-  /* or 16px */
-
-  letter-spacing: -0.01em;
-  text-align: start;
-
-  color: #000000;
-`;
+const CheckText = styled.p`
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+`
 
 const AgeSelectors = styled.div`
-  margin-bottom: 6vh;
+  margin: 8px 0;
+  width: 100%;
 `;
 
 const AgeSelector = styled.select`
-  width: 24vw;
-  height: 10vw;
+  width: 30%;
+  height: 44px;
 
-  margin-left: 2vw;
-  margin-right: 2vw;
+  margin-left: 2%;
 
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 100%;
   /* or 20px */
 
@@ -142,202 +81,213 @@ const AgeSelector = styled.select`
   letter-spacing: -0.01em;
 
   text-align: center;
+  color: #707070;
 
   background: #ffffff;
   border: 1px solid #ff787f;
-  box-shadow: 0px 0px 4px #bebebe;
-  border-radius: 10px;
-`;
-
-const ButtonStyle = styled.button`
-  margin-top: 20vh;
-  width: 80vw;
-  height: 6vh;
-
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 100%;
-  /* or 24px */
-
-  letter-spacing: -0.01em;
-
-  color: #ffffff;
-
-  background: linear-gradient(92.7deg, #fec786 11.06%, #fe9b7c 92.72%);
-
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border-radius: 20px;
-  border: none;
+  padding: 4px;
 `;
 
-const FooterOuterStyle = styled.div`
-  position: absolute;
-  top: 90vh;
-  width: 100%;
-  text-align: center;
+const BtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 56px auto;
 `;
-
-const FooterStyle = styled.p`
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 200;
-  font-size: 20px;
-  line-height: 100%;
-  /* identical to box height, or 20px */
-
+const Btn = styled.button`
+  width: 90%;
+  height: 56px;
   margin: auto;
-  letter-spacing: -0.02em;
-
-  color: #000000;
+  background: linear-gradient(45deg, #fec786, #fe9b7c);
+  border: none;
+  border-radius: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
 `;
 
-// 글자와 input form 한 세트
-const InnerForm = (props: any) => {
-  return (
-    <InnerFormStyle>
-      <FormNameStyle>{props.formName}</FormNameStyle>
-      <FormInputStyle
-        type={props.formType}
-        onChange={props.formEvent}
-        value={props.formValue}
-        maxLength={props.formName === "전화번호" ? 13 : 12}
-      />
-    </InnerFormStyle>
-  );
-};
 
-// 각 input 컴포넌트 (이름, 전화번호, 비밀번호, 비밀번호 확인) 묶음
-const Form = () => {
-  const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [passwordConfirm, setPasswordConfirm] = useState<string>("");
-  const [year, setYear] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
-  const [day, setDay] = useState<string>("");
-  const [passwordSame, setPasswordSame] = useState<boolean>(false);
-  const [nextPage, setNextPage] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!passwordSame) {
-      checkPassword();
-    }
+
+function KakaoSignup() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const preinfo = location.state;
+  const [info, setInfo] = useState({
+    kakao_id: String(preinfo.id),
+    name: preinfo.name,
+    image: preinfo.profile,
+    phone: '',
+    birth: '',
   });
 
-  const handleName = (e: React.FormEvent<HTMLInputElement>) => {
-    setName(e.currentTarget.value);
-  };
-  const handlePhone = (e: React.FormEvent<HTMLInputElement>) => {
-    setPhone(
-      e.currentTarget.value
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
+  const [phone, setPhone] = useState('');
+  
+
+  const onPhoneChange = (e) => {
+        setPhone(e.currentTarget.value
         .replace(/[^0-9]/g, "")
         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
         .replace(/(\-{1,2})$/g, "")
-    );
-  };
-  const handlePassword = (e: React.FormEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value);
-  };
-  const handlePasswordConfirm = (e: React.FormEvent<HTMLInputElement>) => {
-    setPasswordConfirm(e.currentTarget.value);
-  };
-
-  const checkPassword = () => {
-    if (!passwordSame) {
-      if (password !== "") {
-        if (password === passwordConfirm) {
-          setPasswordSame(true);
+    )}
+    useEffect(()=> {
+        if(phone.length === 13){
+            setInfo((pre)=>{return{
+                ...pre, phone:phone
+            }})
+        } else{
+            setInfo((pre)=> {
+                return{...pre, phone:''}
+            })
         }
-      }
-    } else {
-      if (password !== "") {
-        if (password !== passwordConfirm) {
-          setPasswordSame(false);
+    },[phone])
+    const onCertChange = (e) => {
+        setNum(e.currentTarget.value);
+    }
+    
+    const selectYear = (e) => {
+        setYear(e.target.value);
+    }
+    const selectMonth = (e) => {
+        setMonth(e.target.value);
+    }
+    const selectDay = (e) => {
+        setDay(e.target.value);
+    }
+    const [pwarn, setPwarn] = useState(false);
+  const [bwarn, setBwarn] = useState(false);
+  const [nwarn, setNwarn] = useState(false);
+  const [nconfirm, setNconfirm] = useState(false);
+  const [cconfirm, setCconfirm] = useState(false);
+  // 유저가 입력한 인증번호
+  const [certifiNum, setNum] = useState("");
+  // 인증 성공 여부
+  const [cerCheck, setCheck] = useState(false);
+  
+
+  const pushNum = (phone) => {
+    setNconfirm(true);
+    const data = new FormData();
+    data.append("phone", phone.replaceAll("-", ""));
+    axios({
+      method: "POST",
+      url: `https://k7b103.p.ssafy.io/api/v1/event/`,
+      data: data,
+    })
+  }
+  
+  const clickCheck = (certifiNum) => {
+    const data = new FormData();
+    data.append("phone", phone.replaceAll("-", ""));
+    data.append("certification", certifiNum);
+    axios({
+      method: "POST",
+      url: `https://k7b103.p.ssafy.io/api/v1/event/check/`,
+      data: data,
+    }).then((res) => {
+        if (res.status === 200) {
+            setNwarn(false);
+            setCconfirm(true);
+            setCheck(true);
+        } 
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            setCconfirm(false);
+            setNwarn(true);
+        }else if (err.response.status === 404) {
+            setCconfirm(false);
+            setNwarn(true);
+        } else if (err.response.status === 429) {
+          console.log("짧은 시간안에 너무 많은 요청을 보냈습니다.");
+        } else if (err.response.status === 500) {
+          console.log("server error");
         }
-      }
-    }
-  };
+    })
+  }
 
-  const goNext = () => {
-    // 정규식 문제 있음
-    //const REGEX_PASSWORD: RegExp = new RegExp('^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$');
 
-    if (
-      name !== "" &&
-      phone !== "" &&
-      password !== "" &&
-      passwordConfirm !== ""
-    ) {
-      if (passwordSame) {
-        //console.log(this.state.password.match(REGEX_PASSWORD))
-        //if (this.state.password.match(REGEX_PASSWORD)) {
-        setNextPage(true);
-        //} else {
-        //  console.log(this.state.password)
-        //  alert(
-        //    "비밀번호는 8~12 글자의 영문 대소문자, 숫자, 특수문자의 조합으로 이루어져야합니다."
-        //  );
-        //}
-      } else {
-        alert("비밀번호가 다릅니다.");
-      }
+  const push = () => {
+    if(cerCheck == false) {
+        setNwarn(true);
     } else {
-      alert("빈 칸이 있습니다.");
+        if (info.phone === '') {
+            setNconfirm(false);
+            setPwarn(true);
+        } else if(year === '' || month === '' || day===''){
+            setPwarn(false);
+            setBwarn(true);
+        } else {
+            const birth = String(year) + '-' + String(month) + '-' + String(day);
+            setInfo((pre) => {return{...pre, birth: birth}})
+            const data = new FormData();
+            data.append("kakao_id", info.kakao_id);
+            data.append("name", info.name);
+            data.append("image", info.image);
+            data.append("phone", info.phone.replaceAll("-", ""));
+            data.append("birth", birth);
+            axios({
+                method: "POST",
+                url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
+                data: data,
+            })
+            .then((res) => {
+                if (res.status === 201) {
+                    navigate("/");
+                }
+            }).catch((err) => {
+                if (err.response.status === 400) {
+                    console.log(err)
+                    alert('이미 가입된 회원입니다. 로그인을 해주세요.');
+                    navigate("/intro");
+                } else {
+                console.log("예상치 못한 에러군,,,");
+                }
+            })
+        }
+
     }
-  };
-
-  const selectYear = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setYear(e.currentTarget.value);
-  };
-
-  const selectMonth = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMonth(e.currentTarget.value);
-  };
-
-  const selectDay = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDay(e.currentTarget.value);
-  };
-
-  const navigate = useNavigate();
-  const signUp = async () => {
-    const signupForm = new FormData();
-    signupForm.append("name", name);
-    signupForm.append("phone", phone.replaceAll("-", ""));
-    signupForm.append("password", password);
-    signupForm.append("birth", year + "-" + month + "-" + day);
-
-    console.log(signupForm.get('name'));
-    console.log(signupForm.get('phone'));
-    console.log(signupForm.get('password'));
-    console.log(signupForm.get('birth'));
-
-
-    if (!year || !month || !day) {
-      alert("날짜가 없습니다.");
-    } else {
-      const response =  await customAxios.post("/accounts/signup/", signupForm)
-
-      console.log(response)
-
-      if(response.status === 201){
-        alert("회원가입 성공")
-        navigate('/login', {replace:true});
-      }else{
-        alert("몬가 문제가 있음")
-      }
-    }
-  };
-
+  }
   return (
     <div>
-      {nextPage ? (
-        <SignupNextStyle>
-          <FormImgDescStyle>프로필 사진을 변경해보세요</FormImgDescStyle>
-          <ProfileStyle>
-            <ProfileImgStyle src={DefaultProfile}></ProfileImgStyle>
-          </ProfileStyle>
-          <AgeDescStyle>생년월일</AgeDescStyle>
+      <Header label={"회원가입"} back="false"></Header>
+      <Container>
+        <Info>추가 정보를 입력해주세요🙂</Info>
+        <InputBox>
+          <Title>휴대폰 번호</Title>
+          <PhoneInputBox>
+            <PhoneInput
+                type="tel"
+                placeholder="휴대폰 11자리"
+                maxLength="13"
+                onChange={onPhoneChange}
+                value={phone}
+            ></PhoneInput>
+            <CheckText onClick={()=> pushNum(phone)}>인증번호 받기</CheckText>
+          </PhoneInputBox>
+          <Warning active={pwarn}>휴대폰 번호를 확인해주세요.</Warning>
+          <Confirm active={nconfirm}>인증번호를 전송하였습니다.</Confirm>
+        </InputBox>
+        <InputBox>
+          <Title>인증번호</Title>
+          <PhoneInputBox>
+            <PhoneInput
+                type="number"
+                placeholder="인증 번호 입력"
+                maxLength="6"
+                onChange={onCertChange}
+                value={certifiNum}
+            ></PhoneInput>
+            <CheckText onClick={() => clickCheck(certifiNum)}>확인</CheckText>
+          </PhoneInputBox>
+          <Warning active={nwarn}>인증번호가 잘못되었습니다.</Warning>
+          <Confirm active={cconfirm}>인증번호가 확인되었습니다.</Confirm>
+        </InputBox>
+        <InputBox>
+          <Title>생년월일</Title>
           <AgeSelectors>
             <AgeSelector onChange={selectYear}>
               <option value="">년도</option>
@@ -493,48 +443,14 @@ const Form = () => {
               <option value="31">31일</option>
             </AgeSelector>
           </AgeSelectors>
-          <ButtonStyle onClick={signUp}>회원가입</ButtonStyle>
-        </SignupNextStyle>
-      ) : (
-        <FormStyle>
-          <InnerForm
-            formName="이름"
-            formType="text"
-            formEvent={handleName}
-          ></InnerForm>
-          <InnerForm
-            formName="전화번호"
-            formType="text"
-            formValue={phone}
-            formEvent={handlePhone}
-          ></InnerForm>
-          <InnerForm
-            formName="비밀번호"
-            formType="password"
-            formEvent={handlePassword}
-          ></InnerForm>
-          <InnerForm
-            formName="비밀번호 확인"
-            formType="password"
-            formEvent={handlePasswordConfirm}
-          ></InnerForm>
-          <ButtonStyle onClick={goNext}>다음</ButtonStyle>
-        </FormStyle>
-      )}
+          <Warning active={bwarn}>생년월일을 확인해주세요.</Warning>
+        </InputBox>
+        <BtnBox>
+          <Btn onClick={push}>회원가입</Btn>
+        </BtnBox>
+      </Container>
     </div>
   );
-};
+}
 
-const Signup = () => {
-  return (
-    <div>
-      <Header label="회원가입" back={true}></Header>
-      <Form></Form>
-      <FooterOuterStyle>
-        <FooterStyle>Copyright ⓒB103</FooterStyle>
-      </FooterOuterStyle>
-    </div>
-  );
-};
-
-export default Signup;
+export default KakaoSignup;
