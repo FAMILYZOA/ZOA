@@ -37,12 +37,20 @@ class ChecklistCreateAPIView(GenericAPIView):
     serializer_class = ChecklistCreateSerializer
     def post(self, request):
         member = request.data.getlist('to_users_id')
-        context = {
-            'text': request.data.get('text'),
-            'photo': request.FILES['photo'],
-            'to_users_id': member,
-            'from_user_id': request.user.id,
-        }
+        if request.data.get('photo') == None:
+            context = {
+                'text': request.data.get('text'),
+                'to_users_id': member,
+                'from_user_id': request.user.id,
+            }
+        else:
+            context = {
+                'text': request.data.get('text'),
+                'photo': request.FILES['photo'],
+                'to_users_id': member,
+                'from_user_id': request.user.id,
+            }
+        
         if not request.user.family_id:
             return Response("당신은 가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
         
