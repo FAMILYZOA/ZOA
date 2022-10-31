@@ -12,6 +12,7 @@ from rest_framework.parsers import MultiPartParser
 from .serializers import (
     KaKaoLoginSerializer,
     KaKaoSignupSerializer,
+    ProfileRetriveSerializer,
     SignupSerializer,
     LoginSerializer,
     RefreshTokenSerializer,
@@ -119,6 +120,12 @@ class ProfileAPIView(RetrieveUpdateAPIView):
     @swagger_auto_schema(operation_summary="회원정보 조회")
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = ProfileRetriveSerializer(instance)
+        return Response(serializer.data)
+
     @swagger_auto_schema(operation_summary="회원정보 수정")
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
