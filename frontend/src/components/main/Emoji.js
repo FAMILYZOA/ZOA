@@ -10,7 +10,7 @@ const Container = styled.div`
 const EContainer = styled.div`
   display: flex;
   margin: 16px 8px;
-  width: 90%-32px;
+  height: 72px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
@@ -29,7 +29,7 @@ const EContainer = styled.div`
 const MContainer = styled.div`
   display: flex;
   margin: 16px 8px;
-  width: 90%-32px;
+  height: 72px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
@@ -68,31 +68,62 @@ const EmojiText = styled.p`
   margin: auto;
 `;
 
+const Contents = styled.div`
+  margin: 16px 0px;
+  display: flex;
+  align-items: center;
+`;
+const Text = styled.div`
+  font-size: 16px;
+  margin: auto 4px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 function Emojis({ scrum }) {
   return (
     <Container>
       <BrowserView>
         <EContainer>
-          {scrum.map((item, index) => (
-            <EmojiBox key={index}>
-              <Emoji>
-                <EmojiText>{item.emoji}</EmojiText>
-              </Emoji>
-              <UserImg src={item.image} alt="userimg"></UserImg>
-            </EmojiBox>
-          ))}
+          {scrum.length === 0 ? (
+            <Contents>
+              <Text>🙂'안녕'에서 오늘의 나를 알려주세요! </Text>
+            </Contents>
+          ) : (
+            <>
+              {scrum.map((item, index) => (
+                <EmojiBox key={index}>
+                  <Emoji>
+                    <EmojiText>{item.emoji}</EmojiText>
+                  </Emoji>
+                  <UserImg src={item.image} alt="userimg"></UserImg>
+                </EmojiBox>
+              ))}
+            </>
+          )}
         </EContainer>
       </BrowserView>
+
       <MobileView>
         <MContainer>
-          {scrum.map((item, index) => (
-            <EmojiBox key={index}>
-              <Emoji>
-                <EmojiText>{item.emoji}</EmojiText>
-              </Emoji>
-              <UserImg src={item.image} alt="userimg"></UserImg>
-            </EmojiBox>
-          ))}
+          {scrum.length === 0 ? (
+            <Contents>
+              <Text>🙂'안녕'에서 오늘의 나를 알려주세요! </Text>
+            </Contents>
+          ) : (
+            <>
+              {scrum.map((item, index) => (
+                <EmojiBox key={index}>
+                  <Emoji>
+                    <EmojiText>{item.emoji}</EmojiText>
+                  </Emoji>
+                  <UserImg src={item.image} alt="userimg"></UserImg>
+                </EmojiBox>
+              ))}
+            </>
+          )}
         </MContainer>
       </MobileView>
     </Container>

@@ -11,6 +11,7 @@ import KakaoSignup from "./pages/auth/kakao/kakaoSignUp";
 import "./App.css";
 import Resister from "./pages/auth/Resister";
 import NewLogin from "./pages/auth/kakao/Login";
+import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 
 import Navbar from "./components/Navbar";
@@ -127,12 +128,13 @@ function App() {
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
           <Route path="/scrum/create" element={<ScrumCreate />}></Route>
           <Route path="/intro" element={<Prelogin />} />
-          <Route path="/" element={<Main />} />
+          <Route path="/main" element={<Main />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
           <Route path="/login" element={<NewLogin />} />
+          <Route path="/" element={<KakaoLoding />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>

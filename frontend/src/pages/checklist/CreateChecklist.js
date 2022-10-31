@@ -35,7 +35,7 @@ function CreateChecklist() {
   };
 
   const event = () => {
-    console.log(info.photo);
+    console.log(info.to_users_id);
     const data = new FormData();
     data.append("text", info.text);
     data.append("to_users_id", info.to_users_id);
