@@ -21,7 +21,6 @@ function Main() {
         Authorization: `Bearer ${token}`,
       },
     }).then((res) => {
-      console.log(res.data);
       setScrum(res.data);
     });
   }, [family]);
