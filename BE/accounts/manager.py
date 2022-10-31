@@ -1,8 +1,23 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+import random
 
 first_phone_number = ['010','011','016','017','018','019']
+
+def password_creator() :
+
+    uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    lowercase = uppercase.lower()
+    digits = '0123456789'
+    symbols = "()[]{},;:.-_/\\?)*#"
+
+    password = random.sample(uppercase,3)+random.sample(lowercase,3)+random.sample(digits,3)+random.sample(symbols,3)
+
+    random.shuffle(password)
+
+    password = ''.join(password)
+    return password
 
 class CustomUserManager(BaseUserManager):
     """

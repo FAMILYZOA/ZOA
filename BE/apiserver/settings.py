@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'accounts',
     'families',
     'checklist',
+    'scrums',
+    'event',
 
     # default
     'django.contrib.admin',
@@ -62,6 +64,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'corsheaders',
+    'storages'
 
 ]
 
@@ -100,23 +103,22 @@ WSGI_APPLICATION = 'apiserver.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = { 
-# 	'default': { 
-#     	'ENGINE': 'django.db.backends.mysql', 
-#         'NAME': 'test', 
-#         'USER': 'root', 
-#         'PASSWORD': env('MYSQL_PASSWORD'), 
-#         'HOST': 'k7b103.p.ssafy.io', 
-#         'PORT': '3306', 
-#      } 
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DATABASES = { 
+	'default': { 
+    	'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'test', 
+        'USER': 'root', 
+        'PASSWORD': env('MYSQL_PASSWORD'), 
+        'HOST': 'k7b103.p.ssafy.io', 
+        'PORT': '3306', 
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
+     } 
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -170,7 +172,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -195,6 +197,22 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
+SMS_SECRET = {
+    'SMSServiceId' : env('SMSServiceId'),
+    'SMSAccessKey' : env('SMSAccessKey'),
+    'SMSSecretKey' : env('SMSSecretKey'),
+    'FromUser' : env('FromUser'),
+}
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = 'ap-northeast-2'
+
+AWS_STORAGE_BUCKET_NAME = 'zoa-bucket' # 설정한 버킷 이름
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 STATIC_URL = '/static/'
@@ -204,10 +222,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
