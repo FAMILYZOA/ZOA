@@ -35,14 +35,15 @@ function CreateChecklist() {
   };
 
   const event = () => {
-    console.log(info.to_users_id);
     const data = new FormData();
     data.append("text", info.text);
-    data.append("to_users_id", info.to_users_id);
+    {
+      info.to_users_id.map((userId) => data.append("to_users_id", userId));
+    }
     if (info.photo !== "") {
       data.append("photo", info.photo);
     }
-
+    console.log(data);
     axios({
       method: "POST",
       url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
