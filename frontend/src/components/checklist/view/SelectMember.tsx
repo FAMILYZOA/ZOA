@@ -33,13 +33,13 @@ const UnselectedMemberProfileImg = styled.img`
 type SelectMemberProps = {
   selectedMember: {id: number; name: string; image: string;};
   unSelectedMember: {id: number; name: string; image: string;}[];
-  getSelect: (id: number) => void;
+  getModal: () => void;
 }
 
-function SelectMember( { selectedMember, unSelectedMember, getSelect }: SelectMemberProps ){ // 선택되지 않은 멤버 리스트, 임시로 더미데이터
+function SelectMember( { selectedMember, unSelectedMember, getModal }: SelectMemberProps ){ // 선택되지 않은 멤버 리스트, 임시로 더미데이터
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
-    getSelect(id);
+    getModal();
   }
 
   return (
@@ -50,7 +50,9 @@ function SelectMember( { selectedMember, unSelectedMember, getSelect }: SelectMe
         </div>
         <UnselectedGroup>
           {unSelectedMember.map((member: any) => (
-            <UnselectedMemberProfile key={member.id} onClick={()=>(onClick(member.id))}>
+            <UnselectedMemberProfile key={member.id} 
+              onClick={()=>(onClick(member.id))}
+            >
               <UnselectedMemberProfileImg src={member.image}/>
             </UnselectedMemberProfile>
             ))}

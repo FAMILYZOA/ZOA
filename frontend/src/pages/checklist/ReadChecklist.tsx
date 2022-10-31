@@ -22,7 +22,40 @@ const ViewMore = styled.div`
   font-size: 2vh;
 `;
 
+const ModalBack = styled.div`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  background-color: rgba(102,102,102,0.5);
+`
+const ModalDiv = styled.div`
+  position: absolute;
+  top: 13vh;
+  right: 2vh;
+  z-index: 3;
+`
+const ModalItem = styled.div`
+  display: flex;
+  align-items: center;
+  z-index: 4;
+  margin-bottom: 1vh;
+  margin-left: auto;
+`
+const ModalItemName = styled.div`
+  margin-right: 1vh;
+  font-weight: 700;
+  font-size: 2vh;
+`
+const ModalItemImg = styled.img`
+  width: 8vh;
+  height: 8vh;
+  border-radius: 4vh;
+  object-fit: fill;
+`
+
 function ReadChecklist() {
+  const [isModal, setIsModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
     name: string;
@@ -113,6 +146,7 @@ function ReadChecklist() {
     const tempMember = [...FamilyMembers];
     tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
+    setIsModal(false);
   };
 
   const refreshCheckLists = (to_users_id: number) => {
@@ -154,26 +188,48 @@ function ReadChecklist() {
     setUnCheckedList(tempUnCheckedList);
   },[checkList])
 
+  const getModal = () => {
+    setIsModal(true);
+  }
+
+  const getDetailSelect = (index: number) => {
+    setOnDetail(index);
+  }
+
+  const detailOff = () => {
+    setOnDetail(-1);
+  }
+
   return (
     <div>
       <Header label="할 일 목록" back="true"></Header>
+      {isModal && <ModalBack onClick={() => (setIsModal(false))}/>}
+      {isModal && 
+        <ModalDiv>
+          {unSelectedMember.map((member: any) => (
+            <ModalItem onClick={() => (getSelect(member.id))}>
+              <ModalItemName>{member.name}</ModalItemName>
+              <div><ModalItemImg src={member.image}/></div>
+            </ModalItem>
+          ))}
+        </ModalDiv>}
       <CheckListViewBody>
         <SelectMember
           selectedMember={selectedMember}
           unSelectedMember={unSelectedMember}
-          getSelect={getSelect}
+          getModal={getModal}
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
-        {unCheckedList.map((item: any) => (
-          <CheckItem item={item} key={item.id} />
+        {unCheckedList.map((item: any, i: number) => (
+          <CheckItem item={item} index={i} key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
         ))}
         {!viewMore &&
-          todayCheckedList.map((item: any) => (
-            <CheckItem item={item} key={item.id} />
+          todayCheckedList.map((item: any, i: number) => (
+            <CheckItem item={item} index={i + unCheckedList.length} key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
           ))}
         {viewMore &&
-          checkedList.map((item: any) => (
-            <CheckItem item={item} key={item.id} />
+          checkedList.map((item: any, i: number) => (
+            <CheckItem item={item} index={i + todayCheckedList.length + unCheckedList.length } key={item.id} getDetailSelect = {getDetailSelect} detailOff = {detailOff} onDetail={onDetail} />
           ))}
         {!viewMore && (
           <ViewMore onClick={() => setViewMore(true)}>+ 더보기</ViewMore>
