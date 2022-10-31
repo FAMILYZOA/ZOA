@@ -1,4 +1,5 @@
 import React from 'react';
+import Main from './pages/main/main';
 import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
 import Signup from "./pages/auth/signup";
@@ -26,6 +27,7 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/main" element={<Main />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
