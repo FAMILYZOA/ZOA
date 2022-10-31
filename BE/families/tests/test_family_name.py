@@ -12,22 +12,23 @@ class TestCaseSetUp(APITestCase)  :
         self.client.post(reverse("accounts:signup"),{"phone":"01046509261","name":"이조아","password":"Password123!","birth":"1999-11-11"})
         response=self.client.post(reverse('accounts:login'),{"phone":"01046509261","password":"Password123!"})
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['token']['access']}")
+        get_user = self.client.get(reverse('accounts:profile'))
         self.client.post(reverse('families:join_family',kwargs={'family_id':family_id}))
 
 class UserNameSetTestCase(TestCaseSetUp) :
 
     def test_1_get_default_interaction_name(self) :
         self.authenticate()
-        response = self.client.get(reverse('families:info',kwargs={'id':1}))
+        response = self.client.get(reverse('families:info',kwargs={'id':8}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['users'][0]['set_name'],False)
         self.assertEqual(response.data['users'][1]['set_name'],'나')
 
     def test_2_set_interaction_name(self) :
         self.authenticate()
-        response = self.client.post(reverse('families:name_set',kwargs={'id':3}),{'name':'아빠'})
+        response = self.client.post(reverse('families:name_set',kwargs={'id':28}),{'name':'아빠'})
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
-        self.assertEqual(response.data['to_user'],3)
+        self.assertEqual(response.data['to_user'],28)
         self.assertEqual(response.data['name'],'아빠')
         get_user = self.client.get(reverse('accounts:profile'))
         self.assertEqual(response.data['from_user'],get_user.data['id'])
@@ -42,14 +43,14 @@ class UserNameSetTestCase(TestCaseSetUp) :
 
     def test_4_edit_interaction_name_self(self) :
         self.authenticate()
-        self.client.post(reverse('families:name_set',kwargs={'id':7}),{'name':'아빠'})
-        response = self.client.put(reverse('families:name_set',kwargs={'id':7}),{'name':'아저씨'})
+        self.client.post(reverse('families:name_set',kwargs={'id':32}),{'name':'아빠'})
+        response = self.client.put(reverse('families:name_set',kwargs={'id':32}),{'name':'아저씨'})
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['name'],'아저씨')
 
     def test_5_set_interaction_name_again(self) :
         self.authenticate()
-        response = self.client.post(reverse('families:name_set',kwargs={'id':9}),{'name':'아저씨'})
-        response = self.client.post(reverse('families:name_set',kwargs={'id':9}),{'name':'아저씨!!'})
+        response = self.client.post(reverse('families:name_set',kwargs={'id':34}),{'name':'아저씨'})
+        response = self.client.post(reverse('families:name_set',kwargs={'id':34}),{'name':'아저씨!!'})
         self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data,{'이미 김조아님의 이름을 설정했습니다. 이름 수정만 가능합니다.'})
