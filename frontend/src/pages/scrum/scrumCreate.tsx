@@ -297,7 +297,7 @@ const RegistBtn = (props: registBtnPRops) => {
         .catch(async (err) => {
           switch (err.response.status) {
             case 400:
-              alert("스크럽은 하루에 한개만 작성 가능합니다.")
+              alert("스크럼은 하루에 한개만 작성 가능합니다.")
               break;
             case 401:
               const code = err.response.data.code;
@@ -339,3 +339,18 @@ const RegistBtn = (props: registBtnPRops) => {
     </RegistStyle>
   );
 };
+
+const ScrumCreate = () => {
+  return (
+    <div>
+      <Header label="데일리 스크럼" back={true}></Header>
+      <div>
+        <DateSelector></DateSelector>
+        <ScrumCreateBody></ScrumCreateBody>
+      </div>
+      <div>푸터 자리</div>
+    </div>
+  );
+}
+
+export default ScrumCreate;
