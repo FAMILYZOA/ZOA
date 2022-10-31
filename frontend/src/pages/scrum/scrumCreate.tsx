@@ -4,7 +4,6 @@ import EmojiPicker, {
   EmojiStyle,
   EmojiClickData,
 } from "emoji-picker-react";
-import { method } from "lodash";
 import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -256,7 +255,7 @@ const Today = (props: InputProps) => {
 const RegistBtn = (props: registBtnPRops) => {
   // 나중에 저장 방식 바뀌면 수정 예정
   const [isRegist, toggleResigt] = useState<boolean>(true);
-  const tokens: any = useAppSelector((state) => state.token.value);
+  const tokens: any = useAppSelector((state) => state.token.access);
 
   useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
