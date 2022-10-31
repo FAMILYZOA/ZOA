@@ -28,7 +28,7 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<Test />} />
+          <Route path="/" element={<Main />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
         </Routes>

@@ -28,16 +28,15 @@ const CheckList = () => {
 
   return(
     <>
-    <div>
+      <div>
         <div style={{display: "flex", justifyContent: "space-between", width: "80%"}}>
           <CheckListNameWrapper style={{margin: "0px 0px 0px 20px"}}>체크리스트</CheckListNameWrapper>
-          {/* 플러스 버튼에 나중에 체크리스트 추가하는 페이지 걸어놓기 */}
           <CheckListPlusButton onClick={() => navigate("/checklist")}>
             <FaPlusCircle size="24"/>
           </CheckListPlusButton>
       </div>
       <div>
-            <CheckListList/>
+        <CheckListList/>
       </div>
       </div>
     </>
