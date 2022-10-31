@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os, environ
+import pymysql  
+pymysql.install_as_MySQLdb()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 env = environ.Env(
     # set casting, default value
@@ -42,6 +45,9 @@ INSTALLED_APPS = [
     # myapp 
     'accounts',
     'families',
+    'checklist',
+    'scrums',
+    'event',
 
     # default
     'django.contrib.admin',
@@ -58,6 +64,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'corsheaders',
+    'storages'
 
 ]
 
@@ -96,11 +103,23 @@ WSGI_APPLICATION = 'apiserver.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DATABASES = { 
+	'default': { 
+    	'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'test', 
+        'USER': 'root', 
+        'PASSWORD': env('MYSQL_PASSWORD'), 
+        'HOST': 'k7b103.p.ssafy.io', 
+        'PORT': '3306', 
+        'TEST': {
+            'NAME': 'zoa_test',
+        },
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
+     } 
 }
 
 
@@ -122,6 +141,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -130,6 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS' :{
@@ -152,7 +175,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -173,10 +196,26 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY,
     'ROTATE_REFRESH_TOKENS': True,
     'UPDATE_LAST_LOGIN': True,
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
+SMS_SECRET = {
+    'SMSServiceId' : env('SMSServiceId'),
+    'SMSAccessKey' : env('SMSAccessKey'),
+    'SMSSecretKey' : env('SMSSecretKey'),
+    'FromUser' : env('FromUser'),
+}
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = 'ap-northeast-2'
+
+AWS_STORAGE_BUCKET_NAME = 'zoa-bucket' # 설정한 버킷 이름
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 STATIC_URL = '/static/'
@@ -186,10 +225,31 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH'
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+

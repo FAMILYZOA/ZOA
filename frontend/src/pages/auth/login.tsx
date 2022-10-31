@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setAccessToken } from "../../features/token/tokenSlice";
+import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
 
 
 const LoginStyle = styled.div`
@@ -217,7 +217,6 @@ const Header = () => {
 const Form = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [userToken, setUserToken] = useState<string>("");
 
   // 전화번호 입력 업데이트
   const handlePhone = (e: React.FormEvent<HTMLInputElement>) => {
@@ -234,7 +233,6 @@ const Form = () => {
     setPassword(e.currentTarget.value);
   };
 
-  const token = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
   const navigate = useNavigate();
 
@@ -248,8 +246,8 @@ const Form = () => {
     console.log(loginForm.get("phone"));
 
     customAxios.post("accounts/login/", loginForm).then((response) => {
-      setUserToken(response.data.token.access);
       dispatch(setAccessToken(response.data.token.access));
+      dispatch(setRefreshToken(response.data.token.refresh));
       alert("로그인 성공!");
       navigate('/scrum/create', {replace: true});
     }).catch((err) => {
