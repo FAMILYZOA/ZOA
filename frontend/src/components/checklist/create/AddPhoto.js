@@ -30,12 +30,17 @@ const DelBtn = styled.div`
 function AddPhoto({ getPhoto }) {
   //미리보기용
   const [file, setFile] = useState(plus);
+  //업로드 용
+  const [photo, setPhoto] = useState("");
   const saveFile = (e) => {
+    console.log(e);
     setFile(URL.createObjectURL(e.target.files[0]));
+    setPhoto(e.target.files[0]);
   };
   const deleteFile = () => {
     URL.revokeObjectURL(file);
     setFile(plus);
+    setPhoto("");
   };
   const photoInput = useRef();
   const handleClick = () => {
@@ -43,7 +48,7 @@ function AddPhoto({ getPhoto }) {
   };
 
   useEffect(() => {
-    getPhoto({ photo: file });
+    getPhoto({ photo: photo });
   }, [file]);
   return (
     <Container>
