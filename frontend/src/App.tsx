@@ -12,6 +12,7 @@ import Test from "./pages/auth/kakao/Test";
 import KakaoSignup from './pages/auth/kakao/kakaoSignUp';
 import './App.css';
 import Resister from './pages/auth/Resister';
+import NewLogin from "./pages/auth/kakao/Login"
 
 import Navbar from './components/Navbar';
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
+          <Route path="/newLogin" element={<NewLogin />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
