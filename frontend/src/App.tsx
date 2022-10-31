@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import Main from './pages/main/main';
+import Main from "./pages/main/main";
 import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
 import Signup from "./pages/auth/signup";
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { FamilyManage } from './pages/family'
-import ScrumCreate from './pages/scrum/scrumCreate';
-import FamilyCreate from './pages/family/FamilyCreate';
-import FamilyNameEdit from './pages/family/FamilyNameEdit';
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { FamilyManage } from "./pages/family";
+import ScrumCreate from "./pages/scrum/scrumCreate";
+import FamilyCreate from "./pages/family/FamilyCreate";
+import FamilyNameEdit from "./pages/family/FamilyNameEdit";
 import Test from "./pages/auth/kakao/Test";
 import KakaoSignup from "./pages/auth/kakao/kakaoSignUp";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
@@ -135,9 +135,7 @@ function App() {
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
-          <Route path="/kacreateChecklist" element={<CreateChecklist />} /> 
-          <Route path="/ChecklistSignup" element={<ReadChecklistSignup />} />
-          <Route path="/register" element={<Resister />} /> 
+          <Route path="/register" element={<Resister />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
