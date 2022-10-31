@@ -9,10 +9,13 @@ import ScrumCreate from './pages/scrum/scrumCreate';
 import FamilyCreate from './pages/family/FamilyCreate';
 import FamilyNameEdit from './pages/family/FamilyNameEdit';
 import Test from "./pages/auth/kakao/Test";
-import KakaoSignup from "./pages/auth/kakao/kakaoSignUp";
+import KakaoSignup from './pages/auth/kakao/kakaoSignUp';
+import './App.css';
+import Resister from './pages/auth/Resister';
+import NewLogin from "./pages/auth/kakao/Login"
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
-import "./App.css";
-import Resister from "./pages/auth/Resister";
+
+
 
 import Navbar from "./components/Navbar";
 
@@ -135,8 +138,8 @@ function App() {
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
-          <Route path="/kacreateChecklist" element={<CreateChecklist />} /> 
-          <Route path="/ChecklistSignup" element={<ReadChecklistSignup />} />
+          <Route path="/register" element={<Resister />} />
+          <Route path="/newLogin" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} /> 
         </Routes>
         <Navbar></Navbar>
