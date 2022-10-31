@@ -32,24 +32,24 @@ const MemberProfileImg = styled.img`
 const ScrumItem = ({scrums}) => {
 
   const navigate = useNavigate();
-  useEffect(()=>{
-    console.log(scrums);
-  },[scrums])
+  // useEffect(()=>{
+  //   console.log(scrums);
+  // },[scrums])
 
   return(
     <>
       <ScrumWrapper style={{display: "flex"}}>
         <ProfileWrapper>
           <MemberProfile>
-            <MemberProfileImg/>
+            <MemberProfileImg src={scrums.image}/>
           </MemberProfile>
         </ProfileWrapper>
         <ItemWrapper>
           <div style={{margin: "1vh"}}>
-           {/* 🙋‍♂️ {scrums.yesterday} */}
+           🙋‍♂️ {scrums.yesterday}
           </div>
           <div style={{margin: "1vh"}}>
-           {/* 📢 {scrums.today} */}
+           📢 {scrums.today}
           </div>
         </ItemWrapper>
       </ScrumWrapper>

@@ -28,7 +28,8 @@ const ScrumHome = () => {
 
   // 받아온 값 저장
   const [scrums, setScrums] = useState([]);
-
+  const famScrums = [];
+  
   // const token = useAppSelector((state) => state.token.value);
   useEffect(() => {
     axios({
@@ -46,7 +47,14 @@ const ScrumHome = () => {
       console.log(err)
     })
   }, [])
-  console.log(scrums[0])
+  // let i = 0
+  // for (i = 1; i < scrums.length; i++) {
+  //   famScrums.push(scrums[i])
+  // }
+  // famScrums.push(scrums[1])
+  // famScrums.push(scrums[2])
+  // // console.log(scrums[1])
+  // console.log(famScrums)
 
   return(
     <>
@@ -66,7 +74,9 @@ const ScrumHome = () => {
             <ScrumItem scrums={scrums[0]}></ScrumItem>
           </div>
           <div>
-            <ScrumFamItem></ScrumFamItem>
+            {famScrums.map((item) => (
+              <ScrumFamItem {...item} key={item.id}/>
+            ))}
           </div>
     </>
   )

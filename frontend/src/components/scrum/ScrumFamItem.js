@@ -23,10 +23,10 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumFamItem = ({scrums}) => {
+const ScrumFamItem = ({id, emoji}) => {
 
     const navigate = useNavigate();
-    console.log(scrums)
+    console.log(id)
 
     return(
         <> 
