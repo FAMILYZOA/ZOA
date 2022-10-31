@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
 import { CheckItem } from "../../components/checklist/view";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import axios from "axios";
 
 const CheckListViewBody = styled.div`
   padding: 3vh 2vh;
@@ -25,150 +27,77 @@ function ReadChecklist() {
     id: number;
     name: string;
     image: string;
+    set_name: string;
   }>({
-    id: 1,
-    name: "신짱아",
-    image:
-      "https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png",
+    id: -1,
+    name: "",
+    image: "",
+    set_name: "",
   }); // 선택된 인원
   const [unSelectedMember, setUnSelectedMember] = useState<
-    { id: number; name: string; image: string }[]
+    { id: number; name: string; image: string, set_name: string }[]
   >([
     {
-      id: 2,
-      name: "신짱구",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
-    },
-    {
-      id: 3,
-      name: "봉미선",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
-    },
-    {
-      id: 4,
-      name: "신형만",
-      image:
-        "https://user-images.githubusercontent.com/97648026/198463633-0f10182b-21f9-4530-bdcd-428ee9ca2892.png",
-    },
-  ]); // 선택되지 않은 인원
-  const [FamilyMembers, setFamilyMembers] = useState<
-    { id: number; name: string; image: string }[]
-  >([
-    {
-      id: 1,
-      name: "신짱아",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png",
-    },
-    {
-      id: 2,
-      name: "신짱구",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
-    },
-    {
-      id: 3,
-      name: "봉미선",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
-    },
-    {
-      id: 4,
-      name: "신형만",
-      image:
-        "https://user-images.githubusercontent.com/97648026/198463633-0f10182b-21f9-4530-bdcd-428ee9ca2892.png",
-    },
-  ]); // 임시 변수. 상위로부터 props로 받아올 것
-
+      id: -1,
+      name: "",
+      image: "",
+      set_name: "",
+    },]); // 선택되지 않은 인원
+  const FamilyMembers = useAppSelector((state) => state.family.users);
   const [checkList, setCheckList] = useState<
-    { id: number; text: string; status: boolean; to_user_id: number }[]
+    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
   >([
     {
-      id: 1,
-      text: "1번 할일",
+      id: -1,
+      text: "",
       status: false,
-      to_user_id: 1,
-    },
-    {
-      id: 2,
-      text: "2번 할일",
-      status: false,
-      to_user_id: 1,
-    },
-    {
-      id: 3,
-      text: "3번 할일",
-      status: true,
-      to_user_id: 1,
-    },
-    {
-      id: 4,
-      text: "4번 할일",
-      status: false,
-      to_user_id: 1,
-    },
-    {
-      id: 5,
-      text: "5번 할일",
-      status: true,
-      to_user_id: 1,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
     },
   ]);
 
   const [unCheckedList, setUnCheckedList] = useState<
-    { id: number; text: string; status: boolean; to_user_id: number }[]
+    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
   >([
     {
-      id: 1,
-      text: "1번 할일",
+      id: -1,
+      text: "",
       status: false,
-      to_user_id: 1,
-    },
-    {
-      id: 2,
-      text: "2번 할일",
-      status: false,
-      to_user_id: 1,
-    },
-    {
-      id: 4,
-      text: "4번 할일",
-      status: false,
-      to_user_id: 1,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
     },
   ]);
 
   const [checkedList, setCheckedList] = useState<
-    { id: number; text: string; status: boolean; to_user_id: number }[]
+    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
   >([
     {
-      id: 3,
-      text: "3번 할일",
-      status: true,
-      to_user_id: 1,
-    },
-    {
-      id: 5,
-      text: "5번 할일",
-      status: true,
-      to_user_id: 1,
+      id: -1,
+      text: "",
+      status: false,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
     },
   ]);
 
   const [todayCheckedList, setTodayCheckedList] = useState<
-    { id: number; text: string; status: boolean; to_user_id: number }[]
+    { id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }[]
   >([
     {
-      id: 5,
-      text: "5번 할일",
-      status: true,
-      to_user_id: 1,
+      id: -1,
+      text: "",
+      status: false,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
     },
   ]);
   const [viewMore, setViewMore] = useState<boolean>(false);
-  const [onDetail, setOnDetail] = useState<number>(-1);
+
+  const accessToken = useAppSelector((state) => state.token.access)
 
   const getSelect = (id: number) => {
     let index: number = 0;
@@ -179,12 +108,51 @@ function ReadChecklist() {
         return false;
       }
     });
-
+    setViewMore(false);
     setSelectedMember(FamilyMembers[index]);
     const tempMember = [...FamilyMembers];
     tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
   };
+
+  const refreshCheckLists = (to_users_id: number) => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/${to_users_id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        setCheckList(res.data);
+        console.log("get checklist success")
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
+  useEffect(() => {
+    setSelectedMember(FamilyMembers[0]);
+    const tempMember = [...FamilyMembers];
+    tempMember.splice(0, 1);
+    setUnSelectedMember(tempMember);
+  })
+
+  useEffect(() => {
+    const tempCheckedList: Array<{ id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }> = [];
+    const tempUnCheckedList: Array<{ id: number; text: string; status: boolean; photo: string; created_at: string; to_user_id: number[] }> = [];
+
+    checkList.forEach((value) => {
+      if (value.status) {
+        tempCheckedList.push(value);
+      } else {
+        tempUnCheckedList.push(value);
+      }
+    })
+    setCheckedList(tempCheckedList);
+    setUnCheckedList(tempUnCheckedList);
+  },[checkList])
 
   return (
     <div>
