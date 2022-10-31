@@ -7,7 +7,8 @@ from rest_framework.generics import GenericAPIView
 from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
 from .models import Checklist
 from accounts.models import User
-
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 class DdayAPIView(GenericAPIView):
     # TODO : 캘린더 app의 model 만든 후 개발
@@ -62,21 +63,21 @@ class ChecklistCreateAPIView(GenericAPIView):
 
 
 class ChecklistDetailAPIView(GenericAPIView):
-    get_serializer_class = ChecklistDetailSerializer
+    serializer_class = ChecklistDetailSerializer
     def get(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
-        serializer = self.get_serializer_class(checklist)
+        serializer = self.get_serializer(checklist)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
 
-    serializer_class = ChecklistStateChangeSerializer
+    @swagger_auto_schema(request_body=ChecklistStateChangeSerializer)
     def put(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
-        serializer = self.serializer_class(checklist, data=request.data)
+        serializer = ChecklistStateChangeSerializer(checklist, data=request.data)
         if serializer.is_valid():
             if request.user in checklist.to_users_id.all():
                 serializer.save()
-                return Response("성공적으로 변경되었습니다.", status=status.HTTP_200_OK) 
+                return Response(serializer.data, status=status.HTTP_200_OK) 
         return Response("Todo가 부여된 사용자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
 
 
