@@ -37,12 +37,21 @@ class ChecklistTodayAPIView(GenericAPIView):
 class ChecklistCreateAPIView(GenericAPIView):
     serializer_class = ChecklistCreateSerializer
     def post(self, request):
-        member = request.POST.getlist('to_users_id')
-        context = {
-            'text': request.data.get('text'),
-            'to_users_id': member,
-            'from_user_id': request.user.id,
-        }
+        member = request.data.getlist('to_users_id')
+        if request.data.get('photo') == None:
+            context = {
+                'text': request.data.get('text'),
+                'to_users_id': member,
+                'from_user_id': request.user.id,
+            }
+        else:
+            context = {
+                'text': request.data.get('text'),
+                'photo': request.FILES['photo'],
+                'to_users_id': member,
+                'from_user_id': request.user.id,
+            }
+        
         if not request.user.family_id:
             return Response("당신은 가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
         
@@ -56,7 +65,8 @@ class ChecklistCreateAPIView(GenericAPIView):
                 }
                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = ChecklistDetailSerializer(data=context)
+
+        serializer = self.serializer_class(data=context)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
