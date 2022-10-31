@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -9,9 +9,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { customAxios } from "../../api/customAxios";
-import { useAppSelector } from "../../app/hooks";
+import { AuthRefresh, customAxios } from "../../api/customAxios";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  setAccessToken,
+  setRefreshToken,
+} from "../../features/token/tokenSlice";
 import Header from "../../components/header";
 import TextBox from "../../components/textBox";
 
@@ -255,9 +260,9 @@ const Today = (props: InputProps) => {
 const RegistBtn = (props: registBtnPRops) => {
   // 나중에 저장 방식 바뀌면 수정 예정
   const [isRegist, toggleResigt] = useState<boolean>(true);
-  const tokens: any = useAppSelector((state) => state.token.access);
-
-  useEffect(() => {
+  const access:string = useAppSelector((state) => state.token.access);
+  const refresh: string = useAppSelector((state) => state.token.refresh);
+    useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
       toggleResigt(true);
     } else {
@@ -265,17 +270,16 @@ const RegistBtn = (props: registBtnPRops) => {
     }
   }, [props.emoji, props.yesterday, props.today]);
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const regist = () => {
     // 0. token 파싱
-    console.log(props.emoji);
-    console.log(props.yesterday);
-    console.log(props.today)
-    const accessToken = `Bearer ${tokens.access}`;
-    console.log(accessToken);
+    const accessToken = `Bearer ${access}`;
     const config = {
       headers: { Authorization: accessToken },
     };
-    if (tokens) {
+    if (access) {
       const scrumData = new FormData();
       scrumData.append("emoji", props.emoji);
       scrumData.append("yesterday", props.yesterday);
@@ -283,13 +287,44 @@ const RegistBtn = (props: registBtnPRops) => {
       customAxios
         .post("scrums/", scrumData, config)
         .then((res: AxiosResponse) => {
-          
-          console.log(res);
-        }).catch((err:any) => {
-          // 현재 가족이 없기 떄문에 500에러 발생.
-          // 가족 생성이 마무리 되면 처리할 것
-          console.log(err);
+          if (res.status === 201) {
+            // 스크럽 등록 성공
+            alert("스크럼 등록 성공");
+            // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
+            navigate("/", { replace: true });
+          }
         })
+        .catch(async (err) => {
+          switch (err.response.status) {
+            case 400:
+              alert("스크럽은 하루에 한개만 작성 가능합니다.")
+              break;
+            case 401:
+              const code = err.response.data.code;
+              if (code === "token_not_valid") {
+                const tokens = await AuthRefresh(refresh);
+                console.log(tokens)
+                if (tokens) {
+                  dispatch(setAccessToken(tokens.access));
+                  dispatch(setRefreshToken(tokens.refresh));
+                  alert("토큰을 재발급 받았습니다. 다시 시도하여 주십시오.");
+                } else {
+                  alert("기간 만료! 로그인 페이지로 이동합니다.")
+                  dispatch(setAccessToken(""));
+                  dispatch(setRefreshToken(""));
+
+                  navigate("/login", { replace: true });
+                }
+              }
+              break;
+            case 500:
+              alert("현재 서버에 문제가 발생하였습니다.");
+              break;
+            default:
+              console.log(err);
+              break;
+          }
+        });
     } else {
       alert("잘못된 접근! token이 없습니다!");
     }
@@ -304,18 +339,3 @@ const RegistBtn = (props: registBtnPRops) => {
     </RegistStyle>
   );
 };
-
-const ScrumCreate = () => {
-  return (
-    <div>
-      <Header label="데일리스크럼" back={true} />
-      <div>
-        <DateSelector />
-        <ScrumCreateBody />
-      </div>
-      <div>푸터 자리</div>
-    </div>
-  );
-};
-
-export default ScrumCreate;
