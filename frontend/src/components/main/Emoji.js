@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import user from "../../assets/test/jjanga.png"
-
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import axios from "axios";
 
 const Container = styled.div`
   margin: 5%;
@@ -31,19 +32,19 @@ const EContainer = styled.div`
 `;
 const EmojiBox = styled.div`
     display: inline-block;
-    position: static;
+    position: relative;
     width: 69px;
     height: 69px;
     margin: 0 8px 0 0;
 `
 const UserImg = styled.img`
     position: absolute;
+    top:0px;
     width: 24px;
     height: 24px;
     border-radius: 30px;
 `
 const Emoji = styled.div`
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,41 +65,38 @@ const EmojiText = styled.p`
 `
 
 function Emojis(){
-    
+    const token = useAppSelector((state)=> state.token.access);
+    const family = useAppSelector((state) => state.family.id);
+    const [scrum, setScrum] = useState([]);
+
+
+
+    useEffect(()=> {
+      axios({
+        method: "GET",
+        url: `https://k7b103.p.ssafy.io/api/v1/scrums/`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        setScrum(res.data)
+      });
+    }, [family])
+
+
     return (
       <Container>
         <EContainer>
-          {/* 데이터 받아오면 EmojiBox를 .map해서 반복문처리 */}
-          <EmojiBox>
-            <Emoji>
-              <EmojiText>😀</EmojiText>
-            </Emoji>
-            <UserImg src={user} alt="userimg"></UserImg>
-          </EmojiBox>
-          <EmojiBox>
-            <Emoji>
-              <EmojiText>😀</EmojiText>
-            </Emoji>
-            <UserImg src={user} alt="userimg"></UserImg>
-          </EmojiBox>
-          <EmojiBox>
-            <Emoji>
-              <EmojiText>😀</EmojiText>
-            </Emoji>
-            <UserImg src={user} alt="userimg"></UserImg>
-          </EmojiBox>
-          <EmojiBox>
-            <Emoji>
-              <EmojiText>😀</EmojiText>
-            </Emoji>
-            <UserImg src={user} alt="userimg"></UserImg>
-          </EmojiBox>
-          <EmojiBox>
-            <Emoji>
-              <EmojiText>😀</EmojiText>
-            </Emoji>
-            <UserImg src={user} alt="userimg"></UserImg>
-          </EmojiBox>
+          {scrum.map((item, index) => (
+            <EmojiBox key={index}>
+              <Emoji>
+                <EmojiText>{item.emoji}</EmojiText>
+              </Emoji>
+              <UserImg src={item.image} alt="userimg"></UserImg>
+            </EmojiBox>
+
+          ))}
         </EContainer>
       </Container>
     );
