@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { useAppSelector } from "../../app/hooks";
-import axios from "axios";
+import { BrowserView, MobileView } from "react-device-detect";
 
 const Container = styled.div`
   margin: 5%;
@@ -28,6 +27,14 @@ const EContainer = styled.div`
       border-radius: 3px;
     }
   }
+`;
+const MContainer = styled.div`
+  display: flex;
+  margin: 16px 8px;
+  width: 90%-32px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
 `;
 const EmojiBox = styled.div`
     display: inline-block;
@@ -63,37 +70,33 @@ const EmojiText = styled.p`
     margin: auto;
 `
 
-function Emojis(){
-    const token = useAppSelector((state)=> state.token.access);
-    const family = useAppSelector((state) => state.family.id);
-    const [scrum, setScrum] = useState([]);
-
-    useEffect(()=> {
-      axios({
-        method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/scrums/`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        setScrum(res.data)
-      });
-    }, [family])
-
-
+function Emojis({scrum}){
     return (
       <Container>
-        <EContainer>
-          {scrum.map((item, index) => (
-            <EmojiBox key={index}>
-              <Emoji>
-                <EmojiText>{item.emoji}</EmojiText>
-              </Emoji>
-              <UserImg src={item.image} alt="userimg"></UserImg>
-            </EmojiBox>
-          ))}
-        </EContainer>
+        <BrowserView>
+          <EContainer>
+            {scrum.map((item, index) => (
+              <EmojiBox key={index}>
+                <Emoji>
+                  <EmojiText>{item.emoji}</EmojiText>
+                </Emoji>
+                <UserImg src={item.image} alt="userimg"></UserImg>
+              </EmojiBox>
+            ))}
+          </EContainer>
+        </BrowserView>
+        <MobileView>
+          <MContainer>
+            {scrum.map((item, index) => (
+              <EmojiBox key={index}>
+                <Emoji>
+                  <EmojiText>{item.emoji}</EmojiText>
+                </Emoji>
+                <UserImg src={item.image} alt="userimg"></UserImg>
+              </EmojiBox>
+            ))}
+          </MContainer>
+        </MobileView>
       </Container>
     );
 }
