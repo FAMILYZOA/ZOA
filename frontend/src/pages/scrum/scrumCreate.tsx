@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -9,8 +9,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { customAxios } from "../../api/customAxios";
+import { AuthRefresh, customAxios } from "../../api/customAxios";
 import { useAppSelector } from "../../app/hooks";
 import Header from "../../components/header";
 import TextBox from "../../components/textBox";
@@ -255,8 +256,10 @@ const Today = (props: InputProps) => {
 const RegistBtn = (props: registBtnPRops) => {
   // 나중에 저장 방식 바뀌면 수정 예정
   const [isRegist, toggleResigt] = useState<boolean>(true);
-  const tokens: any = useAppSelector((state) => state.token.access);
-
+  //const access:string = useAppSelector((state) => state.token.access);
+  const refresh: string = useAppSelector((state) => state.token.refresh);
+  const access =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3MTQ2MDI5LCJpYXQiOjE2NjcxNDYwMjUsImp0aSI6IjcwNWI2OTU3ODQ5NTRkNTZiMzhkMDA0MjJkYThhNjAzIiwidXNlcl9pZCI6MjN9.zKI0zJdhMtOuhJv3x_087d0CvHOoln_bdKGfScKcY6E";
   useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
       toggleResigt(true);
@@ -265,17 +268,15 @@ const RegistBtn = (props: registBtnPRops) => {
     }
   }, [props.emoji, props.yesterday, props.today]);
 
+  const navigate = useNavigate();
+
   const regist = () => {
     // 0. token 파싱
-    console.log(props.emoji);
-    console.log(props.yesterday);
-    console.log(props.today)
-    const accessToken = `Bearer ${tokens.access}`;
-    console.log(accessToken);
+    const accessToken = `Bearer ${access}`;
     const config = {
       headers: { Authorization: accessToken },
     };
-    if (tokens) {
+    if (access) {
       const scrumData = new FormData();
       scrumData.append("emoji", props.emoji);
       scrumData.append("yesterday", props.yesterday);
@@ -283,13 +284,27 @@ const RegistBtn = (props: registBtnPRops) => {
       customAxios
         .post("scrums/", scrumData, config)
         .then((res: AxiosResponse) => {
-          
-          console.log(res);
-        }).catch((err) => {
-          // 현재 가족이 없기 떄문에 500에러 발생.
-          // 가족 생성이 마무리 되면 처리할 것
-          console.log(err);
+          if (res.status === 201) {
+            // 스크럽 등록 성공
+            alert("스크럼 등록 성공");
+            // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
+            navigate("/", { replace: true });
+          }
         })
+        .catch(async (err) => {
+          switch (err.response.status) {
+            case 401:
+              const code = err.response.data.code;
+              if (code === "token_not_valid") {
+                const tokens = await AuthRefresh(refresh);
+                console.log(tokens)
+              }
+              break;
+            case 500:
+              alert("현재 서버에 문제가 발생하였습니다.");
+              break;
+          }
+        });
     } else {
       alert("잘못된 접근! token이 없습니다!");
     }
