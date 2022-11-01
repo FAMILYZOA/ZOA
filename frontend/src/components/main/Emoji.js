@@ -5,12 +5,12 @@ import { BrowserView, MobileView } from "react-device-detect";
 const Container = styled.div`
   margin: 5%;
   border-bottom: 1px solid #d9d9d9;
-`
+`;
 
 const EContainer = styled.div`
   display: flex;
   margin: 16px 8px;
-  width: 90%-32px;
+  height: 72px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
@@ -31,25 +31,25 @@ const EContainer = styled.div`
 const MContainer = styled.div`
   display: flex;
   margin: 16px 8px;
-  width: 90%-32px;
+  height: 72px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
 `;
 const EmojiBox = styled.div`
-    display: inline-block;
-    position: relative;
-    width: 69px;
-    height: 69px;
-    margin: 0 8px 0 0;
-`
+  display: inline-block;
+  position: relative;
+  width: 69px;
+  height: 69px;
+  margin: 0 8px 0 0;
+`;
 const UserImg = styled.img`
-    position: absolute;
-    top:0px;
-    width: 24px;
-    height: 24px;
-    border-radius: 30px;
-`
+  position: absolute;
+  top: 0px;
+  width: 24px;
+  height: 24px;
+  border-radius: 30px;
+`;
 const Emoji = styled.div`
   display: flex;
   justify-content: center;
@@ -66,39 +66,70 @@ const Emoji = styled.div`
 `;
 
 const EmojiText = styled.p`
-    border-radius: 100px;
-    margin: auto;
-`
+  border-radius: 100px;
+  margin: auto;
+`;
 
-function Emojis({scrum}){
-    return (
-      <Container>
-        <BrowserView>
-          <EContainer>
-            {scrum.map((item, index) => (
-              <EmojiBox key={index}>
-                <Emoji>
-                  <EmojiText>{item.emoji}</EmojiText>
-                </Emoji>
-                <UserImg src={item.image} alt="userimg"></UserImg>
-              </EmojiBox>
-            ))}
-          </EContainer>
-        </BrowserView>
-        <MobileView>
-          <MContainer>
-            {scrum.map((item, index) => (
-              <EmojiBox key={index}>
-                <Emoji>
-                  <EmojiText>{item.emoji}</EmojiText>
-                </Emoji>
-                <UserImg src={item.image} alt="userimg"></UserImg>
-              </EmojiBox>
-            ))}
-          </MContainer>
-        </MobileView>
-      </Container>
-    );
+const Contents = styled.div`
+  margin: 16px 0px;
+  display: flex;
+  align-items: center;
+`;
+const Text = styled.div`
+  font-size: 16px;
+  margin: auto 4px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+function Emojis({ scrum }) {
+  return (
+    <Container>
+      <BrowserView>
+        <EContainer>
+          {scrum.length === 0 ? (
+            <Contents>
+              <Text>🙂'안녕'에서 오늘의 나를 알려주세요! </Text>
+            </Contents>
+          ) : (
+            <>
+              {scrum.map((item, index) => (
+                <EmojiBox key={index}>
+                  <Emoji>
+                    <EmojiText>{item.emoji}</EmojiText>
+                  </Emoji>
+                  <UserImg src={item.image} alt="userimg"></UserImg>
+                </EmojiBox>
+              ))}
+            </>
+          )}
+        </EContainer>
+      </BrowserView>
+
+      <MobileView>
+        <MContainer>
+          {scrum.length === 0 ? (
+            <Contents>
+              <Text>🙂'안녕'에서 오늘의 나를 알려주세요! </Text>
+            </Contents>
+          ) : (
+            <>
+              {scrum.map((item, index) => (
+                <EmojiBox key={index}>
+                  <Emoji>
+                    <EmojiText>{item.emoji}</EmojiText>
+                  </Emoji>
+                  <UserImg src={item.image} alt="userimg"></UserImg>
+                </EmojiBox>
+              ))}
+            </>
+          )}
+        </MContainer>
+      </MobileView>
+    </Container>
+  );
 }
 
 export default Emojis;

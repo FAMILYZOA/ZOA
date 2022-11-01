@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Header from "../../components/main/Header";
 import Emojis from "../../components/main/Emoji";
 import Announcement from "../../components/main/Announcement";
+import CheckList from "../../components/main/checklist/CheckList";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
-
 
 
 function Main() {
@@ -13,7 +12,6 @@ function Main() {
   const family = useAppSelector((state) => state.family.id);
   const [scrum, setScrum] = useState([]);
 
-  
   useEffect(() => {
     axios({
       method: "GET",
@@ -21,15 +19,20 @@ function Main() {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }).then((res) => {
-      setScrum(res.data);
-    });
+    })
+      .then((res) => {
+        setScrum(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [family]);
 
   return <div>
     <Header></Header>
     <Emojis scrum = {scrum}></Emojis>
     <Announcement scrum = {scrum}></Announcement>
+    <CheckList/>
   </div>;
 }
 
