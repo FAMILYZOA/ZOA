@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'checklist',
     'scrums',
     'event',
+    'schedule',
 
     # default
     'django.contrib.admin',
