@@ -23,10 +23,9 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumFamItem = ({id, emoji}) => {
+const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
 
     const navigate = useNavigate();
-    console.log(id)
 
     return(
         <> 
@@ -34,14 +33,14 @@ const ScrumFamItem = ({id, emoji}) => {
             <div style={{display: "flex"}}>
                 <ProfileWrapper>
                     <MemberProfile>
-                        <MemberProfileImg/>
+                        <MemberProfileImg src={image}/>
                     </MemberProfile>
                 </ProfileWrapper>
                 <div style={{margin: "3vh", fontWeight: "bold"}}>
-                    가족 이름
+                    {name}
                 </div>
                 <div style={{margin: "3vh 0 0 0"}}>
-                    이모지 자리
+                    {emoji}
                 </div>
                 <div style={{color: "#ff787f", cursor: "pointer", margin: "3vh 0 0 40vw"}}>
                     <BsChevronRight
@@ -54,10 +53,10 @@ const ScrumFamItem = ({id, emoji}) => {
             <div style={{margin: "0vw 10vw 2vw 8vw"}}>
             <ItemWrapper>
                 <div style={{margin: "1vh"}}>
-                🙋‍♂️ 가족의 상태
+                🙋‍♂️ {yesterday}
                 </div>
                 <div style={{margin: "1vh"}}>
-                📢 가족 공지
+                📢 {today}
                 </div>
             </ItemWrapper>
             </div>

@@ -47,14 +47,15 @@ const ScrumHome = () => {
       console.log(err)
     })
   }, [])
-  // let i = 0
-  // for (i = 1; i < scrums.length; i++) {
-  //   famScrums.push(scrums[i])
-  // }
-  // famScrums.push(scrums[1])
-  // famScrums.push(scrums[2])
-  // // console.log(scrums[1])
-  // console.log(famScrums)
+  console.log(scrums[0])
+  let i = 0
+  for (i = 1; i < scrums.length; i++) {
+    famScrums.push(scrums[i])
+  }
+  famScrums.push(scrums[1])
+  famScrums.push(scrums[2])
+  // console.log(scrums[1])
+  console.log(famScrums)
 
   return(
     <>

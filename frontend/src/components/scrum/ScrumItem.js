@@ -32,9 +32,9 @@ const MemberProfileImg = styled.img`
 const ScrumItem = ({scrums}) => {
 
   const navigate = useNavigate();
-  // useEffect(()=>{
-  //   console.log(scrums);
-  // },[scrums])
+  useEffect(()=>{
+    console.log(scrums);
+  },[scrums])
 
   return(
     <>
