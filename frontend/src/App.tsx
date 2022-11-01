@@ -119,11 +119,11 @@ function App() {
       }
     }
   });
-  const location = useLocation();
+  // const location = useLocation();
   return (
     <div>
       <BrowserRouter>
-        <Routes location={location}>
+        <Routes>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
@@ -138,7 +138,7 @@ function App() {
           <Route path="/register" element={<Resister />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
         </Routes>
-        {location.pathname === "/intro" ||
+        {/* {location.pathname === "/intro" ||
         location.pathname === "/kakaoSignup" ||
         location.pathname === "/register" ||
         location.pathname === "/login" ||
@@ -148,7 +148,8 @@ function App() {
         location.pathname === "/login" ||
         location.pathname === "/register" ? null : (
           <Navbar></Navbar>
-        )}
+        )} */}
+        <Navbar></Navbar>
       </BrowserRouter>
     </div>
   );
