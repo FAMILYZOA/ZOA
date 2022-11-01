@@ -1,8 +1,23 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-
+from django.core.exceptions import ValidationError
+import random
 
 first_phone_number = ['010','011','016','017','018','019']
+
+def password_creator() :
+
+    uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    lowercase = uppercase.lower()
+    digits = '0123456789'
+    symbols = "()[]{},;:.-_/\\?)*#"
+
+    password = random.sample(uppercase,3)+random.sample(lowercase,3)+random.sample(digits,3)+random.sample(symbols,3)
+
+    random.shuffle(password)
+
+    password = ''.join(password)
+    return password
 
 class CustomUserManager(BaseUserManager):
     """
@@ -16,20 +31,22 @@ class CustomUserManager(BaseUserManager):
         if not phone:
             raise ValueError('The Phone number must be set')
         if not phone.isdecimal() :
-            raise ValueError('The Phone number is in numerical form.')
+            raise ValidationError('The Phone number is in numerical form.')
         if not 10 <= len(phone) <= 11  :
-            raise ValueError('The Phone number is 10 or 11 digits.')
+            raise ValidationError('The Phone number is 10 or 11 digits.')
         if not phone[:3] in first_phone_number :
-            raise ValueError('The first three digits of the Phone number do not fit the format.')
+            raise ValidationError('The first three digits of the Phone number do not fit the format.')
         
         if not name :
             raise ValueError('The name must be set')
         if len(name) < 2 :
-            raise ValueError('Please enter a name with at least 2 characters')
+            raise ValidationError('Please enter a name with at least 2 characters')
         if len(name) > 30 :
-            raise ValueError('Please enter a name of 30 characters or less')
+            raise ValidationError('Please enter a name of 30 characters or less')
+        if len(name.split()) >=2:
+            raise ValidationError("The name contains spaces. Please remove the space and save it again")
         if not name.isalpha() :
-            raise ValueError('The name must be a string.')
+            raise ValidationError('The name must be a string.')
     
         if not password :
             raise ValueError('The password must be set')
