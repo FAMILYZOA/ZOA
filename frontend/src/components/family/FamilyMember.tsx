@@ -24,7 +24,7 @@ const MemberProfileImg = styled.img`
 
 props = {
   member: {
-    customName: "사용자가 커스텀 설정한 이름",
+    set_name: "사용자가 커스텀 설정한 이름",
     name: "본인이 설정한 이름"
     image: "프로필 이미지"
   },
@@ -32,11 +32,11 @@ props = {
 
 */
 
-const FamilyMember = (props: any) => {
+const FamilyMember = (props: {member: {id: number; name: string; image: string; set_name: string}}) => {
   const NameResult = () => {
     // 커스텀 설정된 이름이 있는지 확인
-    if (props.member.customName !== "" && props.member.customName) {
-      return `${props.member.customName} (${props.member.name})`;
+    if (props.member.set_name !== "" && props.member.set_name) {
+      return `${props.member.set_name} (${props.member.name})`;
     } else if (!props.member.name) {
       return "";
     } else {

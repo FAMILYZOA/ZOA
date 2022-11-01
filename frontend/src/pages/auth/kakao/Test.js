@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
+
+
 
 function Test() {
   const params = new URL(document.location).searchParams;
@@ -39,7 +42,6 @@ function Test() {
             Authorization: `Bearer ${localStorage.token}`,
           },
         }).then((res) => {
-          console.log(res);
           const id = String(res.data.id);
           const data = new FormData();
           data.append("kakao_id", id);
@@ -49,8 +51,9 @@ function Test() {
             data: data,
           })
             .then((result) => {
-              if (result.status === 201) {
-                console.log("로그인 완료");
+              if (result.status === 200) {
+                localStorage.setItem("access_token", result.data.token.access);
+                localStorage.setItem("refresh_token", result.data.token.refresh);
               }
             })
             .catch((err) => {
@@ -81,9 +84,7 @@ function Test() {
 
   return (
     <div>
-      왜!!!
-      <p>{kakao_code}</p>
-      <p>{token}</p>
+      
     </div>
   );
 }

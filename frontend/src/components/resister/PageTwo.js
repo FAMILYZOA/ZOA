@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
 
 
 const Container = styled.div`
@@ -19,19 +18,19 @@ const Warning = styled.p`
   font-size: 12px;
   margin: 4px 0 8px 8px;
   color: red;
-  display: ${(props) => (props.active == false ? "none" : "block")};
+  display: ${(props) => (props.active === false ? "none" : "block")};
 `;
 const Confirm = styled.p`
   font-size: 12px;
   margin: 4px 0 8px 8px;
   color: #3db9a4;
-  display: ${(props) => (props.active == false ? "none" : "block")};
+  display: ${(props) => (props.active === false ? "none" : "block")};
 `;
 const PwInfo = styled.p`
   font-size: 12px;
   margin: 4px 0 0px 8px;
   color: #707070;
-  display: ${(props) => (props.active == false ? "none" : "block")};
+  display: ${(props) => (props.active === false ? "none" : "block")};
 `;
 const InputBox = styled.div`
   width: 90%;
