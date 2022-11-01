@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Main from "./pages/main/main";
 import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter, useLocation } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
 import FamilyCreate from "./pages/family/FamilyCreate";
@@ -119,10 +119,11 @@ function App() {
       }
     }
   });
+  const location = useLocation();
   return (
     <div>
       <BrowserRouter>
-        <Routes>
+        <Routes location={location}>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
@@ -137,7 +138,17 @@ function App() {
           <Route path="/register" element={<Resister />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
         </Routes>
-        <Navbar></Navbar>
+        {location.pathname === "/intro" ||
+        location.pathname === "/kakaoSignup" ||
+        location.pathname === "/register" ||
+        location.pathname === "/login" ||
+        location.pathname === "/family/manage" ||
+        location.pathname === "/family/create" ||
+        location.pathname === "/family/edit" ||
+        location.pathname === "/login" ||
+        location.pathname === "/register" ? null : (
+          <Navbar></Navbar>
+        )}
       </BrowserRouter>
     </div>
   );
