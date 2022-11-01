@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'checklist',
     'scrums',
     'event',
-
+    'audios',
     # default
     'django.contrib.admin',
     'django.contrib.auth',
