@@ -30,13 +30,13 @@ const ScrumHome = () => {
   const [scrums, setScrums] = useState([]);
   const famScrums = [];
   
-  // const token = useAppSelector((state) => state.token.value);
+  const token = useAppSelector((state) => state.token.value);
   useEffect(() => {
     axios({
       method: "get",
       url: `https://k7b103.p.ssafy.io/api/v1/scrums`,
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3Mjc5NzU0LCJpYXQiOjE2NjcxOTMzNTQsImp0aSI6ImQ5MTZiN2I0M2ViYTQwMzVhNjBmNjY3ZTIwMjNkMzE0IiwidXNlcl9pZCI6MjJ9.pBBNXZtRgqXRGZYbsSbhEXbjI4Lnz_LzRu4Lz3iedX4',
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((res) => {
@@ -46,16 +46,11 @@ const ScrumHome = () => {
     .catch((err) => {
       console.log(err)
     })
-  }, [])
-  console.log(scrums[0])
+  }, [token])
   let i = 0
   for (i = 1; i < scrums.length; i++) {
     famScrums.push(scrums[i])
   }
-  famScrums.push(scrums[1])
-  famScrums.push(scrums[2])
-  // console.log(scrums[1])
-  console.log(famScrums)
 
   return(
     <>
