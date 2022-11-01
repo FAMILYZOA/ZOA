@@ -10,7 +10,7 @@ class ScrumSerializer(serializers.ModelSerializer) :
     set_name = serializers.SerializerMethodField()
     class Meta: 
         model = Scrum
-        fields= ('id','emoji','yesterday','today','name','image','set_name')
+        fields= ('id','emoji','yesterday','today','name','image','set_name','created_at')
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
