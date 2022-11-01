@@ -7,6 +7,9 @@ from rest_framework.generics import GenericAPIView
 from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
 from .models import Checklist
 from accounts.models import User
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 
 
 class DdayAPIView(GenericAPIView):
@@ -75,10 +78,10 @@ class ChecklistDetailAPIView(GenericAPIView):
         serializer = self.get_serializer_class(checklist)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
-    serializer_class = ChecklistStateChangeSerializer
+    @swagger_auto_schema(request_body=ChecklistStateChangeSerializer)
     def put(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
-        serializer = self.serializer_class(checklist, data=request.data)
+        serializer = ChecklistStateChangeSerializer(checklist, data=request.data)
         if serializer.is_valid():
             if request.user in checklist.to_users_id.all():
                 serializer.save()
