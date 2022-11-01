@@ -9,6 +9,7 @@ from .models import Checklist
 from accounts.models import User
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser
 
 
 
@@ -26,7 +27,7 @@ class ChecklistSearchAPIView(GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
 
-class ChecklistTodayAPIView(GenericAPIView):
+class ChecklistTodayCreateAPIView(GenericAPIView):
     serializer_class = ChecklistSerializer
     def get(self, request, to_users_id):
         today = datetime.today()
@@ -35,9 +36,9 @@ class ChecklistTodayAPIView(GenericAPIView):
         serializer = self.serializer_class(checklist, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
-
 class ChecklistCreateAPIView(GenericAPIView):
-    serializer_class = ChecklistCreateSerializer
+    parser_classes = (MultiPartParser,)
+    @swagger_auto_schema(request_body=ChecklistCreateSerializer)
     def post(self, request):
         member = request.data.getlist('to_users_id')
         if request.data.get('photo') == None:
@@ -65,7 +66,7 @@ class ChecklistCreateAPIView(GenericAPIView):
                     f'{man}님은 해당 가족이 아닙니다.'
                 }
                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
-        serializer = self.serializer_class(data=context)
+        serializer = ChecklistCreateSerializer(data=context)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
