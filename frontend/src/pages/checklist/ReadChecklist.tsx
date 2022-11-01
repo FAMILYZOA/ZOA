@@ -160,7 +160,12 @@ function ReadChecklist() {
     const tempMember = [...FamilyMembers];
     tempMember.splice(0, 1);
     setUnSelectedMember(tempMember);
+    refreshCheckList(FamilyMembers[0].id);
   },[FamilyMembers]);
+
+  useEffect(() => {
+    refreshCheckList(selectedMember.id);
+  },[selectedMember])
 
   // useEffect(() => { // 체크리스트 분류
   //   const tempCheckedList: Array<{
@@ -211,6 +216,8 @@ function ReadChecklist() {
     setOnDetail(-1);
   };
 
+  const checkBoundary = 5 // 임시 더보기 한계선
+
   return (
     <div>
       <Header label="할 일 목록" back="true"></Header>
@@ -218,7 +225,7 @@ function ReadChecklist() {
       {isModal && (
         <ModalDiv>
           {unSelectedMember.map((member: any) => (
-            <ModalItem onClick={() => getSelect(member.id)}>
+            <ModalItem onClick={() => getSelect(member.id)} key={member.id}>
               <ModalItemName>{member.name}</ModalItemName>
               <div>
                 <ModalItemImg src={member.image} />
@@ -266,9 +273,10 @@ function ReadChecklist() {
               onDetail={onDetail}
             />
           ))} */}
-        {(viewMore || checkList.length <= 5) && checkList.map((item: any, i: number) => (
+        {(viewMore || checkList.length <= checkBoundary) && checkList.map((item: any, i: number) => (
           <CheckItem
             item={item}
+            selectedMember={selectedMember}
             index={i}
             key={item.id}
             getDetailSelect={getDetailSelect}
@@ -277,9 +285,10 @@ function ReadChecklist() {
             refreshCheckList={refreshCheckList}
           />
         ))}
-        {(!viewMore && checkList.length > 5) && checkList.map((item: any, i: number) => (
+        {(!viewMore && checkList.length > checkBoundary) && (checkList.slice(0,checkBoundary)).map((item: any, i: number) => (
           <CheckItem
             item={item}
+            selectedMember={selectedMember}
             index={i}
             key={item.id}
             getDetailSelect={getDetailSelect}
@@ -288,7 +297,10 @@ function ReadChecklist() {
             refreshCheckList={refreshCheckList}
           />
         ))}
-        {(!viewMore && checkList.length > 5) && (
+        {(viewMore || checkList.length <= checkBoundary) && (
+          <ViewMore onClick={() => setViewMore(false)}>- 닫기</ViewMore>
+        )}
+        {(!viewMore && checkList.length > checkBoundary) && (
           <ViewMore onClick={() => setViewMore(true)}>+ 더보기</ViewMore>
         )}
       </CheckListViewBody>

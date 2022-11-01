@@ -78,6 +78,7 @@ const CheckTitle = styled.div<propStyle>`
 
 type CheckItemProps = {
   item: { id: number; text: string; status: boolean; to_user_id: number };
+  selectedMember: { id: number; name: string; image: string; set_name: string };
   index: number;
   getDetailSelect: (index: number) => void;
   detailOff: () => void;
@@ -92,12 +93,13 @@ function CheckItem({
   detailOff,
   onDetail,
   refreshCheckList,
+  selectedMember,
 }: CheckItemProps) {
   const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
     axios({
-      method: "get",
+      method: "put",
       url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${id}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -108,7 +110,7 @@ function CheckItem({
     })
       .then((res) => {
         console.log(res.data.status);
-        refreshCheckList(item.to_user_id);
+        refreshCheckList(selectedMember.id);
       })
       .catch((err) => {
         console.error(err);
