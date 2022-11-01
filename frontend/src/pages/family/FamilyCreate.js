@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { customAxios } from "../../api/customAxios";
 import axios from "axios";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { access } from "fs";
 
 const FamilyName = styled.div`
   display: flex;
@@ -47,7 +50,6 @@ const FamilyPostButton = styled.button`
 const FamilyPostUnButton = styled.button`
   border: 2px solid;
   border-radius: 12px;
-  cursor: pointer;
   background-color: transparent;
   width: 80%;
   color: white;
@@ -68,21 +70,37 @@ const FamilyCreate = () => {
       setIsActive(false)
     }
   };
+  
+  // const onPostFam = () => {
+  //   customAxios
+  //     .post('/family/', familyName)
+  //     .then((res) => {
+  //       console.log(res)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     });
+  // }
 
-  // 가족 생성 api 요청 HEADERS에 ACCESS TOKEN추가
-  const onPostFamily = () => {
-    const config = {
+  const accessToken = useAppSelector((state) => state.token.access);
+
+  const onPostFam = () => {
+    axios({
+      method: "post",
+      url: 'https://k7b103.p.ssafy.io/api/v1/family/',
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY2ODU2MTg5LCJpYXQiOjE2NjY4NDg5ODksImp0aSI6IjJlNTdhY2M1MWJiZjRiNjk4ZjI0YWM3NjIyMzEzYjc4IiwidXNlcl9pZCI6M30.CnU-lhZVyPgHgBnJCF3hefZsahunW8mPnHlJrsNAVZI'
+        Authorization: accessToken,
+      },
+      data: {
+        name: familyName
       }
-    };
-    const url = 'http://127.0.0.1:8000/api/v1/family/';
-    const data = {
-      name: familyName
-    }
-    axios.post(url, data, config)
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+    })
+    .then((res) => {
+      console.log(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
 
   return (
@@ -103,7 +121,7 @@ const FamilyCreate = () => {
         ></FamilyNameInput>
         <div>
           {isActive ?
-           <FamilyPostButton onClick={onPostFamily}>가족 생성하기</FamilyPostButton>
+           <FamilyPostButton onClick={onPostFam}>가족 생성하기</FamilyPostButton>
            :
            <FamilyPostUnButton>가족 생성하기</FamilyPostUnButton>}
         </div>
