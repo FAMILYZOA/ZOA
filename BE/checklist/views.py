@@ -53,7 +53,6 @@ class ChecklistCreateAPIView(GenericAPIView):
         
         if not request.user.family_id:
             return Response("당신은 가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
-        
         giver = request.user.family_id.id
         for id in member:
             man = User.objects.get(id=id)
@@ -63,8 +62,6 @@ class ChecklistCreateAPIView(GenericAPIView):
                     f'{man}님은 해당 가족이 아닙니다.'
                 }
                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
-
-
         serializer = self.serializer_class(data=context)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -78,7 +75,6 @@ class ChecklistDetailAPIView(GenericAPIView):
         serializer = self.get_serializer_class(checklist)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
-
     serializer_class = ChecklistStateChangeSerializer
     def put(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
@@ -89,10 +85,36 @@ class ChecklistDetailAPIView(GenericAPIView):
                 return Response("성공적으로 변경되었습니다.", status=status.HTTP_200_OK) 
         return Response("Todo가 부여된 사용자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
 
-
     def delete(self, request, checklist_id):
         checklist = get_object_or_404(Checklist, id=checklist_id)
         if request.user.pk == checklist.from_user_id.id:
             checklist.delete()
             return Response("해당 Todo를 삭제하였습니다.", status=status.HTTP_200_OK)     
         return Response("Todo 부여자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
+
+
+class ChecklistTodayFinish(GenericAPIView):
+    serializer_class = ChecklistSerializer
+    def get(self, request, to_users_id):
+        today = datetime.today()
+        year, month, day = today.year, today.month, today.day
+        checklist = Checklist.objects.filter(Q(to_users_id__exact=to_users_id)  & Q(updated_at__year=year, updated_at__month=month, updated_at__day=day) & Q(status='True'))
+        serializer = self.serializer_class(checklist, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
+class ChecklistUnFinish(GenericAPIView):
+    serializer_class = ChecklistSerializer
+    def get(self, request, to_users_id):
+        checklist = Checklist.objects.filter(status='False')
+        serializer = self.serializer_class(checklist, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ChecklistFinish(GenericAPIView):
+    serializer_class = ChecklistSerializer
+    def get(self, request, to_users_id):
+        checklist = Checklist.objects.filter(status='True')
+        serializer = self.serializer_class(checklist, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+ 
