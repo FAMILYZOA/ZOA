@@ -12,6 +12,7 @@ import Resister from "./pages/auth/Resister";
 import NewLogin from "./pages/auth/kakao/Login";
 import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
+import ScrumHome from "./pages/scrum/ScrumHome";
 
 import Navbar from "./components/Navbar";
 
@@ -135,6 +136,7 @@ function App() {
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
+          <Route path="/scrum" element={<ScrumHome />}/>
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
