@@ -2,15 +2,19 @@ import { useState } from "react";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
+import { useAppDispatch } from "../../app/hooks";
+import {
+  setAccessToken,
+} from  "../../features/token/tokenSlice"
 
 type modalType = {
-    isOpen:boolean,
-    toggle:any,
-}
+  isOpen: boolean;
+  toggle: any;
+};
 
 const CloseBtnStyle = styled(GrClose)`
-  position: relative;
-  left: 68vw;
+  position: absolute;
+  right: 2.5vh;
 `;
 
 const LogoutStyle = styled.div`
@@ -20,13 +24,11 @@ const LogoutStyle = styled.div`
   align-items: center;
 `;
 
-const LogouTitleStyle = styled.p`
-  margin: 0;
-
+const LogouTitleStyle = styled.div`
   /* Pretendard-20 */
   font-family: "Pretendard Variable";
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 20px;
   line-height: 36px;
   /* identical to box height, or 180% */
@@ -38,12 +40,14 @@ const LogouTitleStyle = styled.p`
   color: #ff787f;
 `;
 
-const LogoutDescStyle = styled.p`
+const LogoutDescStyle = styled.div`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
   line-height: 36px;
+
+  height: 9.5vh;
   /* or 180% */
 
   display: flex;
@@ -60,9 +64,8 @@ const LogoutBtnStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  margin: auto;
-  margin-top: 20px;
-  width: 35%;
+  width: 35vw;
+  height: 5.5vh;
 
   font-family: "Inter";
   font-style: normal;
@@ -77,21 +80,21 @@ const LogoutBtnStyle = styled.div`
 
   background: #ff787f;
   border-radius: 10px;
-
-  p {
-    margin-top: 12px;
-    margin-bottom: 12px;
-  }
 `;
 
 const LogoutModal = (props: modalType) => {
   const [isModal, toggleModal] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
 
   const modalStyle = {
     content: {
-      top: "35%",
-      bottom: "35%",
-      borderRadius: "16px",
+      top: "35vh",
+      bottom: "35vh",
+      left: "4vw",
+      right: "4vw",
+      borderRadius: "2vh",
+      display: "flex",
+      justifyContent: "center",
     },
   };
 
@@ -100,7 +103,7 @@ const LogoutModal = (props: modalType) => {
   };
 
   const comfirmModal = () => {
-    // 로그아웃 하기
+    dispatch(setAccessToken(""));// 로그아웃 하기
     props.toggle(false);
   };
 
@@ -122,6 +125,5 @@ const LogoutModal = (props: modalType) => {
     </Modal>
   );
 };
-
 
 export default LogoutModal;
