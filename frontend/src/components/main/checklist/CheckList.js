@@ -3,43 +3,49 @@ import { FaPlusCircle } from "react-icons/fa";
 import CheckListList from "./CheckListList";
 import { useNavigate } from "react-router-dom";
 
+const Container = styled.div`
+  margin: 8px auto;
+`
+const TitleBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 4px auto;
+
+`
+
 const CheckListNameWrapper = styled.div`
   color: #ff787f;
   font-weight: bold;
+  margin: auto 8px;
+  font-size: 18px;
 `;
 
 const CheckListPlusButton = styled.div`
-  font-size: x-large;
   border-radius: 50%;
-  cursor: pointer;
-  color:  #ff787f;
-`
+  color: #ff787f;
+  margin: auto 8px;
+  font-size: 20px;
+`;
 
-const CheckListWrapper = styled.div`
-  border-radius: 12px;
-  width: 90%;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  margin: 0 16px 0 16px;
-`
 
 const CheckList = () => {
-  
   const navigate = useNavigate();
 
   return(
-    <>
-      <div>
-        <div style={{display: "flex", justifyContent: "space-between", width: "80%"}}>
-          <CheckListNameWrapper style={{margin: "0px 0px 0px 20px"}}>체크리스트</CheckListNameWrapper>
+    <Container>
+        <TitleBox>
+          <CheckListNameWrapper>체크리스트</CheckListNameWrapper>
           <CheckListPlusButton onClick={() => navigate("/checklist/create/")}>
-            <FaPlusCircle size="24"/>
+            <FaPlusCircle size="20"/>
           </CheckListPlusButton>
-      </div>
+      </TitleBox>
       <div>
         <CheckListList/>
       </div>
-      </div>
-    </>
+
+    </Container>
   )
 };
 
