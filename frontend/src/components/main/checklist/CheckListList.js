@@ -45,6 +45,7 @@ const CheckListList = () => {
           </CheckListPlusButton>
         </div> */}
         <CheckListWrapper>
+          if (list.length == 0)
             {list.map((item, idx) => (
               <CheckListItem
                 {...item}
