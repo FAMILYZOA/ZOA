@@ -25,7 +25,6 @@
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-icons": "^4.6.0",
-<<<<<<< HEAD
     "react-router-dom": "6.4.2",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
@@ -33,15 +32,6 @@
     "react-kakao-login": "^2.1.1",
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.4",
-=======
-    "react-kakao-login": "^2.1.1",
-    "react-modal": "^3.16.1",
-    "react-redux": "^8.0.4",
-    "react-router-dom": "6.4.2",
-    "react-scripts": "5.0.1",
-    "react-slick": "^0.29.0",
-    "slick-carousel": "^1.8.1",
->>>>>>> 40c7c29ea7e9e1eb73d70a7b607f95b02f1a5295
     "styled-components": "5.3.6",
     "typescript": "^4.8.4",
     "web-vitals": "^2.1.4"

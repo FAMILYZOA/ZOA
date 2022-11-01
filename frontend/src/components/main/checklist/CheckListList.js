@@ -3,8 +3,7 @@ import CheckListItem from "./CheckListItem";
 import CheckListDetail from "./CheckListDetail";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../../app/hooks";
 
 const CheckListWrapper = styled.div`
   border-radius: 12px;
@@ -16,16 +15,16 @@ const CheckListWrapper = styled.div`
 const CheckListList = () => {
 
   const [list, setList] = useState([]);
-  const accessToken = useAppSelector((state) => state.token.access);
-  const user = useSelector((state) => state.user);
+  const token = useAppSelector((state) => state.token.access);
+  const user = useAppSelector((state) => state.user.id);
   console.log(user)
 
   useEffect(() => {
     axios({
       method: "get",
-        url: "https://k7b103.p.ssafy.io/api/v1/checklist/22",
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}`,
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         }
     })
     .then((res) => {
@@ -38,20 +37,14 @@ const CheckListList = () => {
 
   return(
     <>
-        {/* <div style={{display: "flex"}}>
-          <CheckListNameWrapper> 체크리스트</CheckListNameWrapper>
-          <CheckListPlusButton onClick={() => navigate("/checklist")}>
-            <FaPlusCircle size="24"/>
-          </CheckListPlusButton>
-        </div> */}
         <CheckListWrapper>
-          if (list.length == 0)
-            {list.map((item, idx) => (
-              <CheckListItem
-                {...item}
-                key={idx}
-              />
-            ))}
+          {list.length !== 0 ? (
+            <div>
+              {list.slice(0, 3).map((item, idx) => (
+                <CheckListItem {...item} key={idx}/>
+              ))}
+            </div>
+          ) : '등록된 체크리스트가 없습니다' }
             <CheckListDetail/>
         </CheckListWrapper>
     </>

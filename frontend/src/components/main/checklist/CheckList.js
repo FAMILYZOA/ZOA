@@ -31,7 +31,7 @@ const CheckList = () => {
       <div>
         <div style={{display: "flex", justifyContent: "space-between", width: "80%"}}>
           <CheckListNameWrapper style={{margin: "0px 0px 0px 20px"}}>체크리스트</CheckListNameWrapper>
-          <CheckListPlusButton onClick={() => navigate("/checklist")}>
+          <CheckListPlusButton onClick={() => navigate("/checklist/create")}>
             <FaPlusCircle size="24"/>
           </CheckListPlusButton>
       </div>

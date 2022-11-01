@@ -30,6 +30,7 @@ function Main() {
     <Header></Header>
     <Emojis scrum = {scrum}></Emojis>
     <Announcement scrum = {scrum}></Announcement>
+    <CheckList/>
   </div>;
 }
 
