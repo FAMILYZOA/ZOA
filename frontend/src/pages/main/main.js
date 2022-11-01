@@ -4,11 +4,19 @@ import Emojis from "../../components/main/Emoji";
 import Announcement from "../../components/main/Announcement";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Main() {
+  const navigate = useNavigate();
   const token = useAppSelector((state) => state.token.access);
   const family = useAppSelector((state) => state.family.id);
   const [scrum, setScrum] = useState([]);
+
+  useEffect (()=> {
+    if (token.length === 0) {
+      navigate("/intro");
+    }
+  })
 
   useEffect(() => {
     axios({
