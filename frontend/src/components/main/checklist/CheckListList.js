@@ -12,28 +12,31 @@ const CheckListWrapper = styled.div`
   margin: 0 16px 0 16px;
 `
 
-const CheckListList = () => {
+const CheckListList = ({list}) => {
 
-  const [list, setList] = useState([]);
-  const token = useAppSelector((state) => state.token.access);
-  const user = useAppSelector((state) => state.user.id);
-  console.log(user)
+  // const token = useAppSelector((state) => state.token.access);
+  // const user = useAppSelector((state) => state.user.id);
+
+  // useEffect(() => {
+    
+  //   axios({
+  //     method: "get",
+  //       url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}`,
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       }
+  //   })
+  //   .then((res) => {
+  //     setList([...res.data])
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+  // }, [user]);
 
   useEffect(() => {
-    axios({
-      method: "get",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-    })
-    .then((res) => {
-      setList([...res.data])
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }, [user]);
+    console.log(list);
+  }, [list])
 
   return(
     <>

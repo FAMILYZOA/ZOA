@@ -22,7 +22,7 @@ const CheckListWrapper = styled.div`
   margin: 0 16px 0 16px;
 `
 
-const CheckList = () => {
+const CheckList = ({list}) => {
   
   const navigate = useNavigate();
 
@@ -31,12 +31,12 @@ const CheckList = () => {
       <div>
         <div style={{display: "flex", justifyContent: "space-between", width: "80%"}}>
           <CheckListNameWrapper style={{margin: "0px 0px 0px 20px"}}>체크리스트</CheckListNameWrapper>
-          <CheckListPlusButton onClick={() => navigate("/checklist/create")}>
+          <CheckListPlusButton onClick={() => navigate("/checklist/create/")}>
             <FaPlusCircle size="24"/>
           </CheckListPlusButton>
       </div>
       <div>
-        <CheckListList/>
+        <CheckListList list = {list}/>
       </div>
       </div>
     </>
