@@ -43,6 +43,7 @@ const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
                     {emoji}
                 </div>
                 <div style={{color: "#ff787f", cursor: "pointer", margin: "3vh 0 0 40vw"}}>
+                    {/* scrum/detail 생기면 navigate 주소 바꿔줄것 */}
                     <BsChevronRight
                     onClick={() => {
                         navigate(`/`)
