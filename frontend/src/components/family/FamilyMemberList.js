@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
-import { useEffect } from "react";
+import { useEffect, useNavigate } from "react";
 
 const MemberInfo = styled.div`
   display: flex;
@@ -57,8 +57,12 @@ const FamilyMemberList = ({id, name, image, set_name}) => {
 };
   
   const token = useAppSelector((state) => state.token.access);
-
-  const [flag, setFlag] = useState(true)
+  const navigate = useNavigate();
+  useEffect (()=> {
+    if (token.length === 0) {
+      navigate("/intro");
+    }
+  });
 
     // 이름 최초 수정 api
     const onPostName = () => {
