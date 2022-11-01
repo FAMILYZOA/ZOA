@@ -3,7 +3,6 @@ import { useState } from "react";
 import { customAxios } from "../../api/customAxios";
 import axios from "axios";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { access } from "fs";
 
 const FamilyName = styled.div`
   display: flex;
