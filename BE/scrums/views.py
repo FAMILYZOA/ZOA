@@ -6,14 +6,22 @@ from rest_framework.response import Response
 from datetime import datetime
 from rest_framework import filters
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions
 
+class IsFamilyorBadResponsePermission(permissions.BasePermission) :
+    def has_permission(self,request,view) :
+        return request.user.is_authenticated and request.user.family_id
+    def has_object_permission(self, request, view, obj):
+        if request.user.family_id :
+            return True 
+        return False
 # Create your views here.
 
 class ScrumAPIView(ListCreateAPIView) :
     serializer_class = ScrumSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['created_at']
-
+    permission_classes = [IsFamilyorBadResponsePermission]
     @swagger_auto_schema(operation_summary="가족 스크럼 조회")
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -32,7 +40,7 @@ class ScrumAPIView(ListCreateAPIView) :
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        today = datetime.today().strftime("%Y-%m-%d")  
+        today = datetime.today().strftime("%Y-%m-%d")
         if Scrum.objects.filter(created_at=today,user=self.request.user).exists() :
             return Response({"스크럼은 하루에 한 개만 작성 가능합니다."},status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(data=request.data)
