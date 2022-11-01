@@ -248,8 +248,8 @@ const Form = () => {
     console.log(loginForm.get("phone"));
 
     customAxios.post("accounts/login/", loginForm).then((response) => {
-      setUserToken(response.data.token);
-      dispatch(setAccessToken(response.data.token));
+      setUserToken(response.data.token.access);
+      dispatch(setAccessToken(response.data.token.access));
       alert("로그인 성공!");
       navigate('/scrum/create', {replace: true});
     }).catch((err) => {
