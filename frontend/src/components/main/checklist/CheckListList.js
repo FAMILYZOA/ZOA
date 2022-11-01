@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 const CheckListWrapper = styled.div`
   border-radius: 12px;
   width: 90%;
-  height: calc(100vh - 400px);
+  height: calc(100vh - 450px);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin: 0 auto;
 `;
@@ -59,7 +59,6 @@ const CheckListList = () => {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    console.log(user);
     if (user >= 0 ){
       axios({
         method: "get",
@@ -83,7 +82,7 @@ const CheckListList = () => {
   }, [user]);
 
   useEffect(() => {
-    console.log(list);
+    
   }, [list, user])
 
   const viewMore = () => {
