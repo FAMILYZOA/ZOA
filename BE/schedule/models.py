@@ -1,5 +1,4 @@
 from django.db import models
-# from families.models import User
 
 class Checklist(models.Model) :
     id = models.BigAutoField(primary_key=True)
