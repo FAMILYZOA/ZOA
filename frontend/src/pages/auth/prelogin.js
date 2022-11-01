@@ -72,7 +72,7 @@ function Btns() {
 
   const clickKakaoLogin = () => {
     Kakao.Auth.authorize({
-      redirectUri: "http://localhost:3000/",
+      redirectUri: "http://localhost:3000/kakaoLoading/",
     });
   };
 

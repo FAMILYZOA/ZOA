@@ -291,7 +291,7 @@ const RegistBtn = (props: registBtnPRops) => {
             // 스크럽 등록 성공
             alert("스크럼 등록 성공");
             // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
-            navigate("/", { replace: true });
+            navigate("/hello/", { replace: true });
           }
         })
         .catch(async (err) => {

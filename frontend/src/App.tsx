@@ -128,14 +128,14 @@ function App() {
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
           <Route path="/scrum/create" element={<ScrumCreate />}></Route>
           <Route path="/intro" element={<Prelogin />} />
-          <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Main />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
-          <Route path="/" element={<KakaoLoding />} />
+          <Route path="/kakaoLoading/" element={<KakaoLoding />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>

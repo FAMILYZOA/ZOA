@@ -140,14 +140,14 @@ function Login() {
 
         customAxios.post("accounts/login", data).then((res) => {
             dispatch(setAccessToken(res.data.token.access));
-            navigate("/main", {replace:true});
+            navigate("/", {replace:true});
         }).catch((err)=> {
             activeWarn()
         })
     }
     const clickKakaoLogin = () => {
       Kakao.Auth.authorize({
-        redirectUri: "http://localhost:3000/",
+        redirectUri: "http://localhost:3000/kakaoLoading/",
       });
     };
 
