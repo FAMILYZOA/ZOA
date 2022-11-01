@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { BsCheckLg } from "react-icons/bs";
 import { FaChevronUp } from "react-icons/fa";
+import axios from "axios";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface propStyle {
   status?: any;
@@ -76,15 +78,43 @@ const CheckTitle = styled.div<propStyle>`
 
 type CheckItemProps = {
   item: { id: number; text: string; status: boolean; to_user_id: number };
-  index: number,
-  getDetailSelect: (index: number) => void,
-  detailOff: () => void,
-  onDetail: number,
+  selectedMember: { id: number; name: string; image: string; set_name: string };
+  index: number;
+  getDetailSelect: (index: number) => void;
+  detailOff: () => void;
+  onDetail: number;
+  refreshCheckList: (id: number) => void;
 };
 
-function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckItemProps) {
+function CheckItem({
+  item,
+  index,
+  getDetailSelect,
+  detailOff,
+  onDetail,
+  refreshCheckList,
+  selectedMember,
+}: CheckItemProps) {
+  const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        status: !item.status,
+      },
+    })
+      .then((res) => {
+        console.log(res.data.status);
+        refreshCheckList(selectedMember.id);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const onToggle = () => {
@@ -98,7 +128,7 @@ function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckI
   const offToggle = () => {
     setToggle(false);
     detailOff();
-  }
+  };
   const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
@@ -107,7 +137,7 @@ function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckI
     } else {
       setToggle(false);
     }
-  },[onDetail])
+  }, [onDetail, index]);
 
   return (
     <>

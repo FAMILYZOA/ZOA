@@ -126,7 +126,7 @@ function App() {
           <Route path="/family/manage" element={<FamilyManage />}></Route>
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
-          <Route path="/scrum/create" element={<ScrumCreate />}></Route>
+          {/* <Route path="/scrum/create" element={<ScrumCreate />}></Route> */}
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/main" element={<Main />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
