@@ -12,8 +12,8 @@ export const Background = styled.div`
 `;
 
 export const LoadingText = styled.div`
-    font: 2rem;
-    text-align: center;
+  font: 2rem;
+  text-align: center;
 `;
 
 function Loading() {
