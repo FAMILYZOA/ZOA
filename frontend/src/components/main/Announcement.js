@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Slider from "react-slick";
 import './slick-theme.css';
 import './slick.css';
@@ -11,20 +11,20 @@ const Text = styled.div`
     font-size: 16px;
     margin: 0 4px 0 0;
     width: 90%;
-    height: 3vh;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 `
 const From = styled.p`
   text-align: end;
-  margin: 4px 0 0 0;
+  margin: 4px 0 8px 0;
   font-size: 14px;
   color: #444444;
   width: 95%;
 `;
 
-function Announcement() {
+function Announcement({scrum}) {
+
     const settings = {
         slide: 'Contents',
         dots: false,
@@ -40,10 +40,19 @@ function Announcement() {
     }
     return (
         <Slider {...settings}>
-            <Contents>
-                <Text>📢오늘 저녁 밖에서 먹고 들어갈게 dddddddddddddddddddddddddddddddddd</Text>
-                <From>From.아빠(신형식)</From>
-            </Contents>
+            {scrum.map((item, index) => (
+                 item.today.length>1
+                    ? 
+                    <Contents key={index}>
+                        <Text>📢 {item.today}</Text>
+                        <From>From.{item.set_name}({item.name})</From>
+                    </Contents>
+                    :
+                    <Contents key={index}>
+                        <Text>📢 오늘의 공지가 없습니다.</Text>
+                        <From>From.{item.set_name}({item.name})</From>
+                    </Contents>
+            ))}
                     
         </Slider>
 

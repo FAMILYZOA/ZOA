@@ -1,5 +1,8 @@
 import React from 'react';
+<<<<<<< HEAD
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+=======
+>>>>>>> 40c7c29ea7e9e1eb73d70a7b607f95b02f1a5295
 import Main from './pages/main/main';
 import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
@@ -28,7 +31,8 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<Main />} />
+          <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Test />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
         </Routes>

@@ -285,7 +285,7 @@ const RegistBtn = (props: registBtnPRops) => {
         .then((res: AxiosResponse) => {
           
           console.log(res);
-        }).catch((err) => {
+        }).catch((err:any) => {
           // 현재 가족이 없기 떄문에 500에러 발생.
           // 가족 생성이 마무리 되면 처리할 것
           console.log(err);
