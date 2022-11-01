@@ -106,14 +106,14 @@ class RefreshTokenSerializer(serializers.Serializer):
             self.fail('bad_token')
 
 
-# 회원정보 조회/수정
+# 회원정보 수정
 class ProfileSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)
     class Meta:
         model = User
-        fields = ('phone','name','birth','image','family_id')
+        fields = ('id','phone','name','birth','image','family_id')
         extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
-        read_only_fields = ('family_id','birth',)
+        read_only_fields = ('id','family_id','birth',)
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         for (key, value) in validated_data.items():
@@ -128,6 +128,21 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class ProfileRetriveSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('id','phone','name','birth','image','family_id')
+        extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
+        read_only_fields = ('id','family_id','birth',)
+
+    def get_image(self,obj) :
+        if 'kakao' in obj.image.url :
+            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            return res
+        return obj.image.url
 
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
@@ -157,3 +172,4 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
