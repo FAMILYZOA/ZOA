@@ -2,11 +2,9 @@ import * as React from 'react';
 import styled from "styled-components";
 import { IoIosArrowBack } from "react-icons/io";
 
-export interface IHeaderProps {
-    label: string;
-    back: boolean;
-}
-
+// 사용 시
+// <Header label="할 일 등록" back="true"></Header>
+// 이렇게 해주세용 !!!!!!
 
 const HeaderBox = styled.div`
   display: grid;
@@ -30,16 +28,18 @@ const HeaderLabel = styled.div`
     
 `
 
-export default class Header extends React.Component<IHeaderProps> {
-  public render() {
-    return <HeaderBox>
+function Header(props){
+  return(
+    <HeaderBox>
         <IconBox>
-            {this.props.back ? <IoIosArrowBack size="24"/> : <div></div>}
+            {props.back === 'true' ? <IoIosArrowBack size="24"/> : <div></div>}
         </IconBox>
         <HeaderLabel>
-            {this.props.label}
+            {props.label}
         </HeaderLabel>
         <div></div>
-    </HeaderBox>;
-  }
+    </HeaderBox>
+  )
 }
+
+export default Header;

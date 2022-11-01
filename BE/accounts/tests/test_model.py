@@ -67,27 +67,30 @@ class UserUnexpectedinput(APITestCase) :
     #휴대폰 번호 테스트 
     def test_raise_error_when_invalid_number(self) :
         #휴대폰 번호 9자리
-        self.assertRaises(ValueError,
+        self.assertRaises(ValidationError,
         User.objects.create_user,phone='010000000',password='password123!@#',name='김조아',birth='1997-11-19')
         #휴대폰 번호 12자리 
-        self.assertRaisesMessage(ValueError,'The Phone number is 10 or 11 digits.',
+        self.assertRaisesMessage(ValidationError,'The Phone number is 10 or 11 digits.',
         User.objects.create_user,phone='010000000000',password='password123!@#',name='김조아',birth='1997-11-19')
         #휴대폰 번호에 문자열 
-        self.assertRaisesMessage(ValueError,'The Phone number is in numerical form.',
+        self.assertRaisesMessage(ValidationError,'The Phone number is in numerical form.',
         User.objects.create_user,phone='abcdefgh',password='password123!@#',name='김조아',birth='1997-11-19')
         # ['010','011','016','017','018','019']이 아닌 것으로 시작되는 휴대폰 번호 
-        self.assertRaisesMessage(ValueError,'The first three digits of the Phone number do not fit the format.',
+        self.assertRaisesMessage(ValidationError,'The first three digits of the Phone number do not fit the format.',
         User.objects.create_user,phone='0200000000',password='password123!@#',name='김조아',birth='1997-11-19')
     
     def test_raise_error_when_invalid_name(self) :
         #한글자 이름 
-        self.assertRaisesMessage(ValueError,'Please enter a name with at least 2 characters',
+        self.assertRaisesMessage(ValidationError,'Please enter a name with at least 2 characters',
         User.objects.create_user,phone='01000000000',password='password123!@#',name='김',birth='1997-11-19')
         #30글자를 초과한 이름 
-        self.assertRaisesMessage(ValueError,'Please enter a name of 30 characters or less',
+        self.assertRaisesMessage(ValidationError,'Please enter a name of 30 characters or less',
         User.objects.create_user,phone='01000000000',password='password123!@#',name='김'*31,birth='1997-11-19')
-
-        self.assertRaisesMessage(ValueError,'The name must be a string.',
+        #이름에 공백 포함 
+        self.assertRaisesMessage(ValidationError,'The name contains spaces. Please remove the space and save it again',
+        User.objects.create_user,phone='01000000000',password='password123!@#',name='김 동완',birth='1997-11-19')
+        #숫자가 포함된 이름 
+        self.assertRaisesMessage(ValidationError,'The name must be a string.',
         User.objects.create_user,phone='01000000000',password='password123!@#',name='123',birth='1997-11-19')
     
     def test_raise_error_when_invalid_birth(self) :
