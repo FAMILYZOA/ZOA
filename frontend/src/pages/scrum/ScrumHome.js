@@ -1,6 +1,6 @@
 import Header from "../../components/header";
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useNavigate } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
 import ScrumItem from "../../components/scrum/ScrumItem";
 import ScrumFamItem from "../../components/scrum/ScrumFamItem";
@@ -30,7 +30,13 @@ const ScrumHome = () => {
   const [scrums, setScrums] = useState([]);
   const famScrums = [];
   
-  const token = useAppSelector((state) => state.token.value);
+  const token = useAppSelector((state) => state.token.access);
+  const navigate = useNavigate();
+  useEffect (()=> {
+    if (token.length === 0) {
+      navigate("/intro");
+    }
+  });
   useEffect(() => {
     axios({
       method: "get",
