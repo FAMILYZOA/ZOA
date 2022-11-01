@@ -19,8 +19,8 @@ class IsFamilyorBadResponsePermission(permissions.BasePermission) :
 
 class ScrumAPIView(ListCreateAPIView) :
     serializer_class = ScrumSerializer
-    filter_backends = [DjangoFilterBackend,]
-    filterset_fields = ['created_at']
+    filter_backends = [filters.SearchFilter,]
+    search_fields = ['created_at']
     permission_classes = [IsFamilyorBadResponsePermission]
 
     def get_queryset(self):
