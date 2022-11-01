@@ -87,7 +87,7 @@ function SlideBox() {
   return(
     <ImgBox>
       <Swiper
-        spaceBetween={50}
+        spaceBetween={0}
         slidesPerView={1}
         autoplay={{ delay: 4000 }}
         loop={true}

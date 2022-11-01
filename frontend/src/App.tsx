@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import Main from "./pages/main/main";
-import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
-import { Route, Routes, BrowserRouter, useLocation } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
 import FamilyCreate from "./pages/family/FamilyCreate";
@@ -37,7 +36,6 @@ import axios from "axios";
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
   const userId = useAppSelector((state) => state.user.id);
-  const userFamilyId = useAppSelector((state) => state.user.familyId);
   const familyId = useAppSelector((state) => state.family.id);
   const dispatch = useAppDispatch();
 
@@ -138,17 +136,6 @@ function App() {
           <Route path="/register" element={<Resister />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
         </Routes>
-        {/* {location.pathname === "/intro" ||
-        location.pathname === "/kakaoSignup" ||
-        location.pathname === "/register" ||
-        location.pathname === "/login" ||
-        location.pathname === "/family/manage" ||
-        location.pathname === "/family/create" ||
-        location.pathname === "/family/edit" ||
-        location.pathname === "/login" ||
-        location.pathname === "/register" ? null : (
-          <Navbar></Navbar>
-        )} */}
         <Navbar></Navbar>
       </BrowserRouter>
     </div>
