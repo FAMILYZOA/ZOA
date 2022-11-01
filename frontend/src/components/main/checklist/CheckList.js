@@ -22,7 +22,7 @@ const CheckListWrapper = styled.div`
   margin: 0 16px 0 16px;
 `
 
-const CheckList = ({list}) => {
+const CheckList = () => {
   
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const CheckList = ({list}) => {
           </CheckListPlusButton>
       </div>
       <div>
-        <CheckListList list = {list}/>
+        <CheckListList/>
       </div>
       </div>
     </>
