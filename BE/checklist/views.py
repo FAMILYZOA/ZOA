@@ -13,13 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 from .models import Checklist
 from accounts.models import User
 from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
-
-
-class DdayAPIView(GenericAPIView):
-    # TODO : 캘린더 app의 model 만든 후 개발
-    def get(self, request):
-        return Response("")
-
+from rest_framework import filters
 
 class ChecklistCreateAPIView(GenericAPIView):
     parser_classes = (MultiPartParser,)
@@ -65,8 +59,8 @@ class ChecklistSearchAPIView(ListAPIView):
     queryset = Checklist.objects.all()
     serializer_class = ChecklistSerializer
     pagination_class = ChecklistPagination
-    filter_backends=[ DjangoFilterBackend, ]
-    filterset_fields = ['status']
+    filter_backends=[ filters.SearchFilter,]
+    search_fields = ['status']
     
     def get_queryset(self):
         id = self.request.parser_context['kwargs']['to_users_id']
