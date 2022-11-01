@@ -228,7 +228,7 @@ function KakaoSignup() {
             data.append("name", info.name);
             data.append("image", info.image);
             data.append("phone", info.phone.replaceAll("-", ""));
-            data.append("birth", info.birth);
+            data.append("birth", birth);
             axios({
                 method: "POST",
                 url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,

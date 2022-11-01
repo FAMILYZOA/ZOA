@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setToken } from "../../features/token/tokenSlice";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
@@ -91,68 +90,13 @@ const FamilyMembersEdit = styled.div`
 `;
 
 const FamilyManage = () => {
-  const { id } = useParams();
-  const [familyName, setFamilyName] = useState<string>("패밀리명");
-  const [userName, setUserName] = useState<string>("사용자명");
-  const [familyMembersList, setFamilyMemberList] = useState<any>([
-    {
-      customName: "나",
-      name: "신짱아",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png",
-    },
-    {
-      customName: "동생",
-      name: "신짱구",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
-    },
-    {
-      customName: "",
-      name: "봉미선",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
-    },
-  ]); // member는 object. 예시 이미지 입력
-  const token = useAppSelector((state) => state.token.value); // redux로 중앙으로부터 token값을 가져온다.
+  // const [familyMembersList, setFamilyMemberList] = useState<any>(); // member는 object. 예시 이미지 입력
+  const familyMembersList = useAppSelector((state) => state.family.users);
+  const token = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
+  const id = useAppSelector((state) => state.family.id);
+  const familyName = useAppSelector((state) => state.family.name);
+  const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
-
-  /*
------------ 이하, 가족 생성, 구성원 초대가 완료되는것 확인 후 연결 할 것 ----------
-*/
-
-  useEffect(() => { // 최초 token값은 비워져 있다. token값 갱신을 위해 사용되는 useEffect. 추후에는 로그인 기능과 연동시켜서 토큰값 지정할 것.
-    dispatch(
-      setToken(
-        `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY2ODYyOTMzLCJpYXQiOjE2NjY4NTU3MzMsImp0aSI6ImYyZmI1NWEzZjM3NTQ4NjU5ZTZlYmJiNmY1ZDM0YWEyIiwidXNlcl9pZCI6MX0.jMbReJBRMGRxsNWaRU_UflFOElBuCN7Ewikr5FB-c9A`
-      )
-    ); 
-    console.log(`토큰 갱신`);
-    console.log(token);
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (token) {
-      axios({
-        method: "get",
-        url: `${process.env.REACT_APP_BACK_HOST}/family/${id}`,
-        headers: {
-          Authorization: token, // 토큰 값
-        },
-      })
-        .then((res) => {
-          console.log(res.data);
-          console.log(process.env.REACT_APP_BACK_HOST);
-          console.log(token);
-          setFamilyMemberList(res.data.users);
-          setFamilyName(res.data.name);
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log(process.env.REACT_APP_BACK_HOST);
-        });
-    }
-  }, [id, token]);
 
   const inviteLink: string = "(초대링크)";
   const userAgent = navigator.userAgent.toLocaleLowerCase(); // 기기 확인
