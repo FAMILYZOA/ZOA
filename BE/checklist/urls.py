@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import (
-    # DdayAPIView,
     ChecklistCreateAPIView, 
     ChecklistSearchAPIView, 
     ChecklistDetailAPIView,
@@ -10,9 +9,6 @@ from .views import (
 app_name = 'checklist'
 
 urlpatterns = [
-    # D-day
-    # path('Dday', DdayAPIView.as_view(), name="Dday"),
-
     # 체크리스트 작성
     path('', ChecklistCreateAPIView.as_view(), name="checklistcreate"),
     # 유저별 체크리스트 전체 조회
