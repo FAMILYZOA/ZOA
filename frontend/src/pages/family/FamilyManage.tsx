@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { GrHomeRounded } from "react-icons/gr";
+import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
@@ -149,7 +149,7 @@ const FamilyManage = () => {
     <>
       <HeaderBox>
         <Icon onClick={navigateToHome}>
-          <GrHomeRounded size="22" />
+          <AiFillHome size="24" color="#FF787F" />
         </Icon>
         <HeaderLabel>멤버 관리</HeaderLabel>
         <div></div>
