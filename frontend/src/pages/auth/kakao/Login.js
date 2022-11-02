@@ -132,6 +132,7 @@ function Login() {
         setWarn(true)
     }
     const clickLogin = (phone, pw) => {
+        console.log(phone, pw);
         const data = new FormData();
         data.append("phone", phone.replaceAll("-", ""));
         data.append("password", pw);
@@ -194,7 +195,7 @@ function Login() {
                 <span style={{ color: "#FF787F" }}>ZOA </span> 회원가입
               </RegisterText>
             </Link>
-            <KakaoLogin onClick={clickKakaoLogin}>
+            <KakaoLogin onClick={() => clickKakaoLogin(phone, pw)}>
               <RiKakaoTalkFill
                 size={24}
                 color={"#F5C343"}
