@@ -1,41 +1,23 @@
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
 from datetime import datetime
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
-from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
-from .models import Checklist
-from accounts.models import User
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-
-class DdayAPIView(GenericAPIView):
-    # TODO : 캘린더 app의 model 만든 후 개발
-    def get(self, request):
-        return Response("")
-
-
-class ChecklistSearchAPIView(GenericAPIView):
-    serializer_class = ChecklistSerializer
-    def get(self, request, to_users_id):
-        checklist = Checklist.objects.filter(to_users_id__exact=to_users_id).order_by('status', 'created_at')
-        serializer = self.serializer_class(checklist, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK) 
-
-
-class ChecklistTodayAPIView(GenericAPIView):
-    serializer_class = ChecklistSerializer
-    def get(self, request, to_users_id):
-        today = datetime.today()
-        year, month, day = today.year, today.month, today.day
-        checklist = Checklist.objects.filter(Q(to_users_id__exact=to_users_id) & Q(created_at__year=year, created_at__month=month, created_at__day=day))
-        serializer = self.serializer_class(checklist, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK) 
-
+from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework.pagination import PageNumberPagination
+from .models import Checklist
+from accounts.models import User
+from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
+from rest_framework import filters
 
 class ChecklistCreateAPIView(GenericAPIView):
-    serializer_class = ChecklistCreateSerializer
+    parser_classes = (MultiPartParser,)
+    @swagger_auto_schema(request_body=ChecklistCreateSerializer)
     def post(self, request):
         member = request.data.getlist('to_users_id')
         if request.data.get('photo') == None:
@@ -54,7 +36,6 @@ class ChecklistCreateAPIView(GenericAPIView):
         
         if not request.user.family_id:
             return Response("당신은 가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
-        
         giver = request.user.family_id.id
         for id in member:
             man = User.objects.get(id=id)
@@ -64,12 +45,40 @@ class ChecklistCreateAPIView(GenericAPIView):
                     f'{man}님은 해당 가족이 아닙니다.'
                 }
                 return Response(context, status=status.HTTP_400_BAD_REQUEST)
-
-
-        serializer = self.serializer_class(data=context)
+        serializer = ChecklistCreateSerializer(data=context)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ChecklistPagination(PageNumberPagination):
+    page_size = 5
+
+
+class ChecklistSearchAPIView(ListAPIView):
+    queryset = Checklist.objects.all()
+    serializer_class = ChecklistSerializer
+    pagination_class = ChecklistPagination
+    filter_backends=[ filters.SearchFilter,]
+    search_fields = ['status']
+    
+    def get_queryset(self):
+        id = self.request.parser_context['kwargs']['to_users_id']
+        me = User.objects.get(id=id).family_id
+        you = User.objects.get(id=self.request.user.id).family_id
+        if me == you:
+            return Checklist.objects.filter(to_users_id=id).order_by('created_at')
+        raise Http404
+
+
+class ChecklistTodayCreateAPIView(GenericAPIView):
+    serializer_class = ChecklistSerializer
+    def get(self, request, to_users_id):
+        today = datetime.today()
+        year, month, day = today.year, today.month, today.day
+        checklist = Checklist.objects.filter(Q(to_users_id__exact=to_users_id) & Q(created_at__year=year, created_at__month=month, created_at__day=day))
+        serializer = self.serializer_class(checklist, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
 
 
 class ChecklistDetailAPIView(GenericAPIView):
@@ -90,10 +99,11 @@ class ChecklistDetailAPIView(GenericAPIView):
                 return Response(serializer.data, status=status.HTTP_200_OK) 
         return Response("Todo가 부여된 사용자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
 
-
     def delete(self, request, checklist_id):
         checklist = get_object_or_404(Checklist, id=checklist_id)
         if request.user.pk == checklist.from_user_id.id:
             checklist.delete()
             return Response("해당 Todo를 삭제하였습니다.", status=status.HTTP_200_OK)     
         return Response("Todo 부여자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
+
+

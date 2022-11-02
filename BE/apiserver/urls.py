@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/v1/scrums/', include('scrums.urls')),
     path('api/v1/event/', include('event.urls')),
     path('api/v1/audio/', include('audios.urls')),
+    path('api/v1/schedule/', include('schedule.urls')),
 
     #swagger
     path('api/v1/swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
