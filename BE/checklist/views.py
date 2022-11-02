@@ -19,6 +19,7 @@ class ChecklistCreateAPIView(GenericAPIView):
     parser_classes = (MultiPartParser,)
     @swagger_auto_schema(request_body=ChecklistCreateSerializer)
     def post(self, request):
+        result = []
         member = request.data.getlist('to_users_id')
         for memberpk in member:
             if request.data.get('photo') == None:
@@ -43,13 +44,14 @@ class ChecklistCreateAPIView(GenericAPIView):
                 family_num = man.family_id.id
                 if giver != family_num:
                     context = {
-                        f'{man}님은 해당 가족이 아닙니다.'
+                        f'{man}님은 당신이 속한 가족의 멤버가 아닙니다.'
                     }
                     return Response(context, status=status.HTTP_400_BAD_REQUEST)
             serializer = ChecklistCreateSerializer(data=context)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                result.append(serializer.data)
+        return Response(result, status=status.HTTP_201_CREATED)
 
 
 class ChecklistPagination(PageNumberPagination):
@@ -94,15 +96,15 @@ class ChecklistDetailAPIView(GenericAPIView):
     def put(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
         serializer = ChecklistStateChangeSerializer(checklist, data=request.data)
-        if serializer.is_valid():
-            if request.user in checklist.to_users_id.all():
+        if request.user.id == checklist.to_users_id.id:
+            if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK) 
         return Response("Todo가 부여된 사용자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, checklist_id):
         checklist = get_object_or_404(Checklist, id=checklist_id)
-        if request.user.pk == checklist.from_user_id.id:
+        if request.user.id == checklist.from_user_id.id:
             checklist.delete()
             return Response("해당 Todo를 삭제하였습니다.", status=status.HTTP_200_OK)     
         return Response("Todo 부여자가 아닙니다.", status=status.HTTP_403_FORBIDDEN)

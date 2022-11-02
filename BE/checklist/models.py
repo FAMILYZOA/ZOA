@@ -9,6 +9,5 @@ class Checklist(models.Model) :
                 null=True, blank=True, verbose_name='체크리스트 사진')
     created_at = models.DateTimeField(auto_now_add=True)
     from_user_id = models.ForeignKey(User, related_name='fromchecklist', on_delete=models.CASCADE, db_column='from_user_id')
-    # to_users_id = models.ManyToManyField(User, db_column='to_user_id')
     to_users_id = models.ForeignKey(User, related_name='tochecklist', on_delete=models.CASCADE, db_column='to_user_id')
 
