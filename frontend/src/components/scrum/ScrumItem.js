@@ -41,12 +41,18 @@ const ScrumItem = ({myScrum}) => {
           </MemberProfile>
         </ProfileWrapper>
         <ItemWrapper>
-          <div style={{margin: "1vh"}}>
-           🙋‍♂️ {myScrum.yesterday}
-          </div>
-          <div style={{margin: "1vh"}}>
-           📢 {myScrum.today}
-          </div>
+          {myScrum.yesterday && myScrum.today === "" ? (
+            <>
+              <div style={{margin: "1vh"}}>
+              🙋‍♂️ {myScrum.yesterday}
+              </div>
+              <div style={{margin: "1vh"}}>
+              📢 {myScrum.today}
+              </div>
+            </>
+          ) : (
+            "아직 작성된 스크럼이 없어요 😢"
+          )}
         </ItemWrapper>
       </ScrumWrapper>
       <div
