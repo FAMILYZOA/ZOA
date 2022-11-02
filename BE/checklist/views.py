@@ -99,7 +99,7 @@ class ChecklistSearchAPIView(ListAPIView):
             if me == you:
                 return Checklist.objects.filter(to_users_id=id).order_by('created_at')
             raise Http404
-        except User.DoesNotExist:
+        except:
             raise Http404
 
 
