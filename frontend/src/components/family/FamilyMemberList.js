@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
-import { useEffect, useNavigate } from "react";
+import  { useNavigate } from "react-router-dom";
+
+
 
 const MemberInfo = styled.div`
   display: flex;

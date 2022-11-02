@@ -63,6 +63,8 @@ function Navbar() {
          location.pathname === "/register"
        ) {
          setActive(true);
+       } else{
+        setActive(false);
        }
     }, [location])
 

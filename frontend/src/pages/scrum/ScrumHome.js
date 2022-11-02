@@ -1,6 +1,7 @@
 import Header from "../../components/header";
 import styled from "styled-components";
-import React, { useState, useEffect, useNavigate } from "react";
+import React, { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
 import ScrumItem from "../../components/scrum/ScrumItem";
 import ScrumFamItem from "../../components/scrum/ScrumFamItem";
