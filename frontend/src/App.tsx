@@ -102,7 +102,7 @@ function App() {
             dispatch(setUserImage(res.data.image));
             dispatch(setUserName(res.data.name));
             console.log("user fetched");
-            if (familyId < 0) {
+            if (familyId < 0 && res.data.family_id) {
               // 가족 정보가 없으면, 가족 정보 불러오기
               axios({
                 method: "get",
