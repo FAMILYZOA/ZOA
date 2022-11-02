@@ -1,18 +1,26 @@
 from accounts.models import User
 from audios.models import Audio
 from audios.serializers import AudioListSerializer, AudioSerializer
-from rest_framework.generics import (ListCreateAPIView)
+from rest_framework.generics import (ListCreateAPIView,RetrieveDestroyAPIView)
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
 from scrums.views import IsFamilyorBadResponsePermission
-
+from rest_framework import permissions
+from rest_framework.filters import SearchFilter
+class IsObjectorBadResponsePermission(permissions.BasePermission) :
+    def has_permission(self,request,view) :
+        return request.user.is_authenticated and request.user.family_id
+    def has_object_permission(self, request, view, obj):
+        return request.user.family_id == obj and obj.to_user_id == request.user
 
 class AudioSaveAPIView(ListCreateAPIView):
     serializer_class = AudioListSerializer
     permission_classes = [IsFamilyorBadResponsePermission,]
     parser_classes = [MultiPartParser, ]
+    filter_backends = [SearchFilter,]
+    search_fields = ['status',]
 
     @swagger_auto_schema(request_body=AudioSerializer)
     def post(self, request, *args, **kwargs):
@@ -44,6 +52,12 @@ class AudioSaveAPIView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def list(self,request, *args,**kwagrs) :
-        queryset = Audio.objects.filter(to_user_id=self.request.user)
+        queryset = Audio.objects.filter(to_user_id=self.request.user).order_by('-created_at')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+# class AudioDetailAPIView(RetrieveDestroyAPIView) :
+#     serializer_class = 
+#     permission_classes = [IsObjectorBadResponsePermission,]
+#     queryset = Audio.objects.all()
+#     lookup_field = 'id'
