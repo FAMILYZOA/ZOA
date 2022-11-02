@@ -1,7 +1,8 @@
 from accounts.models import User
 from audios.models import Audio
-from audios.serializers import AudioListSerializer, AudioSerializer
-from rest_framework.generics import (ListCreateAPIView,RetrieveDestroyAPIView)
+from audios.serializers import AudioListSerializer, AudioSerializer, AudioUpdateSerializer
+from rest_framework.generics import (ListCreateAPIView,GenericAPIView)
+from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
@@ -13,15 +14,16 @@ class IsObjectorBadResponsePermission(permissions.BasePermission) :
     def has_permission(self,request,view) :
         return request.user.is_authenticated and request.user.family_id
     def has_object_permission(self, request, view, obj):
-        return request.user.family_id == obj and obj.to_user_id == request.user
+        print(obj.to_user_id.all(),request.user)
+        print(obj)
+        return request.user in obj.to_user_id.all()
 
 class AudioSaveAPIView(ListCreateAPIView):
     serializer_class = AudioListSerializer
     permission_classes = [IsFamilyorBadResponsePermission,]
     parser_classes = [MultiPartParser, ]
     filter_backends = [SearchFilter,]
-    search_fields = ['status',]
-
+    search_fields = ['status']
     @swagger_auto_schema(request_body=AudioSerializer)
     def post(self, request, *args, **kwargs):
 
@@ -52,12 +54,25 @@ class AudioSaveAPIView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def list(self,request, *args,**kwagrs) :
-        queryset = Audio.objects.filter(to_user_id=self.request.user).order_by('-created_at')
+        is_query  =self.request.GET.getlist('search')
+        if not is_query  :
+            return Response('query를 입력해주세요 0 or 1',status=status.HTTP_400_BAD_REQUEST)
+        queryset = self.filter_queryset(Audio.objects.filter(to_user_id=request.user).order_by('-created_at'))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-# class AudioDetailAPIView(RetrieveDestroyAPIView) :
-#     serializer_class = 
-#     permission_classes = [IsObjectorBadResponsePermission,]
-#     queryset = Audio.objects.all()
-#     lookup_field = 'id'
+class AudioDeleteAPIView(GenericAPIView,mixins.UpdateModelMixin,mixins.DestroyModelMixin,) :
+    permission_classes = [IsObjectorBadResponsePermission,]
+    queryset = Audio.objects.all()
+    lookup_field = 'id'
+    serializer_class = AudioUpdateSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
