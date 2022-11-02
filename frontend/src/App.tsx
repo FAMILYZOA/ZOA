@@ -150,18 +150,18 @@ function App() {
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
 
-          <Route path="/family/create" element={<FamilyCreate/>}></Route>
+          <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
 
           <Route path="/" element={<Main />} />
 
-          <Route path="/scrum/create" element={<ScrumCreate />}></Route>
+          <Route path="/hello/" element={<ScrumHome />}></Route>
+          <Route path="/hello/create" element={<ScrumCreate />}></Route>
 
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
 
-          
           <Route path="/settings" element={<Settings />} />
         </Routes>
         <Navbar></Navbar>
