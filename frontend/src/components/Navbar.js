@@ -50,19 +50,6 @@ const UnSelectBox = styled.div`
 function Navbar() {
     const location = useLocation();
     const [active, setActive] = useState(false);
-    // const check = () => {if (
-    //   location.pathname === "/intro" ||
-    //   location.pathname === "/kakaoSignup" ||
-    //   location.pathname === "/register" ||
-    //   location.pathname === "/login" ||
-    //   location.pathname === "/family/manage" ||
-    //   location.pathname === "/family/create" ||
-    //   location.pathname === "/family/edit" ||
-    //   location.pathname === "/login" ||
-    //   location.pathname === "/register"
-    // ) {
-    //     setActive(true)
-    // }}
     useEffect(()=> {
        if (
          location.pathname === "/intro" ||

@@ -127,18 +127,19 @@ function Login() {
     }
     const onChangePw = (e) => {
         setPw(
-            setPw(e.currentTarget.value)
+            e.currentTarget.value
         )
+        console.log(pw);
     }
     const activeWarn = () => {
         setWarn(true)
     }
     const clickLogin = (phone, pw) => {
+        console.log(phone, pw);
         const data = new FormData();
         data.append("phone", phone.replaceAll("-", ""));
         data.append("password", pw);
-
-        customAxios.post("accounts/login", data).then((res) => {
+        customAxios.post("accounts/login/", data).then((res) => {
             dispatch(setAccessToken(res.data.token.access));
             navigate("/", {replace:true});
         }).catch((err)=> {
@@ -194,7 +195,7 @@ function Login() {
                 <span style={{ color: "#FF787F" }}>ZOA </span> 회원가입
               </RegisterText>
             </Link>
-            <KakaoLogin onClick={clickKakaoLogin}>
+            <KakaoLogin onClick={() => clickKakaoLogin(phone, pw)}>
               <RiKakaoTalkFill
                 size={24}
                 color={"#F5C343"}
