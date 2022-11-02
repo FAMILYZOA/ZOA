@@ -6,7 +6,7 @@ import { MdOutlineLock } from "react-icons/md";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { useAppDispatch } from "../../../app/hooks";
 import { customAxios } from './../../../api/customAxios';
-import { setAccessToken } from "../../../features/token/tokenSlice";
+import { setAccessToken, setRefreshToken } from "../../../features/token/tokenSlice";
 import logo from "../../../assets/white-logo.png"
 /*global Kakao*/
 
@@ -126,10 +126,7 @@ function Login() {
         );
     }
     const onChangePw = (e) => {
-        setPw(
-            e.currentTarget.value
-        )
-        console.log(pw);
+        setPw(e.currentTarget.value)
     }
     const activeWarn = () => {
         setWarn(true)
@@ -139,10 +136,13 @@ function Login() {
         const data = new FormData();
         data.append("phone", phone.replaceAll("-", ""));
         data.append("password", pw);
+
         customAxios.post("accounts/login/", data).then((res) => {
             dispatch(setAccessToken(res.data.token.access));
+            dispatch(setRefreshToken(res.data.token.refresh));
             navigate("/", {replace:true});
         }).catch((err)=> {
+            console.log(err)
             activeWarn()
         })
     }
