@@ -3,7 +3,7 @@ import styled from "styled-components";
 import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
 import { CheckItem } from "../../components/checklist/view";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 
 const CheckListViewBody = styled.div`
@@ -161,6 +161,7 @@ function ReadChecklist() {
   const [onDetail, setOnDetail] = useState<number>(-1);
 
   const accessToken = useAppSelector((state) => state.token.access);
+  const userId = useAppSelector((state) => state.user.id);
 
   const getSelect = (id: number) => {
     let index: number = 0;
@@ -197,9 +198,18 @@ function ReadChecklist() {
   };
 
   useEffect(() => {
-    setSelectedMember(FamilyMembers[0]);
+
+    let index: number = 0;
+    // 패밀리중 유저와 일치하는 index 탐색
+    FamilyMembers.forEach((value, i: number) => {
+      if (value.id === userId) {
+        index = i;
+        return false;
+      }
+    });
+    setSelectedMember(FamilyMembers[index]);
     const tempMember = [...FamilyMembers];
-    tempMember.splice(0, 1);
+    tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
   });
 
