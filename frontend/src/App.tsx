@@ -122,19 +122,20 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/family/manage" element={<FamilyManage />}></Route>
-          <Route path="/family/create" element={<FamilyCreate />}></Route>
-          <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
-          <Route path="/scrum/create" element={<ScrumCreate />}></Route>
           <Route path="/intro" element={<Prelogin />} />
-          <Route path="/" element={<Main />} />
-          <Route path="/checklist/create" element={<CreateChecklist />} />
-          <Route path="/checklist" element={<ReadChecklist />} />
-          <Route path="/kakaoSignup" element={<KakaoSignup />} />
-          <Route path="/register" element={<Resister />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
+          <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
+
+          <Route path="/scrum/create" element={<ScrumCreate />}></Route>
+          <Route path="/family/manage" element={<FamilyManage />}></Route>
+          <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
+
+          <Route path="/" element={<Main />} />
+
+          <Route path="/checklist" element={<ReadChecklist />} />
+          <Route path="/checklist/create" element={<CreateChecklist />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
