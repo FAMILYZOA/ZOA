@@ -8,6 +8,7 @@ from rest_framework import filters
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
+
 class IsFamilyorBadResponsePermission(permissions.BasePermission) :
     def has_permission(self,request,view) :
         return request.user.is_authenticated and request.user.family_id
