@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'apiserver.wsgi.application'
 DATABASES = { 
 	'default': { 
     	'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'test', 
+        'NAME': 'zoa', 
         'USER': 'root', 
         'PASSWORD': env('MYSQL_PASSWORD'), 
         'HOST': 'k7b103.p.ssafy.io', 
