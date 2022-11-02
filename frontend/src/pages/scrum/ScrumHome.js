@@ -33,15 +33,17 @@ const ScrumHome = () => {
     yesterday: "",
     today: "",
   },]);
-  const famScrums = [];
-  
+
   const token = useAppSelector((state) => state.token.access);
+  const family = useAppSelector((state) => state.family.users);
+  const userId = useAppSelector((state) => state.user.id)
   const navigate = useNavigate();
   useEffect (()=> {
     if (token.length === 0) {
       navigate("/intro");
     }
   });
+
   useEffect(() => {
     axios({
       method: "get",
@@ -57,10 +59,28 @@ const ScrumHome = () => {
       console.log(err)
     })
   }, [token])
+  const famScrums = [];
   let i = 0
   for (i = 1; i < scrums.length; i++) {
     famScrums.push(scrums[i])
   }
+  console.log("전체 스크럼", scrums);
+  console.log("가족정보", family);
+  const myScrum = useState([{
+    image: "",
+    yesterday: "",
+    today: "",
+  }])
+  let j = 0
+  for (j = 0; j < scrums.length; j++) {
+    if (scrums[j].user_id === userId) {
+      myScrum.unshift(scrums[j])
+      scrums.splice(j, 1)
+    }
+  };
+  console.log(scrums);
+  console.log(myScrum);
+  console.log(family);
 
   return(
     <>
@@ -77,7 +97,7 @@ const ScrumHome = () => {
             </div>
           </div>
           <div>
-            <ScrumItem scrums={scrums[0]}></ScrumItem>
+            <ScrumItem myScrum={myScrum[0]}></ScrumItem>
           </div>
           <div>
             {famScrums.map((item) => (
