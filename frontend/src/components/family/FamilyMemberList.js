@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
+import { useAppSelector } from "../../app/hooks";
+import { useEffect, useNavigate } from "react";
 
 const MemberInfo = styled.div`
   display: flex;
@@ -44,24 +46,31 @@ cursor: pointer;
 
 const FamilyMemberList = ({id, name, image, set_name}) => {
 
-    const NameResult = () => {
-        // 커스텀 설정된 이름이 있는지 확인
-        if (set_name !== "") {
-          return `${name} (${set_name})`;
-        } else if (!name) {
-          return "";
-        } else {
-          return name;
-        }
-      };
+  
+  const NameResult = () => {
+    // 커스텀 설정된 이름이 있는지 확인
+  if (set_name !== false) {
+    return `${name} (${set_name})`;
+  } else {
+    return name;
+  }
+};
+  
+  const token = useAppSelector((state) => state.token.access);
+  const navigate = useNavigate();
+  useEffect (()=> {
+    if (token.length === 0) {
+      navigate("/intro");
+    }
+  });
 
-    // 이름 수정 api
-    const onEditName = () => {
-    axios({
-        method: "put",
-        url: 'https://k7b103.p.ssafy.io/api/v1/family/31',
+    // 이름 최초 수정 api
+    const onPostName = () => {
+      axios({
+        method: "post",
+        url: `https://k7b103.p.ssafy.io/api/v1/family/name/${id}/`,
         headers: {
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3MjA5NTU5LCJpYXQiOjE2NjcxMjMxNTksImp0aSI6IjNjMzI1NjZjMjMyYTQ1MWQ4OWRkMWI5NjZmYjM5ZWE0IiwidXNlcl9pZCI6MjJ9.UbK79emS3ReB5rxUJLmK3RG6aZPp1o0_S20Bqfu3rqw'
+            Authorization: `Bearer ${token}`
         },
         data: {
             name: editName
@@ -74,7 +83,28 @@ const FamilyMemberList = ({id, name, image, set_name}) => {
         console.log(err)
       })
     };
-    
+
+    // 이름 수정 api
+    const onEditName = () => {
+    axios({
+        method: "put",
+        url: `https://k7b103.p.ssafy.io/api/v1/family/name/${id}/`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        data: {
+            name: editName
+        }
+    })
+    .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {  
+        console.log(err)
+      })
+    };
+
+
     const [editName, setEditName] = useState('');
     const handleNameEdit = (e) => {
         setEditName(e.target.value)
@@ -86,6 +116,9 @@ const FamilyMemberList = ({id, name, image, set_name}) => {
         setEdited(!edited);
       };
     
+
+    
+
     return(
         <>
       <MemberInfo>
@@ -103,10 +136,15 @@ const FamilyMemberList = ({id, name, image, set_name}) => {
         <div>
           { edited === true ?
           <NameEditButton
-            onClick={() => {
+          onClick={() => {
+              if (set_name !== false) {
+                onEditName(id);
                 onClickEditButton();
-                onEditName();
-            }}
+              } else {
+                onPostName(id);
+                onClickEditButton();
+              }
+          }}
           >수정</NameEditButton> : <></>}
         </div>
       </MemberInfo>
