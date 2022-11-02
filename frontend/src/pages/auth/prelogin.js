@@ -3,6 +3,17 @@ import styled from "styled-components";
 import symbol from "../../assets/symbol.png";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper";
+import img1 from "../../assets/prelogin1.jpg"
+import img2 from "../../assets/prelogin2.jpg"
+import img3 from "../../assets/prelogin3.jpg"
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+
+ SwiperCore.use([Navigation, Pagination, Autoplay]);
 
 /*global Kakao*/
 
@@ -17,7 +28,15 @@ const ImgBox = styled.div`
     margin: auto;
   }
   height: 70vh;
-  background-color: gray;
+  width: 100vw;
+  img {
+    height: 70vh;
+    width: 100vw;
+    @media screen and (min-width: 720px) {
+      width: 70vh;
+      margin: auto;
+    }
+  }
 `;
 
 const BtnBox = styled.div`
@@ -64,6 +83,26 @@ const TextBox = styled.div`
   margin: auto;
 `;
 
+function SlideBox() {
+  return(
+    <ImgBox>
+      <Swiper
+        spaceBetween={0}
+        slidesPerView={1}
+        autoplay={{ delay: 4000 }}
+        loop={true}
+      >
+        <SwiperSlide><img src={img1} alt="" /></SwiperSlide>
+        <SwiperSlide><img src={img2} alt="" /></SwiperSlide>
+        <SwiperSlide><img src={img3} alt="" /></SwiperSlide>
+
+      </Swiper>
+    </ImgBox>
+  )
+}
+
+
+
 function Btns() {
   const navigate = useNavigate();
   const NavZoa = () => {
@@ -102,7 +141,7 @@ function Btns() {
 function prelogin() {
   return (
     <Prelogin>
-      <ImgBox>이미지넣어죠</ImgBox>
+      <SlideBox></SlideBox>
       <Btns></Btns>
     </Prelogin>
   );

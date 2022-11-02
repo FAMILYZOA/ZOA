@@ -44,8 +44,7 @@ function Announcement({ scrum }) {
           <Text>📢 '안녕'에서 가족들에게 한마디를 작성해보세요! </Text>
         </Contents>
       ) : (
-        <>
-          {scrum.map((item, index) =>
+        scrum.map((item, index) =>
             item.today.length > 1 ? (
               <Contents key={index}>
                 <Text>📢 {item.today}</Text>
@@ -61,8 +60,7 @@ function Announcement({ scrum }) {
                 </From>
               </Contents>
             )
-          )}
-        </>
+          )
       )}
     </Slider>
   );
