@@ -6,3 +6,4 @@ class ScrumAdmin(admin.ModelAdmin) :
     readonly_fields = ('created_at',)
 # Register your models here.
 admin.site.register(Scrum,ScrumAdmin)
+
