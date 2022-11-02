@@ -13,6 +13,7 @@ import Resister from "./pages/auth/Resister";
 import NewLogin from "./pages/auth/kakao/Login";
 import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
+import ScrumHome from "./pages/scrum/ScrumHome";
 
 import Navbar from "./components/Navbar";
 
@@ -63,7 +64,6 @@ function App() {
         dispatch(setUserBirth(""));
         dispatch(setUserImage(""));
         dispatch(setUserName(""));
-        console.log("user info initialized");
       }
       if (familyId >= 0) {
         // 패밀리 값 초기화. id 값이 양의 정수면 들어있다고 판단.
@@ -144,19 +144,24 @@ function App() {
     <div style={fontStyle}>
       <BrowserRouter>
         <Routes>
-          <Route path="/family/manage" element={<FamilyManage />}></Route>
-          <Route path="/family/create" element={<FamilyCreate />}></Route>
-          <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
-          <Route path="/scrum/create" element={<ScrumCreate />}></Route>
           <Route path="/intro" element={<Prelogin />} />
-          <Route path="/" element={<Main />} />
-          <Route path="/checklist/create" element={<CreateChecklist />} />
-          <Route path="/checklist" element={<ReadChecklist />} />
-          <Route path="/kakaoSignup" element={<KakaoSignup />} />
-          <Route path="/register" element={<Resister />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
+          <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
+
+          <Route path="/family/create" element={<FamilyCreate />}></Route>
+          <Route path="/family/manage" element={<FamilyManage />}></Route>
+          <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
+
+          <Route path="/" element={<Main />} />
+
+          <Route path="/hello/" element={<ScrumHome />}></Route>
+          <Route path="/hello/create" element={<ScrumCreate />}></Route>
+
+          <Route path="/checklist" element={<ReadChecklist />} />
+          <Route path="/checklist/create" element={<CreateChecklist />} />
+
           <Route path="/settings" element={<Settings />} />
         </Routes>
         <Navbar></Navbar>
