@@ -4,19 +4,19 @@ import plus from "../../../assets/plus.png";
 import { BsTrashFill } from "react-icons/bs";
 
 const Container = styled.div`
-  margin: 5%;
+  margin: 5% 5% 2%;
 `;
 const MainText = styled.div`
   font-size: 16px;
   font-weight: bold;
   text-align: start;
-  margin-bottom: 16px;
+  margin-bottom:4px;
 `;
 
 const Photo = styled.div`
   display: flex;
   justify-content: center;
-  margin: 4px auto 8px;
+  margin: 4px auto 4px;
   /* width: 33%; */
   height: 20vh;
   img {
