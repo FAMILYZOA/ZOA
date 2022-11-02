@@ -7,8 +7,8 @@ interface TokenState { // 타입 지정
 }
 
 const initialState: TokenState = { // 초기 상태
-  access: localStorage.getItem("access") || "",
-  refresh: localStorage.getItem("refresh") || "",
+  access: localStorage.getItem("access_token") || "",
+  refresh: localStorage.getItem("refresh_token") || "",
 }
 
 export const tokenSlice = createSlice({
@@ -17,11 +17,11 @@ export const tokenSlice = createSlice({
   reducers: { // 값 변화 시키는 방법
     setAccessToken: (state:any, action: PayloadAction<string>) => {
       state.access = action.payload;
-      localStorage.setItem("access", action.payload);
+      localStorage.setItem("access_token", action.payload);
     },
     setRefreshToken: (state:any, action: PayloadAction<string>) => {
       state.refresh = action.payload;
-      localStorage.setItem("refresh", action.payload);
+      localStorage.setItem("refresh_token", action.payload);
     },
   }
 })
