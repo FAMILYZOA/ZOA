@@ -63,8 +63,8 @@ class ChecklistSearchAPIView(ListAPIView):
     queryset = Checklist.objects.all()
     serializer_class = ChecklistSerializer
     pagination_class = ChecklistPagination
-    filter_backends=[ DjangoFilterBackend, ]
-    filterset_fields = ['status']
+    filter_backends=[ filters.SearchFilter,]
+    search_fields = ['status']
     
     def get_queryset(self):
         id = self.request.parser_context['kwargs']['to_users_id']

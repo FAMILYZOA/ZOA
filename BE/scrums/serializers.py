@@ -5,12 +5,13 @@ from .models import Scrum
 
 class ScrumSerializer(serializers.ModelSerializer) :
 
+    user_id = serializers.IntegerField(source='user.id',read_only=True)
     name = serializers.CharField(source='user.name',read_only=True)
     image = serializers.ImageField(source='user.image',read_only=True)
     set_name = serializers.SerializerMethodField()
     class Meta: 
         model = Scrum
-        fields= ('id','emoji','yesterday','today','name','image','set_name')
+        fields= ('id','user_id','emoji','yesterday','today','name','image','set_name')
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
@@ -26,4 +27,4 @@ class ScrumSerializer(serializers.ModelSerializer) :
 class MainScrumSerializer(ScrumSerializer) :
     class Meta :
         model = Scrum
-        fields= ('id','emoji','today','name','image','set_name')
+        fields= ('id','user_id','emoji','today','name','image','set_name')

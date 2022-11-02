@@ -46,6 +46,7 @@ urlpatterns = [
     path('api/v1/checklist/', include('checklist.urls')),
     path('api/v1/scrums/', include('scrums.urls')),
     path('api/v1/event/', include('event.urls')),
+    path('api/v1/audio/', include('audios.urls')),
     path('api/v1/schedule/', include('schedule.urls')),
 
     #swagger
