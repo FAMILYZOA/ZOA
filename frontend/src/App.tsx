@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
+import { Settings } from './pages/settings';
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
@@ -37,9 +38,20 @@ function App() {
   const accessToken = useAppSelector((state) => state.token.access);
   const userId = useAppSelector((state) => state.user.id);
   const familyId = useAppSelector((state) => state.family.id);
+  const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  const fontArray = [
+    "2vh",
+    "2.5vh",
+    "3vh",
+  ]
+
+  const [fontStyle, setFontStyle ] = useState<{fontSize: string}>({
+    fontSize: fontArray[fontSize],
+  });
+
+  const infoUpdate = () => {
     if (accessToken === "") {
       // 토큰이 없는 경우
       if (userId >= 0) {
@@ -116,10 +128,20 @@ function App() {
           });
       }
     }
-  });
-  // const location = useLocation();
+  }
+
+  useEffect(() => {
+    setFontStyle({
+      fontSize: fontArray[fontSize],
+    })
+  }, [fontSize])
+
+  useEffect(() => {
+    infoUpdate();
+  }, [accessToken])
+
   return (
-    <div>
+    <div style={fontStyle}>
       <BrowserRouter>
         <Routes>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
@@ -135,6 +157,7 @@ function App() {
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
