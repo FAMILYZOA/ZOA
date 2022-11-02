@@ -11,9 +11,9 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.pagination import PageNumberPagination
-from .models import Checklist
+from .models import Checklist, Photo
 from accounts.models import User
-from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
+from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer, ResultSerializer
 
 
 class ChecklistCreateAPIView(GenericAPIView):
@@ -22,6 +22,12 @@ class ChecklistCreateAPIView(GenericAPIView):
     def post(self, request):
         result = []
         member = request.data.getlist('to_users_id')
+        photo = request.FILES.getlist('photo')
+        if request.data.get('photo') != None:
+            image = request.FILES['photo']
+            photo = Photo.objects.create(image=image)
+            photo.save()
+
         for memberpk in member:
             if request.data.get('photo') == None:
                 context = {
@@ -32,7 +38,7 @@ class ChecklistCreateAPIView(GenericAPIView):
             else:
                 context = {
                     'text': request.data.get('text'),
-                    'photo': request.FILES['photo'],
+                    'photo': photo.pk,
                     'from_user_id': request.user.id,
                     'to_users_id' :memberpk
                 }
@@ -89,6 +95,7 @@ class ChecklistDetailAPIView(GenericAPIView):
     serializer_class = ChecklistDetailSerializer
     def get(self, request, checklist_id):
         checklist = Checklist.objects.get(id=checklist_id)
+        # todo: checklist 없으면 없다고 return
         serializer = self.get_serializer(checklist)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
