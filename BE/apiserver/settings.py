@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'checklist',
     'scrums',
     'event',
+    'audios',
     'schedule',
 
     # default
