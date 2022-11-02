@@ -11,6 +11,8 @@ import {
   setUserName,
 } from "../../features/user/userSlice";
 
+const ALLOW_FILE_EXTENSION = "jpg,jpeg,png";
+
 const SettingsHeader = styled.div`
   display: flex;
   height: 8vh;
@@ -112,14 +114,31 @@ const Settings = () => {
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const [isFontModal, toggleFontModal] = useState<boolean>(false);
   const [isLogoutModal, toggleLogoutModal] = useState<boolean>(false);
+  const [file, setFile] = useState<File>();
   const fontLetter = ["작게", "보통", "크게"];
 
   const accessToken = useAppSelector((state) => state.token.access);
   const userPhone = useAppSelector((state) => state.user.phone);
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
+  const userKakao = useAppSelector((state) => state.user.kakaoId);
 
   const dispatch = useAppDispatch();
+  
+
+
+  const fileInput = React.createRef<HTMLInputElement>();
+
+  const handleImageClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget;
+    const files = (target.file as targetFile);
+
+    if(file === undefined) {
+      return ;
+    }
+    
+    fileInput.current.click();
+  };
 
   return (
     <>
@@ -130,7 +149,11 @@ const Settings = () => {
         <ProfileImgDiv>
           <ProfileImgCover>
             <div>
-              <ProfileImg src={userImage} />
+              <ProfileImg src={userImage} onClick={this.handleImageClick} />
+              <input type="file"
+                name="pic"
+                accept="image/*"
+                ref={fileInput} />
             </div>
             <ProfileEditIcon>
               <AiFillCamera />
@@ -139,7 +162,7 @@ const Settings = () => {
         </ProfileImgDiv>
         <NameEmailDiv>
           <UserName>{userName}</UserName>
-          <UserEmail></UserEmail>
+          <UserEmail>{userKakao}</UserEmail>
         </NameEmailDiv>
         <SettingMenu>
           <SettingItem>
