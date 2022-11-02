@@ -94,7 +94,7 @@ const CheckListList = () => {
       <ListBox>
         {list.length !== 0 ? (
           <div>
-            {list.slice(0, 3).map((item, idx) => (
+            {list.map((item, idx) => (
               <CheckListItem {...item} key={idx} />
             ))}
           </div>
