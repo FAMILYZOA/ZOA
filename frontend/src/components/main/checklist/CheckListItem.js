@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { FaCheckSquare, FaRegSquare } from "react-icons/fa";
 import axios from "axios";
+import { useAppSelector } from "../../../app/hooks";
 
 const Container = styled.div`
   display: grid;
@@ -37,25 +37,29 @@ const CheckListItem = (item) => {
   //   textDecorationLine = "line-through";
   // }
 
-  // 나중에 api 요청으로 체크리스트 patch 붙이기
-  // const onSetCheck = () => {
-    
-  // };
+  const token = useAppSelector((state) => state.token.access);
 
-  // // 체크리스트 완료 api
-  // const onPutCheckList = () => {
-  //   axios({
-  //     method: "put",
-  //     url: "https://k7b103.p.ssafy.io/api/v1/checklist/detail/"
-  //   })
-  //   .then((res) => {
-      
-  //   })
-  // }
+  // 체크리스트 완료 api
+  const onPutCheckList = () => {
+    axios({
+      method: "put",
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${item.id}`,
+      data: {
+        status: !item.status
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => console.log(err))
+  };
 
   return (
     <Container>
-      <IconBox>
+      <IconBox onClick={() => {onPutCheckList(item.id);}}>
         {item.status === true ? (
           <FaCheckSquare size={16} color={"#FAD7D4"} />
         ) : (
