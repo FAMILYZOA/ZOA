@@ -21,6 +21,11 @@ function Main() {
   useEffect (()=> {
     if (access.length === 0) {
       navigate("/intro");
+    } else {
+      if (localStorage.getItem('familyId')) {
+        const familyId = localStorage.getItem('familyId');
+        navigate(`/join/${familyId}`);
+      }
     }
   })
 
