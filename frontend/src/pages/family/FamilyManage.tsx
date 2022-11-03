@@ -137,7 +137,7 @@ const FamilyManage = () => {
         {
           title: "ZOA에 참여하기",
           link: {
-            mobileWebUrl: "https://developers.kakao.com",
+            mobileWebUrl: `/join/${id}`,
             webUrl: "https://developers.kakao.com",
           },
         },
