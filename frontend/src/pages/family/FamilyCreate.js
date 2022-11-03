@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { customAxios } from "../../api/customAxios";
 import axios from "axios";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
+import Header from "../../components/header";
 
 const FamilyName = styled.div`
   display: flex;
   font-weight: bold;
+  margin-left: 10%;
 `
 
 const EssentialInput = styled.div`
@@ -22,6 +23,14 @@ const FamilyNameInput = styled.input`
   height: 30px;
   border-color: #ffd5d7;
   outline: 0;
+  background-color: transparent;
+  ::placeholder,
+  ::-webkit-input-placeholder {
+    color: #666666;
+    font-weight: 500;
+  }
+  margin-left: 10%;
+  margin-top: 2%;
 `;
 
 const FamilyPostButton = styled.button`
@@ -44,6 +53,8 @@ const FamilyPostButton = styled.button`
     @include buttonDefault;
     background: linear-gradient(to left, #FE9B7C, #fec786);
   }
+  margin-left: 10%;
+  margin-top: 20%;
 `
 
 const FamilyPostUnButton = styled.button`
@@ -55,6 +66,8 @@ const FamilyPostUnButton = styled.button`
   background: linear-gradient(to left, #FE9B7C, #fec786);
   opacity: 0.5;
   font-size: 3vh;
+  margin-left: 10%;
+  margin-top: 20%;
 `
 
 const FamilyCreate = () => {
@@ -70,17 +83,6 @@ const FamilyCreate = () => {
     }
   };
   
-  // const onPostFam = () => {
-  //   customAxios
-  //     .post('/family/', familyName)
-  //     .then((res) => {
-  //       console.log(res)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     });
-  // }
-
   const accessToken = useAppSelector((state) => state.token.access);
 
   const onPostFam = () => {
@@ -104,9 +106,7 @@ const FamilyCreate = () => {
 
   return (
     <>
-      <div>
-        헤더자리
-      </div>
+      <Header label="ZOA"/>
       <FamilyName>
         가족 이름
         <EssentialInput>*</EssentialInput>
