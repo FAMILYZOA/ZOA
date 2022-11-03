@@ -63,6 +63,8 @@ function Navbar() {
          location.pathname === "/register"
        ) {
          setActive(true);
+       } else{
+        setActive(false);
        }
     }, [location])
 
@@ -82,7 +84,7 @@ function Navbar() {
                 </UnSelectBox>
             )}
             </Link>
-            <Link to="/zoa">
+            <Link to="/hello">
             {location.pathname.includes("/zoa" )? (
                 <SelectBox>
                 <FaRegSmile size={28} color={"white"} />

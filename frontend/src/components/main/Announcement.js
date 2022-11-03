@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const Contents = styled.div`
   margin: 16px 8px;
+  z-index: 4;
 `;
 const Text = styled.div`
   font-size: 16px;
@@ -36,6 +37,7 @@ function Announcement({ scrum }) {
     sidesToScroll: 1,
     vertical: true,
     draggable: true,
+    adaptiveHeight: true,
   };
   return (
     <Slider {...settings}>

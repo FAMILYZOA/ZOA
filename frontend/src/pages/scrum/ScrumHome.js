@@ -1,6 +1,7 @@
 import Header from "../../components/header";
 import styled from "styled-components";
-import React, { useState, useEffect, useNavigate } from "react";
+import React, { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
 import ScrumItem from "../../components/scrum/ScrumItem";
 import ScrumFamItem from "../../components/scrum/ScrumFamItem";
@@ -27,7 +28,11 @@ const ScrumHome = () => {
   };
 
   // 받아온 값 저장
-  const [scrums, setScrums] = useState([]);
+  const [scrums, setScrums] = useState([{
+    image: "",
+    yesterday: "",
+    today: "",
+  },]);
   const famScrums = [];
   
   const token = useAppSelector((state) => state.token.access);
@@ -46,8 +51,7 @@ const ScrumHome = () => {
       },
     })
     .then((res) => {
-      console.log(res.data)
-      setScrums({...res.data})
+      setScrums([...res.data])
     })
     .catch((err) => {
       console.log(err)
