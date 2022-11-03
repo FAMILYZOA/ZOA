@@ -8,7 +8,12 @@ const FamilyMembersTitle = styled.div`
   margin: 4.5vh 0 2vh;
   font-size: 2vh;
   font-weight: bold;
+  margin-left: 4%;
 `;
+
+const ListWrapper = styled.div`
+  margin-left: 4%;
+`
 
 const FamilyNameEdit = () => {
 
@@ -18,7 +23,9 @@ const FamilyNameEdit = () => {
       <FamilyMembersTitle>
           <div>멤버</div>
         </FamilyMembersTitle>
-        <FamilyMemberEdit/>
+        <ListWrapper>
+          <FamilyMemberEdit/>
+        </ListWrapper>
     </>
   )
 };
