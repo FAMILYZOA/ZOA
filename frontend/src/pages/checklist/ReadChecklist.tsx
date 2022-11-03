@@ -4,6 +4,8 @@ import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Tabs from "../../components/checklist/view/Tabs";
+import { CheckItem } from "../../components/checklist/view";
+import axios from "axios";
 
 const CheckListViewBody = styled.div`
   padding: 3vh 2vh;
@@ -74,6 +76,71 @@ function ReadChecklist() {
   const FamilyMembers = useAppSelector((state) => state.family.users);
 
 
+  const [unCheckedList, setUnCheckedList] = useState<
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
+  >([
+    {
+      id: -1,
+      text: "",
+      status: false,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
+    },
+  ]);
+
+  const [checkedList, setCheckedList] = useState<
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
+  >([
+    {
+      id: -1,
+      text: "",
+      status: false,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
+    },
+  ]);
+
+  const [todayCheckedList, setTodayCheckedList] = useState<
+    {
+      id: number;
+      text: string;
+      status: boolean;
+      photo: string;
+      created_at: string;
+      to_user_id: number[];
+    }[]
+  >([
+    {
+      id: -1,
+      text: "",
+      status: false,
+      photo: "",
+      created_at: "",
+      to_user_id: [-1],
+    },
+  ]);
+  const [viewMore, setViewMore] = useState<boolean>(false);
+  const [onDetail, setOnDetail] = useState<number>(-1);
+
+  const accessToken = useAppSelector((state) => state.token.access);
+
+
   const getSelect = (id: number) => {
     let index: number = 0;
 
@@ -92,9 +159,18 @@ function ReadChecklist() {
 
 
   useEffect(() => {
-    setSelectedMember(FamilyMembers[0]);
+
+    let index: number = 0;
+    // 패밀리중 유저와 일치하는 index 탐색
+    FamilyMembers.forEach((value, i: number) => {
+      if (value.id === userId) {
+        index = i;
+        return false;
+      }
+    });
+    setSelectedMember(FamilyMembers[index]);
     const tempMember = [...FamilyMembers];
-    tempMember.splice(0, 1);
+    tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
   }, []);
 

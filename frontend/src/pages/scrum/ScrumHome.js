@@ -28,7 +28,11 @@ const ScrumHome = () => {
   };
 
   // 받아온 값 저장
-  const [scrums, setScrums] = useState([]);
+  const [scrums, setScrums] = useState([{
+    image: "",
+    yesterday: "",
+    today: "",
+  },]);
   const famScrums = [];
   
   const token = useAppSelector((state) => state.token.access);
@@ -47,8 +51,7 @@ const ScrumHome = () => {
       },
     })
     .then((res) => {
-      console.log(res.data)
-      setScrums({...res.data})
+      setScrums([...res.data])
     })
     .catch((err) => {
       console.log(err)
