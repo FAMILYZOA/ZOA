@@ -140,6 +140,23 @@ function App() {
     infoUpdate();
   }, [accessToken])
 
+  // 모바일 연동
+  const getMessageFromDevice = (e:any) => {
+    alert(e.data)
+  }
+
+  window.__WEBVIEW_BRIDGE__ = {
+    init() {
+      try {
+        document.addEventListener("message", (e:any) => getMessageFromDevice);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+  };
+
+  window.__WEBVIEW_BRIDGE__.init();
+
   return (
     <div style={fontStyle}>
       <BrowserRouter>
@@ -147,7 +164,7 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
-          <Route path="/kakaoSignup" element={<KakaoSignup />} />
+          <Route path="/kakaoSignup"   element={<KakaoSignup />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
 
           <Route path="/family/create" element={<FamilyCreate />}></Route>

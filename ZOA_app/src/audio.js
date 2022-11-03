@@ -1,4 +1,3 @@
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import {PermissionsAndroid, Platform} from 'react-native';
 
 export const CheckAudioPermission = async () => {
@@ -32,9 +31,9 @@ export const CheckAudioPermission = async () => {
   }
 };
 
-export const onStartRecord = async () => {
-  const result = await this.audioRecorderPlayer.startRecorder();
-  this.audioRecorderPlayer.addRecordBackListener((e) => {
+export const onStartRecord = async audioRecorderPlayer => {
+  const result = await audioRecorderPlayer.startRecorder();
+  this.audioRecorderPlayer.addRecordBackListener(e => {
     this.setState({
       recordSecs: e.currentPosition,
       recordTime: this.audioRecorderPlayer.mmssss(
@@ -46,8 +45,8 @@ export const onStartRecord = async () => {
   console.log(result);
 };
 
-export const onStopRecord = async () => {
-  const result = await this.audioRecorderPlayer.stopRecorder();
+export const onStopRecord = async audioRecorderPlayer => {
+  const result = await audioRecorderPlayer.stopRecorder();
   this.audioRecorderPlayer.removeRecordBackListener();
   this.setState({
     recordSecs: 0,
@@ -55,11 +54,11 @@ export const onStopRecord = async () => {
   console.log(result);
 };
 
-export onStartPlay = async () => {
+export const onStartPlay = async audioRecorderPlayer => {
   console.log('onStartPlay');
-  const msg = await this.audioRecorderPlayer.startPlayer();
+  const msg = await audioRecorderPlayer.startPlayer();
   console.log(msg);
-  this.audioRecorderPlayer.addPlayBackListener((e) => {
+  this.audioRecorderPlayer.addPlayBackListener(e => {
     this.setState({
       currentPositionSec: e.currentPosition,
       currentDurationSec: e.duration,
@@ -70,12 +69,12 @@ export onStartPlay = async () => {
   });
 };
 
-export const onPausePlay = async () => {
-  await this.audioRecorderPlayer.pausePlayer();
+export const onPausePlay = async audioRecorderPlayer => {
+  await audioRecorderPlayer.pausePlayer();
 };
 
-export const onStopPlay = async () => {
+export const onStopPlay = async audioRecorderPlayer => {
   console.log('onStopPlay');
-  this.audioRecorderPlayer.stopPlayer();
-  this.audioRecorderPlayer.removePlayBackListener();
+  audioRecorderPlayer.stopPlayer();
+  audioRecorderPlayer.removePlayBackListener();
 };
