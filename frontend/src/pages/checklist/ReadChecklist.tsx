@@ -6,6 +6,10 @@ import { CheckItem } from "../../components/checklist/view";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import axios from "axios";
 
+interface modalBackProps {
+  toggle?: boolean;
+}
+
 const CheckListViewBody = styled.div`
   padding: 3vh 2vh;
 `;
@@ -22,12 +26,48 @@ const ViewMore = styled.div`
   font-size: 2vh;
 `;
 
-const ModalBack = styled.div`
+const ModalBack = styled.div<modalBackProps>`
   position: absolute;
   width: 100vw;
   height: 100vh;
   z-index: 2;
   background-color: rgba(102, 102, 102, 0.5);
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 const ModalDiv = styled.div`
   position: absolute;
