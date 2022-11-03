@@ -75,6 +75,8 @@ const FamilyCreate = () => {
 
   const [familyName, setFamilyName] = useState('');
   const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
+
   const handleFamilyNameInput = (e) => {
     setFamilyName(e.target.value)
     if (e.target.value !== '') {
@@ -87,18 +89,20 @@ const FamilyCreate = () => {
   const accessToken = useAppSelector((state) => state.token.access);
 
   const onPostFam = () => {
+    console.log(accessToken)
     axios({
       method: "post",
       url: 'https://k7b103.p.ssafy.io/api/v1/family/',
       headers: {
-        Authorization: accessToken,
+        Authorization: `Bearer ${accessToken}`,
       },
       data: {
         name: familyName
       }
     })
     .then((res) => {
-      console.log(res.data)
+      //console.log(res.data)
+      navigate('/', {replace: true})
     })
     .catch((err) => {
       console.log(err)

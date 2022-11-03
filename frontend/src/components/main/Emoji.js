@@ -14,18 +14,16 @@ const EContainer = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  @media screen and (min-width: 520px) {
-    &::-webkit-scrollbar {
-      width: auto;
-      height: 5px;
-      border-radius: 3px;
-      background-color: #ffcdbe;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #ff787f;
-      height: 3px;
-      border-radius: 3px;
-    }
+  &::-webkit-scrollbar {
+    width: auto;
+    height: 5px;
+    border-radius: 3px;
+    background-color: #ffcdbe;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ff787f;
+    height: 3px;
+    border-radius: 3px;
   }
 `;
 const MContainer = styled.div`
