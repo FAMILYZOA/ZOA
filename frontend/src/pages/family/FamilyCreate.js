@@ -8,6 +8,7 @@ const FamilyName = styled.div`
   display: flex;
   font-weight: bold;
   margin-left: 10%;
+  margin-top: 8%;
 `
 
 const EssentialInput = styled.div`
