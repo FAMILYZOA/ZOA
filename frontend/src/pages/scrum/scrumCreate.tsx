@@ -291,7 +291,7 @@ const RegistBtn = (props: registBtnPRops) => {
             // 스크럽 등록 성공
             alert("스크럼 등록 성공");
             // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
-            navigate("/", { replace: true });
+            navigate("/hello/", { replace: true });
           }
         })
         .catch(async (err) => {
@@ -307,18 +307,13 @@ const RegistBtn = (props: registBtnPRops) => {
                 if (tokens) {
                   dispatch(setAccessToken(tokens.access));
                   dispatch(setRefreshToken(tokens.refresh));
-                  alert("토큰을 재발급 받았습니다. 다시 시도하여 주십시오.");
                 } else {
-                  alert("기간 만료! 로그인 페이지로 이동합니다.")
                   dispatch(setAccessToken(""));
                   dispatch(setRefreshToken(""));
 
                   navigate("/login", { replace: true });
                 }
               }
-              break;
-            case 500:
-              alert("현재 서버에 문제가 발생하였습니다.");
               break;
             default:
               console.log(err);

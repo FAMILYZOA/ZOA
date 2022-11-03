@@ -6,35 +6,34 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { GrHomeRounded } from "react-icons/gr";
+import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
 import styled, { css, keyframes } from "styled-components";
 
-const FamilyManageHeader = styled.div`
-  display: flex;
-  height: 7.5vh;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 2px solid #aaa;
-`;
-const HomeButton = styled.div`
-  position: absolute;
-  top: 3.75vh;
-  left: 3.75vh;
-  height: 3vh;
-  width: 3vh;
-  transform: translate(-50%, -50%);
-  border-radius: 1.5vh;
-  font-size: 3vh;
-  color: black;
-`;
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`
 
-const FamilyManageHeaderTitle = styled.div`
-  font-size: 3vh;
-`;
+const Icon = styled.div`
+    margin: auto;
+    display: flex;
+    align-items: center;
+`
+
+const HeaderLabel = styled.div`
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 56px;
+`
 
 const FamilyManageBody = styled.div`
   padding: 2vh;
@@ -42,6 +41,7 @@ const FamilyManageBody = styled.div`
 const FamilyManageGuide = styled.div`
   margin-top: 1vh;
   margin-bottom: 3vh;
+  margin-left: 4px;
   font-size: 2.5vh;
 `;
 const FamilyNameHighlight = styled.span`
@@ -147,12 +147,14 @@ const FamilyManage = () => {
 
   return (
     <>
-      <FamilyManageHeader>
-        <HomeButton onClick={navigateToHome}>
-          <GrHomeRounded />
-        </HomeButton>
-        <FamilyManageHeaderTitle>멤버관리</FamilyManageHeaderTitle>
-      </FamilyManageHeader>
+      <HeaderBox>
+        <Icon onClick={navigateToHome}>
+          <AiFillHome size="24" color="#FF787F" />
+        </Icon>
+        <HeaderLabel>멤버 관리</HeaderLabel>
+        <div></div>
+      </HeaderBox>
+
       <FamilyManageBody>
         <FamilyManageGuide>
           <div>

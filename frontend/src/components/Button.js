@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  margin: 16px auto;
+  margin: 8px auto;
 `;
 // const Btn = styled.button`
 //   width: 90%;

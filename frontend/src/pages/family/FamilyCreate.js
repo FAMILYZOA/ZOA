@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { customAxios } from "../../api/customAxios";
+import axios from "axios";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 const FamilyName = styled.div`
   display: flex;
@@ -46,7 +50,6 @@ const FamilyPostButton = styled.button`
 const FamilyPostUnButton = styled.button`
   border: 2px solid;
   border-radius: 12px;
-  cursor: pointer;
   background-color: transparent;
   width: 80%;
   color: white;
@@ -59,6 +62,8 @@ const FamilyCreate = () => {
 
   const [familyName, setFamilyName] = useState('');
   const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
+
   const handleFamilyNameInput = (e) => {
     setFamilyName(e.target.value)
     if (e.target.value !== '') {
@@ -67,6 +72,40 @@ const FamilyCreate = () => {
       setIsActive(false)
     }
   };
+  
+  // const onPostFam = () => {
+  //   customAxios
+  //     .post('/family/', familyName)
+  //     .then((res) => {
+  //       console.log(res)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     });
+  // }
+
+  const accessToken = useAppSelector((state) => state.token.access);
+
+  const onPostFam = () => {
+    console.log(accessToken)
+    axios({
+      method: "post",
+      url: 'https://k7b103.p.ssafy.io/api/v1/family/',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        name: familyName
+      }
+    })
+    .then((res) => {
+      //console.log(res.data)
+      navigate('/', {replace: true})
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
 
   return (
     <>
@@ -86,7 +125,7 @@ const FamilyCreate = () => {
         ></FamilyNameInput>
         <div>
           {isActive ?
-           <FamilyPostButton>가족 생성하기</FamilyPostButton>
+           <FamilyPostButton onClick={onPostFam}>가족 생성하기</FamilyPostButton>
            :
            <FamilyPostUnButton>가족 생성하기</FamilyPostUnButton>}
         </div>

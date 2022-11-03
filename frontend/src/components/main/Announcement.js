@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const Contents = styled.div`
   margin: 16px 8px;
+  z-index: 4;
 `;
 const Text = styled.div`
   font-size: 16px;
@@ -36,6 +37,7 @@ function Announcement({ scrum }) {
     sidesToScroll: 1,
     vertical: true,
     draggable: true,
+    adaptiveHeight: true,
   };
   return (
     <Slider {...settings}>
@@ -44,8 +46,7 @@ function Announcement({ scrum }) {
           <Text>📢 '안녕'에서 가족들에게 한마디를 작성해보세요! </Text>
         </Contents>
       ) : (
-        <>
-          {scrum.map((item, index) =>
+        scrum.map((item, index) =>
             item.today.length > 1 ? (
               <Contents key={index}>
                 <Text>📢 {item.today}</Text>
@@ -61,8 +62,7 @@ function Announcement({ scrum }) {
                 </From>
               </Contents>
             )
-          )}
-        </>
+          )
       )}
     </Slider>
   );
