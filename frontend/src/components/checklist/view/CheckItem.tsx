@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { BsCheckLg } from "react-icons/bs";
 import { FaChevronUp } from "react-icons/fa";
@@ -8,7 +8,26 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 interface propStyle {
   status?: any;
 }
+interface propDetail {
+  toggle?: any;
+}
 
+const DetailWrap = styled.div<propDetail>`
+  ${({toggle}) => {
+    if (!toggle) {
+      return css`
+        height: 0;
+      `
+    } else {
+      return css`
+        height: 10vh;
+      `
+    }
+  }}
+  width: inherit;
+  overflow: hidden;
+  transition: height 0.35s ease;
+`
 const CheckDetail = styled.div`
   position: relative;
   height: 10vh;
@@ -35,6 +54,9 @@ const CheckDetailChevron = styled.div`
 const CheckDiv = styled.div`
   display: flex;
   margin-bottom: 2vh;
+`;
+const CheckContent = styled.div`
+  padding: 0.1px;
 `;
 const CheckBox = styled.div<propStyle>`
   // status 값이 false일 경우 비체크, true일 경우 체크
@@ -149,15 +171,17 @@ function CheckItem({
           {item.text}
         </CheckTitle>
       </CheckDiv>
-      {toggle && (
-        <CheckDetail>
-          <CheckDetailChevron onClick={() => offToggle()}>
-            <FaChevronUp />
-          </CheckDetailChevron>
-          <CheckDetailTitle>From. 엄마(봉미선)</CheckDetailTitle>
-          <CheckDetailDate>2022. 10. 13</CheckDetailDate>
+      <DetailWrap toggle={toggle}>
+        <CheckDetail >
+          <CheckContent>
+            <CheckDetailChevron onClick={() => offToggle()}>
+              <FaChevronUp />
+            </CheckDetailChevron>
+            <CheckDetailTitle>From. 엄마(봉미선)</CheckDetailTitle>
+            <CheckDetailDate>2022. 10. 13</CheckDetailDate>
+          </CheckContent>
         </CheckDetail>
-      )}
+      </DetailWrap>
     </>
   );
 }

@@ -139,20 +139,23 @@ function ReadChecklist() {
   };
 
   const refreshCheckList = (to_users_id: number) => { // 체크리스트 갱신 함수
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/${to_users_id}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((res) => {
-        setCheckList(res.data);
-        console.log("get checklist success");
+    if (to_users_id >= 0){
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${to_users_id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
-      .catch((err) => {
-        console.error(err);
-      });
+        .then((res) => {
+          setCheckList(res.data.results);
+          console.log(res.data.results);
+          console.log("get checklist success");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   useEffect(() => {
