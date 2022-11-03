@@ -19,7 +19,7 @@ const CheckListWrapper = styled.div`
 
 const ListBox = styled.div`
   padding: 18px 8px;
-  margin-top: 2%;
+  margin-top: 2%;;
 `
 const ViewMoreBox = styled.div`
   display: grid;
@@ -92,11 +92,7 @@ const CheckListList = () => {
         console.log(err)
       })
     }
-  }, [user]);
-
-  useEffect(() => {
-    
-  }, [list, user])
+  }, [user, list]);
 
   const viewMore = () => {
     navigate("/checklist/");

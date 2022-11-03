@@ -19,7 +19,7 @@ const IconBox = styled.div`
 
 
 const TextBox = styled.p`
-  text-decoration-line: ${props => (props.active === true ? "line-through #808080" : null )};
+  text-decoration: ${props => (props.active === true ? "line-through #808080" : null )};
   color: ${props => (props.active === true? "#808080" : "black")};
   margin: auto 8px;
   font-size: 18px;
@@ -28,14 +28,14 @@ const TextBox = styled.p`
 
 const CheckListItem = (item) => {
 
-  // // 체크 했을 때 스타일 설정
-  // let itemTextColor = "#000000";
-  // let textDecorationLine = "";
+  // 체크 했을 때 스타일 설정
+  let itemTextColor = "#000000";
+  let textDecorationLine = "";
   
-  // if (item.status === true) {
-  //   itemTextColor = "#808080";
-  //   textDecorationLine = "line-through";
-  // }
+  if (item.status === true) {
+    itemTextColor = "#808080";
+    textDecorationLine = "line-through";
+  }
 
   const token = useAppSelector((state) => state.token.access);
 
@@ -66,7 +66,8 @@ const CheckListItem = (item) => {
           <FaRegSquare size={16} color={" #ff787f"} />
         )}
       </IconBox>
-      <TextBox active={item.active}>{item.text}</TextBox>
+      {/* <TextBox active={item.active}>{item.text}</TextBox> */}
+      <TextBox style={{color: itemTextColor, textDecorationLine: textDecorationLine}}>{item.text}</TextBox>
     </Container>
   );
 };
