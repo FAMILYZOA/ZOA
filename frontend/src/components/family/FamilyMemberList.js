@@ -34,6 +34,7 @@ const NameEditInput = styled.input`
   height: 30px;
   border-color: #ffd5d7;
   outline: 0;
+  background-color: transparent;
 `
 
 const NameEditButton = styled.button`
@@ -130,7 +131,7 @@ const FamilyMemberList = ({id, name, image, set_name}) => {
         <div>
           { edited === true ?
             <NameEditInput
-              placeholder={name}
+              placeholder={set_name}
               onChange={handleNameEdit}
             />
             : <div onClick={onClickEditButton}>{NameResult()}</div>}
