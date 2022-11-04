@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;
@@ -26,20 +27,21 @@ const MemberProfileImg = styled.img`
 const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
 
     const navigate = useNavigate();
+    console.log("가족 이모지",emoji);
 
     return(
         <> 
-            <div style={{display: "flex"}}>
+            <div style={{display: "flex", margin: "2%"}}>
                 <ProfileWrapper>
                     <MemberProfile>
                         <MemberProfileImg src={image}/>
                     </MemberProfile>
                 </ProfileWrapper>
-                <div style={{margin: "3vh", fontWeight: "bold"}}>
+                <div style={{margin: "3%", fontWeight: "bold"}}>
                     {name}
                 </div>
-                <div style={{margin: "3vh 0 0 0"}}>
-                    {emoji}
+                <div style={{margin: "3% 0 0 0"}}>
+                    <Emoji unifed={emoji} />
                 </div>
                 <div style={{color: "#ff787f", cursor: "pointer", margin: "3vh 0 0 40vw"}}>
                     <BsChevronRight
@@ -49,7 +51,7 @@ const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
                     />
                 </div>
             </div>
-            <div style={{margin: "0vw 10vw 2vw 8vw"}}>
+            <div style={{margin: "0vw 10vw 2vw 13%"}}>
             <ItemWrapper>
                 <div style={{margin: "1vh"}}>
                 🙋‍♂️ {yesterday}
