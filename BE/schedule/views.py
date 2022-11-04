@@ -77,5 +77,5 @@ class DetailModifyDeleteScheduleAPIView(GenericAPIView):
         schedule = get_object_or_404(Schedule, id=schedule_id)
         if request.user.family_id.id == schedule.family_id:
             schedule.delete()
-            return Response("해당 스케줄을 삭제하였습니다.", status=status.HTTP_200_OK)     
+            return Response("해당 스케줄을 삭제하였습니다.", status=status.HTTP_204_NO_CONTENT)     
         return Response("권한이 없습니다.", status=status.HTTP_403_FORBIDDEN)    
