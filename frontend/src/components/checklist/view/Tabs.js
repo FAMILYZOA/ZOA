@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useAppSelector } from "../../../app/hooks";
-
-
+import { AiFillCheckSquare, AiOutlineCheckSquare } from "react-icons/ai";
+import { BiCheckbox } from "react-icons/bi"
 const Container = styled.div`
 
 `
@@ -36,12 +36,41 @@ const ContentsBox = styled.div`
 `
 
 const NoToggle = styled.div`
-    height: 10vh;
+    display: flex;
+    height: 20vh;
+    align-items: center;
+    margin: 8px 0;
+    p{
+        margin: 0 4px;
+    }
 `
+const Toggle = styled.div` 
+  display: ${props => props.id === props.current ? 'flex' : 'none'};
+  width: 100%;
+  border: none;
+  height: 78px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 20px;
+  align-items: center;
+  p {
+    font-size: 20px;
+    margin: 0;
+  }
+  span {
+    font-size: 14px;
+    color: #707070;
+  }
+  div{
+    margin: 5%;
+  }
+  transition: display 0.35ms;
+`;
 
 const ContentsContainer = styled.div`
     margin: 5%;
 `
+
 
 function TodoContents({ current, getDetailSelect, detailOff, onDetail }) {
   const access = useAppSelector((state) => state.token.access);
@@ -53,6 +82,8 @@ function TodoContents({ current, getDetailSelect, detailOff, onDetail }) {
   const obsRef = useRef(null);
   const endRef = useRef(false);
 
+  const [click, setClick] = useState(-1);
+
   useEffect(() => {
     const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
     if (obsRef.current) observer.observe(obsRef.current);
@@ -63,6 +94,7 @@ function TodoContents({ current, getDetailSelect, detailOff, onDetail }) {
 
   useEffect(() => {
     getTodo();
+    console.log(list);
   }, [page]);
 
   const obsHandler = (entries) => {
@@ -88,6 +120,9 @@ function TodoContents({ current, getDetailSelect, detailOff, onDetail }) {
         //마지막 페이지
         endRef.current = true;
       }
+    //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+    //     item ? {...item, active:false} : list
+    //   ))); // 리스트 추가
       setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
       preventRef.current = true;
     } else {
@@ -95,17 +130,36 @@ function TodoContents({ current, getDetailSelect, detailOff, onDetail }) {
     }
     setLoad(false); //로딩 종료
   }, [page]);
+
+  const clickItem = (id) => {
+    if (click !== id) {
+        setClick(id);
+    } else {
+        setClick(-1);
+    }
+  }
+
   return (
     <ContentsContainer>
       {list && (
         <>
-          {list.map(
-            (li) => (
-                <NoToggle key={li.id}>
-                    {li.text}
-                </NoToggle>
-            )
-          )}
+          {list.map((li, index) => (
+            <div key={index}>
+              <NoToggle>
+                <BiCheckbox size={32} color="#FF787F" />
+                <p onClick={()=> clickItem(li.id)}>{li.text}</p>
+              </NoToggle>
+              <Toggle id={li.id} current={click}>
+                <div>
+                    <p>From. {li.to_users_id}</p>
+                    <span>
+                    {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
+                    {li.created_at.slice(8, 10)}
+                    </span>
+                </div>
+              </Toggle>
+            </div>
+          ))}
         </>
       )}
       {load ? <div>로딩중</div> : <></>}
