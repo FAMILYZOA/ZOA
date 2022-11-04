@@ -29,7 +29,6 @@ const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
 
     return(
         <> 
-            {/* 프사, 이름, 이모티콘 자리 */}
             <div style={{display: "flex"}}>
                 <ProfileWrapper>
                     <MemberProfile>
@@ -43,10 +42,9 @@ const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
                     {emoji}
                 </div>
                 <div style={{color: "#ff787f", cursor: "pointer", margin: "3vh 0 0 40vw"}}>
-                    {/* scrum/detail 생기면 navigate 주소 바꿔줄것 */}
                     <BsChevronRight
                     onClick={() => {
-                        navigate(`/`)
+                        navigate(`/hello/${id}`)
                         }}
                     />
                 </div>
