@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from './pages/settings';
@@ -42,6 +42,7 @@ function App() {
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
+  const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
 
   const fontArray = [
     "2vh",
@@ -127,6 +128,7 @@ function App() {
           .catch((err) => {
             console.error(err);
           });
+          forceUpdate();
       }
     }
   }
