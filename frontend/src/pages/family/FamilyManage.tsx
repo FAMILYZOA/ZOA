@@ -20,20 +20,20 @@ const HeaderBox = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-`
+`;
 
 const Icon = styled.div`
-    margin: auto;
-    display: flex;
-    align-items: center;
-`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
 
 const HeaderLabel = styled.div`
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    line-height: 56px;
-`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+`;
 
 const FamilyManageBody = styled.div`
   padding: 2vh;
@@ -138,7 +138,7 @@ const FamilyManage = () => {
           title: "ZOA에 참여하기",
           link: {
             mobileWebUrl: `/join/${id}`,
-            webUrl: "https://developers.kakao.com",
+            webUrl: `/join/${id}`,
           },
         },
       ],
