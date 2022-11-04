@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 const ScrumWrapper = styled.div`
   background-color: transparent;
@@ -30,28 +31,33 @@ const MemberProfileImg = styled.img`
 `;
 
 const ScrumItem = ({myScrum}) => {
-
+  
   const navigate = useNavigate();
+  const userImg = useAppSelector((state) => state.user.image)
   return(
     <>
       <ScrumWrapper style={{display: "flex"}}>
         <ProfileWrapper>
           <MemberProfile>
-            <MemberProfileImg src={myScrum.image}/>
+            {myScrum[0].image === "" ? (
+              <MemberProfileImg src={userImg}/>
+            ) : (
+              <MemberProfileImg src={myScrum[0].image}/>
+            )}
           </MemberProfile>
         </ProfileWrapper>
         <ItemWrapper>
-          {myScrum.yesterday && myScrum.today === "" ? (
+          {myScrum[0].emoji === "" ? (
+              "아직 작성된 스크럼이 없어요 😢"
+            ) : (
             <>
               <div style={{margin: "1vh"}}>
-              🙋‍♂️ {myScrum.yesterday}
+              🙋‍♂️ {myScrum[0].yesterday}
               </div>
               <div style={{margin: "1vh"}}>
-              📢 {myScrum.today}
+              📢 {myScrum[0].today}
               </div>
             </>
-          ) : (
-            "아직 작성된 스크럼이 없어요 😢"
           )}
         </ItemWrapper>
       </ScrumWrapper>
