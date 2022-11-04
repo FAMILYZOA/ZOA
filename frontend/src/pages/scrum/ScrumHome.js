@@ -67,6 +67,7 @@ const ScrumHome = () => {
       myScrum.unshift({image: `${userImg}`, yesterday: "", today: ""})
     }
   };
+  console.log(scrums);
 
   return(
     <>
@@ -78,7 +79,7 @@ const ScrumHome = () => {
           </div>
           <ScrumItem myScrum={myScrum[0]}></ScrumItem>
           {scrums.map((item) => (
-            <ScrumFamItem {...item} key={item.id}/>
+            <ScrumFamItem {...item} key={item.user_id}/>
           ))}
     </>
   )
