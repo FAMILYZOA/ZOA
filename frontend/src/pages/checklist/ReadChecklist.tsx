@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled , { css } from "styled-components";
 import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Tabs from "../../components/checklist/view/Tabs";
 import { CheckItem } from "../../components/checklist/view";
 import axios from "axios";
+
+interface modalBackProps {
+  toggle?: boolean;
+}
+
+interface modalItemProps {
+  index?: any;
+  toggle?: any;
+}
 
 const CheckListViewBody = styled.div`
   padding: 3vh 2vh;
@@ -17,12 +26,48 @@ const CheckListTitle = styled.div`
 `;
 
 
-const ModalBack = styled.div`
+const ModalBack = styled.div<modalBackProps>`
   position: absolute;
   width: 100vw;
   height: 100vh;
   z-index: 2;
   background-color: rgba(102, 102, 102, 0.5);
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 const ModalDiv = styled.div`
   position: absolute;
@@ -30,12 +75,55 @@ const ModalDiv = styled.div`
   right: 2vh;
   z-index: 3;
 `;
-const ModalItem = styled.div`
+const ModalItem = styled.div<modalItemProps>`
   display: flex;
   align-items: center;
   z-index: 4;
   margin-bottom: 1vh;
   margin-left: auto;
+  animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
+  -moz-animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
+  -webkit-animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
+  -o-animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
+  animation-fill-mode: backwards;
+  -webkit-animation-fill-mode: backwards;
+  -o-animation-fill-mode: backwards;
+  @keyframes fadein-item {
+    from {
+      opacity: 0;
+      transform: translate(0, -50%);
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein-item {
+    from {
+      opacity: 0;
+      transform: translate(0, -50%);
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein-item {
+    from {
+      opacity: 0;
+      transform: translate(0, -50%);
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein-item {
+    from {
+      opacity: 0;
+      transform: translate(0, -50%);
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 const ModalItemName = styled.div`
   margin-right: 1vh;
@@ -65,14 +153,7 @@ function ReadChecklist() {
   }); // 선택된 인원
   const [unSelectedMember, setUnSelectedMember] = useState<
     { id: number; name: string; image: string; set_name: string }[]
-  >([
-    {
-      id: -1,
-      name: "",
-      image: "",
-      set_name: "",
-    },
-  ]); // 선택되지 않은 인원
+  >([]); // 선택되지 않은 인원
   const FamilyMembers = useAppSelector((state) => state.family.users);
 
 
@@ -184,8 +265,8 @@ function ReadChecklist() {
       {isModal && <ModalBack onClick={() => setIsModal(false)} />}
       {isModal && (
         <ModalDiv>
-          {unSelectedMember.map((member: any) => (
-            <ModalItem onClick={() => getSelect(member.id)}>
+          {unSelectedMember.map((member: any, index: number) => (
+            <ModalItem onClick={() => getSelect(member.id)} key={member.id} index={index}>
               <ModalItemName>{member.name}</ModalItemName>
               <div>
                 <ModalItemImg src={member.image} />

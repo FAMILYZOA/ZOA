@@ -1,12 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { BsCheckLg } from "react-icons/bs";
 import { FaChevronUp } from "react-icons/fa";
+import axios from "axios";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface propStyle {
   status?: any;
 }
+interface propDetail {
+  toggle?: any;
+}
 
+const DetailWrap = styled.div<propDetail>`
+  ${({toggle}) => {
+    if (!toggle) {
+      return css`
+        height: 0;
+      `
+    } else {
+      return css`
+        height: 10vh;
+      `
+    }
+  }}
+  width: inherit;
+  overflow: hidden;
+  transition: height 0.35s ease;
+`
 const CheckDetail = styled.div`
   position: relative;
   height: 10vh;
@@ -33,6 +54,9 @@ const CheckDetailChevron = styled.div`
 const CheckDiv = styled.div`
   display: flex;
   margin-bottom: 2vh;
+`;
+const CheckContent = styled.div`
+  padding: 0.1px;
 `;
 const CheckBox = styled.div<propStyle>`
   // status 값이 false일 경우 비체크, true일 경우 체크
@@ -76,15 +100,43 @@ const CheckTitle = styled.div<propStyle>`
 
 type CheckItemProps = {
   item: { id: number; text: string; status: boolean; to_user_id: number };
-  index: number,
-  getDetailSelect: (index: number) => void,
-  detailOff: () => void,
-  onDetail: number,
+  selectedMember: { id: number; name: string; image: string; set_name: string };
+  index: number;
+  getDetailSelect: (index: number) => void;
+  detailOff: () => void;
+  onDetail: number;
+  refreshCheckList: (id: number) => void;
 };
 
-function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckItemProps) {
+function CheckItem({
+  item,
+  index,
+  getDetailSelect,
+  detailOff,
+  onDetail,
+  refreshCheckList,
+  selectedMember,
+}: CheckItemProps) {
+  const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${id}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        status: !item.status,
+      },
+    })
+      .then((res) => {
+        console.log(res.data.status);
+        refreshCheckList(selectedMember.id);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const onToggle = () => {
@@ -98,7 +150,7 @@ function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckI
   const offToggle = () => {
     setToggle(false);
     detailOff();
-  }
+  };
   const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
@@ -107,7 +159,7 @@ function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckI
     } else {
       setToggle(false);
     }
-  },[onDetail])
+  }, [onDetail, index]);
 
   return (
     <>
@@ -119,15 +171,17 @@ function CheckItem({ item, index, getDetailSelect, detailOff, onDetail }: CheckI
           {item.text}
         </CheckTitle>
       </CheckDiv>
-      {toggle && (
-        <CheckDetail>
-          <CheckDetailChevron onClick={() => offToggle()}>
-            <FaChevronUp />
-          </CheckDetailChevron>
-          <CheckDetailTitle>From. 엄마(봉미선)</CheckDetailTitle>
-          <CheckDetailDate>2022. 10. 13</CheckDetailDate>
+      <DetailWrap toggle={toggle}>
+        <CheckDetail >
+          <CheckContent>
+            <CheckDetailChevron onClick={() => offToggle()}>
+              <FaChevronUp />
+            </CheckDetailChevron>
+            <CheckDetailTitle>From. 엄마(봉미선)</CheckDetailTitle>
+            <CheckDetailDate>2022. 10. 13</CheckDetailDate>
+          </CheckContent>
         </CheckDetail>
-      )}
+      </DetailWrap>
     </>
   );
 }
