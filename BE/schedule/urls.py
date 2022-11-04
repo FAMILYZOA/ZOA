@@ -1,6 +1,7 @@
 from django.urls import path, register_converter
 from .converters import DateConverter
 from schedule.views import (
+    SearchSDdayAPIView,
     CreateSearchScheduleAPIView,
     DetailModifyDeleteScheduleAPIView,
 )
@@ -10,6 +11,8 @@ register_converter(DateConverter, 'date')
 app_name = 'calendar'
 
 urlpatterns = [
+    # D-Day
+    path('<date:date>/Dday', SearchSDdayAPIView.as_view(), name="search_Dday"),
     # 전체 일정 조회 / 일정 등록
     path('<date:date>', CreateSearchScheduleAPIView.as_view(), name="create_search_calendar"),
     # 일정 상세 조회 / 일정 수정 / 일정 삭제
