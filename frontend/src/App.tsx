@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
-import { Settings } from './pages/settings';
+import { Settings } from "./pages/settings";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
@@ -42,13 +42,9 @@ function App() {
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
 
-  const fontArray = [
-    "2vh",
-    "2.5vh",
-    "3vh",
-  ]
+  const fontArray = ["2vh", "2.5vh", "3vh"];
 
-  const [fontStyle, setFontStyle ] = useState<{fontSize: string}>({
+  const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
   });
 
@@ -128,34 +124,44 @@ function App() {
           });
       }
     }
-  }
+  };
 
   useEffect(() => {
     setFontStyle({
       fontSize: fontArray[fontSize],
-    })
-  }, [fontSize])
+    });
+  }, [fontSize]);
 
   useEffect(() => {
     infoUpdate();
-  }, [accessToken])
+  }, [accessToken]);
 
-  // 모바일 연동
-  const getMessageFromDevice = (e:any) => {
-    alert(e.data)
-  }
+  // =================================================== 모바일 연동 ==============================================
+  const getMessageFromDevice = (e: any) => {
+    const data = JSON.parse(e.data);
+
+    if(data.photo){
+      // 사진일 경우 BackEnd에 수정 요청 보내기
+      console.log("received PHOTO!!!!")
+    }
+  };
 
   window.__WEBVIEW_BRIDGE__ = {
     init() {
       try {
-        document.addEventListener("message", (e:any) => getMessageFromDevice);
+        document.addEventListener("message", (e) => getMessageFromDevice(e));
       } catch (err) {
         console.error(err);
       }
     },
   };
 
-  window.__WEBVIEW_BRIDGE__.init();
+  useEffect(() => {
+    // do stuff here...
+    window.__WEBVIEW_BRIDGE__.init();
+  }, []);
+
+  // =================================================== 모바일 연동 ==============================================
 
   return (
     <div style={fontStyle}>
@@ -164,7 +170,7 @@ function App() {
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
-          <Route path="/kakaoSignup"   element={<KakaoSignup />} />
+          <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/kakaoLoading/" element={<KakaoLoding />} />
 
           <Route path="/family/create" element={<FamilyCreate />}></Route>
