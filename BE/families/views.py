@@ -5,6 +5,7 @@ from rest_framework.generics import (
 from rest_framework import mixins
 from accounts.models import User
 from django.http import JsonResponse
+from accounts.permissions import InFamilyorBadResponsePermission
 from families.models import Family, FamilyInteractionName
 from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUpdateSerializer
 from rest_framework.response import Response
@@ -12,13 +13,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions
 
-class IsFamilyorBadResponsePermission(permissions.BasePermission) :
-    def has_permission(self,request,view) :
-        return request.user.is_authenticated and request.user.family_id
-    def has_object_permission(self, request, view, obj):
-        return request.user.family_id == obj 
 
 class FamilyCreateAPIView(GenericAPIView,mixins.CreateModelMixin) :
     serializer_class = FamilySerializer
@@ -42,7 +37,7 @@ class FamilyAPIView(RetrieveUpdateDestroyAPIView) :
     serializer_class = FamilyRetriveSerializer
     queryset=Family.objects.all()
     lookup_field = 'id'
-    permission_classes = [IsFamilyorBadResponsePermission]
+    permission_classes = [InFamilyorBadResponsePermission]
     @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -95,7 +90,7 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
     
     serializer_class = FamilyNameSetSerializer
     queryset = Family.objects.all()
-    permission_classes = [IsFamilyorBadResponsePermission]
+    permission_classes = [InFamilyorBadResponsePermission]
     lookup_field = 'id'
 
     def get_user(self) :

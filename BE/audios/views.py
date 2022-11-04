@@ -1,4 +1,5 @@
 from accounts.models import User
+from accounts.permissions import IsFamilyorBadResponsePermission, IsObjectorBadResponsePermission
 from audios.models import Audio
 from audios.serializers import AudioListSerializer, AudioSerializer, AudioUpdateSerializer
 from rest_framework.generics import (ListCreateAPIView,GenericAPIView)
@@ -7,16 +8,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
-from scrums.views import IsFamilyorBadResponsePermission
 from rest_framework import permissions
 from rest_framework.filters import SearchFilter
-class IsObjectorBadResponsePermission(permissions.BasePermission) :
-    def has_permission(self,request,view) :
-        return request.user.is_authenticated and request.user.family_id
-    def has_object_permission(self, request, view, obj):
-        print(obj.to_user_id.all(),request.user)
-        print(obj)
-        return request.user in obj.to_user_id.all()
+
 
 class AudioSaveAPIView(ListCreateAPIView):
     serializer_class = AudioListSerializer
