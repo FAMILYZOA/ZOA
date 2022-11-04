@@ -159,7 +159,6 @@ function ReadChecklist() {
 
 
   useEffect(() => {
-
     let index: number = 0;
     // 패밀리중 유저와 일치하는 index 탐색
     FamilyMembers.forEach((value, i: number) => {
@@ -172,7 +171,7 @@ function ReadChecklist() {
     const tempMember = [...FamilyMembers];
     tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
-  }, []);
+  },[userId]);
 
 
   const getModal = () => {

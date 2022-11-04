@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useAppSelector } from "../../../app/hooks";
@@ -35,26 +35,45 @@ const ContentsBox = styled.div`
 
 function Tabs({current}){
     const access = useAppSelector((state) => state.token.access)
-    const [todoTab, setTodo] = useState(true);
+    const [todoTab, setTodoTab] = useState(true);
     const [completeTab, setCompleteTab] = useState(false);
+    const [todo, setTodo] = useState([]);
+    const [todoNext, setTodoNext] = useState("");
+    const [completeNext, setCompleteNext] = useState("");
+    const [complete, setComplete] = useState([]);
     const TodoClick = () => {
-        setTodo(true);
+        setTodoTab(true);
         setCompleteTab(false);
     }
     const CompleteClick = () => {
-        setTodo(false);
+        setTodoTab(false);
         setCompleteTab(true);
     }
 
-    const todo = () => {
+    useEffect(()=> {
         axios({
             method: "GET",
-            url : `https://k7b103.p.ssafy.io/api/v1/checklist/${current}/0/`,
+            url : `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
             headers: {
                 Authorization: `Bearer ${access}`,
-            }
+            },
+            params: {"status" : 0}
+        }).then((res)=>{
+            setTodo(res.data.results)
+            setTodoNext(res.data.next);
         })
-    }
+        axios({
+          method: "GET",
+          url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+          params: { status: 1 },
+        }).then((res)=> {
+            setComplete(res.data.results);
+            setCompleteNext(res.data.next);
+        })
+    }, [])
 
     return(
         <Container>
