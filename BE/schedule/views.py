@@ -18,9 +18,6 @@ class SearchSDdayAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = DdaySerializer
     def get (self, request, date):
-    #    test = Schedule.objects.get(start_date="2022-12-30")
-    #    test.start_date
-    #    test.start_date-date
         result = []
         schedules = Schedule.objects.filter(Q(start_date__gte=date)).order_by('start_date')[:3]
         for schedule in schedules:
@@ -34,6 +31,16 @@ class SearchSDdayAPIView(GenericAPIView):
             result.append(context)
         serializer = self.serializer_class(result, many=True)
         return Response(serializer.data)
+
+
+class SearchScheduleAPIView(GenericAPIView):
+    permission_classes = [IsFamilyorBadResponsePermission]
+    serializer_class = ScheduleSerializer
+    def get(self, request, month):
+        schedule = Schedule.objects.filter((Q(start_date=month) | Q(end_date=month)) & Q(family_id=request.user.family_id))
+        print(schedule.values())
+        return Response("")
+
 
 class CreateSearchScheduleAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]

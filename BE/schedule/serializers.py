@@ -8,7 +8,6 @@ class DdaySerializer(serializers.Serializer):
     title = serializers.CharField(max_length=30)
     start_date = serializers.DateField()
     end_date = serializers.DateField()
-
     class Meta:
         model = Schedule
         fields = ('id', 'Dday', 'title', 'start_date', 'end_date')
