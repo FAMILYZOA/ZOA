@@ -2,25 +2,20 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
-import { CheckItem } from "../../components/checklist/view";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import Tabs from "../../components/checklist/view/Tabs";
+import { CheckItem } from "../../components/checklist/view";
 import axios from "axios";
 
 const CheckListViewBody = styled.div`
   padding: 3vh 2vh;
 `;
 const CheckListTitle = styled.div`
-  margin: 4.5vh 0;
+  margin: 16px 0;
   font-size: 2.5vh;
   font-weight: bold;
 `;
 
-const ViewMore = styled.div`
-  text-align: center;
-  color: #ff787f;
-  font-weight: 400;
-  font-size: 2vh;
-`;
 
 const ModalBack = styled.div`
   position: absolute;
@@ -55,6 +50,7 @@ const ModalItemImg = styled.img`
 `;
 
 function ReadChecklist() {
+  const userId = useAppSelector((state) => state.user.id)
   const [isModal, setIsModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
@@ -78,25 +74,7 @@ function ReadChecklist() {
     },
   ]); // 선택되지 않은 인원
   const FamilyMembers = useAppSelector((state) => state.family.users);
-  const [checkList, setCheckList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
+
 
   const [unCheckedList, setUnCheckedList] = useState<
     {
@@ -162,6 +140,7 @@ function ReadChecklist() {
 
   const accessToken = useAppSelector((state) => state.token.access);
 
+
   const getSelect = (id: number) => {
     let index: number = 0;
 
@@ -171,7 +150,6 @@ function ReadChecklist() {
         return false;
       }
     });
-    setViewMore(false);
     setSelectedMember(FamilyMembers[index]);
     const tempMember = [...FamilyMembers];
     tempMember.splice(index, 1);
@@ -179,69 +157,26 @@ function ReadChecklist() {
     setIsModal(false);
   };
 
-  const refreshCheckLists = (to_users_id: number) => {
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/${to_users_id}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((res) => {
-        setCheckList(res.data);
-        console.log("get checklist success");
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
 
   useEffect(() => {
-    setSelectedMember(FamilyMembers[0]);
-    const tempMember = [...FamilyMembers];
-    tempMember.splice(0, 1);
-    setUnSelectedMember(tempMember);
-  });
 
-  useEffect(() => {
-    const tempCheckedList: Array<{
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }> = [];
-    const tempUnCheckedList: Array<{
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }> = [];
-
-    checkList.forEach((value) => {
-      if (value.status) {
-        tempCheckedList.push(value);
-      } else {
-        tempUnCheckedList.push(value);
+    let index: number = 0;
+    // 패밀리중 유저와 일치하는 index 탐색
+    FamilyMembers.forEach((value, i: number) => {
+      if (value.id === userId) {
+        index = i;
+        return false;
       }
     });
-    setCheckedList(tempCheckedList);
-    setUnCheckedList(tempUnCheckedList);
-  }, [checkList]);
+    setSelectedMember(FamilyMembers[index]);
+    const tempMember = [...FamilyMembers];
+    tempMember.splice(index, 1);
+    setUnSelectedMember(tempMember);
+  }, []);
+
 
   const getModal = () => {
     setIsModal(true);
-  };
-
-  const getDetailSelect = (index: number) => {
-    setOnDetail(index);
-  };
-
-  const detailOff = () => {
-    setOnDetail(-1);
   };
 
   return (
@@ -267,41 +202,7 @@ function ReadChecklist() {
           getModal={getModal}
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
-        {unCheckedList.map((item: any, i: number) => (
-          <CheckItem
-            item={item}
-            index={i}
-            key={item.id}
-            getDetailSelect={getDetailSelect}
-            detailOff={detailOff}
-            onDetail={onDetail}
-          />
-        ))}
-        {!viewMore &&
-          todayCheckedList.map((item: any, i: number) => (
-            <CheckItem
-              item={item}
-              index={i + unCheckedList.length}
-              key={item.id}
-              getDetailSelect={getDetailSelect}
-              detailOff={detailOff}
-              onDetail={onDetail}
-            />
-          ))}
-        {viewMore &&
-          checkedList.map((item: any, i: number) => (
-            <CheckItem
-              item={item}
-              index={i + todayCheckedList.length + unCheckedList.length}
-              key={item.id}
-              getDetailSelect={getDetailSelect}
-              detailOff={detailOff}
-              onDetail={onDetail}
-            />
-          ))}
-        {!viewMore && (
-          <ViewMore onClick={() => setViewMore(true)}>+ 더보기</ViewMore>
-        )}
+        <Tabs current ={selectedMember.id}></Tabs>
       </CheckListViewBody>
     </div>
   );
