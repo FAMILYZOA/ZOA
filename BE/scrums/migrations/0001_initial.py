@@ -27,4 +27,15 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='scrum', to=settings.AUTH_USER_MODEL)),
             ],
         ),
+        migrations.CreateModel(
+            name='Comment',
+            fields=[
+                ('id', models.BigAutoField(primary_key=True, serialize=False)),
+                ('content', models.CharField(max_length=50)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('family', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comment', to='families.family')),
+                ('scrum', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comment', to='scrums.scrum')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comment', to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
     ]
