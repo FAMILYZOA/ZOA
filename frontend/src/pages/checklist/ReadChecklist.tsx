@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import styled , { css } from "styled-components";
+import styled from "styled-components";
 import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {  useAppSelector } from "../../app/hooks";
 import Tabs from "../../components/checklist/view/Tabs";
-import { CheckItem } from "../../components/checklist/view";
-import axios from "axios";
+
 
 interface modalBackProps {
   toggle?: boolean;
@@ -157,69 +156,6 @@ function ReadChecklist() {
   const FamilyMembers = useAppSelector((state) => state.family.users);
 
 
-  const [unCheckedList, setUnCheckedList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
-
-  const [checkedList, setCheckedList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
-
-  const [todayCheckedList, setTodayCheckedList] = useState<
-    {
-      id: number;
-      text: string;
-      status: boolean;
-      photo: string;
-      created_at: string;
-      to_user_id: number[];
-    }[]
-  >([
-    {
-      id: -1,
-      text: "",
-      status: false,
-      photo: "",
-      created_at: "",
-      to_user_id: [-1],
-    },
-  ]);
-  const [viewMore, setViewMore] = useState<boolean>(false);
-  const [onDetail, setOnDetail] = useState<number>(-1);
-
-  const accessToken = useAppSelector((state) => state.token.access);
 
 
   const getSelect = (id: number) => {
@@ -266,7 +202,11 @@ function ReadChecklist() {
       {isModal && (
         <ModalDiv>
           {unSelectedMember.map((member: any, index: number) => (
-            <ModalItem onClick={() => getSelect(member.id)} key={member.id} index={index}>
+            <ModalItem
+              onClick={() => getSelect(member.id)}
+              key={member.id}
+              index={index}
+            >
               <ModalItemName>{member.name}</ModalItemName>
               <div>
                 <ModalItemImg src={member.image} />
@@ -282,7 +222,9 @@ function ReadChecklist() {
           getModal={getModal}
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
-        <Tabs current ={selectedMember.id}></Tabs>
+        <Tabs
+          current={selectedMember.id}
+        ></Tabs>
       </CheckListViewBody>
     </div>
   );

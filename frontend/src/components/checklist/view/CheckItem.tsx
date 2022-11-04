@@ -108,6 +108,7 @@ type CheckItemProps = {
   refreshCheckList: (id: number) => void;
 };
 
+
 function CheckItem({
   item,
   index,
@@ -117,6 +118,8 @@ function CheckItem({
   refreshCheckList,
   selectedMember,
 }: CheckItemProps) {
+  console.log(item);
+  
   const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
@@ -177,8 +180,8 @@ function CheckItem({
             <CheckDetailChevron onClick={() => offToggle()}>
               <FaChevronUp />
             </CheckDetailChevron>
-            <CheckDetailTitle>From. 엄마(봉미선)</CheckDetailTitle>
-            <CheckDetailDate>2022. 10. 13</CheckDetailDate>
+            <CheckDetailTitle>{item.text}</CheckDetailTitle>
+            <CheckDetailDate>{item.to_user_id}</CheckDetailDate>
           </CheckContent>
         </CheckDetail>
       </DetailWrap>

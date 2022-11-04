@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from './pages/settings';
@@ -42,7 +42,9 @@ function App() {
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
-  const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
+  const [, updateState] = useState<{}>();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
 
   const fontArray = [
     "2vh",
@@ -104,6 +106,7 @@ function App() {
             dispatch(setUserImage(res.data.image));
             dispatch(setUserName(res.data.name));
             console.log("user fetched");
+            forceUpdate();
             if (familyId < 0 && res.data.family_id) {
               // 가족 정보가 없으면, 가족 정보 불러오기
               axios({
@@ -119,16 +122,17 @@ function App() {
                   dispatch(setFamilyCreatedAt(res.data.created_at));
                   dispatch(setFamilyUsers(res.data.users));
                   console.log("family fetched");
+                  forceUpdate();
                 })
                 .catch((err) => {
                   console.error(err);
                 });
             }
+            
           })
           .catch((err) => {
             console.error(err);
           });
-          forceUpdate();
       }
     }
   }

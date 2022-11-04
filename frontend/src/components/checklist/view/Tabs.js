@@ -35,79 +35,83 @@ const ContentsBox = styled.div`
     overflow-x: hidden;
 `
 
-const Toggle = styled.div`
-    height: 20vh;
+const NoToggle = styled.div`
+    height: 10vh;
 `
 
-function TodoContents({current, todo}){
-    const access = useAppSelector((state) => state.token.access);
+const ContentsContainer = styled.div`
+    margin: 5%;
+`
 
+function TodoContents({ current, getDetailSelect, detailOff, onDetail }) {
+  const access = useAppSelector((state) => state.token.access);
 
-    const [list, setList] = useState([]);
-    const [page, setPage] = useState(0);
-    const [load, setLoad] = useState(1);
-    const preventRef = useRef(true);
-    const obsRef = useRef(null);
-    const endRef = useRef(false);
+  const [list, setList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [load, setLoad] = useState(1);
+  const preventRef = useRef(true);
+  const obsRef = useRef(null);
+  const endRef = useRef(false);
 
-    useEffect(() => {
-        getTodo();
-        const observer = new IntersectionObserver(obsHandler, {threshold : 0.5});
-        if(obsRef.current) observer.observe(obsRef.current);
-        return () => {observer.disconnect();}
-    }, [])
+  useEffect(() => {
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    if (obsRef.current) observer.observe(obsRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
-    useEffect(()=> {
-        getTodo();
-        console.log(list);
-    }, [page])
+  useEffect(() => {
+    getTodo();
+  }, [page]);
 
-    const obsHandler = ((entries)=> {
-        const target = entries[0];
-        if(!endRef.current && target.isIntersecting && preventRef.current) {
-            preventRef.current = false;
-            setPage(prev => prev + 1);
-        }
-    })
+  const obsHandler = (entries) => {
+    const target = entries[0];
+    if (!endRef.current && target.isIntersecting && preventRef.current) {
+      preventRef.current = false;
+      setPage((prev) => prev + 1);
+    }
+  };
 
-    const getTodo = useCallback(async() => { //글 불러오기
-        setLoad(true);
-        const res = await axios({
-          method: "GET",
-          url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}?page=${page}&status=0`,
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        });
-        if(res.data){
-            if(res.data.next === null){ //마지막 페이지
-                endRef.current = true;
-            }
-            setList(prev => [...prev, ...res.data.results]); // 리스트 추가
-            preventRef.current = true;
-        }else {
-            console.log(res);
-        }
-        setLoad(false); //로딩 종료
-    }, [page]);
-    return(
-        <div>
-            {
-                list && <> {
-                    list.map((li)=> 
-                    <Toggle key={li.id}>{li.text}</Toggle>
-                    )
-                }
-                </>
-            }
-            {load ?
-            <div>로딩중</div>
-            :
-            <></>    
-        }
-        <div ref={obsRef}>옵저버 Element</div>
-        </div>
-    )
+  const getTodo = useCallback(async () => {
+    //글 불러오기
+    setLoad(true);
+    const res = await axios({
+      method: "GET",
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}?page=${page}&status=0`,
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+    if (res.data) {
+      if (res.data.next === null) {
+        //마지막 페이지
+        endRef.current = true;
+      }
+      setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
+      preventRef.current = true;
+    } else {
+      console.log(res);
+    }
+    setLoad(false); //로딩 종료
+  }, [page]);
+  return (
+    <ContentsContainer>
+      {list && (
+        <>
+          {list.map(
+            (li) => (
+                <NoToggle key={li.id}>
+                    {li.text}
+                </NoToggle>
+            )
+          )}
+        </>
+      )}
+      {load ? <div>로딩중</div> : <></>}
+      <div ref={obsRef}>옵저버 Element</div>
+    </ContentsContainer>
+  );
 }
 
 function Tabs({current}){
@@ -129,6 +133,7 @@ function Tabs({current}){
         setTodoTab(false);
         setCompleteTab(true);
     }
+
 
     useEffect(()=> {
         if(current >= 0){
@@ -158,18 +163,23 @@ function Tabs({current}){
     }
     }, [])
 
-    return(
-        <Container>
-            <TabBox>
-                <Tab onClick={TodoClick} active={todoTab}>TODO</Tab>
-                <Tab onClick={CompleteClick} active={completeTab}>COMPLETED</Tab>
-            </TabBox>
-            <ContentsBox>
-                <TodoContents current={current} todo={todo}></TodoContents>
-            </ContentsBox>
-            
-        </Container>
-    )
+    return (
+      <Container>
+        <TabBox>
+          <Tab onClick={TodoClick} active={todoTab}>
+            TODO
+          </Tab>
+          <Tab onClick={CompleteClick} active={completeTab}>
+            COMPLETED
+          </Tab>
+        </TabBox>
+        <ContentsBox>
+          <TodoContents
+            current={current}
+          ></TodoContents>
+        </ContentsBox>
+      </Container>
+    );
 }
 
 export default Tabs;
