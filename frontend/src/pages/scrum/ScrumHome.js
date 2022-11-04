@@ -7,6 +7,34 @@ import ScrumItem from "../../components/scrum/ScrumItem";
 import ScrumFamItem from "../../components/scrum/ScrumFamItem";
 import axios from "axios";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import ScrumFamList from "../../components/scrum/ScrumFamList";
+
+const ScrumWrapper = styled.div`
+  background-color: transparent;
+  margin: 12px;
+`
+
+const ItemWrapper = styled.div`
+  background-color: #eefbef;
+`
+
+const ProfileWrapper = styled.div`
+  color: red;
+`
+
+const MemberProfile = styled.div`
+  height: 7vh;
+  width: 7vh;
+  border-radius: 3.5vh;
+  margin-right: 1.5vh;
+`;
+const MemberProfileImg = styled.img`
+  height: 7vh;
+  width: 7vh;
+  border-radius: 3.5vh;
+  object-fit: fill;
+`;
+
 
 const ScrumHome = () => {
 
@@ -23,6 +51,7 @@ const ScrumHome = () => {
     today: "",
   },]);
 
+  // redux 값 불러오는 곳
   const token = useAppSelector((state) => state.token.access);
   const userId = useAppSelector((state) => state.user.id)
   const userImg = useAppSelector((state) => state.user.image)
@@ -32,7 +61,7 @@ const ScrumHome = () => {
     if (token.length === 0) {
       navigate("/intro");
     }
-  });
+  }, [token]);
 
   useEffect(() => {
     axios({
@@ -51,23 +80,39 @@ const ScrumHome = () => {
   }, [token])
 
   // 내 스크럼 저장할 state 선언
-  const myScrum = useState([{
-    image: "",
+  const myScrum = useState({
+    emoji: "",
     yesterday: "",
     today: "",
-  }])
+    image: "",
+    id: "",
+    user_id: "",
+  })
+  console.log("전체 스크럼 조회", scrums);
+
+  // 가족 스크럼 저장할 state 선언
+  const famScrum = useState({
+    emoji: "",
+    yesterday: "",
+    today: "",
+    image: "",
+    id: "",
+    user_id: "",
+  })
 
   // 받아온 스크럼 data에서 스크럼 작성 id 와 유저 id 비교하기
-  let j = 0
+  let j = 0;
   for (j = 0; j < scrums.length; j++) {
     if (scrums[j].user_id === userId) {
       myScrum.unshift(scrums[j])
-      scrums.splice(j)
-    } else {
-      myScrum.unshift({image: `${userImg}`, yesterday: "", today: ""})
+      // scrums.splice(j, 1)
+    }
+    if (scrums[j].user_id !== userId) {
+      famScrum.unshift(scrums[j])
     }
   };
-  console.log(scrums);
+  console.log("가족 스크럼", famScrum);
+  console.log("내 스크럼", myScrum[0]);
 
   return(
     <>
@@ -77,8 +122,43 @@ const ScrumHome = () => {
                 {curDate.year}. {curDate.month}. {curDate.date}
               </div>
           </div>
-          <ScrumItem myScrum={myScrum[0]}></ScrumItem>
-          {scrums.map((item) => (
+          <div>
+            <ScrumWrapper style={{display: "flex"}}>
+            <ProfileWrapper>
+              <MemberProfile>
+                {myScrum[0].image === "" ? (
+                  <MemberProfileImg src={userImg}/>
+                ) : (
+                  <MemberProfileImg src={myScrum[0].image}/>
+                )}
+              </MemberProfile>
+            </ProfileWrapper>
+            <ItemWrapper>
+              {myScrum[0].emoji === "" ? (
+                  "아직 작성된 스크럼이 없어요 😢"
+                ) : (
+                <>
+                  <div style={{margin: "1vh"}}>
+                  🙋‍♂️ {myScrum[0].yesterday}
+                  </div>
+                  <div style={{margin: "1vh"}}>
+                  📢 {myScrum[0].today}
+                  </div>
+                </>
+              )}
+            </ItemWrapper>
+          </ScrumWrapper>
+          <div
+            style={{color: "#ff787f", margin: "0px 0px 0px 20vw", cursor: "pointer"}}
+            onClick={() => {
+              navigate(`/hello/create/`)
+            }}
+            >
+            스크럼 작성하러 가기
+            <BsChevronRight/>
+          </div>
+          </div>
+          {famScrum.slice(0, -2).map((item) => (
             <ScrumFamItem {...item} key={item.user_id}/>
           ))}
     </>
