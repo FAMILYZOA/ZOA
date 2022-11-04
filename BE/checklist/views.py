@@ -11,17 +11,23 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.pagination import PageNumberPagination
-from .models import Checklist
+from .models import Checklist, Photo
 from accounts.models import User
-from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
+from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer, ResultSerializer
 
 
 class ChecklistCreateAPIView(GenericAPIView):
     parser_classes = (MultiPartParser,)
-    @swagger_auto_schema(request_body=ChecklistCreateSerializer)
+    @swagger_auto_schema(operation_summary="POSTMAN 써주세요.", request_body=ChecklistCreateSerializer)
     def post(self, request):
         result = []
         member = request.data.getlist('to_users_id')
+        photo = request.FILES.getlist('photo')
+        if request.data.get('photo') != None:
+            image = request.FILES['photo']
+            photo = Photo.objects.create(image=image)
+            photo.save()
+
         for memberpk in member:
             if request.data.get('photo') == None:
                 context = {
@@ -32,7 +38,8 @@ class ChecklistCreateAPIView(GenericAPIView):
             else:
                 context = {
                     'text': request.data.get('text'),
-                    'photo': request.FILES['photo'],
+                    'photo': photo.pk,
+                    'image': photo.image,
                     'from_user_id': request.user.id,
                     'to_users_id' :memberpk
                 }
@@ -51,8 +58,26 @@ class ChecklistCreateAPIView(GenericAPIView):
             serializer = ChecklistCreateSerializer(data=context)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-                result.append(serializer.data)
-        return Response(result, status=status.HTTP_201_CREATED)
+                if request.data.get('photo') == None:
+                    data = {
+                        'id': serializer.data.get('id'),
+                        'text': request.data.get('text'),
+                        'from_user_id': request.user.id,
+                        'to_users_id' :memberpk
+                    }
+                else:
+                    data = {
+                        'id': serializer.data.get('id'),
+                        'text': request.data.get('text'),
+                        'photo': photo.pk,
+                        'image': photo.image,
+                        'from_user_id': request.user.id,
+                        'to_users_id' :memberpk
+                    }
+                result.append(data)
+        result_serializer = ResultSerializer(data=result, many=True)
+        if result_serializer.is_valid(raise_exception=True):
+            return Response(result_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ChecklistPagination(PageNumberPagination):
@@ -67,12 +92,15 @@ class ChecklistSearchAPIView(ListAPIView):
     search_fields = ['status']
     
     def get_queryset(self):
-        id = self.request.parser_context['kwargs']['to_users_id']
-        me = User.objects.get(id=id).family_id
-        you = User.objects.get(id=self.request.user.id).family_id
-        if me == you:
-            return Checklist.objects.filter(to_users_id=id).order_by('created_at')
-        raise Http404
+        try:
+            id = self.request.parser_context['kwargs']['to_users_id']
+            me = User.objects.get(id=id).family_id
+            you = User.objects.get(id=self.request.user.id).family_id
+            if me == you:
+                return Checklist.objects.filter(to_users_id=id).order_by('created_at')
+            raise Http404
+        except:
+            raise Http404
 
 
 class ChecklistTodayCreateAPIView(GenericAPIView):
