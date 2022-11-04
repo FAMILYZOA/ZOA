@@ -53,7 +53,7 @@ class FamilyUnAuthorizedRetriveSerializer(serializers.ModelSerializer) :
     users = UserUnAuthorizedSerializer(many=True,read_only=True)
     class Meta: 
         model = Family 
-        fields =('id','name','created_at','users')
+        fields =('id','name','users')
 
 
 class FamilyUpdateSerializer(serializers.ModelSerializer) :
