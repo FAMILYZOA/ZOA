@@ -21,6 +21,11 @@ function Main() {
   useEffect (()=> {
     if (access.length === 0) {
       navigate("/intro");
+    } else {
+      if (localStorage.getItem('familyId')) {
+        const familyId = localStorage.getItem('familyId');
+        navigate(`/join/${familyId}`);
+      }
     }
   })
 
@@ -52,7 +57,15 @@ function Main() {
             }
             break;
             case 403:
-              navigate("family/create/");
+              console.log(localStorage.getItem("familyId"));
+              if(localStorage.getItem('familyId')) {
+                const familyId = localStorage.getItem("familyId");
+                navigate(`/join/${familyId}`);
+              } else {
+                console.log('여기');
+                navigate("family/create/");
+
+              }
               break;
           default:
             break;

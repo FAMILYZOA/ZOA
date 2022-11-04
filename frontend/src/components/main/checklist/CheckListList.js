@@ -86,7 +86,7 @@ const CheckListList = () => {
   }, [list, user])
 
   const viewMore = () => {
-    navigate("/checklist/");
+    navigate("/checklist");
   }
 
   return (

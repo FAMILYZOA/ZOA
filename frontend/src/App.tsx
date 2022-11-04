@@ -14,6 +14,7 @@ import NewLogin from "./pages/auth/kakao/Login";
 import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
+import FamilyJoin from "./pages/family/FamilyJoin";
 
 import Navbar from "./components/Navbar";
 
@@ -144,6 +145,9 @@ function App() {
     <div style={fontStyle}>
       <BrowserRouter>
         <Routes>
+          <Route path="/join/:familyId" element={<FamilyJoin />} />
+          {/* <Route path="/join/:familyId" element={<FamilyJoin />} /> */}
+
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
