@@ -43,6 +43,18 @@ class FamilyRetriveSerializer(serializers.ModelSerializer) :
         model = Family 
         fields =('id','name','created_at','users')
 
+class UserUnAuthorizedSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model = User 
+        fields = ('image',)
+
+
+class FamilyUnAuthorizedRetriveSerializer(serializers.ModelSerializer) :
+    users = UserUnAuthorizedSerializer(many=True,read_only=True)
+    class Meta: 
+        model = Family 
+        fields =('id','name','users')
+
 
 class FamilyUpdateSerializer(serializers.ModelSerializer) :
 
