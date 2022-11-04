@@ -118,7 +118,7 @@ function CheckItem({
   refreshCheckList,
   selectedMember,
 }: CheckItemProps) {
-  console.log(item);
+
   
   const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
