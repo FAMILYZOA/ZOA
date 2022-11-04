@@ -1,21 +1,14 @@
-from rest_framework.generics import ListCreateAPIView,ListAPIView,RetrieveUpdateDestroyAPIView
-from scrums.models import Scrum
+from rest_framework.generics import ListCreateAPIView,ListAPIView,RetrieveUpdateDestroyAPIView,CreateAPIView,GenericAPIView
+from accounts.permissions import IsFamilyorBadResponsePermission,IsObjectAuthororBadResponsePermission
+from scrums.models import Scrum,Comment
 from rest_framework import status
-from scrums.serializers import MainScrumSerializer, ScrumSerializer
+from scrums.serializers import CommentSerializer, MainScrumSerializer, ScrumDetailSerializer, ScrumSerializer
 from rest_framework.response import Response
 from datetime import datetime
 from rest_framework import filters
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins
 
-class IsFamilyorBadResponsePermission(permissions.BasePermission) :
-    def has_permission(self,request,view) :
-        return request.user.is_authenticated and request.user.family_id
-    def has_object_permission(self, request, view, obj):
-        if request.user.family_id :
-            return True 
-        return False
 # Create your views here.
 
 class ScrumAPIView(ListCreateAPIView) :
@@ -70,7 +63,7 @@ class MainScrumAPIView(ListAPIView) :
 
 class ScrumDetailUpdateAPIView(RetrieveUpdateDestroyAPIView) :
 
-    serializer_class = ScrumSerializer
+    serializer_class = ScrumDetailSerializer
     queryset = Scrum.objects.all()
     lookup_field = 'id'
     
@@ -109,3 +102,36 @@ class ScrumDetailUpdateAPIView(RetrieveUpdateDestroyAPIView) :
             return Response({'삭제 권한이 없습니다.'},status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CommentCreateAPIView(CreateAPIView) :
+
+    queryset = Scrum.objects.all()
+    lookup_field = 'id'
+    serializer_class = CommentSerializer
+    permission_classes = [IsFamilyorBadResponsePermission]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user,family=self.request.user.family_id,scrum = self.get_object())
+
+class CommentUpdateDeleteAPIView(mixins.UpdateModelMixin,
+                                   mixins.DestroyModelMixin,
+                                   GenericAPIView):
+
+    queryset = Comment.objects.all()
+    lookup_field = 'id'
+    serializer_class = CommentSerializer
+    permission_classes = [IsObjectAuthororBadResponsePermission]
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    
