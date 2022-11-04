@@ -29,31 +29,36 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumItem = ({scrums}) => {
+const ScrumItem = ({myScrum}) => {
 
   const navigate = useNavigate();
-
   return(
     <>
       <ScrumWrapper style={{display: "flex"}}>
         <ProfileWrapper>
           <MemberProfile>
-            <MemberProfileImg src={scrums.image}/>
+            <MemberProfileImg src={myScrum.image}/>
           </MemberProfile>
         </ProfileWrapper>
         <ItemWrapper>
-          <div style={{margin: "1vh"}}>
-           🙋‍♂️ {scrums.yesterday}
-          </div>
-          <div style={{margin: "1vh"}}>
-           📢 {scrums.today}
-          </div>
+          {myScrum.yesterday && myScrum.today === "" ? (
+            <>
+              <div style={{margin: "1vh"}}>
+              🙋‍♂️ {myScrum.yesterday}
+              </div>
+              <div style={{margin: "1vh"}}>
+              📢 {myScrum.today}
+              </div>
+            </>
+          ) : (
+            "아직 작성된 스크럼이 없어요 😢"
+          )}
         </ItemWrapper>
       </ScrumWrapper>
       <div
         style={{color: "#ff787f", margin: "0px 0px 0px 20vw", cursor: "pointer"}}
         onClick={() => {
-          navigate(`/scrum/create/`)
+          navigate(`/hello/create/`)
         }}
         >
         스크럼 작성하러 가기

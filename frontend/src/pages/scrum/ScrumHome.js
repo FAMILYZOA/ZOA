@@ -16,32 +16,24 @@ const ScrumHome = () => {
     date: new Date().getDate(),
   });
 
-  // 날짜 유효성 검사(1일이나 말일에 월 바뀌는거는 아직)
-  // 전 날로 가기
-  const onHandleBeforeDate = () => {
-    setCurDate({...curDate, date: curDate.date -1});
-  };
-
-  // 다음날로 가기
-  const onHandleAfterDate = () => {
-    setCurDate({...curDate, date: curDate.date +1});
-  };
-
   // 받아온 값 저장
   const [scrums, setScrums] = useState([{
     image: "",
     yesterday: "",
     today: "",
   },]);
-  const famScrums = [];
-  
+
   const token = useAppSelector((state) => state.token.access);
+  const userId = useAppSelector((state) => state.user.id)
+  const userImg = useAppSelector((state) => state.user.image)
+
   const navigate = useNavigate();
   useEffect (()=> {
     if (token.length === 0) {
       navigate("/intro");
     }
   });
+
   useEffect(() => {
     axios({
       method: "get",
@@ -57,33 +49,38 @@ const ScrumHome = () => {
       console.log(err)
     })
   }, [token])
-  let i = 0
-  for (i = 1; i < scrums.length; i++) {
-    famScrums.push(scrums[i])
-  }
+
+  // 내 스크럼 저장할 state 선언
+  const myScrum = useState([{
+    image: "",
+    yesterday: "",
+    today: "",
+  }])
+
+  // 받아온 스크럼 data에서 스크럼 작성 id 와 유저 id 비교하기
+  let j = 0
+  for (j = 0; j < scrums.length; j++) {
+    if (scrums[j].user_id === userId) {
+      myScrum.unshift(scrums[j])
+      scrums.splice(j)
+    } else {
+      myScrum.unshift({image: `${userImg}`, yesterday: "", today: ""})
+    }
+  };
+  console.log(scrums);
 
   return(
     <>
-      <Header/>
-        <div style={{display: "inline-flex"}}>
+      <Header label="안녕"/>
           <div style={{justifyContent: "center", display: "flex"}}>
-            {/* <BsChevronLeft onClick={onHandleBeforeDate}/> */}
-            <BsChevronLeft/>
               <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh"}}>
                 {curDate.year}. {curDate.month}. {curDate.date}
               </div>
-            {/* <BsChevronRight onClick={onHandleAfterDate}/> */}
-            <BsChevronRight/>
-            </div>
           </div>
-          <div>
-            <ScrumItem scrums={scrums[0]}></ScrumItem>
-          </div>
-          <div>
-            {famScrums.map((item) => (
-              <ScrumFamItem {...item} key={item.id}/>
-            ))}
-          </div>
+          <ScrumItem myScrum={myScrum[0]}></ScrumItem>
+          {scrums.map((item) => (
+            <ScrumFamItem {...item} key={item.user_id}/>
+          ))}
     </>
   )
 };
