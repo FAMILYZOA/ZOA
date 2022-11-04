@@ -1,13 +1,11 @@
-from cgitb import lookup
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
-    CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView,GenericAPIView)
-from rest_framework import mixins
+    CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView,GenericAPIView,RetrieveAPIView)
+from rest_framework import mixins,permissions
 from accounts.models import User
-from django.http import JsonResponse
 from accounts.permissions import InFamilyorBadResponsePermission
 from families.models import Family, FamilyInteractionName
-from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUpdateSerializer
+from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -147,3 +145,12 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
     def perform_update(self, serializer):
         serializer.save()
 
+class FamilySignAPIView(RetrieveAPIView) :
+
+    serializer_class = FamilyUnAuthorizedRetriveSerializer
+    queryset=Family.objects.all()
+    lookup_field = 'id'
+    permission_classes = [ permissions.AllowAny ]
+    @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
