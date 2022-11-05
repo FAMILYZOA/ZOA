@@ -121,16 +121,6 @@ const FamilyManage = () => {
 ----------- 이하, 가족 생성, 구성원 초대가 완료되는것 확인 후 연결 할 것 ----------
 */
 
-  useEffect(() => { // 최초 token값은 비워져 있다. token값 갱신을 위해 사용되는 useEffect. 추후에는 로그인 기능과 연동시켜서 토큰값 지정할 것.
-    dispatch(
-      setAccessToken(
-        `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY2ODYyOTMzLCJpYXQiOjE2NjY4NTU3MzMsImp0aSI6ImYyZmI1NWEzZjM3NTQ4NjU5ZTZlYmJiNmY1ZDM0YWEyIiwidXNlcl9pZCI6MX0.jMbReJBRMGRxsNWaRU_UflFOElBuCN7Ewikr5FB-c9A`
-      )
-    ); 
-    console.log(`토큰 갱신`);
-    console.log(token);
-  }, [dispatch]);
-
   useEffect(() => {
     if (token) {
       axios({
