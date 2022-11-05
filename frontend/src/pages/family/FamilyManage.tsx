@@ -3,38 +3,36 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setAccessToken } from "../../features/token/tokenSlice";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { GrHomeRounded } from "react-icons/gr";
+import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
 import styled, { css, keyframes } from "styled-components";
 
-const FamilyManageHeader = styled.div`
-  display: flex;
-  height: 7.5vh;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 2px solid #aaa;
-`;
-const HomeButton = styled.div`
-  position: absolute;
-  top: 3.75vh;
-  left: 3.75vh;
-  height: 3vh;
-  width: 3vh;
-  transform: translate(-50%, -50%);
-  border-radius: 1.5vh;
-  font-size: 3vh;
-  color: black;
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
 
-const FamilyManageHeaderTitle = styled.div`
-  font-size: 3vh;
+const Icon = styled.div`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderLabel = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
 `;
 
 const FamilyManageBody = styled.div`
@@ -43,6 +41,7 @@ const FamilyManageBody = styled.div`
 const FamilyManageGuide = styled.div`
   margin-top: 1vh;
   margin-bottom: 3vh;
+  margin-left: 4px;
   font-size: 2.5vh;
 `;
 const FamilyNameHighlight = styled.span`
@@ -91,35 +90,13 @@ const FamilyMembersEdit = styled.div`
 `;
 
 const FamilyManage = () => {
-  const { id } = useParams();
-  const [familyName, setFamilyName] = useState<string>("패밀리명");
-  const [userName, setUserName] = useState<string>("사용자명");
-  const [familyMembersList, setFamilyMemberList] = useState<any>([
-    {
-      customName: "나",
-      name: "신짱아",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681280-abe13572-3872-4e99-8abe-41646cb91f2b.png",
-    },
-    {
-      customName: "동생",
-      name: "신짱구",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
-    },
-    {
-      customName: "",
-      name: "봉미선",
-      image:
-        "https://user-images.githubusercontent.com/97648026/197681295-f9fe8c31-b9e3-4c6d-81e1-63b4df657f1b.png",
-    },
-  ]); // member는 object. 예시 이미지 입력
+  // const [familyMembersList, setFamilyMemberList] = useState<any>(); // member는 object. 예시 이미지 입력
+  const familyMembersList = useAppSelector((state) => state.family.users);
   const token = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
+  const id = useAppSelector((state) => state.family.id);
+  const familyName = useAppSelector((state) => state.family.name);
+  const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
-
-  /*
------------ 이하, 가족 생성, 구성원 초대가 완료되는것 확인 후 연결 할 것 ----------
-*/
 
   useEffect(() => {
     if (token) {
@@ -183,8 +160,8 @@ const FamilyManage = () => {
         {
           title: "ZOA에 참여하기",
           link: {
-            mobileWebUrl: "https://developers.kakao.com",
-            webUrl: "https://developers.kakao.com",
+            mobileWebUrl: `/join/${id}`,
+            webUrl: `/join/${id}`,
           },
         },
       ],
@@ -193,12 +170,14 @@ const FamilyManage = () => {
 
   return (
     <>
-      <FamilyManageHeader>
-        <HomeButton onClick={navigateToHome}>
-          <GrHomeRounded />
-        </HomeButton>
-        <FamilyManageHeaderTitle>멤버관리</FamilyManageHeaderTitle>
-      </FamilyManageHeader>
+      <HeaderBox>
+        <Icon onClick={navigateToHome}>
+          <AiFillHome size="24" color="#FF787F" />
+        </Icon>
+        <HeaderLabel>멤버 관리</HeaderLabel>
+        <div></div>
+      </HeaderBox>
+
       <FamilyManageBody>
         <FamilyManageGuide>
           <div>
