@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Main from "./pages/main/main";
-import Login from "./pages/auth/login";
 import Prelogin from "./pages/auth/prelogin";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
@@ -37,7 +36,6 @@ import axios from "axios";
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
   const userId = useAppSelector((state) => state.user.id);
-  const userFamilyId = useAppSelector((state) => state.user.familyId);
   const familyId = useAppSelector((state) => state.family.id);
   const dispatch = useAppDispatch();
 
@@ -119,6 +117,7 @@ function App() {
       }
     }
   });
+  // const location = useLocation();
   return (
     <div>
       <BrowserRouter>
@@ -128,13 +127,14 @@ function App() {
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
           <Route path="/scrum/create" element={<ScrumCreate />}></Route>
           <Route path="/intro" element={<Prelogin />} />
-          <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Main />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/kakaoSignup" element={<KakaoSignup />} />
           <Route path="/register" element={<Resister />} />
           <Route path="/login" element={<NewLogin />} />
-          <Route path="/" element={<KakaoLoding />} />
+          <Route path="/register" element={<Resister />} />
+          <Route path="/kakaoLoading/" element={<KakaoLoding />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>

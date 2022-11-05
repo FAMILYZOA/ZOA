@@ -12,8 +12,8 @@ export const Background = styled.div`
 `;
 
 export const LoadingText = styled.div`
-    font: 2rem;
-    text-align: center;
+  font: 2rem;
+  text-align: center;
 `;
 
 function Loading() {
@@ -32,7 +32,7 @@ function Loading() {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `grant_type=authorization_code&client_id=${"931a81a6fdb9751f2858ca6f2f46b377"}&redirect_uri=${"http://localhost:3000/"}&code=${kakao_code}`,
+      body: `grant_type=authorization_code&client_id=${"931a81a6fdb9751f2858ca6f2f46b377"}&redirect_uri=${"http://localhost:3000/kakaoLoading/"}&code=${kakao_code}`,
       //prompt={none}(?) 추가하면 자동로그인 된다 함
     })
       .then((res) => res.json())
@@ -65,7 +65,7 @@ function Loading() {
                   "refresh_token",
                   result.data.token.refresh
                 );
-                navigate("/main");
+                navigate("/");
               }
             })
             .catch((err) => {
