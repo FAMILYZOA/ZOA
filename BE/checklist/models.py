@@ -1,5 +1,7 @@
 from django.db import models
+from django.conf import settings
 from accounts.models import User
+from families.models import Family
 
 
 class Photo(models.Model): 
@@ -16,4 +18,4 @@ class Checklist(models.Model) :
     photo =  models.ForeignKey(Photo, null=True, on_delete=models.CASCADE, db_column='photo_id')
     from_user_id = models.ForeignKey(User, related_name='fromchecklist', on_delete=models.CASCADE, db_column='from_user_id')
     to_users_id = models.ForeignKey(User, related_name='tochecklist', on_delete=models.CASCADE, db_column='to_user_id')
-
+    family = models.ForeignKey(Family, on_delete=models.CASCADE,related_name='checklist')
