@@ -1,22 +1,53 @@
 from .models import Schedule
+from accounts.models import User  
+from accounts.permissions import IsFamilyorBadResponsePermission
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from accounts.models import User  
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from drf_yasg.utils import swagger_auto_schema
 from . serializers import (
+    DdaySerializer,
     ScheduleSerializer,
     UpdateScheduleSerializer,
 )
 
 
+class SearchSDdayAPIView(GenericAPIView):
+    permission_classes = [IsFamilyorBadResponsePermission]
+    serializer_class = DdaySerializer
+    def get (self, request, date):
+        result = []
+        schedules = Schedule.objects.filter(Q(start_date__gte=date)).order_by('start_date')[:3]
+        for schedule in schedules:
+            Dday = schedule.start_date - date
+            context = {
+                'title': schedule.title,
+                'start_date': schedule.start_date,
+                'end_date': schedule.end_date,
+                'Dday': Dday.days,
+            }
+            result.append(context)
+        serializer = self.serializer_class(result, many=True)
+        return Response(serializer.data)
+
+
+class SearchScheduleAPIView(GenericAPIView):
+    permission_classes = [IsFamilyorBadResponsePermission]
+    serializer_class = ScheduleSerializer
+    def get(self, request, month):
+        schedule = Schedule.objects.filter((Q(start_date=month) | Q(end_date=month)) & Q(family_id=request.user.family_id))
+        print(schedule.values())
+        return Response("")
+
+
 class CreateSearchScheduleAPIView(GenericAPIView):
+    permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = ScheduleSerializer
     @swagger_auto_schema(operation_summary="date 입력 양식: YYYY-MM-DD")
     def get(self, request, date):
-        schedule = Schedule.objects.filter(Q(start_date__lte=date) & Q(end_date__gte=date))
+        schedule = Schedule.objects.filter(Q(start_date__lte=date) & Q(end_date__gte=date) & Q(family_id=request.user.family_id))
         serializer = ScheduleSerializer(schedule, many=True)
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_302_FOUND)
@@ -25,15 +56,16 @@ class CreateSearchScheduleAPIView(GenericAPIView):
 
     @swagger_auto_schema(operation_summary="date 입력 양식: YYYY-MM-DD, end_date 입력안하면 date값으로 입력됨", request_body=ScheduleSerializer)
     def post(self, request, date):
+        permission_classes = [IsFamilyorBadResponsePermission]
         try:
             user = User.objects.get(pk=request.user.id)
-        
             if request.data.get('end_date') is None:
                 context = {
                     'title': request.data.get('title'),
                     'color': request.data.get('color'),
                     'start_date': date,
                     'end_date': date,
+                    'important_mark': request.data.get('important_mark'),
                     'family': user.family_id.id,
                 }
             else:
@@ -42,6 +74,7 @@ class CreateSearchScheduleAPIView(GenericAPIView):
                     'color': request.data.get('color'),
                     'start_date': request.data.get('start_date'),
                     'end_date': request.data.get('end_date'),
+                    'important_mark': request.data.get('important_mark'),
                     'family': user.family_id.id,
                 }
 
@@ -55,13 +88,16 @@ class CreateSearchScheduleAPIView(GenericAPIView):
 
 
 class DetailModifyDeleteScheduleAPIView(GenericAPIView):
+    permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = ScheduleSerializer
     update_serializer_class = UpdateScheduleSerializer
 
     def get(self, request, schedule_id):
         schedule = get_object_or_404(Schedule, id=schedule_id)
-        serializer = self.serializer_class(schedule)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.user.family_id.id == schedule.family_id:
+            serializer = self.serializer_class(schedule)
+            return Response(serializer.data, status=status.HTTP_200_OK) 
+        return Response("당신이 가입한 가족의 일정만 확인 가능합니다.", status=status.HTTP_400_BAD_REQUEST) 
 
     @swagger_auto_schema(request_body=UpdateScheduleSerializer)
     def put(self, request, schedule_id):
