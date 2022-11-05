@@ -37,9 +37,18 @@ class SearchScheduleAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = ScheduleSerializer
     def get(self, request, month):
-        schedule = Schedule.objects.filter((Q(start_date=month) | Q(end_date=month)) & Q(family_id=request.user.family_id))
-        print(schedule.values())
-        return Response("")
+        schedule = Schedule.objects.filter(
+            Q(end_date__year__gte=month.year) &
+            Q(end_date__month__gte=month.month) &
+            Q(start_date__year__lte=month.year) &
+            Q(start_date__month__lte=month.month) & 
+            Q(family_id=request.user.family_id)
+        ).order_by('start_date')
+        serializer = ScheduleSerializer(schedule, many=True)
+        if serializer.data:
+            return Response(serializer.data, status=status.HTTP_302_FOUND)
+        else:
+            return Response("스케줄이 없습니다.", status=status.HTTP_404_NOT_FOUND)
 
 
 class CreateSearchScheduleAPIView(GenericAPIView):
@@ -47,7 +56,11 @@ class CreateSearchScheduleAPIView(GenericAPIView):
     serializer_class = ScheduleSerializer
     @swagger_auto_schema(operation_summary="date 입력 양식: YYYY-MM-DD")
     def get(self, request, date):
-        schedule = Schedule.objects.filter(Q(start_date__lte=date) & Q(end_date__gte=date) & Q(family_id=request.user.family_id))
+        schedule = Schedule.objects.filter(
+            Q(start_date__lte=date) & 
+            Q(end_date__gte=date) & 
+            Q(family_id=request.user.family_id)
+        )
         serializer = ScheduleSerializer(schedule, many=True)
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_302_FOUND)
@@ -56,7 +69,6 @@ class CreateSearchScheduleAPIView(GenericAPIView):
 
     @swagger_auto_schema(operation_summary="date 입력 양식: YYYY-MM-DD, end_date 입력안하면 date값으로 입력됨", request_body=ScheduleSerializer)
     def post(self, request, date):
-        permission_classes = [IsFamilyorBadResponsePermission]
         try:
             user = User.objects.get(pk=request.user.id)
             if request.data.get('end_date') is None:
@@ -66,6 +78,7 @@ class CreateSearchScheduleAPIView(GenericAPIView):
                     'start_date': date,
                     'end_date': date,
                     'important_mark': request.data.get('important_mark'),
+                    'writer': request.user.id,
                     'family': user.family_id.id,
                 }
             else:
@@ -75,6 +88,7 @@ class CreateSearchScheduleAPIView(GenericAPIView):
                     'start_date': request.data.get('start_date'),
                     'end_date': request.data.get('end_date'),
                     'important_mark': request.data.get('important_mark'),
+                    'writer': request.user.id,
                     'family': user.family_id.id,
                 }
 
