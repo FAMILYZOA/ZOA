@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useAppSelector } from "../../../app/hooks";
+import { BsFillCheckSquareFill } from "react-icons/bs";
+import { BiCheckbox } from "react-icons/bi";
+import Spinner from "../../../assets/Spinner.gif";
 
-
-const Container = styled.div`
-
-`
+const Container = styled.div``;
 
 const TabBox = styled.div`
-    display: grid ;
-    grid-template-columns: 1fr 1fr;
-    width: 100% ;
-`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+`;
 const Tab = styled.div`
   width: 100%;
   height: 40px;
@@ -28,44 +28,362 @@ const Tab = styled.div`
 `;
 
 const ContentsBox = styled.div`
-    background-color: rgba(255,255,255,0.5);
-    height: 60vh;
-    border-radius: 0 0 10px 10px;
-`
+  background-color: rgba(255, 255, 255, 0.5);
+  height: 60vh;
+  border-radius: 0 0 10px 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`;
 
-function Tabs({current}){
-    const access = useAppSelector((state) => state.token.access)
-    const [todoTab, setTodo] = useState(true);
-    const [completeTab, setCompleteTab] = useState(false);
-    const TodoClick = () => {
-        setTodo(true);
-        setCompleteTab(false);
-    }
-    const CompleteClick = () => {
-        setTodo(false);
-        setCompleteTab(true);
-    }
+const NoToggle = styled.div`
+  display: flex;
+  height: 5vh;
+  align-items: center;
+  margin: 8px 0;
+  p {
+    margin: 0 4px;
+  }
+`;
+const IconBox = styled.div`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
 
-    const todo = () => {
-        axios({
-            method: "GET",
-            url : `https://k7b103.p.ssafy.io/api/v1/checklist/${current}/0/`,
-            headers: {
-                Authorization: `Bearer ${access}`,
-            }
-        })
-    }
+const Toggle = styled.div`
+  display: flex;
+  width: 100%;
+  border: none;
+  height: ${(props) => (props.id === props.current ? "78px" : "0")};
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 20px;
+  align-items: center;
+  p {
+    font-size: 20px;
+    margin: 0;
+  }
+  span {
+    font-size: 14px;
+    color: #707070;
+  }
+  div {
+    // display: ${(props) => (props.id === props.current ? "block" : "none")};
+    // transition: display 0.5s;
+    margin: 5%;
+  }
+  transition: height 0.5s;
+  overflow-y: hidden;
+`;
 
-    return(
-        <Container>
-            <TabBox>
-                <Tab onClick={TodoClick} active={todoTab}>TODO</Tab>
-                <Tab onClick={CompleteClick} active={completeTab}>COMPLETED</Tab>
-            </TabBox>
-            <ContentsBox></ContentsBox>
-            
-        </Container>
-    )
+const ContentsContainer = styled.div`
+  margin: 5%;
+`;
+
+function TodoContents({ current }) {
+  const access = useAppSelector((state) => state.token.access);
+
+  const [list, setList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [load, setLoad] = useState(1);
+  const preventRef = useRef(true);
+  const obsRef = useRef(null);
+  const endRef = useRef(false);
+
+  const [click, setClick] = useState(-1);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    if (obsRef.current) observer.observe(obsRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    getTodo();
+    console.log(list);
+  }, [page]);
+
+  const obsHandler = (entries) => {
+    const target = entries[0];
+    if (!endRef.current && target.isIntersecting && preventRef.current) {
+      preventRef.current = false;
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const getTodo = useCallback(async () => {
+    //글 불러오기
+    setLoad(true);
+    const res = await axios({
+      method: "GET",
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}?page=${page}&status=0`,
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+    if (res.data) {
+      if (res.data.next === null) {
+        //마지막 페이지
+        endRef.current = true;
+      }
+      //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+      //     item ? {...item, active:false} : list
+      //   ))); // 리스트 추가
+      setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
+      preventRef.current = true;
+    } else {
+      console.log(res);
+    }
+    setLoad(false); //로딩 종료
+  }, [page]);
+
+  const clickItem = (id) => {
+    if (click !== id) {
+      setClick(id);
+    } else {
+      setClick(-1);
+    }
+  };
+
+  const check = (contentsId) => {
+    const data = new FormData();
+    data.append("status", 1);
+    axios({
+      method: "PUT",
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${contentsId}`,
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+      data: data,
+    }).then((res) => console.log(res));
+  };
+
+  return (
+    <ContentsContainer>
+      {list && (
+        <>
+          {list.map((li, index) => (
+            <div key={index}>
+              <NoToggle>
+                <BiCheckbox
+                  size={32}
+                  color="#FF787F"
+                  onClick={() => check(li.id)}
+                />
+                <p onClick={() => clickItem(li.id)}>{li.text}</p>
+              </NoToggle>
+              <Toggle id={li.id} current={click}>
+                <div>
+                  <p>From. {li.to_users_id}</p>
+                  <span>
+                    {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
+                    {li.created_at.slice(8, 10)}
+                  </span>
+                </div>
+              </Toggle>
+            </div>
+          ))}
+        </>
+      )}
+      {load ? (
+        <div>
+          <img src={Spinner} />
+        </div>
+      ) : (
+        <></>
+      )}
+      <div ref={obsRef}></div>
+    </ContentsContainer>
+  );
+}
+
+function CompleteContents({ current }) {
+  const access = useAppSelector((state) => state.token.access);
+
+  const [list, setList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [load, setLoad] = useState(1);
+  const preventRef = useRef(true);
+  const obsRef = useRef(null);
+  const endRef = useRef(false);
+
+  const [click, setClick] = useState(-1);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    if (obsRef.current) observer.observe(obsRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    getTodo();
+    console.log(list);
+  }, [page]);
+
+  const obsHandler = (entries) => {
+    const target = entries[0];
+    if (!endRef.current && target.isIntersecting && preventRef.current) {
+      preventRef.current = false;
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const getTodo = useCallback(async () => {
+    //글 불러오기
+    setLoad(true);
+    const res = await axios({
+      method: "GET",
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}?page=${page}&status=1`,
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+    if (res.data) {
+      if (res.data.next === null) {
+        //마지막 페이지
+        endRef.current = true;
+      }
+      //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+      //     item ? {...item, active:false} : list
+      //   ))); // 리스트 추가
+      setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
+      preventRef.current = true;
+    } else {
+      console.log(res);
+    }
+    setLoad(false); //로딩 종료
+  }, [page]);
+
+  const clickItem = (id) => {
+    if (click !== id) {
+      setClick(id);
+    } else {
+      setClick(-1);
+    }
+  };
+
+  const check = (contentsId) => {
+    const data = new FormData();
+    data.append("status", 0);
+    axios({
+      method: "PUT",
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${contentsId}`,
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+      data: data,
+    }).then((res) => console.log(res));
+  };
+
+  return (
+    <ContentsContainer>
+      {list && (
+        <>
+          {list.map((li, index) => (
+            <div key={index}>
+              <NoToggle>
+                <IconBox onClick={() => check(li.id)}>
+                  <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
+                </IconBox>
+                <p onClick={() => clickItem(li.id)}>{li.text}</p>
+              </NoToggle>
+              <Toggle id={li.id} current={click}>
+                <div>
+                  <p>From. {li.to_users_id}</p>
+                  <span>
+                    {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
+                    {li.created_at.slice(8, 10)}
+                  </span>
+                </div>
+              </Toggle>
+            </div>
+          ))}
+        </>
+      )}
+      {load ? (
+        <div>
+          <img src={Spinner} />
+        </div>
+      ) : (
+        <></>
+      )}
+      <div ref={obsRef}></div>
+    </ContentsContainer>
+  );
+}
+
+function Tabs({ current }) {
+  console.log("1", current);
+  const access = useAppSelector((state) => state.token.access);
+  const [todoTab, setTodoTab] = useState(true);
+  const [completeTab, setCompleteTab] = useState(false);
+
+  const [todo, setTodo] = useState([]);
+  const [todoNext, setTodoNext] = useState("");
+  const [completeNext, setCompleteNext] = useState("");
+  const [complete, setComplete] = useState([]);
+  const TodoClick = () => {
+    setTodoTab(true);
+    setCompleteTab(false);
+  };
+  const CompleteClick = () => {
+    setTodoTab(false);
+    setCompleteTab(true);
+  };
+
+  useEffect(() => {
+    if (current >= 0) {
+      axios({
+        method: "GET",
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        params: { status: 0 },
+      }).then((res) => {
+        setTodo(res.data.results);
+        setTodoNext(res.data.next);
+      });
+      axios({
+        method: "GET",
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        params: { status: 1 },
+      }).then((res) => {
+        setComplete(res.data.results);
+        setCompleteNext(res.data.next);
+      });
+    }
+  }, []);
+
+  return (
+    <Container>
+      <TabBox>
+        <Tab onClick={TodoClick} active={todoTab}>
+          TODO
+        </Tab>
+        <Tab onClick={CompleteClick} active={completeTab}>
+          COMPLETED
+        </Tab>
+      </TabBox>
+      <ContentsBox>
+        {todoTab === true ? (
+          <TodoContents current={current}></TodoContents>
+        ) : (
+          <CompleteContents current={current}></CompleteContents>
+        )}
+      </ContentsBox>
+    </Container>
+  );
 }
 
 export default Tabs;

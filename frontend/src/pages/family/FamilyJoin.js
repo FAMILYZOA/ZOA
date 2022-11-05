@@ -88,10 +88,11 @@ function FamilyJoin() {
     
 
     useEffect(()=> {
-        localStorage.setItem("family_id", familyId);
+        localStorage.setItem("familyId", familyId);
         if (access.length === 0) {
           navigate("/intro");
         } else {
+            console.log(access);
             axios({
               method: "GET",
               url: `https://k7b103.p.ssafy.io/api/v1/family/${familyId}/`,

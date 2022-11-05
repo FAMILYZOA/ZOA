@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import Header from "../../components/header";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const FamilyName = styled.div`
   display: flex;
@@ -18,9 +18,9 @@ const EssentialInput = styled.div`
 
 const FamilyNameInput = styled.input`
   border-left-width:0;
-  　border-right-width:0;
-  　border-top-width:0;
-  　border-bottom:1;
+  border-right-width:0;
+  border-top-width:0;
+  border-bottom:1;
   width: 80%;
   height: 30px;
   border-color: #ffd5d7;
