@@ -27,7 +27,6 @@ const MemberProfileImg = styled.img`
 const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
 
     const navigate = useNavigate();
-    console.log("가족 이모지",emoji);
 
     return(
         <> 
@@ -40,8 +39,8 @@ const ScrumFamItem = ({id, emoji, name, yesterday, today, image}) => {
                 <div style={{margin: "3%", fontWeight: "bold"}}>
                     {name}
                 </div>
-                <div style={{margin: "3% 0 0 0"}}>
-                    <Emoji unifed={emoji} />
+                <div style={{margin: "2% 0 0 0"}}>
+                    <Emoji unified={emoji}/> 
                 </div>
                 <div style={{color: "#ff787f", cursor: "pointer", margin: "3vh 0 0 40vw"}}>
                     <BsChevronRight

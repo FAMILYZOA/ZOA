@@ -135,7 +135,7 @@ const ScrumHome = () => {
               </MemberProfile>
             </ProfileWrapper>
             <ItemWrapper>
-              <Emoji unified={myScrum[0].emoji}/> 
+              {/* <Emoji unified={myScrum[0].emoji}/> */}
               {myScrum[0].emoji === "" ? (
                   "아직 작성된 스크럼이 없어요 😢"
                 ) : (
