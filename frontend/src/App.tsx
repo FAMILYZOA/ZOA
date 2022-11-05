@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
+import { Settings } from "./pages/settings";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
@@ -12,6 +13,8 @@ import Resister from "./pages/auth/Resister";
 import NewLogin from "./pages/auth/kakao/Login";
 import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
+import ScrumHome from "./pages/scrum/ScrumHome";
+import FamilyJoin from "./pages/family/FamilyJoin";
 
 import Navbar from "./components/Navbar";
 
@@ -37,9 +40,18 @@ function App() {
   const accessToken = useAppSelector((state) => state.token.access);
   const userId = useAppSelector((state) => state.user.id);
   const familyId = useAppSelector((state) => state.family.id);
+  const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
+  const [, updateState] = useState<{}>();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
-  useEffect(() => {
+  const fontArray = ["2vh", "2.5vh", "3vh"];
+
+  const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
+    fontSize: fontArray[fontSize],
+  });
+
+  const infoUpdate = () => {
     if (accessToken === "") {
       // 토큰이 없는 경우
       if (userId >= 0) {
@@ -51,7 +63,6 @@ function App() {
         dispatch(setUserBirth(""));
         dispatch(setUserImage(""));
         dispatch(setUserName(""));
-        console.log("user info initialized");
       }
       if (familyId >= 0) {
         // 패밀리 값 초기화. id 값이 양의 정수면 들어있다고 판단.
@@ -90,7 +101,8 @@ function App() {
             dispatch(setUserImage(res.data.image));
             dispatch(setUserName(res.data.name));
             console.log("user fetched");
-            if (familyId < 0) {
+            forceUpdate();
+            if (familyId < 0 && res.data.family_id) {
               // 가족 정보가 없으면, 가족 정보 불러오기
               axios({
                 method: "get",
@@ -105,6 +117,7 @@ function App() {
                   dispatch(setFamilyCreatedAt(res.data.created_at));
                   dispatch(setFamilyUsers(res.data.users));
                   console.log("family fetched");
+                  forceUpdate();
                 })
                 .catch((err) => {
                   console.error(err);
@@ -116,25 +129,45 @@ function App() {
           });
       }
     }
-  });
-  // const location = useLocation();
+  };
+
+  useEffect(() => {
+    setFontStyle({
+      fontSize: fontArray[fontSize],
+    });
+  }, [fontSize]);
+
+  useEffect(() => {
+    infoUpdate();
+  }, [accessToken]);
+
   return (
-    <div>
+    <div style={fontStyle}>
       <BrowserRouter>
         <Routes>
+          <Route path="/join/:familyId" element={<FamilyJoin />} />
+          {/* <Route path="/join/:familyId" element={<FamilyJoin />} /> */}
+
+          <Route path="/intro" element={<Prelogin />} />
+          <Route path="/login" element={<NewLogin />} />
+          <Route path="/register" element={<Resister />} />
+          <Route path="/kakaoSignup" element={<KakaoSignup />} />
+          <Route path="/kakaoLoading/" element={<KakaoLoding />} />
+
+          <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
-          <Route path="/scrum/create" element={<ScrumCreate />}></Route>
-          <Route path="/intro" element={<Prelogin />} />
+
           <Route path="/" element={<Main />} />
-          <Route path="/checklist/create" element={<CreateChecklist />} />
+
+          <Route path="/hello/" element={<ScrumHome />}></Route>
+          <Route path="/hello/create" element={<ScrumCreate />}></Route>
+
           <Route path="/checklist" element={<ReadChecklist />} />
-          <Route path="/kakaoSignup" element={<KakaoSignup />} />
-          <Route path="/register" element={<Resister />} />
-          <Route path="/login" element={<NewLogin />} />
-          <Route path="/register" element={<Resister />} />
-          <Route path="/kakaoLoading/" element={<KakaoLoding />} />
+          <Route path="/checklist/create" element={<CreateChecklist />} />
+
+          <Route path="/settings" element={<Settings />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
