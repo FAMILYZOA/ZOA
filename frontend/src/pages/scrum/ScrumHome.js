@@ -8,6 +8,7 @@ import ScrumFamItem from "../../components/scrum/ScrumFamItem";
 import axios from "axios";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import ScrumFamList from "../../components/scrum/ScrumFamList";
+import { Emoji } from "emoji-picker-react";
 
 const ScrumWrapper = styled.div`
   background-color: transparent;
@@ -112,7 +113,7 @@ const ScrumHome = () => {
     }
   };
   console.log("가족 스크럼", famScrum);
-  console.log("내 스크럼", myScrum[0]);
+  console.log("내 스크럼", myScrum[0].emoji);
 
   return(
     <>
@@ -134,6 +135,7 @@ const ScrumHome = () => {
               </MemberProfile>
             </ProfileWrapper>
             <ItemWrapper>
+              {/* <Emoji unified={myScrum[0].emoji}/> */}
               {myScrum[0].emoji === "" ? (
                   "아직 작성된 스크럼이 없어요 😢"
                 ) : (
