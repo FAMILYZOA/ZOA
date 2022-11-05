@@ -37,16 +37,13 @@ class SearchScheduleAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = ScheduleSerializer
     def get(self, request, month):
-        print(month)
-        print(month.year)
-        print(month.month)
         schedule = Schedule.objects.filter(
             Q(end_date__year__gte=month.year) &
             Q(end_date__month__gte=month.month) &
             Q(start_date__year__lte=month.year) &
             Q(start_date__month__lte=month.month) & 
             Q(family_id=request.user.family_id)
-        )
+        ).order_by('start_date')
         serializer = ScheduleSerializer(schedule, many=True)
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_302_FOUND)
