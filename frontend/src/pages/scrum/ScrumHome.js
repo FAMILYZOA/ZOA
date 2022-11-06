@@ -3,11 +3,9 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import ScrumItem from "../../components/scrum/ScrumItem";
 import ScrumFamItem from "../../components/scrum/ScrumFamItem";
 import axios from "axios";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import ScrumFamList from "../../components/scrum/ScrumFamList";
+import { useAppSelector } from "../../app/hooks";
 import { Emoji } from "emoji-picker-react";
 
 const ScrumWrapper = styled.div`
@@ -89,7 +87,6 @@ const ScrumHome = () => {
     id: "",
     user_id: "",
   });
-  console.log("전체 스크럼 조회", scrums);
 
   // 가족 스크럼 저장할 state 선언
   const famScrum = useState({
@@ -106,27 +103,22 @@ const ScrumHome = () => {
   for (j = 0; j < scrums.length; j++) {
     if (scrums[j].user_id === userId) {
       myScrum.unshift(scrums[j]);
-      // scrums.splice(j, 1)
     }
     if (scrums[j].user_id !== userId) {
       famScrum.unshift(scrums[j]);
     }
   }
-  console.log("가족 스크럼", famScrum);
-  console.log("내 스크럼", myScrum[0].emoji);
 
   return (
     <>
       <Header label="안녕" />
-      <div style={{ justifyContent: "center", display: "flex" }}>
-        <div
-          style={{ color: "#ff787f", fontWeight: "bolder", fontSize: "3vh" }}
-        >
+      <div style={{ justifyContent: "center", display: "flex"}}>
+        <div style={{ color: "#ff787f", fontWeight: "bolder", fontSize: "3vh"}}>
           {curDate.year}. {curDate.month}. {curDate.date}
         </div>
       </div>
-      <div>
-        <ScrumWrapper style={{ display: "flex" }}>
+      {/* 내 스크럼 */}
+      <div style={{display: "flex", margin: "2%"}}>
           <ProfileWrapper>
             <MemberProfile>
               {myScrum[0].image === "" ? (
@@ -136,8 +128,15 @@ const ScrumHome = () => {
               )}
             </MemberProfile>
           </ProfileWrapper>
+            <div style={{margin: "3%", fontWeight: "bold"}}>
+              {myScrum[0].name}
+            </div>
+            <div style={{margin: "2% 0 0 0"}}>
+              <Emoji unified={myScrum[0].emoji}/> 
+            </div>
+        </div>
+        <div style={{margin: "0vw 10vw 2vw 13%"}}>
           <ItemWrapper>
-            {/* <Emoji unified={myScrum[0].emoji}/> */}
             {myScrum[0].emoji === "" ? (
               "아직 작성된 스크럼이 없어요 😢"
             ) : (
@@ -147,7 +146,8 @@ const ScrumHome = () => {
               </>
             )}
           </ItemWrapper>
-        </ScrumWrapper>
+        </div>
+        <div>
         {myScrum[0].emoji === "" ? (
           <div
             style={{
@@ -167,6 +167,7 @@ const ScrumHome = () => {
           <></>
         )}
       </div>
+      {/* 여기부터 가족 */}
       {famScrum.slice(0, -2).map((item) => (
         <ScrumFamItem {...item} key={item.user_id} />
       ))}
