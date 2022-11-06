@@ -5,6 +5,8 @@ import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
 import userImg from "../../assets/bong.png";
 import logo from "../../assets/white-logo.png";
+import { useDispatch } from "react-redux";
+import { setFamilyId } from "../../features/family/familySlice";
 
 const Header = styled.div`
   display: flex;
@@ -65,6 +67,7 @@ const Btn = styled.div`
 function FamilyJoin() {
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useDispatch();
 
   const familyId = params.familyId;
   const access = useAppSelector((state) => state.token.access);
@@ -78,6 +81,7 @@ function FamilyJoin() {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     }).then((res) => {
+      dispatch(setFamilyId(localStorage.getItem("familyId")));
       localStorage.removeItem("familyId");
       navigate("/");
     });
