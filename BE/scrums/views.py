@@ -29,7 +29,7 @@ class ScrumAPIView(ListCreateAPIView) :
         return self.create(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
-        if request.GET.get('created_at') :
+        if request.GET.get('search') :
             queryset = self.filter_queryset(self.get_queryset())
         else :
             queryset = Scrum.objects.filter(family=self.request.user.family_id,created_at=datetime.today().strftime("%Y-%m-%d")  )
