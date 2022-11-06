@@ -97,7 +97,7 @@ function Emojis({ scrum }) {
               {scrum.map((item, index) => (
                 <EmojiBox key={index}>
                   <EmojiWrapper>
-                    <Emoji unified={item.emoji}/>
+                    <Emoji unified={item.emoji} />
                   </EmojiWrapper>
                   <UserImg src={item.image} alt="userimg"></UserImg>
                 </EmojiBox>
@@ -117,9 +117,9 @@ function Emojis({ scrum }) {
             <>
               {scrum.map((item, index) => (
                 <EmojiBox key={index}>
-                  <Emoji>
-                    {/* <EmojiText>{item.emoji}</EmojiText> */}
-                  </Emoji>
+                  <EmojiWrapper>
+                    <Emoji unified={item.emoji} />
+                  </EmojiWrapper>
                   <UserImg src={item.image} alt="userimg"></UserImg>
                 </EmojiBox>
               ))}
