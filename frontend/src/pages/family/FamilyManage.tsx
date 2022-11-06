@@ -10,6 +10,12 @@ import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
+import {
+  setFamilyCreatedAt,
+  setFamilyId,
+  setFamilyName,
+  setFamilyUsers,
+} from "../../features/family/familySlice";
 import styled, { css, keyframes } from "styled-components";
 
 const HeaderBox = styled.div`
@@ -95,7 +101,6 @@ const FamilyMembersEdit = styled.div`
 `;
 
 const FamilyManage = () => {
-  // const [familyMembersList, setFamilyMemberList] = useState<any>(); // member는 object. 예시 이미지 입력
   const familyMembersList = useAppSelector((state) => state.family.users);
   const token = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
   const id = useAppSelector((state) => state.family.id);
@@ -116,8 +121,8 @@ const FamilyManage = () => {
           console.log(res.data);
           console.log(process.env.REACT_APP_BACK_HOST);
           console.log(token);
-          // setFamilyMemberList(res.data.users);
-          // setFamilyName(res.data.name);
+          dispatch(setFamilyUsers(res.data.users));
+          dispatch(setFamilyName(res.data.name));
         })
         .catch((err) => {
           console.log(err);
