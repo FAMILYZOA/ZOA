@@ -4,6 +4,9 @@ import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
 import { useAppSelector } from "../../app/hooks";
 import Tabs from "../../components/checklist/view/Tabs";
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+import { FiPlus } from "react-icons/fi";
 
 interface modalBackProps {
   toggle?: boolean;
@@ -13,6 +16,29 @@ interface modalItemProps {
   index?: any;
   toggle?: any;
 }
+
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`;
+
+const Icon = styled.div`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderLabel = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+`;
 
 const CheckListViewBody = styled.div`
   padding: 3vh 2vh;
@@ -192,9 +218,25 @@ function ReadChecklist() {
     setIsModal(true);
   };
 
+  const navigate = useNavigate();
+  const navigateToHome = () => {
+    navigate("/family/manage");
+  };
+  const navigateToCreate = () => {
+    navigate("/checklist/create");
+  };
+
   return (
     <div>
-      <Header label="할 일 목록" back="true"></Header>
+      <HeaderBox>
+        <Icon onClick={navigateToHome}>
+          <IoIosArrowBack size="24" />
+        </Icon>
+        <HeaderLabel>멤버 관리</HeaderLabel>
+        <Icon onClick={navigateToCreate}>
+          <FiPlus size="24" />
+        </Icon>
+      </HeaderBox>
       {isModal && <ModalBack onClick={() => setIsModal(false)} />}
       {isModal && (
         <ModalDiv>

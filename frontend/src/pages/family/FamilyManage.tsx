@@ -84,6 +84,11 @@ const FamilyMembersTitle = styled.div`
   font-weight: bold;
 `;
 
+const MemberBox = styled.div`
+  height: 50vh;
+  overflow-y: scroll;
+`;
+
 const FamilyMembersEdit = styled.div`
   font-size: 3vh;
   font-weight: 400;
@@ -211,9 +216,11 @@ const FamilyManage = () => {
             <HiOutlinePencilAlt />
           </FamilyMembersEdit>
         </FamilyMembersTitle>
-        {familyMembersList.map((member: any, index: any) => (
-          <FamilyMember member={member} key={index}></FamilyMember>
-        ))}
+        <MemberBox>
+          {familyMembersList.map((member: any, index: any) => (
+            <FamilyMember member={member} key={index}></FamilyMember>
+          ))}
+        </MemberBox>
       </FamilyManageBody>
     </>
   );
