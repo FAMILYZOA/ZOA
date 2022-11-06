@@ -7,6 +7,8 @@ import AddPhoto from "../../components/checklist/create/AddPhoto";
 import Button from "../../components/Button";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { useAppSelector } from "../../app/hooks";
+import plus from "../../assets/plus.png";
 
 function CreateChecklist() {
   const navigate = useNavigate();
@@ -61,7 +63,7 @@ function CreateChecklist() {
       <Header label="할 일 등록" back="true"></Header>
       <Receiver receivers={receivers}></Receiver>
       <TodoInput todos={todos}></TodoInput>
-      <AddPhoto getPhoto={getPhoto}></AddPhoto>
+      <AddPhoto getPhoto={getPhoto} ></AddPhoto>
       <Button label="등록하기" click={event} active={true}></Button>
     </div>
   );

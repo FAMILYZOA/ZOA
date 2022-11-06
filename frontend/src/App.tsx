@@ -34,6 +34,9 @@ import {
   setFamilyUsers,
 } from "./features/family/familySlice";
 import axios from "axios";
+import { Buffer } from "buffer";
+import { setChecklistPhoto } from "./features/mobile/mobileSlice";
+import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -47,7 +50,7 @@ function App() {
   const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
   });
-
+  
   const infoUpdate = () => {
     if (accessToken === "") {
       // 토큰이 없는 경우
@@ -137,19 +140,51 @@ function App() {
   }, [accessToken]);
 
   // =================================================== 모바일 연동 ==============================================
+  // React Native에서 메시지를 보내면 할 행동
   const getMessageFromDevice = (e: any) => {
     const data = JSON.parse(e.data);
-
-    if(data.photo){
-      // 사진일 경우 BackEnd에 수정 요청 보내기
-      console.log("received PHOTO!!!!")
+    // 사진일 경우 BackEnd에 수정 요청 보내기
+    if (data.photo) {
+      // 프로필사진 수정
+      if (data.from === "profile") {
+        uploadUserImage(data.photo);
+      }
+      if (data.from === "checklist") {
+        dispatch(setChecklistPhoto(data.photo));
+      }
     }
+  };
+
+  // 변경한 프로필 이미지 업로드
+  const uploadUserImage = (baseString: string) => {
+    const filename = makeid(6);
+    const image = dataURLtoFile(baseString, `${filename}.jpg`);
+
+    const data = new FormData();
+    data.append("image", image);
+
+    axios({
+      method: "PUT",
+      url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    })
+      .then((res) => {
+        console.log("Profile Image submitted");
+        dispatch(setUserImage(res.data.image));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   window.__WEBVIEW_BRIDGE__ = {
     init() {
       try {
-        document.addEventListener("message", (e) => getMessageFromDevice(e));
+        document.addEventListener("message", getMessageFromDevice);
       } catch (err) {
         console.error(err);
       }

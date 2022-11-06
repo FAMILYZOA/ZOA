@@ -85,7 +85,6 @@ const FontModal = (props: modalType) => {
   const getOS = () => {
     const browser = detect();
     if(browser){
-      console.log(browser.os);
       return browser.os;
     }
   }
@@ -121,7 +120,8 @@ const FontModal = (props: modalType) => {
   const photoInput = useRef<any>();
   const handleClick = () => {
     if((os === 'Android OS' || os === 'iOS') && window.ReactNativeWebView){
-        window.ReactNativeWebView.postMessage("imagePicker");
+        window.ReactNativeWebView.postMessage("imagePicker,profile");
+        props.toggle(false);
     }else{
       photoInput.current.click();
     }
