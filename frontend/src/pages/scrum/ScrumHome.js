@@ -2,13 +2,10 @@ import Header from "../../components/header";
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
-import ScrumItem from "../../components/scrum/ScrumItem";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import ScrumFamItem from "../../components/scrum/ScrumFamItem";
 import axios from "axios";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import ScrumFamList from "../../components/scrum/ScrumFamList";
-import { Emoji } from "emoji-picker-react";
+import { useAppSelector } from "../../app/hooks";
 
 const ScrumWrapper = styled.div`
   background-color: transparent;
@@ -39,11 +36,20 @@ const MemberProfileImg = styled.img`
 
 const ScrumHome = () => {
 
-  const [curDate, setCurDate] = useState({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    date: new Date().getDate(),
-  });
+  // 날짜 설정
+  const [date, setDate] = useState(new Date());
+  const day = date.getFullYear()+"-"+(("00"+(date.getMonth()+1).toString()).slice(-2))+"-"+(("00"+date.getDate().toString()).slice(-2));
+
+  // 전 날로 가기
+  const onHandleBeforeDate = () => {
+    setDate(new Date(date.setDate(date.getDate() - 1)));
+  };
+
+  // 다음날로 가기
+  const onHandleAfterDate = () => {
+    setDate(new Date(date.setDate(date.getDate() + 1)));
+  };
+
 
   // 받아온 값 저장
   const [scrums, setScrums] = useState([{
@@ -67,7 +73,7 @@ const ScrumHome = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: `https://k7b103.p.ssafy.io/api/v1/scrums`,
+      url: `https://k7b103.p.ssafy.io/api/v1/scrums/?search=${day}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -78,7 +84,7 @@ const ScrumHome = () => {
     .catch((err) => {
       console.log(err)
     })
-  }, [token])
+  }, [day])
 
   // 내 스크럼 저장할 state 선언
   const myScrum = useState({
@@ -119,9 +125,12 @@ const ScrumHome = () => {
     <>
       <Header label="안녕"/>
           <div style={{justifyContent: "center", display: "flex"}}>
+              <BsChevronLeft onClick={onHandleBeforeDate}/>
               <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh"}}>
-                {curDate.year}. {curDate.month}. {curDate.date}
+                {date.getFullYear()}. {date.getMonth()+1}. {date.getDate()}
               </div>
+              {}
+              <BsChevronRight onClick={onHandleAfterDate}/>
           </div>
           <div>
             <ScrumWrapper style={{display: "flex"}}>
