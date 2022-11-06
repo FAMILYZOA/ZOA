@@ -8,6 +8,12 @@ import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import { Emoji } from "emoji-picker-react";
 
+const ScrumBox = styled.div`
+  height: calc(95vh - 180px);
+  overflow-y: scroll;
+  margin: 5%;
+`;
+
 const ScrumWrapper = styled.div`
   background-color: transparent;
   margin: 12px;
@@ -15,6 +21,7 @@ const ScrumWrapper = styled.div`
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;
+  padding: 4px 0;
 `;
 
 const ProfileWrapper = styled.div`
@@ -22,14 +29,14 @@ const ProfileWrapper = styled.div`
 `;
 
 const MemberProfile = styled.div`
-  height: 7vh;
-  width: 7vh;
+  height: 32px;
+  width: 32px;
   border-radius: 3.5vh;
-  margin-right: 1.5vh;
+  margin-right: 8px;
 `;
 const MemberProfileImg = styled.img`
-  height: 7vh;
-  width: 7vh;
+  height: 32px;
+  width: 32px;
   border-radius: 3.5vh;
   object-fit: fill;
 `;
@@ -112,13 +119,23 @@ const ScrumHome = () => {
   return (
     <>
       <Header label="안녕" />
-      <div style={{ justifyContent: "center", display: "flex"}}>
-        <div style={{ color: "#ff787f", fontWeight: "bolder", fontSize: "3vh"}}>
+      <div
+        style={{
+          justifyContent: "center",
+          display: "flex",
+          alignItems: "center",
+          height: "56px",
+        }}
+      >
+        <div
+          style={{ color: "#ff787f", fontWeight: "bolder", fontSize: "3vh" }}
+        >
           {curDate.year}. {curDate.month}. {curDate.date}
         </div>
       </div>
       {/* 내 스크럼 */}
-      <div style={{display: "flex", margin: "2%"}}>
+      <ScrumBox>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <ProfileWrapper>
             <MemberProfile>
               {myScrum[0].image === "" ? (
@@ -128,49 +145,54 @@ const ScrumHome = () => {
               )}
             </MemberProfile>
           </ProfileWrapper>
-            <div style={{margin: "3%", fontWeight: "bold"}}>
-              {myScrum[0].name}
-            </div>
-            <div style={{margin: "2% 0 0 0"}}>
-              <Emoji unified={myScrum[0].emoji}/> 
-            </div>
+          <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
+            {myScrum[0].name}
+          </div>
+          <div style={{ margin: "2% 0 0 0" }}>
+            <Emoji unified={myScrum[0].emoji} size={20} />
+          </div>
         </div>
-        <div style={{margin: "0vw 10vw 2vw 13%"}}>
+        <div style={{ margin: "4px 0 4px 40px" }}>
           <ItemWrapper>
             {myScrum[0].emoji === "" ? (
               "아직 작성된 스크럼이 없어요 😢"
             ) : (
               <>
-                <div style={{ margin: "1vh" }}>🙋‍♂️ {myScrum[0].yesterday}</div>
-                <div style={{ margin: "1vh" }}>📢 {myScrum[0].today}</div>
+                <div style={{ margin: "8px", fontSize: "16px" }}>
+                  🙋‍♂️ {myScrum[0].yesterday}
+                </div>
+                <div style={{ margin: "8px", fontSize: "16px" }}>
+                  📢 {myScrum[0].today}
+                </div>
               </>
             )}
           </ItemWrapper>
         </div>
         <div>
-        {myScrum[0].emoji === "" ? (
-          <div
-            style={{
-              color: "#ff787f",
-              margin: "0px 0px 0px 20vw",
-              cursor: "pointer",
-              fontSize: "14px",
-            }}
-            onClick={() => {
-              navigate(`/hello/create/`);
-            }}
-          >
-            스크럼 작성하러 가기
-            <BsChevronRight />
-          </div>
-        ) : (
-          <></>
-        )}
-      </div>
-      {/* 여기부터 가족 */}
-      {famScrum.slice(0, -2).map((item) => (
-        <ScrumFamItem {...item} key={item.user_id} />
-      ))}
+          {myScrum[0].emoji === "" ? (
+            <div
+              style={{
+                color: "#ff787f",
+                margin: "0px 0px 0px 20vw",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+              onClick={() => {
+                navigate(`/hello/create/`);
+              }}
+            >
+              스크럼 작성하러 가기
+              <BsChevronRight />
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+        {/* 여기부터 가족 */}
+        {famScrum.slice(0, -2).map((item) => (
+          <ScrumFamItem {...item} key={item.user_id} />
+        ))}
+      </ScrumBox>
     </>
   );
 };
