@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { BrowserView, MobileView } from "react-device-detect";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 const Container = styled.div`
   margin: 5%;
@@ -14,18 +15,16 @@ const EContainer = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  @media screen and (min-width: 520px) {
-    &::-webkit-scrollbar {
-      width: auto;
-      height: 5px;
-      border-radius: 3px;
-      background-color: #ffcdbe;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #ff787f;
-      height: 3px;
-      border-radius: 3px;
-    }
+  &::-webkit-scrollbar {
+    width: auto;
+    height: 5px;
+    border-radius: 3px;
+    background-color: #ffcdbe;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ff787f;
+    height: 3px;
+    border-radius: 3px;
   }
 `;
 const MContainer = styled.div`
@@ -50,7 +49,7 @@ const UserImg = styled.img`
   height: 24px;
   border-radius: 30px;
 `;
-const Emoji = styled.div`
+const EmojiWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,9 +96,9 @@ function Emojis({ scrum }) {
             <>
               {scrum.map((item, index) => (
                 <EmojiBox key={index}>
-                  <Emoji>
-                    <EmojiText>{item.emoji}</EmojiText>
-                  </Emoji>
+                  <EmojiWrapper>
+                    <Emoji unified={item.emoji}/>
+                  </EmojiWrapper>
                   <UserImg src={item.image} alt="userimg"></UserImg>
                 </EmojiBox>
               ))}
@@ -119,7 +118,7 @@ function Emojis({ scrum }) {
               {scrum.map((item, index) => (
                 <EmojiBox key={index}>
                   <Emoji>
-                    <EmojiText>{item.emoji}</EmojiText>
+                    {/* <EmojiText>{item.emoji}</EmojiText> */}
                   </Emoji>
                   <UserImg src={item.image} alt="userimg"></UserImg>
                 </EmojiBox>
