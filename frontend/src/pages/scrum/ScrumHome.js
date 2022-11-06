@@ -125,12 +125,19 @@ const ScrumHome = () => {
     <>
       <Header label="안녕"/>
           <div style={{justifyContent: "center", display: "flex"}}>
-              <BsChevronLeft onClick={onHandleBeforeDate}/>
-              <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh"}}>
+              <BsChevronLeft onClick={onHandleBeforeDate} style={{margin: "2% 20% 2% 0"}}/>
+              <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh", margin: "1% 0 2% 0"}}>
                 {date.getFullYear()}. {date.getMonth()+1}. {date.getDate()}
               </div>
-              {}
-              <BsChevronRight onClick={onHandleAfterDate}/>
+              {date.getFullYear() === new Date().getFullYear()
+                && date.getMonth() === new Date().getMonth()
+                && date.getDate() === new Date().getDate() ? (
+                  <div style={{color: "#bebebe", margin: "2% 0 2% 20%"}}>
+                    <BsChevronRight/>
+                  </div>
+                ): (
+                  <BsChevronRight onClick={onHandleAfterDate}/>
+              )}
           </div>
           <div>
             <ScrumWrapper style={{display: "flex"}}>
