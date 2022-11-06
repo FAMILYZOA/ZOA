@@ -83,7 +83,8 @@ const ContentsContainer = styled.div`
   margin: 5%;
 `;
 
-function TodoContents({ current }) {
+function TodoContents({ currentId }) {
+  console.log(currentId);
   const access = useAppSelector((state) => state.token.access);
 
   const [list, setList] = useState([]);
@@ -105,7 +106,6 @@ function TodoContents({ current }) {
 
   useEffect(() => {
     getTodo();
-    console.log(list);
   }, [page]);
 
   const obsHandler = (entries) => {
@@ -121,7 +121,7 @@ function TodoContents({ current }) {
     setLoad(true);
     const res = await axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}?page=${page}&status=0`,
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=0`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -136,8 +136,6 @@ function TodoContents({ current }) {
       //   ))); // 리스트 추가
       setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
       preventRef.current = true;
-    } else {
-      console.log(res);
     }
     setLoad(false); //로딩 종료
   }, [page]);
@@ -160,7 +158,7 @@ function TodoContents({ current }) {
         Authorization: `Bearer ${access}`,
       },
       data: data,
-    }).then((res) => console.log(res));
+    });
   };
 
   return (
@@ -202,7 +200,7 @@ function TodoContents({ current }) {
   );
 }
 
-function CompleteContents({ current }) {
+function CompleteContents(Id) {
   const access = useAppSelector((state) => state.token.access);
 
   const [list, setList] = useState([]);
@@ -211,6 +209,7 @@ function CompleteContents({ current }) {
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
+  const [flag, setFlag] = useState(true);
 
   const [click, setClick] = useState(-1);
 
@@ -224,8 +223,7 @@ function CompleteContents({ current }) {
 
   useEffect(() => {
     getTodo();
-    console.log(list);
-  }, [page]);
+  }, [page, flag]);
 
   const obsHandler = (entries) => {
     const target = entries[0];
@@ -240,7 +238,7 @@ function CompleteContents({ current }) {
     setLoad(true);
     const res = await axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}?page=${page}&status=1`,
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${Id.currentId}?page=${page}&search=1`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -255,11 +253,9 @@ function CompleteContents({ current }) {
       //   ))); // 리스트 추가
       setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
       preventRef.current = true;
-    } else {
-      console.log(res);
     }
     setLoad(false); //로딩 종료
-  }, [page]);
+  }, [page, flag]);
 
   const clickItem = (id) => {
     if (click !== id) {
@@ -279,7 +275,8 @@ function CompleteContents({ current }) {
         Authorization: `Bearer ${access}`,
       },
       data: data,
-    }).then((res) => console.log(res));
+    });
+    setFlag(!flag);
   };
 
   return (
@@ -320,7 +317,6 @@ function CompleteContents({ current }) {
 }
 
 function Tabs({ current }) {
-  console.log("1", current);
   const access = useAppSelector((state) => state.token.access);
   const [todoTab, setTodoTab] = useState(true);
   const [completeTab, setCompleteTab] = useState(false);
@@ -377,9 +373,9 @@ function Tabs({ current }) {
       </TabBox>
       <ContentsBox>
         {todoTab === true ? (
-          <TodoContents current={current}></TodoContents>
+          <TodoContents currentId={current}></TodoContents>
         ) : (
-          <CompleteContents current={current}></CompleteContents>
+          <CompleteContents currentId={current}></CompleteContents>
         )}
       </ContentsBox>
     </Container>

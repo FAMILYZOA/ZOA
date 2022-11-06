@@ -111,8 +111,8 @@ const FamilyManage = () => {
           console.log(res.data);
           console.log(process.env.REACT_APP_BACK_HOST);
           console.log(token);
-          setFamilyMemberList(res.data.users);
-          setFamilyName(res.data.name);
+          // setFamilyMemberList(res.data.users);
+          // setFamilyName(res.data.name);
         })
         .catch((err) => {
           console.log(err);

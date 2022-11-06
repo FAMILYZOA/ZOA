@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SelectMember from "../../components/checklist/view/SelectMember";
 import Header from "../../components/header";
-import {  useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import Tabs from "../../components/checklist/view/Tabs";
-
 
 interface modalBackProps {
   toggle?: boolean;
@@ -23,7 +22,6 @@ const CheckListTitle = styled.div`
   font-size: 2.5vh;
   font-weight: bold;
 `;
-
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
@@ -80,10 +78,14 @@ const ModalItem = styled.div<modalItemProps>`
   z-index: 4;
   margin-bottom: 1vh;
   margin-left: auto;
-  animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
-  -moz-animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
-  -webkit-animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
-  -o-animation: fadein-item 0.3s ease-in ${(props) => (String(0.3 + props.index * 0.2))}s;
+  animation: fadein-item 0.3s ease-in
+    ${(props) => String(0.3 + props.index * 0.2)}s;
+  -moz-animation: fadein-item 0.3s ease-in
+    ${(props) => String(0.3 + props.index * 0.2)}s;
+  -webkit-animation: fadein-item 0.3s ease-in
+    ${(props) => String(0.3 + props.index * 0.2)}s;
+  -o-animation: fadein-item 0.3s ease-in
+    ${(props) => String(0.3 + props.index * 0.2)}s;
   animation-fill-mode: backwards;
   -webkit-animation-fill-mode: backwards;
   -o-animation-fill-mode: backwards;
@@ -137,7 +139,7 @@ const ModalItemImg = styled.img`
 `;
 
 function ReadChecklist() {
-  const userId = useAppSelector((state) => state.user.id)
+  const userId = useAppSelector((state) => state.user.id);
   const [isModal, setIsModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
@@ -155,9 +157,6 @@ function ReadChecklist() {
   >([]); // 선택되지 않은 인원
   const FamilyMembers = useAppSelector((state) => state.family.users);
 
-
-
-
   const getSelect = (id: number) => {
     let index: number = 0;
 
@@ -174,7 +173,6 @@ function ReadChecklist() {
     setIsModal(false);
   };
 
-
   useEffect(() => {
     let index: number = 0;
     // 패밀리중 유저와 일치하는 index 탐색
@@ -188,8 +186,7 @@ function ReadChecklist() {
     const tempMember = [...FamilyMembers];
     tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
-  },[userId]);
-
+  }, [userId]);
 
   const getModal = () => {
     setIsModal(true);
@@ -222,9 +219,7 @@ function ReadChecklist() {
           getModal={getModal}
         />
         <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
-        <Tabs
-          current={selectedMember.id}
-        ></Tabs>
+        <Tabs current={selectedMember.id}></Tabs>
       </CheckListViewBody>
     </div>
   );
