@@ -21,10 +21,16 @@ class FamilyNameSetSerializer(serializers.ModelSerializer) :
 
 class UserSerializer(serializers.ModelSerializer) :
     set_name = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     class Meta :
         model = User 
         fields = ('id','name','image','set_name')
 
+    def get_image(self,obj) :
+        if 'kakao' in obj.image.url :
+            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            return res
+        return obj.image.url
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
         to_user = obj
@@ -44,11 +50,16 @@ class FamilyRetriveSerializer(serializers.ModelSerializer) :
         fields =('id','name','created_at','users')
 
 class UserUnAuthorizedSerializer(serializers.ModelSerializer) :
+    image = serializers.SerializerMethodField()
     class Meta :
         model = User 
         fields = ('image',)
 
-
+    def get_image(self,obj) :
+        if 'kakao' in obj.image.url :
+            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            return res
+        return obj.image.url
 class FamilyUnAuthorizedRetriveSerializer(serializers.ModelSerializer) :
     users = UserUnAuthorizedSerializer(many=True,read_only=True)
     class Meta: 
