@@ -33,7 +33,6 @@ class ChecklistCreateAPIView(GenericAPIView):
                     'text': request.data.get('text'),
                     'from_user_id': request.user.id,
                     'to_users_id' :memberpk,
-                    'family' : request.user.family_id.id,
                 }
             else:
                 context = {
@@ -42,7 +41,6 @@ class ChecklistCreateAPIView(GenericAPIView):
                     'image': photo.image,
                     'from_user_id': request.user.id,
                     'to_users_id' : memberpk,
-                    'family' : request.user.family_id.id,
                 }
             
             if not request.user.family_id:
