@@ -32,10 +32,12 @@ props = {
 
 */
 
-const FamilyMember = (props: {member: {id: number; name: string; image: string; set_name: string}}) => {
+const FamilyMember = (props: {
+  member: { id: number; name: string; image: string; set_name: string };
+}) => {
   const NameResult = () => {
     // 커스텀 설정된 이름이 있는지 확인
-    if (props.member.set_name !== "" && props.member.set_name) {
+    if (props.member.set_name && props.member.set_name) {
       return `${props.member.set_name} (${props.member.name})`;
     } else if (!props.member.name) {
       return "";
