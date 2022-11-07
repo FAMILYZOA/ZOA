@@ -30,9 +30,12 @@ const HeaderLabel = styled.div`
 
 function Header(props) {
   const navigate = useNavigate();
+  const moveToBack = () => {
+    navigate(-1);
+  };
   return (
     <HeaderBox>
-      <IconBox onClick={navigate(-1)}>
+      <IconBox onClick={moveToBack}>
         {props.back === "true" ? <IoIosArrowBack size="24" /> : <div></div>}
       </IconBox>
       <HeaderLabel>{props.label}</HeaderLabel>
