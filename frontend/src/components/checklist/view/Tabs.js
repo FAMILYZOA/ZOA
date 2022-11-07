@@ -163,8 +163,10 @@ function TodoContents({ currentId }) {
         Authorization: `Bearer ${access}`,
       },
       data: data,
-    }).then(() => {
-      setList(tempList.splice(index, 1));
+    }).then((res) => {
+      console.log(res);
+      tempList.splice(index, 1)
+      setList(tempList);
     });;
   };
 
@@ -283,8 +285,10 @@ function CompleteContents({ currentId }) {
         Authorization: `Bearer ${access}`,
       },
       data: data,
-    }).then(() => {
-      setList(tempList.splice(index, 1));
+    }).then((res) => {
+      console.log(res);
+      tempList.splice(index, 1)
+      setList(tempList);
     });
   };
 
