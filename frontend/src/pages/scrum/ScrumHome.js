@@ -42,11 +42,21 @@ const MemberProfileImg = styled.img`
 `;
 
 const ScrumHome = () => {
-  const [curDate, setCurDate] = useState({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    date: new Date().getDate(),
-  });
+
+  // 날짜 설정
+  const [date, setDate] = useState(new Date());
+  const day = date.getFullYear()+"-"+(("00"+(date.getMonth()+1).toString()).slice(-2))+"-"+(("00"+date.getDate().toString()).slice(-2));
+
+  // 전 날로 가기
+  const onHandleBeforeDate = () => {
+    setDate(new Date(date.setDate(date.getDate() - 1)));
+  };
+
+  // 다음날로 가기
+  const onHandleAfterDate = () => {
+    setDate(new Date(date.setDate(date.getDate() + 1)));
+  };
+
 
   // 받아온 값 저장
   const [scrums, setScrums] = useState([
@@ -72,18 +82,18 @@ const ScrumHome = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: `https://k7b103.p.ssafy.io/api/v1/scrums`,
+      url: `https://k7b103.p.ssafy.io/api/v1/scrums/?search=${day}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        setScrums([...res.data]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [token]);
+    .then((res) => {
+      setScrums([...res.data])
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }, [day])
 
   // 내 스크럼 저장할 state 선언
   const myScrum = useState({
@@ -118,38 +128,21 @@ const ScrumHome = () => {
 
   return (
     <>
-      <Header label="안녕" />
-      <div
-        style={{
-          justifyContent: "center",
-          display: "flex",
-          alignItems: "center",
-          height: "56px",
-        }}
-      >
-        <div
-          style={{ color: "#ff787f", fontWeight: "bolder", fontSize: "3vh" }}
-        >
-          {curDate.year}. {curDate.month}. {curDate.date}
-        </div>
-      </div>
-      {/* 내 스크럼 */}
-      <ScrumBox>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <ProfileWrapper>
-            <MemberProfile>
-              {myScrum[0].image === "" ? (
-                <MemberProfileImg src={userImg} />
-              ) : (
-                <MemberProfileImg src={myScrum[0].image} />
+      <Header label="안녕"/>
+          <div style={{justifyContent: "center", display: "flex"}}>
+              <BsChevronLeft onClick={onHandleBeforeDate} style={{margin: "2% 20% 2% 0"}}/>
+              <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh", margin: "1% 0 2% 0"}}>
+                {date.getFullYear()}. {date.getMonth()+1}. {date.getDate()}
+              </div>
+              {date.getFullYear() === new Date().getFullYear()
+                && date.getMonth() === new Date().getMonth()
+                && date.getDate() === new Date().getDate() ? (
+                  <div style={{color: "#bebebe", margin: "2% 0 2% 20%"}}>
+                    <BsChevronRight/>
+                  </div>
+                ): (
+                  <BsChevronRight onClick={onHandleAfterDate}/>
               )}
-            </MemberProfile>
-          </ProfileWrapper>
-          <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
-            {myScrum[0].name}
-          </div>
-          <div style={{ margin: "2% 0 0 0" }}>
-            <Emoji unified={myScrum[0].emoji} size={20} />
           </div>
         </div>
         <div style={{ margin: "4px 0 4px 40px" }}>
