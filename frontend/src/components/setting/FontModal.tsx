@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setFontSize } from "../../features/setting/settingSlice";
 
 type modalType = {
-    isOpen:boolean,
-    toggle:any,
-}
+  isOpen: boolean;
+  toggle: any;
+};
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
@@ -18,7 +18,7 @@ const CloseBtnStyle = styled(GrClose)`
 const ModalContentDiv = styled.div`
   width: 85vw;
   margin: 3vh 0 0;
-`
+`;
 
 const FontDescStyle = styled.div`
   margin: 0;
@@ -55,7 +55,7 @@ const FontSlider = styled.input`
     -webkit-appearance: none;
     position: relative;
     bottom: 6px;
-    background: #ff787f,
+    background: #ff787f;
   }
 
   &::-webkit-slider-runnable-track {
@@ -144,6 +144,8 @@ const FontModal = (props: modalType) => {
       left: "4vw",
       right: "4vw",
       borderRadius: "2vh",
+      border: "none",
+      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       display: "flex",
       justifyContent: "center",
       padding: "3.5vw",
@@ -152,7 +154,7 @@ const FontModal = (props: modalType) => {
 
   useEffect(() => {
     setSliderValue(fontSize);
-  }, [fontSize])
+  }, [fontSize]);
 
   const sliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSliderValue(Number(e.currentTarget.value));

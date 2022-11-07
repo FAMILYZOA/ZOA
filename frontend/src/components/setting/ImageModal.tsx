@@ -79,7 +79,6 @@ const FontModal = (props: modalType) => {
   const [photo, setPhoto] = useState<File>();
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.token.access);
-  
 
   const modalStyle = {
     content: {
@@ -88,6 +87,8 @@ const FontModal = (props: modalType) => {
       left: "4vw",
       right: "4vw",
       borderRadius: "2vh",
+      border: "none",
+      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       display: "flex",
       justifyContent: "center",
       padding: "3.5vw",

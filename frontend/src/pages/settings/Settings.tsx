@@ -10,22 +10,28 @@ import FontModal from "../../components/setting/FontModal";
 import LogoutModal from "../../components/setting/LogoutModal";
 import ImageModal from "../../components/setting/ImageModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  setUserName,
-} from "../../features/user/userSlice";
-import { setPush } from "../../features/setting/settingSlice"
+import { setUserName } from "../../features/user/userSlice";
+import { setPush } from "../../features/setting/settingSlice";
 import axios from "axios";
+import Header from "../../components/main/Header";
 
 const ALLOW_FILE_EXTENSION = "jpg,jpeg,png";
 
 const SettingsHeader = styled.div`
   display: flex;
-  height: 8vh;
-  width: 100vw;
-  font-size: 3vh;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`;
+const SettingLabel = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
 `;
 const SettingsBody = styled.div`
   position: relative;
@@ -35,7 +41,7 @@ const ProfileImgDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2.5vh 0 5vh;
+  margin: 24px auto 40px;
 `;
 const ProfileImgCover = styled.div`
   position: relative;
@@ -43,32 +49,33 @@ const ProfileImgCover = styled.div`
 
 const ProfileEditIcon = styled.div`
   position: absolute;
-  font-size: 3vh;
+  font-size: 24px;
   border-radius: 2.25vh;
-  text-align: center;
-  line-height: 5vh;
-  bottom: 1vh;
-  right: 1vh;
-  height: 4.5vh;
-  width: 4.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 8px;
+  right: 8px;
+  height: 36px;
+  width: 36px;
   background: linear-gradient(120.28deg, #ff787f 15.03%, #fec786 87.76%);
   color: #fff;
 `;
 const ProfileImg = styled.img`
-  width: 20vh;
-  height: 20vh;
+  width: 144px;
+  height: 144px;
   border-radius: 10vh;
 `;
 const NameEmailDiv = styled.div`
-  height: 2.5vh; // 나중에 폰트 사이즈 변수화 하여 연동 할 것
+  height: 24px; // 나중에 폰트 사이즈 변수화 하여 연동 할 것
   position: relative;
-  padding-bottom: 2vh;
+  padding-bottom: 16px;
+  margin: 0 5%;
   border-bottom: 1px solid #ff787f;
+  font-size: 20px;
 `;
 const UserName = styled.div`
-  position: absolute;
-  top: 0;
-  left: 3vh;
+  margin: 0 8px;
   display: flex;
 `;
 const UserNameEdit = styled.div`
@@ -89,31 +96,40 @@ const SettingItem = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #f9d7d3;
-  height: 8vh;
+  height: 48px;
+  font-size: 16px;
 `;
 
-const SettingItemTitle = styled.div``;
+const SettingItemTitle = styled.div`
+  margin: 0 8px;
+`;
 const SettingItemContent = styled.div`
   color: #ff787f;
+  margin: 0 8px;
+`;
+const SettingItemContentPush = styled.div`
+  color: #ff787f;
+  margin: 0;
 `;
 const SettingCopyright = styled.div`
   position: absolute;
-  bottom: 9.25vh;
-  width: 100vw;
+  bottom: 68px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 16px;
 `;
 const SettingLogoutIcon = styled.div`
-  height: 4.5vh;
-  width: 4.5vh;
-  font-size: 4.5vh;
+  height: 28px;
+  width: 28px;
+  font-size: 28px;
 `;
 const NameEditInput = styled.input`
   border-left-width: 0;
-  　border-right-width: 0;
-  　border-top-width: 0;
-  　border-bottom: 1;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-bottom: 1;
   width: 30vw;
   height: 2.5vh;
   background-color: transparent;
@@ -127,29 +143,27 @@ const NameEditInput = styled.input`
 const theme = createTheme({
   palette: {
     neutral: {
-      main: '#FF787F',
-      contrastText: '#fad7d4',
+      main: "#FF787F",
+      contrastText: "#fad7d4",
     },
   },
 });
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Palette {
-    neutral: Palette['primary'];
+    neutral: Palette["primary"];
   }
 
   // allow configuration using `createTheme`
   interface PaletteOptions {
-    neutral?: PaletteOptions['primary'];
+    neutral?: PaletteOptions["primary"];
   }
 }
 
-declare module '@mui/material/Switch' {
+declare module "@mui/material/Switch" {
   interface ButtonPropsColorOverrides {
     neutral: true;
   }
 }
-
-
 
 const Settings = () => {
   const [profile, setProfile] = useState<{
@@ -215,7 +229,7 @@ const Settings = () => {
   return (
     <>
       <SettingsHeader>
-        <div>설정</div>
+        <SettingLabel>설정</SettingLabel>
       </SettingsHeader>
       <SettingsBody>
         <ProfileImgDiv>
@@ -256,16 +270,16 @@ const Settings = () => {
         <SettingMenu>
           <SettingItem>
             <SettingItemTitle>푸시알림</SettingItemTitle>
-            <SettingItemContent>
+            <SettingItemContentPush>
               <ThemeProvider theme={theme}>
-                <Switch 
+                <Switch
                   checked={isPush}
                   onChange={handleChange}
-                  inputProps={{ 'aria-label': 'controlled' }}
+                  inputProps={{ "aria-label": "controlled" }}
                   color="neutral"
                 />
               </ThemeProvider>
-            </SettingItemContent>
+            </SettingItemContentPush>
           </SettingItem>
           <SettingItem onClick={() => toggleFontModal(true)}>
             <SettingItemTitle>글자크기</SettingItemTitle>
