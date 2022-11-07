@@ -55,8 +55,3 @@ class  ChecklistDetailSerializer(serializers.ModelSerializer):
         else :
             return "본인입니다."
 
-
-class  ChecklistStateChangeSerializer(serializers.ModelSerializer):
-    class Meta: 
-        model = Checklist
-        fields= ('status',)
