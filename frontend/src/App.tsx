@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
-import { Settings } from './pages/settings';
+import { Settings } from "./pages/settings";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
@@ -42,14 +42,12 @@ function App() {
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
+  const [, updateState] = useState<{}>();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
-  const fontArray = [
-    "2vh",
-    "2.5vh",
-    "3vh",
-  ]
+  const fontArray = ["2vh", "2.5vh", "3vh"];
 
-  const [fontStyle, setFontStyle ] = useState<{fontSize: string}>({
+  const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
   });
 
@@ -103,6 +101,7 @@ function App() {
             dispatch(setUserImage(res.data.image));
             dispatch(setUserName(res.data.name));
             console.log("user fetched");
+            forceUpdate();
             if (familyId < 0 && res.data.family_id) {
               // 가족 정보가 없으면, 가족 정보 불러오기
               axios({
@@ -118,6 +117,7 @@ function App() {
                   dispatch(setFamilyCreatedAt(res.data.created_at));
                   dispatch(setFamilyUsers(res.data.users));
                   console.log("family fetched");
+                  forceUpdate();
                 })
                 .catch((err) => {
                   console.error(err);
@@ -129,17 +129,17 @@ function App() {
           });
       }
     }
-  }
+  };
 
   useEffect(() => {
     setFontStyle({
       fontSize: fontArray[fontSize],
-    })
-  }, [fontSize])
+    });
+  }, [fontSize]);
 
   useEffect(() => {
     infoUpdate();
-  }, [accessToken])
+  }, [accessToken]);
 
   return (
     <div style={fontStyle}>
@@ -156,6 +156,7 @@ function App() {
 
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
+          <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
 
           <Route path="/" element={<Main />} />

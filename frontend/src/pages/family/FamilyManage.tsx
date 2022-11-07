@@ -84,6 +84,11 @@ const FamilyMembersTitle = styled.div`
   font-weight: bold;
 `;
 
+const MemberBox = styled.div`
+  height: 50vh;
+  overflow-y: scroll;
+`;
+
 const FamilyMembersEdit = styled.div`
   font-size: 3vh;
   font-weight: 400;
@@ -97,6 +102,29 @@ const FamilyManage = () => {
   const familyName = useAppSelector((state) => state.family.name);
   const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
+
+  useEffect(() => {
+    if (token) {
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/family/${id}`,
+        headers: {
+          Authorization: token, // 토큰 값
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          console.log(process.env.REACT_APP_BACK_HOST);
+          console.log(token);
+          // setFamilyMemberList(res.data.users);
+          // setFamilyName(res.data.name);
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(process.env.REACT_APP_BACK_HOST);
+        });
+    }
+  }, [id, token]);
 
   const inviteLink: string = "(초대링크)";
   const userAgent = navigator.userAgent.toLocaleLowerCase(); // 기기 확인
@@ -188,9 +216,11 @@ const FamilyManage = () => {
             <HiOutlinePencilAlt />
           </FamilyMembersEdit>
         </FamilyMembersTitle>
-        {familyMembersList.map((member: any, index: any) => (
-          <FamilyMember member={member} key={index}></FamilyMember>
-        ))}
+        <MemberBox>
+          {familyMembersList.map((member: any, index: any) => (
+            <FamilyMember member={member} key={index}></FamilyMember>
+          ))}
+        </MemberBox>
       </FamilyManageBody>
     </>
   );

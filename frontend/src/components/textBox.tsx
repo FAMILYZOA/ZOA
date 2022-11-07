@@ -12,8 +12,8 @@ type BoxProps = {
 
 const TextBoxStyle = styled.div`
   height: 16vh;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  margin-left: 5%;
+  margin-right: 5%;
 
   background-color: #fff1e1;
 
@@ -25,19 +25,19 @@ const TextAreaEmojiStyle = styled.div`
   padding: 10px;
 `;
 const TextAreaStyle = styled.textarea`
-  width: 86vw;
+  width: 90%;
   height: 13vh;
   background-color: transparent;
-  font-size: 20px;
+  font-size: px;
   margin-left: 5px;
   border: none;
   resize: none;
 `;
 const TextAreaInnerStyle = styled.textarea`
-  width: 75vw;
+  width: 90%;
   height: 13vh;
   background-color: transparent;
-  font-size: 20px;
+  font-size: 16px;
   margin-left: 5px;
   border: none;
   resize: none;

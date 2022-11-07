@@ -1,33 +1,75 @@
 import styled from "styled-components";
 import FamilyMemberEdit from "../../components/family/FamilyMemberEdit";
-import Header from "../../components/header";
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`;
+
+const Icon = styled.div`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderLabel = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+`;
+
+const Containter = styled.div`
+  margin: 5%;
+`;
+const Info = styled.div`
+  margin: 5vh 0;
+  font-size: 2vh;
+`;
 
 const FamilyMembersTitle = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 4.5vh 0 2vh;
+  margin: 16px 0;
   font-size: 2vh;
   font-weight: bold;
   margin-left: 4%;
 `;
 
-const ListWrapper = styled.div`
-  margin-left: 4%;
-`
+const ListWrapper = styled.div``;
 
-const FamilyNameEdit = () => {
-
+function FamilyNameEdit() {
+  const navigate = useNavigate();
+  const navigateToHome = () => {
+    navigate("/family/manage");
+  };
   return (
     <>
-      <Header label="멤버관리"/>
-      <FamilyMembersTitle>
+      <HeaderBox>
+        <Icon onClick={navigateToHome}>
+          <IoIosArrowBack size="24" />
+        </Icon>
+        <HeaderLabel>멤버 관리</HeaderLabel>
+        <div></div>
+      </HeaderBox>
+      <Containter>
+        <Info> 💁🏻‍♀️ 이름을 클릭해서 가족에게 별명을 부여해보세요 !</Info>
+        <FamilyMembersTitle>
           <div>멤버</div>
         </FamilyMembersTitle>
         <ListWrapper>
-          <FamilyMemberEdit/>
+          <FamilyMemberEdit />
         </ListWrapper>
+      </Containter>
     </>
-  )
-};
+  );
+}
 
 export default FamilyNameEdit;

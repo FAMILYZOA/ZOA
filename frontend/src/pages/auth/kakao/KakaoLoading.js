@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setAccessToken, setRefreshToken } from "../../../features/token/tokenSlice";
 
 export const Background = styled.div`
   height: 100vh;
@@ -20,6 +22,7 @@ function Loading() {
   const params = new URL(document.location).searchParams;
   const kakao_code = params.get("code");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [info, setInfo] = useState({
     id: "",
     name: "",
@@ -60,6 +63,8 @@ function Loading() {
           })
             .then((result) => {
               if (result.status === 200) {
+                dispatch(setAccessToken(result.data.token.access_token));
+                dispatch(setRefreshToken(result.data.token.refresh_token));
                 localStorage.setItem("access_token", result.data.token.access);
                 localStorage.setItem(
                   "refresh_token",
