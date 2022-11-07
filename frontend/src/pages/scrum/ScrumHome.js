@@ -22,7 +22,6 @@ const ScrumWrapper = styled.div`
 const ItemWrapper = styled.div`
   background-color: #eefbef;
   padding: 4px 0;
-  width: ;
 `;
 
 const ProfileWrapper = styled.div`
