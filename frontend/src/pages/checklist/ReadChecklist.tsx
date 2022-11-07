@@ -234,7 +234,7 @@ function ReadChecklist() {
         <Icon onClick={navigateToHome}>
           <IoIosArrowBack size="24" />
         </Icon>
-        <HeaderLabel>멤버 관리</HeaderLabel>
+        <HeaderLabel>할 일 목록</HeaderLabel>
         <Icon onClick={navigateToCreate}>
           <FiPlus size="24" />
         </Icon>
