@@ -36,7 +36,7 @@ class  ChecklistSerializer(serializers.ModelSerializer):
 class ChecklistCreateSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Checklist
-        fields= ('id', 'text', 'photo', 'from_user_id', 'to_users_id' , 'family',)
+        fields= ('id', 'text', 'photo', 'from_user_id', 'to_users_id',)
 
 
 class  ChecklistDetailSerializer(serializers.ModelSerializer):
