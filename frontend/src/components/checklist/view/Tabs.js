@@ -131,10 +131,13 @@ function TodoContents({ currentId }) {
           //마지막 페이지
           endRef.current = true;
         }
+
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
+        console.log(res.data);
+        setList(list.concat(res.data.results)); // 리스트 추가
+        console.log("list", list);
         preventRef.current = true;
       }
       setLoad(false); //로딩 종료
@@ -178,7 +181,7 @@ function TodoContents({ currentId }) {
               </NoToggle>
               <Toggle id={li.id} current={click}>
                 <div>
-                  <p>From. {li.to_users_id}</p>
+                  <p>From. {li.to_users_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
@@ -201,11 +204,8 @@ function TodoContents({ currentId }) {
   );
 }
 
-function CompleteContents({currentId}) {
+function CompleteContents({ currentId }) {
   const access = useAppSelector((state) => state.token.access);
-  // var currentId = JSON.stringify(currentId);
-  console.log(currentId.currentId);
-  console.log(typeof currentId.currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
@@ -235,11 +235,9 @@ function CompleteContents({currentId}) {
       setPage((prev) => prev + 1);
     }
   };
-  console.log(currentId.currentId);
-  console.log(currentId.currentId);
   const getTodo = useCallback(async () => {
     //글 불러오기
-    if (currentId >= 0  && page !== 0) {
+    if (currentId >= 0 && page !== 0) {
       setLoad(true);
       const res = await axios({
         method: "GET",
@@ -282,7 +280,6 @@ function CompleteContents({currentId}) {
       },
       data: data,
     });
-    setFlag(!flag);
   };
 
   return (
@@ -299,7 +296,7 @@ function CompleteContents({currentId}) {
               </NoToggle>
               <Toggle id={li.id} current={click}>
                 <div>
-                  <p>From. {li.to_users_id}</p>
+                  <p>From. {li.to_users_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
