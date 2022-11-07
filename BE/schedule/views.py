@@ -46,7 +46,7 @@ class SearchScheduleAPIView(GenericAPIView):
         ).order_by('start_date')
         serializer = ScheduleSerializer(schedule, many=True)
         if serializer.data:
-            return Response(serializer.data, status=status.HTTP_302_FOUND)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("스케줄이 없습니다.", status=status.HTTP_404_NOT_FOUND)
 
@@ -63,7 +63,7 @@ class CreateSearchScheduleAPIView(GenericAPIView):
         )
         serializer = ScheduleSerializer(schedule, many=True)
         if serializer.data:
-            return Response(serializer.data, status=status.HTTP_302_FOUND)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("스케줄이 없습니다.", status=status.HTTP_404_NOT_FOUND)
 
