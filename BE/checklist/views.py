@@ -20,8 +20,19 @@ class ChecklistCreateAPIView(GenericAPIView):
     parser_classes = (MultiPartParser,)
     @swagger_auto_schema(operation_summary="POSTMAN 써주세요.", request_body=ChecklistCreateSerializer)
     def post(self, request):
-        result = []
+        if not request.user.family_id:
+                return Response("당신은 가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
+        giver = request.user.family_id.id
         member = request.data.getlist('to_users_id')
+        for id in member:
+            man = User.objects.get(id=id)
+            family_num = man.family_id.id
+            if giver != family_num:
+                context = {
+                    f'{id}번 {man}님은 당신이 속한 가족의 멤버가 아닙니다.'
+                }
+                return Response(context, status=status.HTTP_400_BAD_REQUEST)
+        result = []
         photo = request.FILES.getlist('photo')
         if request.data.get('photo') != None:
             image = request.FILES['photo']
@@ -42,18 +53,6 @@ class ChecklistCreateAPIView(GenericAPIView):
                     'from_user_id': request.user.id,
                     'to_users_id' : memberpk,
                 }
-            
-            if not request.user.family_id:
-                return Response("당신은 가족에 가입되어 있지 않습니다", status=status.HTTP_403_FORBIDDEN)
-            giver = request.user.family_id.id
-            for id in member:
-                man = User.objects.get(id=id)
-                family_num = man.family_id.id
-                if giver != family_num:
-                    context = {
-                        f'{man}님은 당신이 속한 가족의 멤버가 아닙니다.'
-                    }
-                    return Response(context, status=status.HTTP_400_BAD_REQUEST)
             result.append(context)
         serializer = ChecklistCreateSerializer(data=result, many=True)
         if serializer.is_valid(raise_exception=True):
@@ -92,7 +91,10 @@ class ChecklistTodayAPIView(GenericAPIView):
     def get(self, request, to_users_id):
         today = datetime.today()
         year, month, day = today.year, today.month, today.day
-        checklist = Checklist.objects.filter(Q(to_users_id__exact=to_users_id) & Q(created_at__year=year, created_at__month=month, created_at__day=day))
+        checklist = Checklist.objects.filter(
+            Q(to_users_id__exact=to_users_id) & 
+            Q(created_at__year=year, created_at__month=month, created_at__day=day)
+        )
         serializer = self.serializer_class(checklist, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 

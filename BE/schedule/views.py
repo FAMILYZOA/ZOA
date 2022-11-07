@@ -19,7 +19,7 @@ class SearchSDdayAPIView(GenericAPIView):
     serializer_class = DdaySerializer
     def get (self, request, date):
         result = []
-        schedules = Schedule.objects.filter(Q(start_date__gte=date)).order_by('start_date')[:3]
+        schedules = Schedule.objects.filter(Q(start_date__gte=date) & Q(important_mark='True')).order_by('start_date')[:3]
         for schedule in schedules:
             Dday = schedule.start_date - date
             context = {
@@ -91,7 +91,6 @@ class CreateSearchScheduleAPIView(GenericAPIView):
                     'writer': request.user.id,
                     'family': user.family_id.id,
                 }
-
             serializer = self.serializer_class(data=context)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
