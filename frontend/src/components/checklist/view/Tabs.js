@@ -203,7 +203,9 @@ function TodoContents({ currentId }) {
 
 function CompleteContents({currentId}) {
   const access = useAppSelector((state) => state.token.access);
-
+  // var currentId = JSON.stringify(currentId);
+  console.log(currentId.currentId);
+  console.log(typeof currentId.currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
@@ -233,7 +235,8 @@ function CompleteContents({currentId}) {
       setPage((prev) => prev + 1);
     }
   };
-
+  console.log(currentId.currentId);
+  console.log(currentId.currentId);
   const getTodo = useCallback(async () => {
     //글 불러오기
     if (currentId >= 0  && page !== 0) {
