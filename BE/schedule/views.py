@@ -45,8 +45,7 @@ class SearchScheduleAPIView(GenericAPIView):
             Q(family_id=request.user.family_id)
         ).order_by('start_date')
         serializer = ScheduleSerializer(schedule, many=True)
-        if serializer.data:
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CreateSearchScheduleAPIView(GenericAPIView):
