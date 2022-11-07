@@ -152,7 +152,8 @@ function TodoContents({ currentId }) {
     }
   };
 
-  const check = (contentsId) => {
+  const check = (contentsId, index) => {
+    const tempList = [...list];
     const data = new FormData();
     data.append("status", 1);
     axios({
@@ -162,7 +163,9 @@ function TodoContents({ currentId }) {
         Authorization: `Bearer ${access}`,
       },
       data: data,
-    });
+    }).then(() => {
+      setList(tempList.splice(index, 1));
+    });;
   };
 
   return (
@@ -175,7 +178,7 @@ function TodoContents({ currentId }) {
                 <BiCheckbox
                   size={32}
                   color="#FF787F"
-                  onClick={() => check(li.id)}
+                  onClick={() => check(li.id, index)}
                 />
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
               </NoToggle>
@@ -269,8 +272,9 @@ function CompleteContents({ currentId }) {
     }
   };
 
-  const check = (contentsId) => {
+  const check = (contentsId, index) => {
     const data = new FormData();
+    const tempList = [...list];
     data.append("status", 0);
     axios({
       method: "PUT",
@@ -279,6 +283,8 @@ function CompleteContents({ currentId }) {
         Authorization: `Bearer ${access}`,
       },
       data: data,
+    }).then(() => {
+      setList(tempList.splice(index, 1));
     });
   };
 
@@ -289,7 +295,7 @@ function CompleteContents({ currentId }) {
           {list.map((li, index) => (
             <div key={index}>
               <NoToggle>
-                <IconBox onClick={() => check(li.id)}>
+                <IconBox onClick={() => check(li.id, index)}>
                   <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
                 </IconBox>
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
