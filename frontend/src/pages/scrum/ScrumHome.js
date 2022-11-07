@@ -25,7 +25,7 @@ const ItemWrapper = styled.div`
 `;
 
 const ProfileWrapper = styled.div`
-  color: red;
+  color: black;
 `;
 
 const MemberProfile = styled.div`
@@ -129,6 +129,7 @@ const ScrumHome = () => {
   return (
     <>
       <Header label="안녕"/>
+        <ScrumBox>
           <div style={{justifyContent: "center", display: "flex"}}>
               <BsChevronLeft onClick={onHandleBeforeDate} style={{margin: "2% 20% 2% 0"}}/>
               <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh", margin: "1% 0 2% 0"}}>
@@ -144,22 +145,42 @@ const ScrumHome = () => {
                   <BsChevronRight onClick={onHandleAfterDate}/>
               )}
           </div>
-        </div>
-        <div style={{ margin: "4px 0 4px 40px" }}>
-          <ItemWrapper>
-            {myScrum[0].emoji === "" ? (
-              "아직 작성된 스크럼이 없어요 😢"
-            ) : (
-              <>
-                <div style={{ margin: "8px", fontSize: "16px" }}>
-                  🙋‍♂️ {myScrum[0].yesterday}
+        <div style={{ margin: "4px 0 4px 40px", display: "flex", alignItems: "center" }}>
+          <ScrumWrapper>
+            {/* 프로필 이미지, 이름, 이모지 */}
+              <ProfileWrapper>
+                <MemberProfile>
+                  {myScrum[0].image === "" ? (
+                    <MemberProfileImg src={userImg}/>
+                  ) : (
+                    <MemberProfileImg src={myScrum[0].image}/>
+                  )}
+                <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
+                  {myScrum[0].name}
                 </div>
-                <div style={{ margin: "8px", fontSize: "16px" }}>
-                  📢 {myScrum[0].today}
+                <div style={{ margin: "2% 0 0 0" }}>
+                  <Emoji unified={myScrum[0].emoji} size={20} />
                 </div>
-              </>
-            )}
-          </ItemWrapper>
+                </MemberProfile>
+              </ProfileWrapper>
+              
+            <div style={{ margin: "4px 0 4px 40px" }}>
+            <ItemWrapper>
+              {myScrum[0].emoji === "" ? (
+                "아직 작성된 스크럼이 없어요 😢"
+              ) : (
+                <>
+                  <div style={{ margin: "8px", fontSize: "16px" }}>
+                    🙋‍♂️ {myScrum[0].yesterday}
+                  </div>
+                  <div style={{ margin: "8px", fontSize: "16px" }}>
+                    📢 {myScrum[0].today}
+                  </div>
+                </>
+              )}
+            </ItemWrapper>
+            </div>
+          </ScrumWrapper>
         </div>
         <div>
           {myScrum[0].emoji === "" ? (
