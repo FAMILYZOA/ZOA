@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
+import { setFamilyUsers } from "../../features/family/familySlice"
 
 const MemberInfo = styled.div`
   display: flex;
@@ -51,6 +52,7 @@ const NameEditButton = styled.button`
 `;
 
 const FamilyMemberList = ({ id, name, image, set_name }) => {
+  const dispatch = useAppDispatch();
   const NameResult = () => {
     // 커스텀 설정된 이름이 있는지 확인
     if (set_name !== false) {
@@ -59,7 +61,7 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
       return name;
     }
   };
-
+  const familyId = useAppSelector((state) => state.family.id)
   const token = useAppSelector((state) => state.token.access);
   const navigate = useNavigate();
   useEffect(() => {
@@ -81,7 +83,20 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
       },
     })
       .then((res) => {
-        console.log(res.data);
+        axios({
+          method: "get",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => {
+            dispatch(setFamilyUsers(res.data.users));
+            console.log("family fetched");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -101,7 +116,20 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
       },
     })
       .then((res) => {
-        console.log(res);
+        axios({
+          method: "get",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => {
+            dispatch(setFamilyUsers(res.data.users));
+            console.log("family fetched");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       })
       .catch((err) => {
         console.log(err);
