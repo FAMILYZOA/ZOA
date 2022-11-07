@@ -83,7 +83,7 @@ const ContentsContainer = styled.div`
   margin: 5%;
 `;
 
-function TodoContents({ currentId }) {
+function TodoContents(currentId) {
   console.log(currentId);
   const access = useAppSelector((state) => state.token.access);
 
@@ -200,9 +200,11 @@ function TodoContents({ currentId }) {
   );
 }
 
-function CompleteContents(Id) {
+function CompleteContents(currentId) {
   const access = useAppSelector((state) => state.token.access);
-
+  // var currentId = JSON.stringify(currentId);
+  console.log(currentId.currentId);
+  console.log(typeof currentId.currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
@@ -232,13 +234,14 @@ function CompleteContents(Id) {
       setPage((prev) => prev + 1);
     }
   };
-
+  console.log(currentId.currentId);
+  console.log(currentId.currentId);
   const getTodo = useCallback(async () => {
     //글 불러오기
     setLoad(true);
     const res = await axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${Id.currentId}?page=${page}&search=1`,
+      url: `https://k7b103.p.ssafy.io/api/v1/checklist/16?page=1&search=1`,
       headers: {
         Authorization: `Bearer ${access}`,
       },

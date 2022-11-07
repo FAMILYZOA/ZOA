@@ -15,13 +15,14 @@ const ScrumBox = styled.div`
 `;
 
 const ScrumWrapper = styled.div`
-  background-color: transparent;
-  margin: 12px;
+  // background-color: transparent;
+  // margin: 12px;
 `;
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;
   padding: 4px 0;
+  width: ;
 `;
 
 const ProfileWrapper = styled.div`
@@ -42,10 +43,14 @@ const MemberProfileImg = styled.img`
 `;
 
 const ScrumHome = () => {
-
   // 날짜 설정
   const [date, setDate] = useState(new Date());
-  const day = date.getFullYear()+"-"+(("00"+(date.getMonth()+1).toString()).slice(-2))+"-"+(("00"+date.getDate().toString()).slice(-2));
+  const day =
+    date.getFullYear() +
+    "-" +
+    ("00" + (date.getMonth() + 1).toString()).slice(-2) +
+    "-" +
+    ("00" + date.getDate().toString()).slice(-2);
 
   // 전 날로 가기
   const onHandleBeforeDate = () => {
@@ -56,7 +61,6 @@ const ScrumHome = () => {
   const onHandleAfterDate = () => {
     setDate(new Date(date.setDate(date.getDate() + 1)));
   };
-
 
   // 받아온 값 저장
   const [scrums, setScrums] = useState([
@@ -87,13 +91,13 @@ const ScrumHome = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-    .then((res) => {
-      setScrums([...res.data])
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }, [day])
+      .then((res) => {
+        setScrums([...res.data]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [day]);
 
   // 내 스크럼 저장할 state 선언
   const myScrum = useState({
@@ -128,60 +132,70 @@ const ScrumHome = () => {
 
   return (
     <>
-      <Header label="안녕"/>
-        <ScrumBox>
-          <div style={{justifyContent: "center", display: "flex"}}>
-              <BsChevronLeft onClick={onHandleBeforeDate} style={{margin: "2% 20% 2% 0"}}/>
-              <div style={{color: "#ff787f", fontWeight: "bolder", fontSize: "3vh", margin: "1% 0 2% 0"}}>
-                {date.getFullYear()}. {date.getMonth()+1}. {date.getDate()}
-              </div>
-              {date.getFullYear() === new Date().getFullYear()
-                && date.getMonth() === new Date().getMonth()
-                && date.getDate() === new Date().getDate() ? (
-                  <div style={{color: "#bebebe", margin: "2% 0 2% 20%"}}>
-                    <BsChevronRight/>
-                  </div>
-                ): (
-                  <BsChevronRight onClick={onHandleAfterDate}/>
-              )}
+      <Header label="안녕" />
+      <ScrumBox>
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <BsChevronLeft
+            onClick={onHandleBeforeDate}
+            style={{ margin: "2% 20% 2% 0" }}
+          />
+          <div
+            style={{
+              color: "#ff787f",
+              fontWeight: "bolder",
+              fontSize: "3vh",
+              margin: "1% 0 2% 0",
+            }}
+          >
+            {date.getFullYear()}. {date.getMonth() + 1}. {date.getDate()}
           </div>
-        <div style={{ margin: "4px 0 4px 40px", display: "flex", alignItems: "center" }}>
-          <ScrumWrapper>
-            {/* 프로필 이미지, 이름, 이모지 */}
-              <ProfileWrapper>
-                <MemberProfile>
-                  {myScrum[0].image === "" ? (
-                    <MemberProfileImg src={userImg}/>
-                  ) : (
-                    <MemberProfileImg src={myScrum[0].image}/>
-                  )}
-                <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
-                  {myScrum[0].name}
-                </div>
-                <div style={{ margin: "2% 0 0 0" }}>
-                  <Emoji unified={myScrum[0].emoji} size={20} />
-                </div>
-                </MemberProfile>
-              </ProfileWrapper>
-              
-            <div style={{ margin: "4px 0 4px 40px" }}>
-            <ItemWrapper>
-              {myScrum[0].emoji === "" ? (
-                "아직 작성된 스크럼이 없어요 😢"
-              ) : (
-                <>
-                  <div style={{ margin: "8px", fontSize: "16px" }}>
-                    🙋‍♂️ {myScrum[0].yesterday}
-                  </div>
-                  <div style={{ margin: "8px", fontSize: "16px" }}>
-                    📢 {myScrum[0].today}
-                  </div>
-                </>
-              )}
-            </ItemWrapper>
+          {date.getFullYear() === new Date().getFullYear() &&
+          date.getMonth() === new Date().getMonth() &&
+          date.getDate() === new Date().getDate() ? (
+            <div style={{ color: "#bebebe", margin: "2% 0 2% 20%" }}>
+              <BsChevronRight />
             </div>
-          </ScrumWrapper>
+          ) : (
+            <BsChevronRight onClick={onHandleAfterDate} />
+          )}
         </div>
+
+        {/* 프로필 이미지, 이름, 이모지 */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <ProfileWrapper>
+            <MemberProfile>
+              {myScrum[0].image === "" ? (
+                <MemberProfileImg src={userImg} />
+              ) : (
+                <MemberProfileImg src={myScrum[0].image} />
+              )}
+            </MemberProfile>
+          </ProfileWrapper>
+          <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
+            {myScrum[0].name}
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Emoji unified={myScrum[0].emoji} size={20} />
+          </div>
+        </div>
+
+        <div style={{ margin: "4px 0 4px 40px" }}>
+          <ItemWrapper>
+            {myScrum[0].emoji === "" ? (
+              "아직 작성된 스크럼이 없어요 😢"
+            ) : (
+              <>
+                <div style={{ margin: "8px", fontSize: "16px" }}>
+                  🙋‍♂️ {myScrum[0].yesterday}
+                </div>
+                <div style={{ margin: "8px", fontSize: "16px" }}>
+                  📢 {myScrum[0].today}
+                </div>
+              </>
+            )}
+          </ItemWrapper>
+        </div>
+
         <div>
           {myScrum[0].emoji === "" ? (
             <div
@@ -203,8 +217,8 @@ const ScrumHome = () => {
           )}
         </div>
         {/* 여기부터 가족 */}
-        {famScrum.slice(0, -2).map((item) => (
-          <ScrumFamItem {...item} key={item.user_id} />
+        {famScrum.slice(0, -2).map((item, index) => (
+          <ScrumFamItem {...item} key={index} />
         ))}
       </ScrumBox>
     </>

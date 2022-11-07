@@ -39,14 +39,14 @@ const ScrumFamItem = ({ id, emoji, name, yesterday, today, image }) => {
         <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
           {name}
         </div>
-        <div style={{ margin: "2% 0 0 0" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Emoji unified={emoji} size={20} />
         </div>
         <div
           style={{
             color: "#ff787f",
             cursor: "pointer",
-            margin: "3vh 0 0 40vw",
+            margin: "4px 0 0 40px",
           }}
         >
           {/* <BsChevronRight
