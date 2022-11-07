@@ -4,34 +4,31 @@ import axios from "axios";
 import { useAppSelector } from "../../../app/hooks";
 
 const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 9fr;
-  justify-content: center;
+  display: flex;
+  width: 100%;
   align-items: center;
   margin-bottom: 4px;
-`
+`;
 
 const IconBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
-
+`;
 
 const TextBox = styled.p`
-  text-decoration: ${props => (props.active === true ? "line-through #808080" : null )};
-  color: ${props => (props.active === true? "#808080" : "black")};
+  text-decoration: ${(props) =>
+    props.active === true ? "line-through #808080" : null};
+  color: ${(props) => (props.active === true ? "#808080" : "black")};
   margin: auto 8px;
   font-size: 18px;
-`
-
+`;
 
 const CheckListItem = (item) => {
-
   // 체크 했을 때 스타일 설정
   let itemTextColor = "#000000";
   let textDecorationLine = "";
-  
+
   if (item.status === true) {
     itemTextColor = "#808080";
     textDecorationLine = "line-through";
@@ -45,21 +42,25 @@ const CheckListItem = (item) => {
       method: "put",
       url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${item.id}`,
       data: {
-        status: !item.status
+        status: !item.status,
       },
       headers: {
         Authorization: `Bearer ${token}`,
-      }
+      },
     })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => console.log(err))
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <Container>
-      <IconBox onClick={() => {onPutCheckList(item.id);}}>
+      <IconBox
+        onClick={() => {
+          onPutCheckList(item.id);
+        }}
+      >
         {item.status === true ? (
           <FaCheckSquare size={16} color={"#FAD7D4"} />
         ) : (
@@ -67,7 +68,11 @@ const CheckListItem = (item) => {
         )}
       </IconBox>
       {/* <TextBox active={item.active}>{item.text}</TextBox> */}
-      <TextBox style={{color: itemTextColor, textDecorationLine: textDecorationLine}}>{item.text}</TextBox>
+      <TextBox
+        style={{ color: itemTextColor, textDecorationLine: textDecorationLine }}
+      >
+        {item.text}
+      </TextBox>
     </Container>
   );
 };
