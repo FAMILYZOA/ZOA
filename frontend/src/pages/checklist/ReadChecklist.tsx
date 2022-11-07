@@ -166,6 +166,8 @@ const ModalItemImg = styled.img`
 
 function ReadChecklist() {
   const userId = useAppSelector((state) => state.user.id);
+  const userName = useAppSelector((state) => state.user.name);
+  const userImage = useAppSelector((state) => state.user.image);
   const [isModal, setIsModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
@@ -173,9 +175,9 @@ function ReadChecklist() {
     image: string;
     set_name: string;
   }>({
-    id: -1,
-    name: "",
-    image: "",
+    id: userId,
+    name: userName,
+    image: userImage,
     set_name: "",
   }); // 선택된 인원
   const [unSelectedMember, setUnSelectedMember] = useState<
@@ -212,7 +214,7 @@ function ReadChecklist() {
     const tempMember = [...FamilyMembers];
     tempMember.splice(index, 1);
     setUnSelectedMember(tempMember);
-  }, [userId]);
+  }, [FamilyMembers]);
 
   const getModal = () => {
     setIsModal(true);

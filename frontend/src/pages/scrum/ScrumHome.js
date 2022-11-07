@@ -144,7 +144,7 @@ const ScrumHome = () => {
                   <BsChevronRight onClick={onHandleAfterDate}/>
               )}
           </div>
-        </div>
+        
         <div style={{ margin: "4px 0 4px 40px" }}>
           <ItemWrapper>
             {myScrum[0].emoji === "" ? (
@@ -185,7 +185,6 @@ const ScrumHome = () => {
         {famScrum.slice(0, -2).map((item) => (
           <ScrumFamItem {...item} key={item.user_id} />
         ))}
-      </ScrumBox>
     </>
   );
 };

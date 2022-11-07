@@ -84,7 +84,6 @@ const ContentsContainer = styled.div`
 `;
 
 function TodoContents({ currentId }) {
-  console.log(currentId);
   const access = useAppSelector((state) => state.token.access);
 
   const [list, setList] = useState([]);
@@ -106,7 +105,7 @@ function TodoContents({ currentId }) {
 
   useEffect(() => {
     getTodo();
-  }, [page]);
+  }, [page, currentId]);
 
   const obsHandler = (entries) => {
     const target = entries[0];
@@ -117,28 +116,30 @@ function TodoContents({ currentId }) {
   };
 
   const getTodo = useCallback(async () => {
-    //글 불러오기
-    setLoad(true);
-    const res = await axios({
-      method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=0`,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
-    if (res.data) {
-      if (res.data.next === null) {
-        //마지막 페이지
-        endRef.current = true;
+    if (currentId >= 0 && page !== 0) {
+      //글 불러오기
+      setLoad(true);
+      const res = await axios({
+        method: "GET",
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=0`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+      if (res.data) {
+        if (res.data.next === null) {
+          //마지막 페이지
+          endRef.current = true;
+        }
+        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+        //     item ? {...item, active:false} : list
+        //   ))); // 리스트 추가
+        setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
+        preventRef.current = true;
       }
-      //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-      //     item ? {...item, active:false} : list
-      //   ))); // 리스트 추가
-      setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
-      preventRef.current = true;
+      setLoad(false); //로딩 종료
     }
-    setLoad(false); //로딩 종료
-  }, [page]);
+  }, [page, currentId]);
 
   const clickItem = (id) => {
     if (click !== id) {
@@ -200,7 +201,7 @@ function TodoContents({ currentId }) {
   );
 }
 
-function CompleteContents(Id) {
+function CompleteContents({currentId}) {
   const access = useAppSelector((state) => state.token.access);
 
   const [list, setList] = useState([]);
@@ -223,7 +224,7 @@ function CompleteContents(Id) {
 
   useEffect(() => {
     getTodo();
-  }, [page, flag]);
+  }, [page, flag, currentId]);
 
   const obsHandler = (entries) => {
     const target = entries[0];
@@ -235,26 +236,28 @@ function CompleteContents(Id) {
 
   const getTodo = useCallback(async () => {
     //글 불러오기
-    setLoad(true);
-    const res = await axios({
-      method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/${Id.currentId}?page=${page}&search=1`,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
-    if (res.data) {
-      if (res.data.next === null) {
-        //마지막 페이지
-        endRef.current = true;
+    if (currentId >= 0  && page !== 0) {
+      setLoad(true);
+      const res = await axios({
+        method: "GET",
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=1`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+      if (res.data) {
+        if (res.data.next === null) {
+          //마지막 페이지
+          endRef.current = true;
+        }
+        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+        //     item ? {...item, active:false} : list
+        //   ))); // 리스트 추가
+        setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
+        preventRef.current = true;
       }
-      //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-      //     item ? {...item, active:false} : list
-      //   ))); // 리스트 추가
-      setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
-      preventRef.current = true;
+      setLoad(false); //로딩 종료
     }
-    setLoad(false); //로딩 종료
   }, [page, flag]);
 
   const clickItem = (id) => {
