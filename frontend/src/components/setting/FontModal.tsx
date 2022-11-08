@@ -27,7 +27,6 @@ const FontDescStyle = styled.div`
   font-family: "Pretendard Variable";
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
   line-height: 36px;
   /* identical to box height, or 180% */
 
@@ -71,7 +70,6 @@ const PreviewDescStyle = styled.div`
   font-family: "Pretendard Variable";
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
   line-height: 36px;
   /* identical to box height, or 180% */
 
@@ -91,7 +89,6 @@ const PreviewStyle = styled.div`
   font-family: "Pretendard Variable";
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
   /* identical to box height, or 180% */
   height: 8vh;
   letter-spacing: 1.25px;

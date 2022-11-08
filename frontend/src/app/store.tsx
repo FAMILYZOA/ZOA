@@ -3,6 +3,7 @@ import tokenReducer from "../features/token/tokenSlice";
 import userReducer from "../features/user/userSlice";
 import familyReducer from "../features/family/familySlice";
 import settingReducer from "../features/setting/settingSlice";
+import mobileReducer from "../features/mobile/mobileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: userReducer,
     family: familyReducer,
     setting: settingReducer,
+    mobile: mobileReducer,
   },
 });
 

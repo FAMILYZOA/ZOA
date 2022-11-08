@@ -208,10 +208,10 @@ const ScrumHome = () => {
                 "아직 작성된 스크럼이 없어요 😢"
               ) : (
                 <>
-                  <div style={{ margin: "8px", fontSize: "16px" }}>
+                  <div style={{ margin: "8px" }}>
                     🙋‍♂️ {myScrum[0].yesterday}
                   </div>
-                  <div style={{ margin: "8px", fontSize: "16px" }}>
+                  <div style={{ margin: "8px" }}>
                     📢 {myScrum[0].today}
                   </div>
                 </>

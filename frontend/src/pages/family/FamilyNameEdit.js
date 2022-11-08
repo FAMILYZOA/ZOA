@@ -20,7 +20,7 @@ const Icon = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
@@ -31,14 +31,12 @@ const Containter = styled.div`
 `;
 const Info = styled.div`
   margin: 5vh 0;
-  font-size: 2vh;
 `;
 
 const FamilyMembersTitle = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 16px 0;
-  font-size: 2vh;
   font-weight: bold;
   margin-left: 4%;
 `;

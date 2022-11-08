@@ -57,7 +57,7 @@ const EmojiWrapper = styled.div`
   width: 64px;
   border-radius: 100px;
   border: 3px solid transparent;
-  font-size: 40px;
+  font-size: 2rem;
   background-image: linear-gradient(#fff, #fff),
     linear-gradient(45deg, #ff787f, #fec786);
   background-origin: border-box;
@@ -75,7 +75,6 @@ const Contents = styled.div`
   align-items: center;
 `;
 const Text = styled.div`
-  font-size: 16px;
   margin: auto 4px;
   width: 100%;
   overflow: hidden;
