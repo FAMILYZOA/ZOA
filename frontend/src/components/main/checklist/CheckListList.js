@@ -21,6 +21,13 @@ const ListBox = styled.div`
   margin: 18px 8px;
   width: 100%;
 `;
+
+const ListScrollBox = styled.div`
+  overflow-y: scroll;
+  height: auto;
+  max-height: calc(100vh - 510px);
+  width: 100%;
+`;
 const ViewMoreBox = styled.div`
   display: flex;
   align-items: center;
@@ -36,7 +43,7 @@ const IconBox = styled.div`
 const Text = styled.p`
   color: #ff787f;
   margin: auto 8px;
-  font-size: 18px;
+  font-size: 0.9em;
 `;
 
 const NoList = styled.div`
@@ -47,7 +54,6 @@ const NoList = styled.div`
 `;
 
 const NoListText = styled.p`
-  font-size: 18px;
   margin: 4px 8px;
   text-align: center;
 `;
@@ -97,13 +103,7 @@ const CheckListList = () => {
     <CheckListWrapper>
       <UserImg src={userImg} />
       <ListBox>
-        <div
-          style={{
-            overflowY: "scroll",
-            height: "calc(100vh - 510px)",
-            width: "100%",
-          }}
-        >
+        <ListScrollBox>
           {list.length !== 0 ? (
             <div>
               {list.map((item, idx) => (
@@ -118,7 +118,7 @@ const CheckListList = () => {
               </NoListText>
             </NoList>
           )}
-        </div>
+        </ListScrollBox>
         <ViewMoreBox>
           <IconBox onClick={viewMore}>
             <FaPlusSquare size={16} color={" #ff787f"} />

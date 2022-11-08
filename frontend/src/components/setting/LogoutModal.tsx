@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
@@ -12,7 +13,7 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 2.5vh;
+  right: 5.5vmin;
 `;
 
 const LogoutStyle = styled.div`
@@ -27,7 +28,6 @@ const LogouTitleStyle = styled.div`
   font-family: "Pretendard Variable";
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
   line-height: 36px;
   /* identical to box height, or 180% */
 
@@ -42,10 +42,9 @@ const LogoutDescStyle = styled.div`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 20px;
   line-height: 36px;
 
-  height: 9.5vh;
+  height: 21vmin;
   /* or 180% */
 
   display: flex;
@@ -63,12 +62,11 @@ const LogoutBtnStyle = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 5.5vh;
+  height: 12vmin;
 
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
   line-height: 100%;
   /* or 20px */
 
@@ -77,11 +75,12 @@ const LogoutBtnStyle = styled.div`
   color: #ffffff;
 
   background: #ff787f;
-  border-radius: 10px;
+  border-radius: 3vmin;
 `;
 
 const LogoutModal = (props: modalType) => {
   const [isModal, toggleModal] = useState<boolean>(true);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const modalStyle = {
@@ -105,6 +104,7 @@ const LogoutModal = (props: modalType) => {
   const comfirmModal = () => {
     dispatch(setAccessToken("")); // 로그아웃 하기
     props.toggle(false);
+    navigate("/intro", { replace: true });
   };
 
   return (

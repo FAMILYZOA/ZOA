@@ -26,9 +26,9 @@ const SettingsHeader = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: 1;
 `;
 const SettingLabel = styled.div`
-  font-size: 20px;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
@@ -49,8 +49,8 @@ const ProfileImgCover = styled.div`
 
 const ProfileEditIcon = styled.div`
   position: absolute;
-  font-size: 24px;
-  border-radius: 2.25vh;
+  font-size: 1.2em;
+  border-radius: 5vmin;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +64,7 @@ const ProfileEditIcon = styled.div`
 const ProfileImg = styled.img`
   width: 144px;
   height: 144px;
-  border-radius: 10vh;
+  border-radius: 72px;
 `;
 const NameEmailDiv = styled.div`
   height: 24px; // 나중에 폰트 사이즈 변수화 하여 연동 할 것
@@ -72,24 +72,23 @@ const NameEmailDiv = styled.div`
   padding-bottom: 16px;
   margin: 0 5%;
   border-bottom: 1px solid #ff787f;
-  font-size: 20px;
 `;
 const UserName = styled.div`
   margin: 0 8px;
   display: flex;
 `;
 const UserNameEdit = styled.div`
-  margin-left: 1vh;
+  margin-left: 2.25vmin;
   color: #ff787f;
 `;
 
 const UserEmail = styled.div`
   position: absolute;
   top: 0;
-  right: 2.5vh;
+  right: 5.5vmin;
 `;
 const SettingMenu = styled.div`
-  margin: 2vh 3vh;
+  margin: 4.5vmin 6.5vmin;
 `;
 const SettingItem = styled.div`
   display: flex;
@@ -97,7 +96,7 @@ const SettingItem = styled.div`
   align-items: center;
   border-bottom: 1px solid #f9d7d3;
   height: 48px;
-  font-size: 16px;
+  font-size: 0.8em;
 `;
 
 const SettingItemTitle = styled.div`
@@ -123,7 +122,7 @@ const SettingCopyright = styled.div`
 const SettingLogoutIcon = styled.div`
   height: 28px;
   width: 28px;
-  font-size: 28px;
+  font-size: 1.4em;
 `;
 const NameEditInput = styled.input`
   border-left-width: 0;
@@ -131,11 +130,11 @@ const NameEditInput = styled.input`
   border-top-width: 0;
   border-bottom: 1;
   width: 30vw;
-  height: 2.5vh;
+  height: 5.5vmin;
   background-color: transparent;
   border-color: #ffd5d7;
   outline: 0;
-  font-size: 2.5vh;
+  font-size: 5.5vmin;
   font-family: "Pretendard-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -268,7 +267,7 @@ const Settings = () => {
           <UserEmail>{userKakao < 0 ? null : userKakao}</UserEmail>
         </NameEmailDiv>
         <SettingMenu>
-          <SettingItem>
+          {/* <SettingItem>
             <SettingItemTitle>푸시알림</SettingItemTitle>
             <SettingItemContentPush>
               <ThemeProvider theme={theme}>
@@ -280,7 +279,7 @@ const Settings = () => {
                 />
               </ThemeProvider>
             </SettingItemContentPush>
-          </SettingItem>
+          </SettingItem> */}
           <SettingItem onClick={() => toggleFontModal(true)}>
             <SettingItemTitle>글자크기</SettingItemTitle>
             <SettingItemContent>{fontLetter[fontSize]}</SettingItemContent>

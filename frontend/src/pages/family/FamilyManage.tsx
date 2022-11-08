@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
@@ -10,13 +8,8 @@ import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
-import {
-  setFamilyCreatedAt,
-  setFamilyId,
-  setFamilyName,
-  setFamilyUsers,
-} from "../../features/family/familySlice";
 import styled, { css, keyframes } from "styled-components";
+import { detect } from "detect-browser";
 
 const HeaderBox = styled.div`
   display: grid;
@@ -35,20 +28,18 @@ const Icon = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 20px;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
 `;
 
 const FamilyManageBody = styled.div`
-  padding: 2vh;
+  padding: 4.5vmin;
 `;
 const FamilyManageGuide = styled.div`
-  margin-top: 1vh;
-  margin-bottom: 3vh;
+  margin-top: 2.25vmin;
+  margin-bottom: 6.5vmin;
   margin-left: 4px;
-  font-size: 2.5vh;
 `;
 const FamilyNameHighlight = styled.span`
   font-weight: bold;
@@ -58,45 +49,44 @@ const FamilyInviteBox = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  margin-bottom: 1vh;
-  padding: 1.25vh;
+  margin-bottom: 2.25vmin;
+  padding: 2.75vmin;
   border: 1px solid #ff787f;
 `;
 
 const IconBox = styled.div`
-  width: 6vh;
-  height: 6vh;
-  border-radius: 3vh;
+  width: 13vmin;
+  height: 13vmin;
+  border-radius: 6.5vmin;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
-  margin-right: 1.5vh;
-  line-height: 7vh;
+  margin-right: 3.5vmin;
+  line-height: 15.5vmin;
   text-align: center;
-  font-size: 3vh;
+  font-size: 10vmin;
 `;
 
 const MessageBox20 = styled.div`
-  font-size: 2.5vh;
-  margin-bottom: 0.5vh;
+  margin-bottom: 1vmin;
 `;
 const MessageBox12 = styled.div`
-  font-size: 1.5vh;
+  font-size: 3.5vmin;
 `;
 const FamilyMembersTitle = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 4.5vh 0 2vh;
-  font-size: 2vh;
+  margin: 10vmin 0 4.5vmin;
+  font-size: 4.5vmin;
   font-weight: bold;
 `;
 
 const MemberBox = styled.div`
-  height: 50vh;
+  height: 110vmin;
   overflow-y: scroll;
 `;
 
 const FamilyMembersEdit = styled.div`
-  font-size: 3vh;
+  font-size: 6.5vmin;
   font-weight: 400;
 `;
 
@@ -108,17 +98,12 @@ const FamilyManage = () => {
   const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
 
+  // android 딥링크 설정 필요 -> firebase dynamic link 설정되면 사용
   const inviteLink: string = "(초대링크)";
-  const userAgent = navigator.userAgent.toLocaleLowerCase(); // 기기 확인
-  let smsUrl: string;
-
-  if (userAgent.search("android") > -1) {
-    // android 기기 여부 확인
-    smsUrl = `sms:?body=${userName}님이 ZOA앱 초대장을 보내셨어요! /n 다음 링크를 통해 참여해 보세요! /n ${inviteLink}`;
-  } else if (userAgent.search("iphone") > -1 || userAgent.search("ipad") > -1) {
-    // ios 기기 여부 확인
-    smsUrl = `sms:&body=${userName}님이 ZOA앱 초대장을 보내셨어요! /n 다음 링크를 통해 참여해 보세요! /n ${inviteLink}`;
-  }
+  const os = detect()?.os;
+  let smsUrl: string = `ZOA에서 초대장이 왔습니다!
+${userName}님과 함께하세요!
+${inviteLink}`;
 
   const navigate = useNavigate();
   const navigateToEdit = () => {
@@ -128,31 +113,40 @@ const FamilyManage = () => {
     navigate("/");
   };
   const sendMessage = () => {
-    window.location.href = smsUrl;
+    if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+    } else {
+      console.log("모바일 환경이 아닙니다.");
+    }
   };
   const shareKakao = () => {
-    window.Kakao.Share.sendDefault({
-      objectType: "feed",
-      content: {
-        title: `ZOA에서 초대장이 왔습니다!`,
-        description: `${userName}님이 함께하고 싶어하셔요!`,
-        imageUrl:
-          "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
-        link: {
-          mobileWebUrl: "https://developers.kakao.com",
-          webUrl: "https://developers.kakao.com",
-        },
-      },
-      buttons: [
-        {
-          title: "ZOA에 참여하기",
+    try {
+      // link를 우리 앱의 deeplink로 바꿔야 함.
+      window.Kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: `ZOA에서 초대장이 왔습니다!`,
+          description: `${userName}님이 함께하고 싶어하셔요!`,
+          imageUrl:
+            "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
           link: {
             mobileWebUrl: `/join/${id}`,
             webUrl: `/join/${id}`,
           },
         },
-      ],
-    });
+        buttons: [
+          {
+            title: "ZOA에 참여하기",
+            link: {
+              mobileWebUrl: "https://developers.kakao.com",
+              webUrl: "https://developers.kakao.com",
+            },
+          },
+        ],
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
