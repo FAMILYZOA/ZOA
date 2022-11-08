@@ -28,7 +28,6 @@ const TextAreaStyle = styled.textarea`
   width: 90%;
   height: 13vh;
   background-color: transparent;
-  font-size: px;
   margin-left: 5px;
   border: none;
   resize: none;
@@ -37,7 +36,7 @@ const TextAreaInnerStyle = styled.textarea`
   width: 90%;
   height: 13vh;
   background-color: transparent;
-  font-size: 16px;
+  font-size: 0.8em;
   margin-left: 5px;
   border: none;
   resize: none;

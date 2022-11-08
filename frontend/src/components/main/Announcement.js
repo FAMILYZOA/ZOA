@@ -9,7 +9,6 @@ const Contents = styled.div`
   z-index: 4;
 `;
 const Text = styled.div`
-  font-size: 16px;
   margin: 0 4px 0 0;
   width: 90%;
   overflow: hidden;
@@ -19,7 +18,7 @@ const Text = styled.div`
 const From = styled.p`
   text-align: end;
   margin: 4px 0 8px 0;
-  font-size: 14px;
+  font-size: 0.7em;
   color: #444444;
   width: 95%;
 `;

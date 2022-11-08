@@ -21,7 +21,6 @@ const TextBox = styled.p`
     props.active === true ? "line-through #808080" : null};
   color: ${(props) => (props.active === true ? "#808080" : "black")};
   margin: auto 8px;
-  font-size: 18px;
 `;
 
 const CheckListItem = (item) => {

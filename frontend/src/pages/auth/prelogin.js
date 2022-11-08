@@ -68,7 +68,6 @@ const Btn = styled.div`
     width: 60vh;
     margin: 3% auto 0;
   }
-  font-size: 18px;
 `;
 const KakaoBtn = styled(Btn)`
   background-color: #ffcd00;
@@ -111,7 +110,7 @@ function Btns() {
 
   const clickKakaoLogin = () => {
     Kakao.Auth.authorize({
-      redirectUri: "http://localhost:3000/kakaoLoading/",
+      redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
     });
   };
 

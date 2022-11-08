@@ -34,18 +34,18 @@ const Icon = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 20px;
+  font-size: 1.25em;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
 `;
 
 const CheckListViewBody = styled.div`
-  padding: 3vh 2vh;
+  padding: 3vmin 2vmin;
 `;
 const CheckListTitle = styled.div`
   margin: 16px 0;
-  font-size: 2.5vh;
+  font-size: 1.25em;
   font-weight: bold;
 `;
 
@@ -153,14 +153,14 @@ const ModalItem = styled.div<modalItemProps>`
   }
 `;
 const ModalItemName = styled.div`
-  margin-right: 1vh;
+  margin-right: 1vmin;
   font-weight: 700;
-  font-size: 2vh;
+  font-size: 2vmin;
 `;
 const ModalItemImg = styled.img`
-  width: 8vh;
-  height: 8vh;
-  border-radius: 4vh;
+  width: 8vmin;
+  height: 8vmin;
+  border-radius: 4vmin;
   object-fit: fill;
 `;
 

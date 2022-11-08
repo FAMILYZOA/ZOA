@@ -7,9 +7,9 @@ const MemberDiv = styled.div`
 `;
 
 const SelectedMemberProfileImg = styled.img`
-  height: 8vh;
-  width: 8vh;
-  border-radius: 4vh;
+  height: 17.5vmin;
+  width: 17.5vmin;
+  border-radius: 8.75vmin;
   object-fit: fill;
 `;
 
@@ -24,14 +24,14 @@ const UnselectedGroup = styled.div`
 const UnselectedMemberProfile = styled.div`
   width: auto;
   position: relative;
-  margin-left: 0.5vh;
-  margin-top: 4vh;
+  margin-left: 1vmin;
+  margin-top: 9vmin;
 `;
 
 const UnselectedMemberProfileImg = styled.img`
-  height: 4vh;
-  width: 4vh;
-  border-radius: 2vh;
+  height: 9vmin;
+  width: 9vmin;
+  border-radius: 4.5vmin;
   object-fit: fill;
   opacity: 0.5;
 `;
