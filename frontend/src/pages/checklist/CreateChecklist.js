@@ -12,7 +12,7 @@ import styled from "styled-components";
 const Container = styled.div`
   height: calc(95vh - 120px);
   margin: 5% 0;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   overflow-x: hidden;
 `;
 
