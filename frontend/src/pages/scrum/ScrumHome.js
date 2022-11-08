@@ -161,7 +161,14 @@ const ScrumHome = () => {
           {date.getFullYear() === new Date().getFullYear() &&
           date.getMonth() === new Date().getMonth() &&
           date.getDate() === new Date().getDate() ? (
-            <div style={{ color: "#bebebe", margin: "4px" }}>
+            <div
+              style={{
+                color: "#bebebe",
+                margin: "4px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <BsChevronRight size={16} />
             </div>
           ) : (
