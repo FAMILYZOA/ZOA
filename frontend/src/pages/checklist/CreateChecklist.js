@@ -15,7 +15,7 @@ function CreateChecklist() {
     to_users_id: [],
     text: "",
     photo: "",
-  });
+  }, []);
 
   const receivers = (data) => {
     console.log(data);
@@ -43,7 +43,7 @@ function CreateChecklist() {
     if (info.photo !== "") {
       data.append("photo", info.photo);
     }
-    console.log(data);
+    //console.log(data);
     axios({
       method: "POST",
       url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
@@ -52,7 +52,10 @@ function CreateChecklist() {
       },
       data: data,
     }).then((res) => {
+      //console.log(res);
       navigate("/checklist");
+    }).catch((err) =>{
+      console.log(err);
     });
   };
 
@@ -61,7 +64,7 @@ function CreateChecklist() {
       <Header label="할 일 등록" back="true"></Header>
       <Receiver receivers={receivers}></Receiver>
       <TodoInput todos={todos}></TodoInput>
-      <AddPhoto getPhoto={getPhoto}></AddPhoto>
+      <AddPhoto getPhoto={getPhoto} ></AddPhoto>
       <Button label="등록하기" click={event} active={true}></Button>
     </div>
   );
