@@ -35,7 +35,7 @@ const DateStyle = styled.p`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 28px;
+  font-size: 1.5rem;
   line-height: 100%;
   /* or 20px */
 
@@ -52,20 +52,17 @@ const EmojiSelectorStyle = styled.div`
 `;
 
 const EmojiOuterStyle = styled.div`
-  margin: 6vw;
+  margin: 8px;
 `;
 
 const DescStyle = styled.div`
   display: flex;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  margin: 4px 5% 0;
+  align-items: center;
 `;
 
 const DescTextStyle = styled.p`
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 10px;
-  font-size: 24px;
+  margin: 8px 8px;
 `;
 
 const RegistStyle = styled.div`
@@ -86,7 +83,7 @@ const RegistBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 100%;
   /* or 24px */
 
@@ -199,7 +196,7 @@ const EmojiSelector = (props: EmojiProps) => {
         <Emoji
           unified={props.selectedEmoji}
           emojiStyle={EmojiStyle.APPLE}
-          size={84}
+          size={72}
         />
       </EmojiOuterStyle>
       <Modal
@@ -260,9 +257,9 @@ const Today = (props: InputProps) => {
 const RegistBtn = (props: registBtnPRops) => {
   // 나중에 저장 방식 바뀌면 수정 예정
   const [isRegist, toggleResigt] = useState<boolean>(true);
-  const access:string = useAppSelector((state) => state.token.access);
+  const access: string = useAppSelector((state) => state.token.access);
   const refresh: string = useAppSelector((state) => state.token.refresh);
-    useEffect(() => {
+  useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
       toggleResigt(true);
     } else {
@@ -288,8 +285,6 @@ const RegistBtn = (props: registBtnPRops) => {
         .post("scrums/", scrumData, config)
         .then((res: AxiosResponse) => {
           if (res.status === 201) {
-            // 스크럽 등록 성공
-            alert("스크럼 등록 성공");
             // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
             navigate("/hello/", { replace: true });
           }
@@ -297,13 +292,13 @@ const RegistBtn = (props: registBtnPRops) => {
         .catch(async (err) => {
           switch (err.response.status) {
             case 400:
-              alert("스크럼은 하루에 한개만 작성 가능합니다.")
+              alert("스크럼은 하루에 한개만 작성 가능합니다.");
               break;
             case 401:
               const code = err.response.data.code;
               if (code === "token_not_valid") {
                 const tokens = await AuthRefresh(refresh);
-                console.log(tokens)
+                console.log(tokens);
                 if (tokens) {
                   dispatch(setAccessToken(tokens.access));
                   dispatch(setRefreshToken(tokens.refresh));
@@ -321,7 +316,7 @@ const RegistBtn = (props: registBtnPRops) => {
           }
         });
     } else {
-      alert("잘못된 접근! token이 없습니다!");
+      alert("로그인이 필요한 기능입니다.");
     }
   };
 
@@ -338,14 +333,13 @@ const RegistBtn = (props: registBtnPRops) => {
 const ScrumCreate = () => {
   return (
     <div>
-      <Header label="데일리 스크럼" back={true}></Header>
+      <Header label="안녕" back={true}></Header>
       <div>
         <DateSelector></DateSelector>
         <ScrumCreateBody></ScrumCreateBody>
       </div>
-      <div>푸터 자리</div>
     </div>
   );
-}
+};
 
 export default ScrumCreate;

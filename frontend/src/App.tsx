@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
-import { Settings } from './pages/settings';
+import { Settings } from "./pages/settings";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
@@ -14,6 +14,7 @@ import NewLogin from "./pages/auth/kakao/Login";
 import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
+import FamilyJoin from "./pages/family/FamilyJoin";
 
 import Navbar from "./components/Navbar";
 
@@ -34,6 +35,9 @@ import {
   setFamilyUsers,
 } from "./features/family/familySlice";
 import axios from "axios";
+import { Buffer } from "buffer";
+import { setChecklistPhoto } from "./features/mobile/mobileSlice";
+import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -41,17 +45,15 @@ function App() {
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
+  const [, updateState] = useState<{}>();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
-  const fontArray = [
-    "2vh",
-    "2.5vh",
-    "3vh",
-  ]
+  const fontArray = ["4.5vmin", "5.5vmin", "6.5vmin"];
 
-  const [fontStyle, setFontStyle ] = useState<{fontSize: string}>({
+  const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
   });
-
+  
   const infoUpdate = () => {
     if (accessToken === "") {
       // 토큰이 없는 경우
@@ -102,6 +104,7 @@ function App() {
             dispatch(setUserImage(res.data.image));
             dispatch(setUserName(res.data.name));
             console.log("user fetched");
+            forceUpdate();
             if (familyId < 0 && res.data.family_id) {
               // 가족 정보가 없으면, 가족 정보 불러오기
               axios({
@@ -117,6 +120,7 @@ function App() {
                   dispatch(setFamilyCreatedAt(res.data.created_at));
                   dispatch(setFamilyUsers(res.data.users));
                   console.log("family fetched");
+                  forceUpdate();
                 })
                 .catch((err) => {
                   console.error(err);
@@ -128,22 +132,84 @@ function App() {
           });
       }
     }
-  }
+  };
 
   useEffect(() => {
     setFontStyle({
       fontSize: fontArray[fontSize],
-    })
-  }, [fontSize])
+    });
+  }, [fontSize]);
 
   useEffect(() => {
     infoUpdate();
-  }, [accessToken])
+  }, [accessToken]);
+
+  // =================================================== 모바일 연동 ==============================================
+  // React Native에서 메시지를 보내면 할 행동
+  const getMessageFromDevice = (e: any) => {
+    const data = JSON.parse(e.data);
+    // 사진일 경우 BackEnd에 수정 요청 보내기
+    if (data.photo) {
+      // 프로필사진 수정
+      if (data.from === "profile") {
+        uploadUserImage(data.photo);
+      }
+      if (data.from === "checklist") {
+        dispatch(setChecklistPhoto(data.photo));
+      }
+    }
+  };
+
+  // 변경한 프로필 이미지 업로드
+  const uploadUserImage = (baseString: string) => {
+    const filename = makeid(6);
+    const image = dataURLtoFile(baseString, `${filename}.jpg`);
+
+    const data = new FormData();
+    data.append("image", image);
+
+    axios({
+      method: "PUT",
+      url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    })
+      .then((res) => {
+        console.log("Profile Image submitted");
+        dispatch(setUserImage(res.data.image));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  window.__WEBVIEW_BRIDGE__ = {
+    init() {
+      try {
+        document.addEventListener("message", getMessageFromDevice);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+  };
+
+  useEffect(() => {
+    // do stuff here...
+    window.__WEBVIEW_BRIDGE__.init();
+  }, []);
+
+  // =================================================== 모바일 연동 ==============================================
 
   return (
     <div style={fontStyle}>
       <BrowserRouter>
         <Routes>
+          <Route path="/join/:familyId" element={<FamilyJoin />} />
+          {/* <Route path="/join/:familyId" element={<FamilyJoin />} /> */}
+
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
@@ -152,6 +218,7 @@ function App() {
 
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
+          <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
 
           <Route path="/" element={<Main />} />

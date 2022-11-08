@@ -20,14 +20,12 @@ const CheckListNameWrapper = styled.div`
   color: #ff787f;
   font-weight: bold;
   margin: auto 8px;
-  font-size: 18px;
 `;
 
 const CheckListPlusButton = styled.div`
   border-radius: 50%;
   color: #ff787f;
   margin: auto 8px;
-  font-size: 20px;
 `;
 
 

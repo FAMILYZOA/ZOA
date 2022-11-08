@@ -16,6 +16,7 @@ const FamilyMemberEdit = () => {
   });
   
   const familyId = useAppSelector((state) => state.family.id);
+  const [users, setUsers] = useState([]);
 
 
   useEffect(() => {
@@ -32,9 +33,8 @@ const FamilyMemberEdit = () => {
     .catch((err) => {
       console.log(err)
     })
-  }, []);
+  }, [familyId, users]);
 
-  const [users, setUsers] = useState([]);
 
 return (
   <>
