@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
+import { detect } from "detect-browser";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUserImage } from "../../features/user/userSlice";
 
@@ -79,6 +80,16 @@ const FontModal = (props: modalType) => {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.token.access);
 
+  // 모바일 연동
+  const getOS = () => {
+    const browser = detect();
+    if(browser){
+      return browser.os;
+    }
+  }
+
+  const [os, setOS] = useState(getOS());
+
   const modalStyle = {
     content: {
       top: "27.5vh",
@@ -109,7 +120,12 @@ const FontModal = (props: modalType) => {
 
   const photoInput = useRef<any>();
   const handleClick = () => {
-    photoInput.current.click();
+    if((os === 'Android OS' || os === 'iOS') && window.ReactNativeWebView){
+        window.ReactNativeWebView.postMessage("imagePicker,profile");
+        props.toggle(false);
+    }else{
+      photoInput.current.click();
+    }
   };
 
   const closeModal = () => {

@@ -8,7 +8,8 @@ import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
+import { detect } from "detect-browser";
 
 const HeaderBox = styled.div`
   display: grid;
@@ -97,17 +98,12 @@ const FamilyManage = () => {
   const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
 
+  // android 딥링크 설정 필요 -> firebase dynamic link 설정되면 사용
   const inviteLink: string = "(초대링크)";
-  const userAgent = navigator.userAgent.toLocaleLowerCase(); // 기기 확인
-  let smsUrl: string;
-
-  if (userAgent.search("android") > -1) {
-    // android 기기 여부 확인
-    smsUrl = `sms:?body=${userName}님이 ZOA앱 초대장을 보내셨어요! /n 다음 링크를 통해 참여해 보세요! /n ${inviteLink}`;
-  } else if (userAgent.search("iphone") > -1 || userAgent.search("ipad") > -1) {
-    // ios 기기 여부 확인
-    smsUrl = `sms:&body=${userName}님이 ZOA앱 초대장을 보내셨어요! /n 다음 링크를 통해 참여해 보세요! /n ${inviteLink}`;
-  }
+  const os = detect()?.os;
+  let smsUrl: string = `ZOA에서 초대장이 왔습니다!
+${userName}님과 함께하세요!
+${inviteLink}`;
 
   const navigate = useNavigate();
   const navigateToEdit = () => {
@@ -117,31 +113,40 @@ const FamilyManage = () => {
     navigate("/");
   };
   const sendMessage = () => {
-    window.location.href = smsUrl;
+    if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+    } else {
+      console.log("모바일 환경이 아닙니다.");
+    }
   };
   const shareKakao = () => {
-    window.Kakao.Share.sendDefault({
-      objectType: "feed",
-      content: {
-        title: `ZOA에서 초대장이 왔습니다!`,
-        description: `${userName}님이 함께하고 싶어하셔요!`,
-        imageUrl:
-          "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
-        link: {
-          mobileWebUrl: "https://developers.kakao.com",
-          webUrl: "https://developers.kakao.com",
-        },
-      },
-      buttons: [
-        {
-          title: "ZOA에 참여하기",
+    try {
+      // link를 우리 앱의 deeplink로 바꿔야 함.
+      window.Kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: `ZOA에서 초대장이 왔습니다!`,
+          description: `${userName}님이 함께하고 싶어하셔요!`,
+          imageUrl:
+            "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
           link: {
             mobileWebUrl: `/join/${id}`,
             webUrl: `/join/${id}`,
           },
         },
-      ],
-    });
+        buttons: [
+          {
+            title: "ZOA에 참여하기",
+            link: {
+              mobileWebUrl: "https://developers.kakao.com",
+              webUrl: "https://developers.kakao.com",
+            },
+          },
+        ],
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
