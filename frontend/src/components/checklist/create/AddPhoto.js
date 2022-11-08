@@ -9,7 +9,7 @@ import { dataURLtoFile, makeid } from "../../../features/mobile/mobileUtil";
 import { selectMobileChecklistPhoto } from "../../../features/mobile/mobileSlice";
 
 const Container = styled.div`
-  margin: 5% 5% 2%;
+  margin: 0 5% 8px;
 `;
 const MainText = styled.div`
   font-size: 0.8rem;
@@ -45,17 +45,16 @@ function AddPhoto({ getPhoto }) {
     }
   };
 
-
   const checklistPhotoUpdate = () => {
     let current = store.getState().mobile.checklistPhoto;
-    if(current && current !== plus){
+    if (current && current !== plus) {
       //console.log(current);
       // 업로드 작업
       const checklistImage = dataURLtoFile(current, `${makeid(6)}.jpg`);
       setFile(URL.createObjectURL(checklistImage));
       setPhoto(checklistImage);
     }
-  }
+  };
 
   store.subscribe(checklistPhotoUpdate);
 
@@ -85,7 +84,6 @@ function AddPhoto({ getPhoto }) {
   useEffect(() => {
     getPhoto({ photo: photo });
   }, [file]);
-
 
   return (
     <Container>

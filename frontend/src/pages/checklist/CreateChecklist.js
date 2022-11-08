@@ -7,15 +7,26 @@ import AddPhoto from "../../components/checklist/create/AddPhoto";
 import Button from "../../components/Button";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import styled from "styled-components";
+
+const Container = styled.div`
+  height: calc(95vh - 120px);
+  margin: 5% 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`;
 
 function CreateChecklist() {
   const navigate = useNavigate();
 
-  const [info, setInfo] = useState({
-    to_users_id: [],
-    text: "",
-    photo: "",
-  }, []);
+  const [info, setInfo] = useState(
+    {
+      to_users_id: [],
+      text: "",
+      photo: "",
+    },
+    []
+  );
 
   const receivers = (data) => {
     console.log(data);
@@ -51,21 +62,25 @@ function CreateChecklist() {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
       data: data,
-    }).then((res) => {
-      //console.log(res);
-      navigate("/checklist");
-    }).catch((err) =>{
-      console.log(err);
-    });
+    })
+      .then((res) => {
+        //console.log(res);
+        navigate("/checklist");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div>
       <Header label="할 일 등록" back="true"></Header>
-      <Receiver receivers={receivers}></Receiver>
-      <TodoInput todos={todos}></TodoInput>
-      <AddPhoto getPhoto={getPhoto} ></AddPhoto>
-      <Button label="등록하기" click={event} active={true}></Button>
+      <Container>
+        <Receiver receivers={receivers}></Receiver>
+        <TodoInput todos={todos}></TodoInput>
+        <AddPhoto getPhoto={getPhoto}></AddPhoto>
+        <Button label="등록하기" click={event} active={true}></Button>
+      </Container>
     </div>
   );
 }
