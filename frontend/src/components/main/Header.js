@@ -17,7 +17,7 @@ const HeaderBox = styled.div`
 
 const FamilyName = styled.div`
     margin: 16px;
-    font-size : 24px;
+    font-size : 1.2rem;
     font-weight: bold;
     color: #ff787f;
 `

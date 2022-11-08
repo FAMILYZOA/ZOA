@@ -2,19 +2,20 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 const ScrumWrapper = styled.div`
   background-color: transparent;
   margin: 12px;
-`
+`;
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;
-`
+`;
 
 const ProfileWrapper = styled.div`
   color: red;
-`
+`;
 
 const MemberProfile = styled.div`
   height: 7vh;
@@ -29,38 +30,47 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumItem = ({scrums}) => {
-
+const ScrumItem = ({ myScrum }) => {
   const navigate = useNavigate();
-
-  return(
+  const userImg = useAppSelector((state) => state.user.image);
+  return (
     <>
-      <ScrumWrapper style={{display: "flex"}}>
+      <ScrumWrapper style={{ display: "flex" }}>
         <ProfileWrapper>
           <MemberProfile>
-            <MemberProfileImg src={scrums.image}/>
+            {myScrum[0].image === "" ? (
+              <MemberProfileImg src={userImg} />
+            ) : (
+              <MemberProfileImg src={myScrum[0].image} />
+            )}
           </MemberProfile>
         </ProfileWrapper>
         <ItemWrapper>
-          <div style={{margin: "1vh"}}>
-           🙋‍♂️ {scrums.yesterday}
-          </div>
-          <div style={{margin: "1vh"}}>
-           📢 {scrums.today}
-          </div>
+          {myScrum[0].emoji === "" ? (
+            "아직 작성된 스크럼이 없어요 😢"
+          ) : (
+            <>
+              <div style={{ margin: "1vh" }}>🙋‍♂️ {myScrum[0].yesterday}</div>
+              <div style={{ margin: "1vh" }}>📢 {myScrum[0].today}</div>
+            </>
+          )}
         </ItemWrapper>
       </ScrumWrapper>
       <div
-        style={{color: "#ff787f", margin: "0px 0px 0px 20vw", cursor: "pointer"}}
-        onClick={() => {
-          navigate(`/scrum/create/`)
+        style={{
+          color: "#ff787f",
+          margin: "0px 0px 0px 40px",
+          cursor: "pointer",
         }}
-        >
+        onClick={() => {
+          navigate(`/hello/create/`);
+        }}
+      >
         스크럼 작성하러 가기
-        <BsChevronRight/>
+        <BsChevronRight />
       </div>
     </>
-  )
+  );
 };
 
 export default ScrumItem;

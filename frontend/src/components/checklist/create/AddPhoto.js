@@ -12,7 +12,7 @@ const Container = styled.div`
   margin: 5% 5% 2%;
 `;
 const MainText = styled.div`
-  font-size: 16px;
+  font-size: 0.8rem;
   font-weight: bold;
   text-align: start;
   margin-bottom: 4px;

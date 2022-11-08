@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from "./pages/settings";
@@ -14,6 +14,7 @@ import NewLogin from "./pages/auth/kakao/Login";
 import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
+import FamilyJoin from "./pages/family/FamilyJoin";
 
 import Navbar from "./components/Navbar";
 
@@ -44,8 +45,10 @@ function App() {
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
+  const [, updateState] = useState<{}>();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
-  const fontArray = ["2vh", "2.5vh", "3vh"];
+  const fontArray = ["4.5vmin", "5.5vmin", "6.5vmin"];
 
   const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
@@ -101,6 +104,7 @@ function App() {
             dispatch(setUserImage(res.data.image));
             dispatch(setUserName(res.data.name));
             console.log("user fetched");
+            forceUpdate();
             if (familyId < 0 && res.data.family_id) {
               // 가족 정보가 없으면, 가족 정보 불러오기
               axios({
@@ -116,6 +120,7 @@ function App() {
                   dispatch(setFamilyCreatedAt(res.data.created_at));
                   dispatch(setFamilyUsers(res.data.users));
                   console.log("family fetched");
+                  forceUpdate();
                 })
                 .catch((err) => {
                   console.error(err);
@@ -202,6 +207,9 @@ function App() {
     <div style={fontStyle}>
       <BrowserRouter>
         <Routes>
+          <Route path="/join/:familyId" element={<FamilyJoin />} />
+          {/* <Route path="/join/:familyId" element={<FamilyJoin />} /> */}
+
           <Route path="/intro" element={<Prelogin />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<Resister />} />
@@ -210,6 +218,7 @@ function App() {
 
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/manage" element={<FamilyManage />}></Route>
+          <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
 
           <Route path="/" element={<Main />} />

@@ -48,7 +48,7 @@ const HeaderLogoStyle = styled.p`
   -moz-background-clip: text;
   -moz-text-fill-color: transparent;
 
-  font-size: 48px;
+  font-size: 2.5rem;
   font-weight: bolder;
   margin: 0%;
 `;
@@ -68,7 +68,7 @@ const FormDescStyle = styled.p`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 0.8rem;
   line-height: 100%;
   /* or 16px */
 
@@ -106,7 +106,6 @@ const InputStyle = styled.input`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 20px;
   line-height: 100%;
   /* or 20px */
 
@@ -129,7 +128,6 @@ const InhouseLoginBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
   line-height: 100%;
   /* or 20px */
 
@@ -152,7 +150,7 @@ const KakaoLoginBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 0.8rem;
   line-height: 100%;
   /* identical to box height, or 16px */
 
@@ -174,7 +172,7 @@ const SignupStyle = styled(Link)`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 0.8rem;
   text-decoration: none;
   /* or 16px */
 
@@ -192,7 +190,6 @@ const FooterStyle = styled.p`
   font-family: "Inter";
   font-style: normal;
   font-weight: 200;
-  font-size: 20px;
   line-height: 100%;
   /* identical to box height, or 20px */
 
