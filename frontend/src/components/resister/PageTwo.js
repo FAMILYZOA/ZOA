@@ -10,23 +10,23 @@ const PwContainer = styled.div`
   height: 120px;
 `;
 const Title = styled.p`
-  font-size: 0.8rem;
+  font-size: 0.8em;
   margin: 0 0 4px 8px;
 `;
 const Warning = styled.p`
-  font-size: 0.6rem;
+  font-size: 0.6em;
   margin: 4px 0 8px 8px;
   color: red;
   display: ${(props) => (props.active === false ? "none" : "block")};
 `;
 const Confirm = styled.p`
-  font-size: 0.6rem;
+  font-size: 0.6em;
   margin: 4px 0 8px 8px;
   color: #3db9a4;
   display: ${(props) => (props.active === false ? "none" : "block")};
 `;
 const PwInfo = styled.p`
-  font-size: 0.6rem;
+  font-size: 0.6em;
   margin: 4px 0 0px 8px;
   color: #707070;
   display: ${(props) => (props.active === false ? "none" : "block")};
@@ -48,11 +48,11 @@ const Input = styled.input`
   height: 40px;
   border: none;
   background: none;
-  font-size: 0.7rem;
+  font-size: 0.7em;
   outline: none;
 `;
 const CheckText = styled.p`
-  font-size: 0.7rem;
+  font-size: 0.7em;
   font-weight: bold;
   margin: 0;
 `;
@@ -73,7 +73,7 @@ const AgeSelector = styled.select`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 0.8em;
   line-height: 100%;
   /* or 20px */
 

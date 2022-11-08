@@ -26,9 +26,9 @@ const SettingsHeader = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: 1;
 `;
 const SettingLabel = styled.div`
-  font-size: 20px;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
@@ -49,7 +49,7 @@ const ProfileImgCover = styled.div`
 
 const ProfileEditIcon = styled.div`
   position: absolute;
-  font-size: 1.2rem;
+  font-size: 1.2em;
   border-radius: 5vmin;
   display: flex;
   justify-content: center;
@@ -96,7 +96,7 @@ const SettingItem = styled.div`
   align-items: center;
   border-bottom: 1px solid #f9d7d3;
   height: 48px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
 `;
 
 const SettingItemTitle = styled.div`
@@ -122,7 +122,7 @@ const SettingCopyright = styled.div`
 const SettingLogoutIcon = styled.div`
   height: 28px;
   width: 28px;
-  font-size: 1.4rem;
+  font-size: 1.4em;
 `;
 const NameEditInput = styled.input`
   border-left-width: 0;
@@ -267,7 +267,7 @@ const Settings = () => {
           <UserEmail>{userKakao < 0 ? null : userKakao}</UserEmail>
         </NameEmailDiv>
         <SettingMenu>
-          <SettingItem>
+          {/* <SettingItem>
             <SettingItemTitle>푸시알림</SettingItemTitle>
             <SettingItemContentPush>
               <ThemeProvider theme={theme}>
@@ -279,7 +279,7 @@ const Settings = () => {
                 />
               </ThemeProvider>
             </SettingItemContentPush>
-          </SettingItem>
+          </SettingItem> */}
           <SettingItem onClick={() => toggleFontModal(true)}>
             <SettingItemTitle>글자크기</SettingItemTitle>
             <SettingItemContent>{fontLetter[fontSize]}</SettingItemContent>

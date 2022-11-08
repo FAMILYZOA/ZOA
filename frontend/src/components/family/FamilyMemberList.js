@@ -46,7 +46,7 @@ const NameEditButton = styled.button`
   background-color: transparent;
   border-color: #ffd5d7;
   color: #ff787f;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   cursor: pointer;
 `;
 

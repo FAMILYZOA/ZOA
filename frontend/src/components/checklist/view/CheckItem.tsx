@@ -37,11 +37,11 @@ const CheckDetail = styled.div`
   margin-bottom: 4.5vmin;
 `;
 const CheckDetailTitle = styled.div`
-  font-size: 0.9rem;
+  font-size: 0.9em;
 `;
 const CheckDetailDate = styled.div`
   color: #707070;
-  font-size: 0.75rem;
+  font-size: 0.75em;
   margin-top: 1vmin;
 `;
 const CheckDetailChevron = styled.div`
@@ -92,7 +92,7 @@ const CheckTitle = styled.div<propStyle>`
     }
   }}
   margin-left: 2.25vmin;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   line-height: 6.5vmin;
   font-weight: 400;
   flex: 1;
