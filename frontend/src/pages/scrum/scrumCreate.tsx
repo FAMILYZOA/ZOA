@@ -285,8 +285,6 @@ const RegistBtn = (props: registBtnPRops) => {
         .post("scrums/", scrumData, config)
         .then((res: AxiosResponse) => {
           if (res.status === 201) {
-            // 스크럽 등록 성공
-            alert("스크럼 등록 성공");
             // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
             navigate("/hello/", { replace: true });
           }
@@ -318,7 +316,7 @@ const RegistBtn = (props: registBtnPRops) => {
           }
         });
     } else {
-      alert("잘못된 접근! token이 없습니다!");
+      alert("로그인이 필요한 기능입니다.");
     }
   };
 

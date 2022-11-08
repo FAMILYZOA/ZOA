@@ -21,7 +21,8 @@ const ScrumWrapper = styled.div`
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;
-  padding: 4px 0;
+  padding: 8px 4px;
+  font-size: 16px;
 `;
 
 const ProfileWrapper = styled.div`
@@ -74,6 +75,7 @@ const ScrumHome = () => {
   const token = useAppSelector((state) => state.token.access);
   const userId = useAppSelector((state) => state.user.id);
   const userImg = useAppSelector((state) => state.user.image);
+  const userName = useAppSelector((state) => state.user.name);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -159,7 +161,14 @@ const ScrumHome = () => {
           {date.getFullYear() === new Date().getFullYear() &&
           date.getMonth() === new Date().getMonth() &&
           date.getDate() === new Date().getDate() ? (
-            <div style={{ color: "#bebebe", margin: "4px" }}>
+            <div
+              style={{
+                color: "#bebebe",
+                margin: "4px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <BsChevronRight size={16} />
             </div>
           ) : (
@@ -185,8 +194,8 @@ const ScrumHome = () => {
                 )}
               </MemberProfile>
             </ProfileWrapper>
-            <div style={{ margin: "3%", fontWeight: "bold" }}>
-              {myScrum[0].name}
+            <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
+              {userName}
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               <Emoji unified={myScrum[0].emoji} size={20} />
@@ -215,7 +224,7 @@ const ScrumHome = () => {
               <div
                 style={{
                   color: "#ff787f",
-                  margin: "0px 0px 0px 20vw",
+                  margin: "0px 0px 8px 44px",
                   cursor: "pointer",
                   fontSize: "14px",
                 }}

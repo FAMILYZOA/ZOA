@@ -13,17 +13,25 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
 import axios from "axios";
+import Header from "../../components/main/Header";
 
 const ALLOW_FILE_EXTENSION = "jpg,jpeg,png";
 
 const SettingsHeader = styled.div`
   display: flex;
-  height: 17.5vmin;
-  width: 100vw;
-  font-size: 6.5vmin;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`;
+const SettingLabel = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
 `;
 const SettingsBody = styled.div`
   position: relative;
@@ -33,7 +41,7 @@ const ProfileImgDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5.5vmin 0 11vmin;
+  margin: 24px auto 40px;
 `;
 const ProfileImgCover = styled.div`
   position: relative;
@@ -41,32 +49,32 @@ const ProfileImgCover = styled.div`
 
 const ProfileEditIcon = styled.div`
   position: absolute;
-  font-size: 6.5vmin;
+  font-size: 1.2rem;
   border-radius: 5vmin;
-  text-align: center;
-  line-height: 11vmin;
-  bottom: 2.25vmin;
-  right: 2.25vmin;
-  height: 10vmin;
-  width: 10vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 8px;
+  right: 8px;
+  height: 36px;
+  width: 36px;
   background: linear-gradient(120.28deg, #ff787f 15.03%, #fec786 87.76%);
   color: #fff;
 `;
 const ProfileImg = styled.img`
-  width: 44vmin;
-  height: 44vmin;
-  border-radius: 22vmin;
+  width: 144px;
+  height: 144px;
+  border-radius: 72px;
 `;
 const NameEmailDiv = styled.div`
-  height: 5.5vmin; // 나중에 폰트 사이즈 변수화 하여 연동 할 것
+  height: 24px; // 나중에 폰트 사이즈 변수화 하여 연동 할 것
   position: relative;
-  padding-bottom: 4.5vmin;
+  padding-bottom: 16px;
+  margin: 0 5%;
   border-bottom: 1px solid #ff787f;
 `;
 const UserName = styled.div`
-  position: absolute;
-  top: 0;
-  left: 6.5vmin;
+  margin: 0 8px;
   display: flex;
 `;
 const UserNameEdit = styled.div`
@@ -87,31 +95,40 @@ const SettingItem = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #f9d7d3;
-  height: 17.5vmin;
+  height: 48px;
+  font-size: 0.8rem;
 `;
 
-const SettingItemTitle = styled.div``;
+const SettingItemTitle = styled.div`
+  margin: 0 8px;
+`;
 const SettingItemContent = styled.div`
   color: #ff787f;
+  margin: 0 8px;
+`;
+const SettingItemContentPush = styled.div`
+  color: #ff787f;
+  margin: 0;
 `;
 const SettingCopyright = styled.div`
   position: absolute;
-  bottom: 20vmin;
-  width: 100vw;
+  bottom: 68px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 16px;
 `;
 const SettingLogoutIcon = styled.div`
-  height: 10vmin;
-  width: 10vmin;
-  font-size: 10vmin;
+  height: 28px;
+  width: 28px;
+  font-size: 1.4rem;
 `;
 const NameEditInput = styled.input`
   border-left-width: 0;
-  　border-right-width: 0;
-  　border-top-width: 0;
-  　border-bottom: 1;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-bottom: 1;
   width: 30vw;
   height: 5.5vmin;
   background-color: transparent;
@@ -211,7 +228,7 @@ const Settings = () => {
   return (
     <>
       <SettingsHeader>
-        <div>설정</div>
+        <SettingLabel>설정</SettingLabel>
       </SettingsHeader>
       <SettingsBody>
         <ProfileImgDiv>
@@ -252,7 +269,7 @@ const Settings = () => {
         <SettingMenu>
           <SettingItem>
             <SettingItemTitle>푸시알림</SettingItemTitle>
-            <SettingItemContent>
+            <SettingItemContentPush>
               <ThemeProvider theme={theme}>
                 <Switch
                   checked={isPush}
@@ -261,7 +278,7 @@ const Settings = () => {
                   color="neutral"
                 />
               </ThemeProvider>
-            </SettingItemContent>
+            </SettingItemContentPush>
           </SettingItem>
           <SettingItem onClick={() => toggleFontModal(true)}>
             <SettingItemTitle>글자크기</SettingItemTitle>

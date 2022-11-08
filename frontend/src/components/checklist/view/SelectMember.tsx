@@ -15,9 +15,15 @@ const SelectedMemberProfileImg = styled.img`
 
 const UnselectedGroup = styled.div`
   display: flex;
+  width: 22.5vh;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  float: right;
 `;
 
 const UnselectedMemberProfile = styled.div`
+  width: auto;
+  position: relative;
   margin-left: 1vmin;
   margin-top: 9vmin;
 `;
@@ -41,6 +47,7 @@ function SelectMember({
   unSelectedMember,
   getModal,
 }: SelectMemberProps) {
+  const count: number = unSelectedMember.length;
   // 선택되지 않은 멤버 리스트, 임시로 더미데이터
   const onClick = (id: number) => {
     console.log(`${id} clicked`);

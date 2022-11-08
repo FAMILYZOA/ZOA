@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { IoIosArrowBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 // 사용 시
 // <Header label="할 일 등록" back="true"></Header>
@@ -21,16 +22,20 @@ const IconBox = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
 `;
 
 function Header(props) {
+  const navigate = useNavigate();
+  const moveToBack = () => {
+    navigate(-1);
+  };
   return (
     <HeaderBox>
-      <IconBox>
+      <IconBox onClick={moveToBack}>
         {props.back === "true" ? <IoIosArrowBack size="24" /> : <div></div>}
       </IconBox>
       <HeaderLabel>{props.label}</HeaderLabel>

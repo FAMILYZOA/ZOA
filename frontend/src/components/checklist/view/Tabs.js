@@ -135,9 +135,7 @@ function TodoContents({ currentId }) {
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        console.log(res.data);
         setList(list.concat(res.data.results)); // 리스트 추가
-        console.log("list", list);
         preventRef.current = true;
       }
       setLoad(false); //로딩 종료
@@ -164,10 +162,9 @@ function TodoContents({ currentId }) {
       },
       data: data,
     }).then((res) => {
-      console.log(res);
-      tempList.splice(index, 1)
+      tempList.splice(index, 1);
       setList(tempList);
-    });;
+    });
   };
 
   return (
@@ -286,8 +283,7 @@ function CompleteContents({ currentId }) {
       },
       data: data,
     }).then((res) => {
-      console.log(res);
-      tempList.splice(index, 1)
+      tempList.splice(index, 1);
       setList(tempList);
     });
   };
