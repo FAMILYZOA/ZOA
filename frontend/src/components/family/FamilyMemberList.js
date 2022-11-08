@@ -7,20 +7,19 @@ import { setFamilyUsers } from "../../features/family/familySlice"
 
 const MemberInfo = styled.div`
   display: flex;
-  margin-bottom: 2vh;
-  font-size: 2.5vh;
+  margin-bottom: 2vmin;
   align-items: center;
 `;
 const MemberProfile = styled.div`
-  height: 7vh;
-  width: 7vh;
-  border-radius: 3.5vh;
-  margin-right: 1.5vh;
+  height: 7vmin;
+  width: 7vmin;
+  border-radius: 3.5vmin;
+  margin-right: 1.5vmin;
 `;
 const MemberProfileImg = styled.img`
-  height: 7vh;
-  width: 7vh;
-  border-radius: 3.5vh;
+  height: 7vmin;
+  width: 7vmin;
+  border-radius: 3.5vmin;
   object-fit: fill;
 `;
 
@@ -47,7 +46,7 @@ const NameEditButton = styled.button`
   background-color: transparent;
   border-color: #ffd5d7;
   color: #ff787f;
-  font-size: 16px;
+  font-size: 0.8rem;
   cursor: pointer;
 `;
 

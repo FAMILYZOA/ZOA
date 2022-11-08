@@ -3,20 +3,19 @@ import styled, { css, keyframes } from "styled-components";
 
 const MemberInfo = styled.div`
   display: flex;
-  margin-bottom: 2vh;
-  font-size: 2.5vh;
+  margin-bottom: 4.5vmin;
   align-items: center;
 `;
 const MemberProfile = styled.div`
-  height: 7vh;
-  width: 7vh;
-  border-radius: 3.5vh;
-  margin-right: 1.5vh;
+  height: 15.5vmin;
+  width: 15.5vmin;
+  border-radius: 7.5vmin;
+  margin-right: 3.5vmin;
 `;
 const MemberProfileImg = styled.img`
-  height: 7vh;
-  width: 7vh;
-  border-radius: 3.5vh;
+  height: 15.5vmin;
+  width: 15.5vmin;
+  border-radius: 7.5vmin;
   object-fit: fill;
 `;
 

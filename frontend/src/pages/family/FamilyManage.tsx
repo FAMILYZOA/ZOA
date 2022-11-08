@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 import { ImLink, ImAddressBook } from "react-icons/im";
@@ -10,13 +8,7 @@ import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
-import {
-  setFamilyCreatedAt,
-  setFamilyId,
-  setFamilyName,
-  setFamilyUsers,
-} from "../../features/family/familySlice";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 
 const HeaderBox = styled.div`
   display: grid;
@@ -35,20 +27,18 @@ const Icon = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 20px;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
 `;
 
 const FamilyManageBody = styled.div`
-  padding: 2vh;
+  padding: 4.5vmin;
 `;
 const FamilyManageGuide = styled.div`
-  margin-top: 1vh;
-  margin-bottom: 3vh;
+  margin-top: 2.25vmin;
+  margin-bottom: 6.5vmin;
   margin-left: 4px;
-  font-size: 2.5vh;
 `;
 const FamilyNameHighlight = styled.span`
   font-weight: bold;
@@ -58,45 +48,44 @@ const FamilyInviteBox = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  margin-bottom: 1vh;
-  padding: 1.25vh;
+  margin-bottom: 2.25vmin;
+  padding: 2.75vmin;
   border: 1px solid #ff787f;
 `;
 
 const IconBox = styled.div`
-  width: 6vh;
-  height: 6vh;
-  border-radius: 3vh;
+  width: 13vmin;
+  height: 13vmin;
+  border-radius: 6.5vmin;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
-  margin-right: 1.5vh;
-  line-height: 7vh;
+  margin-right: 3.5vmin;
+  line-height: 15.5vmin;
   text-align: center;
-  font-size: 3vh;
+  font-size: 10vmin;
 `;
 
 const MessageBox20 = styled.div`
-  font-size: 2.5vh;
-  margin-bottom: 0.5vh;
+  margin-bottom: 1vmin;
 `;
 const MessageBox12 = styled.div`
-  font-size: 1.5vh;
+  font-size: 3.5vmin;
 `;
 const FamilyMembersTitle = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 4.5vh 0 2vh;
-  font-size: 2vh;
+  margin: 10vmin 0 4.5vmin;
+  font-size: 4.5vmin;
   font-weight: bold;
 `;
 
 const MemberBox = styled.div`
-  height: 50vh;
+  height: 110vmin;
   overflow-y: scroll;
 `;
 
 const FamilyMembersEdit = styled.div`
-  font-size: 3vh;
+  font-size: 6.5vmin;
   font-weight: 400;
 `;
 

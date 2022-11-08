@@ -13,47 +13,47 @@ interface propDetail {
 }
 
 const DetailWrap = styled.div<propDetail>`
-  ${({toggle}) => {
+  ${({ toggle }) => {
     if (!toggle) {
       return css`
         height: 0;
-      `
+      `;
     } else {
       return css`
-        height: 10vh;
-      `
+        height: 22vmin;
+      `;
     }
   }}
   width: inherit;
   overflow: hidden;
   transition: height 0.35s ease;
-`
+`;
 const CheckDetail = styled.div`
   position: relative;
-  height: 10vh;
-  border-radius: 1vh;
+  height: 22vmin;
+  border-radius: 2.25vmin;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  padding: 1.5vh 2vh;
-  margin-bottom: 2vh;
+  padding: 3.25vmin 4.5vmin;
+  margin-bottom: 4.5vmin;
 `;
 const CheckDetailTitle = styled.div`
-  font-size: 2.25vh;
+  font-size: 0.9rem;
 `;
 const CheckDetailDate = styled.div`
   color: #707070;
-  font-size: 1.75vh;
-  margin-top: 0.5vh;
+  font-size: 0.75rem;
+  margin-top: 1vmin;
 `;
 const CheckDetailChevron = styled.div`
   position: absolute;
-  right: 2vh;
-  top: 2vh;
+  right: 4.5vmin;
+  top: 4.5vmin;
   color: #000;
 `;
 
 const CheckDiv = styled.div`
   display: flex;
-  margin-bottom: 2vh;
+  margin-bottom: 4.5vmin;
 `;
 const CheckContent = styled.div`
   padding: 0.1px;
@@ -75,9 +75,9 @@ const CheckBox = styled.div<propStyle>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3vh;
-  height: 3vh;
-  border-radius: 0.5vh;
+  width: 6.5vmin;
+  height: 6.5vmin;
+  border-radius: 1vmin;
   color: #fff;
 `;
 
@@ -91,9 +91,9 @@ const CheckTitle = styled.div<propStyle>`
       `;
     }
   }}
-  margin-left: 1vh;
-  font-size: 2.25vh;
-  line-height: 3vh;
+  margin-left: 2.25vmin;
+  font-size: 0.9rem;
+  line-height: 6.5vmin;
   font-weight: 400;
   flex: 1;
 `;
@@ -108,7 +108,6 @@ type CheckItemProps = {
   refreshCheckList: (id: number) => void;
 };
 
-
 function CheckItem({
   item,
   index,
@@ -118,8 +117,6 @@ function CheckItem({
   refreshCheckList,
   selectedMember,
 }: CheckItemProps) {
-
-  
   const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
@@ -175,7 +172,7 @@ function CheckItem({
         </CheckTitle>
       </CheckDiv>
       <DetailWrap toggle={toggle}>
-        <CheckDetail >
+        <CheckDetail>
           <CheckContent>
             <CheckDetailChevron onClick={() => offToggle()}>
               <FaChevronUp />

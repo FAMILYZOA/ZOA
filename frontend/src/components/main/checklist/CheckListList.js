@@ -36,7 +36,7 @@ const IconBox = styled.div`
 const Text = styled.p`
   color: #ff787f;
   margin: auto 8px;
-  font-size: 18px;
+  font-size: 0.9rem;
 `;
 
 const NoList = styled.div`
@@ -47,7 +47,6 @@ const NoList = styled.div`
 `;
 
 const NoListText = styled.p`
-  font-size: 18px;
   margin: 4px 8px;
   text-align: center;
 `;

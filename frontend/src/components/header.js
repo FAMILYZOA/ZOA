@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import styled from "styled-components";
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -17,29 +17,26 @@ const HeaderBox = styled.div`
 `;
 
 const IconBox = styled.div`
-    margin: auto;
+  margin: auto;
 `;
 
 const HeaderLabel = styled.div`
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    line-height: 56px;
-    
-`
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+`;
 
-function Header(props){
-  return(
+function Header(props) {
+  return (
     <HeaderBox>
-        <IconBox>
-            {props.back === 'true' ? <IoIosArrowBack size="24"/> : <div></div>}
-        </IconBox>
-        <HeaderLabel>
-            {props.label}
-        </HeaderLabel>
-        <div></div>
+      <IconBox>
+        {props.back === "true" ? <IoIosArrowBack size="24" /> : <div></div>}
+      </IconBox>
+      <HeaderLabel>{props.label}</HeaderLabel>
+      <div></div>
     </HeaderBox>
-  )
+  );
 }
 
 export default Header;

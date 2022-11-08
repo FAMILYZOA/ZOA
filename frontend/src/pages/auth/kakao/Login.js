@@ -148,7 +148,7 @@ function Login() {
     }
     const clickKakaoLogin = () => {
       Kakao.Auth.authorize({
-        redirectUri: "http://localhost:3000/kakaoLoading/",
+        redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
       });
     };
 

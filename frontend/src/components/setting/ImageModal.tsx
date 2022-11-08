@@ -1,10 +1,9 @@
 import axios from "axios";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setFontSize } from "../../features/setting/settingSlice";
 import { setUserImage } from "../../features/user/userSlice";
 
 type modalType = {
@@ -29,21 +28,21 @@ const ModalContentDiv = styled.div`
 const ImageTitleDiv = styled.div`
   letter-spacing: 1.25px;
   color: #ff787f;
-  margin-bottom: 2.5vh;
+  margin-bottom: 5.5vmin;
   text-align: center;
 `;
 const ImageBodyDiv = styled.div`
-  width: 20vh;
-  height: 20vh;
+  width: 44vmin;
+  height: 44vmin;
 `;
 const TempShowImage = styled.img`
-  width: 20vh;
-  height: 20vh;
-  border-radius: 10vh;
+  width: 44vmin;
+  height: 44vmin;
+  border-radius: 22vmin;
 `;
 const ButtonDiv = styled.div`
   display: flex;
-  margin-top: 2vh;
+  margin-top: 4.5vmin;
 `;
 const ConfirmButton = styled.div`
   display: flex;
@@ -51,12 +50,12 @@ const ConfirmButton = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 5.5vh;
+  height: 11vmin;
 
   color: #fff;
   background-color: #ff787f;
-  border-radius: 1vh;
-  margin-right: 2vh;
+  border-radius: 2.2vmin;
+  margin-right: 2.2vmin;
 `;
 const CancelButton = styled.div`
   display: flex;
@@ -64,13 +63,13 @@ const CancelButton = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 5.5vh;
+  height: 12vmin;
 
   box-sizing: border-box;
 
   color: #aaa;
   border: 2px solid #aaa;
-  border-radius: 1vh;
+  border-radius: 2.25vmin;
 `;
 
 const FontModal = (props: modalType) => {

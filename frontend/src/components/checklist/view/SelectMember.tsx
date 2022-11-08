@@ -4,58 +4,64 @@ import styled from "styled-components";
 const MemberDiv = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
 
 const SelectedMemberProfileImg = styled.img`
-  height: 8vh;
-  width: 8vh;
-  border-radius: 4vh;
+  height: 17.5vmin;
+  width: 17.5vmin;
+  border-radius: 8.75vmin;
   object-fit: fill;
 `;
 
 const UnselectedGroup = styled.div`
   display: flex;
-`
+`;
 
 const UnselectedMemberProfile = styled.div`
-  margin-left: 0.5vh;
-  margin-top: 4vh;
-`
+  margin-left: 1vmin;
+  margin-top: 9vmin;
+`;
 
 const UnselectedMemberProfileImg = styled.img`
-  height: 4vh;
-  width: 4vh;
-  border-radius: 2vh;
+  height: 9vmin;
+  width: 9vmin;
+  border-radius: 4.5vmin;
   object-fit: fill;
   opacity: 0.5;
-`
+`;
 
 type SelectMemberProps = {
-  selectedMember: {id: number; name: string; image: string;};
-  unSelectedMember: {id: number; name: string; image: string;}[];
+  selectedMember: { id: number; name: string; image: string };
+  unSelectedMember: { id: number; name: string; image: string }[];
   getModal: () => void;
-}
+};
 
-function SelectMember( { selectedMember, unSelectedMember, getModal }: SelectMemberProps ){ // 선택되지 않은 멤버 리스트, 임시로 더미데이터
+function SelectMember({
+  selectedMember,
+  unSelectedMember,
+  getModal,
+}: SelectMemberProps) {
+  // 선택되지 않은 멤버 리스트, 임시로 더미데이터
   const onClick = (id: number) => {
     console.log(`${id} clicked`);
     getModal();
-  }
+  };
 
   return (
     <>
       <MemberDiv>
         <div>
-          <SelectedMemberProfileImg src={selectedMember.image}/>
+          <SelectedMemberProfileImg src={selectedMember.image} />
         </div>
         <UnselectedGroup>
           {unSelectedMember.map((member: any) => (
-            <UnselectedMemberProfile key={member.id} 
-              onClick={()=>(onClick(member.id))}
+            <UnselectedMemberProfile
+              key={member.id}
+              onClick={() => onClick(member.id)}
             >
-              <UnselectedMemberProfileImg src={member.image}/>
+              <UnselectedMemberProfileImg src={member.image} />
             </UnselectedMemberProfile>
-            ))}
+          ))}
         </UnselectedGroup>
       </MemberDiv>
     </>
