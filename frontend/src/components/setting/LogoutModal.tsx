@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch } from "../../app/hooks";
 import {
@@ -85,6 +86,7 @@ const LogoutBtnStyle = styled.div`
 const LogoutModal = (props: modalType) => {
   const [isModal, toggleModal] = useState<boolean>(true);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const modalStyle = {
     content: {
@@ -105,6 +107,7 @@ const LogoutModal = (props: modalType) => {
   const comfirmModal = () => {
     dispatch(setAccessToken(""));// 로그아웃 하기
     props.toggle(false);
+    navigate('/intro', {replace:true,});
   };
 
   return (

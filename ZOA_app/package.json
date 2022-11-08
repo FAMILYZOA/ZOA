@@ -20,6 +20,8 @@
     "react-native-image-picker": "^4.10.0",
     "react-native-modal": "^13.0.1",
     "react-native-permissions": "^3.6.1",
+    "react-native-select-contact": "^1.6.3",
+    "react-native-send-intent": "^1.3.0",
     "react-native-webview": "^11.23.1"
   },
   "devDependencies": {

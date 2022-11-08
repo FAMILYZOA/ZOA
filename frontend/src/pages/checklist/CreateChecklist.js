@@ -7,8 +7,6 @@ import AddPhoto from "../../components/checklist/create/AddPhoto";
 import Button from "../../components/Button";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import { useAppSelector } from "../../app/hooks";
-import plus from "../../assets/plus.png";
 
 function CreateChecklist() {
   const navigate = useNavigate();
@@ -17,7 +15,7 @@ function CreateChecklist() {
     to_users_id: [],
     text: "",
     photo: "",
-  });
+  }, []);
 
   const receivers = (data) => {
     console.log(data);
@@ -45,7 +43,7 @@ function CreateChecklist() {
     if (info.photo !== "") {
       data.append("photo", info.photo);
     }
-    console.log(data);
+    //console.log(data);
     axios({
       method: "POST",
       url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
@@ -54,7 +52,10 @@ function CreateChecklist() {
       },
       data: data,
     }).then((res) => {
+      //console.log(res);
       navigate("/checklist");
+    }).catch((err) =>{
+      console.log(err);
     });
   };
 

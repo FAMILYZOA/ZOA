@@ -17,10 +17,15 @@ import {
   ActivityIndicator,
   StyleSheet,
   Pressable,
+  Linking,
+  Platform,
+  Toast,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ActionSheet from 'react-native-actions-sheet';
+import {selectContactPhone} from 'react-native-select-contact';
+import SendIntentAndroid from 'react-native-send-intent';
 import {useRef, useState, useEffect} from 'react';
 
 const App = () => {
@@ -76,6 +81,9 @@ const App = () => {
       case 'navigationStateChange':
         setCanGoBack(event.nativeEvent.canGoBack);
         break;
+      case 'inviteSMS':
+        sendSMS();
+        break;
       default:
         break;
     }
@@ -89,7 +97,55 @@ const App = () => {
           title: '카메라 사용 권한 요청',
           message:
             '사진을 사용하기 위한 권한이 필요합니다.' +
-            '사진을 사용하고 싶으면 예를 눌러주세요.',
+            '사진을 사용하길 원하면 예를 눌러주세요.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const requestContactPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: '연락처 사용 권한 요청',
+          message:
+            '연락처를 사용하기 위한 권한이 필요합니다.' +
+            '연락처를 사용하길 원하면 예를 눌러주세요.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const requestPackageQueryPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.requestPackageQueryPermission,
+        {
+          title: '패키지 쿼리 사용 권한 요청',
+          message:
+            '패키지를 쿼리하기 위한 권한이 필요합니다.' +
+            '패키지를 쿼리하길 원하면 예를 눌러주세요.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -167,16 +223,56 @@ true;
     );
   };
 
+  const sendSMS = async () => {
+    // 권한 요청
+    if (requestContactPermission()) {
+      // 보낼 사람 선택 -> 한명 or 여러명?
+      const selected = await selectContactPhone();
+      if (!selected) {
+        return null;
+      }
+      // 선택한 사람에게 문자 보내기
+      let {contact, selectedPhone} = selected;
+      Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
+    } else {
+      console.log('거부하셨습니다.');
+    }
+  };
+
+  const onShouldStartLoadWithRequest = event => {
+    if (Platform.OS === 'android') {
+      if (event.url.includes('intent')) {
+        SendIntentAndroid.openAppWithUri(event.url)
+          .then(isOpened => {
+            // 앱이 열렸을 때
+            webViewRef.current.goBack(); // (임시) 이동되고나서, 전에 보던 페이지를 보기 위해
+            if (!isOpened) {
+              alert('앱 실행이 실패했습니다');
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            console.log('ERROR!!!');
+          });
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <View style={{flex: 1}}>
       <WebView
         ref={webViewRef}
         onLoadStart={() => webViewRef.current.injectJavaScript(INJECTED_CODE)}
+        originWhitelist={['*']}
         renderLoading={loadingSpinner}
         startInLoadingState={true}
         style={{flex: 1}}
         source={url}
         onMessage={getMessage}
+        scrollEnabled={false}
+        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       />
 
       <ActionSheet
