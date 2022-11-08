@@ -32,7 +32,7 @@ const Container = styled.div`
 `;
 const Info = styled.div`
   margin: auto;
-  font-size: 1.25rem;
+  font-size: 1.25em;
   text-align: center;
 `;
 const ImgBox = styled.div`
@@ -60,7 +60,7 @@ const Btn = styled.div`
   border-radius: 30px;
   background: linear-gradient(45deg, #fec786, #ff787f);
   color: white;
-  font-size: 1.25rem;
+  font-size: 1.25em;
   opacity: ${(props) => (props.active === true ? 1 : 0.5)};
 `;
 

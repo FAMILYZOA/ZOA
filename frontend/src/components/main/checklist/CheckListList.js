@@ -43,7 +43,7 @@ const IconBox = styled.div`
 const Text = styled.p`
   color: #ff787f;
   margin: auto 8px;
-  font-size: 0.9rem;
+  font-size: 0.9em;
 `;
 
 const NoList = styled.div`

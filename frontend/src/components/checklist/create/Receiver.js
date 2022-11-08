@@ -7,7 +7,7 @@ const Container = styled.div`
   margin: 8px 5%;
 `;
 const MainText = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-weight: bold;
   text-align: start;
 `;
@@ -49,7 +49,7 @@ const UserBox = styled.div`
   }
   p {
     margin: 0 auto;
-    font-size: 0.6rem;
+    font-size: 0.6em;
   }
 `;
 

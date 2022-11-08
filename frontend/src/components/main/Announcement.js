@@ -18,7 +18,7 @@ const Text = styled.div`
 const From = styled.p`
   text-align: end;
   margin: 4px 0 8px 0;
-  font-size: 0.7rem;
+  font-size: 0.7em;
   color: #444444;
   width: 95%;
 `;

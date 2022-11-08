@@ -6,7 +6,7 @@ const Container = styled.div`
 `;
 
 const MainText = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-weight: bold;
   text-align: start;
   margin-bottom: 16px;
@@ -25,7 +25,7 @@ const InputTag = styled.textarea`
   margin: 10px 3%;
   width: 94%;
   height: 100px;
-  font-size: 0.7rem;
+  font-size: 0.7em;
   resize: none;
 `;
 

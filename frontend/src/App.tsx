@@ -48,7 +48,7 @@ function App() {
   const [, updateState] = useState<{}>();
   const forceUpdate = useCallback(() => updateState({}), []);
 
-  const fontArray = ["4.5vmin", "5.5vmin", "6.5vmin"];
+  const fontArray = ["16px", "20px", "24px"];
 
   const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],

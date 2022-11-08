@@ -35,7 +35,7 @@ const DateStyle = styled.p`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   line-height: 100%;
   /* or 20px */
 
@@ -83,7 +83,7 @@ const RegistBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   line-height: 100%;
   /* or 24px */
 

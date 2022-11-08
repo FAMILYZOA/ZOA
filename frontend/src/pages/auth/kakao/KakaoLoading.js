@@ -14,7 +14,7 @@ export const Background = styled.div`
 `;
 
 export const LoadingText = styled.div`
-  font: 2rem;
+  font: 2em;
   text-align: center;
 `;
 

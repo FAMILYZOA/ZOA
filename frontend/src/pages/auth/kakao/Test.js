@@ -23,7 +23,7 @@ function Test() {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `grant_type=authorization_code&client_id=${"931a81a6fdb9751f2858ca6f2f46b377"}&redirect_uri=${process.env.REACT_APP_BACK_HOST}&code=${kakao_code}`,
+      body: `grant_type=authorization_code&client_id=${"931a81a6fdb9751f2858ca6f2f46b377"}&redirect_uri=${process.env.REACT_APP_FE_HOST}&code=${kakao_code}`,
       //prompt={none}(?) 추가하면 자동로그인 된다 함
     })
       .then((res) => res.json())
