@@ -57,7 +57,12 @@ const Toggle = styled.div`
   display: flex;
   width: 100%;
   border: none;
-  height: ${(props) => (props.id === props.current ? "78px" : "0")};
+  height: ${(props) =>
+    props.id === props.current
+      ? props.photo === null
+        ? "78px"
+        : "198px"
+      : "0"};
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 20px;
@@ -70,13 +75,22 @@ const Toggle = styled.div`
     font-size: 14px;
     color: #707070;
   }
-  div {
-    // display: ${(props) => (props.id === props.current ? "block" : "none")};
-    // transition: display 0.5s;
-    margin: 5%;
-  }
   transition: height 0.5s;
   overflow-y: hidden;
+`;
+const ToggleContainer = styled.div`
+  margin: 5%;
+  width: 100%;
+`;
+const ImgBox = styled.div`
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  img {
+    height: 120px;
+    width: auto;
+    margin: 0 auto;
+  }
 `;
 
 const ContentsContainer = styled.div`
@@ -181,14 +195,21 @@ function TodoContents({ currentId }) {
                 />
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
               </NoToggle>
-              <Toggle id={li.id} current={click}>
-                <div>
+              <Toggle id={li.id} current={click} photo={li.photo}>
+                <ToggleContainer>
                   <p>From. {li.to_users_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
                   </span>
-                </div>
+                  {li.photo !== null ? (
+                    <ImgBox>
+                      <img src={li.photo.image} />
+                    </ImgBox>
+                  ) : (
+                    <></>
+                  )}
+                </ToggleContainer>
               </Toggle>
             </div>
           ))}
