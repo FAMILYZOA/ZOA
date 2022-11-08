@@ -18,7 +18,21 @@ from .serializers import (
     RefreshTokenSerializer,
     ProfileSerializer,
     ChangePasswordSerializer,
+    PhonecheckSerializer,
     )
+
+
+# 휴대폰 중복 체크
+class PhonecheckAPIView(GenericAPIView):
+    serializer_class = PhonecheckSerializer
+    permission_classes = [ AllowAny ]
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            return Response("사용 가능한 번호입니다.", status=status.HTTP_200_OK)
+        else:
+            return Response("사용 중인 번호입니다.", status=status.HTTP_400_BAD_REQUEST)
+
 
 # 회원가입
 class SignupAPIView(GenericAPIView):

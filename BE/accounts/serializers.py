@@ -2,11 +2,21 @@ from accounts.manager import password_creator
 from accounts.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import re
 
 
 password_field = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+
+
+# 핸드폰 중복 검사
+class PhonecheckSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(max_length=11, required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    class Meta:
+        model = User
+        fields = ('phone',)
+        
 
 # 회원가입
 class SignupSerializer(serializers.ModelSerializer):
