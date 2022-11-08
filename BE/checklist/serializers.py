@@ -16,12 +16,18 @@ class GetUserNameSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
+class GetImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ('image',)
+
 class  ChecklistSerializer(serializers.ModelSerializer):
+    photo = GetImageSerializer(read_only=True)
     to_users_id = GetUserNameSerializer(read_only=True)
     family_name = serializers.SerializerMethodField()
     class Meta: 
         model = Checklist
-        fields= ('id', 'text', 'status', 'created_at', 'to_users_id', 'family_name')
+        fields= ('id', 'text', 'status', 'created_at', 'to_users_id', 'family_name', 'photo')
 
     def get_family_name(self,obj) :
         from_user = obj.from_user_id
