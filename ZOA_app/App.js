@@ -31,7 +31,7 @@ import {useRef, useState, useEffect} from 'react';
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
-  const url = {uri: 'http://10.0.2.2:3000'};
+  const url = {uri: 'https://familyzoa.com'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
