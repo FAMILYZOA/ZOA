@@ -6,14 +6,14 @@ const VoiceMessageDiv = styled.div`
   display: flex;
 `
 const VoiceSenderDiv = styled.div`
-  width: 8vh;
-  height: 8vh;
-  margin-right: 2vh;
+  width: 17.5vmin;
+  height: 17.5vmin;
+  margin-right: 4.5vmin;
 `
 const VoiceSenderImg = styled.img`
-  width: 8vh;
-  height: 8vh;
-  border-radius: 4vh;
+  width: 17.5vmin;
+  height: 17.5vmin;
+  border-radius: 9vmin;
   object-fit: fill;
 `
 const VoiceDiv = styled.div`
@@ -21,31 +21,31 @@ const VoiceDiv = styled.div`
   position: relative;
   justify-content: center;
   align-items: center;
-  height: 5vh;
-  width: 21vh;
+  height: 11vmin;
+  width: 46.5vmin;
   background-color: #fdaf97;
-  border-radius: 2.5vh;
+  border-radius: 5.5vmin;
 `
 const VoiceIconDiv = styled.div`
-  height: 4vh;
-  width: 4vh;
-  margin: 0.5vh 2vh 0.5vh 0.5vh;
-  border-radius: 2vh;
+  height: 9vmin;
+  width: 9vmin;
+  margin: 1vmin 4.5vmin 1vmin 1vmin;
+  border-radius: 4.5vmin;
   background-color: #fff;
   text-align: center;
-  line-height: 4vh;
+  line-height: 9vmin;
 `
 const VoiceTimeDiv = styled.div`
   color: #fff;
 `
 const VoiceTimeDifference = styled.div`
-  font-size: 1.5vh;
-  bottom: -2vh;
-  right: 2vh;
+  font-size: 0.6rem;
+  bottom: -4.5vmin;
+  right: 4.5vmin;
 `
 const SenderName = styled.div`
-  width: 8vh;
-  margin: 1vh 0 2vh;
+  width: 17.5vmin;
+  margin: 2.25vmin 0 4.5vmin;
   text-align: center;
 `
 type VoiceMessageProps = {

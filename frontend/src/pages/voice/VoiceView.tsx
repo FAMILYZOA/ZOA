@@ -8,11 +8,11 @@ interface highLightProps {
 const SelectViewDiv = styled.div`
   display: flex;
   position: relative;
-  height: 6vh;
+  height: 13.25vmin;
 `
 const SelectViewItem = styled.div`
   text-align: center;
-  line-height: 6vh;
+  line-height: 13.25vmin;
   flex: 1;
 `
 const SelectHighlight = styled.div<highLightProps>`
@@ -33,7 +33,7 @@ const SelectHighlight = styled.div<highLightProps>`
   }}
 `
 const VoiceMessageDiv = styled.div`
-  margin: 2vh;
+  margin: 4.5vmin;
 `
 
 const VoiceView = () => {
