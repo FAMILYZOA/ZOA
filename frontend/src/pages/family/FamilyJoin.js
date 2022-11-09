@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
-import userImg from "../../assets/bong.png";
 import logo from "../../assets/white-logo.png";
 import { useDispatch } from "react-redux";
 import { setFamilyId } from "../../features/family/familySlice";
@@ -56,6 +55,7 @@ const Image = styled.div`
   border-radius: 100px;
   img {
     width: 54px;
+    height: 54px;
     border-radius: 100px;
   }
 `;
