@@ -22,12 +22,16 @@ function Main() {
   const [scrum, setScrum] = useState([]);
 
   useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
-      navigate("/intro");
-    } else {
-      if (localStorage.getItem("familyId")) {
+    if (localStorage.getItem("familyId")) {
+      if (localStorage.getItem("access_token")) {
         const familyId = localStorage.getItem("familyId");
         navigate(`/join/${familyId}`);
+      } else {
+        navigate("/intro");
+      }
+    } else {
+      if (!localStorage.getItem("access_token")) {
+        navigate("/intro");
       }
     }
   }, []);
@@ -35,7 +39,7 @@ function Main() {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/scrums/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/scrums/`,
       headers: {
         Authorization: `Bearer ${access}`,
       },

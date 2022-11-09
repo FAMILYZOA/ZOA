@@ -36,7 +36,7 @@ const ScrumFamItem = ({ id, emoji, name, yesterday, today, image }) => {
             <MemberProfileImg src={image} />
           </MemberProfile>
         </ProfileWrapper>
-        <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
+        <div style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}>
           {name}
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -58,8 +58,8 @@ const ScrumFamItem = ({ id, emoji, name, yesterday, today, image }) => {
       </div>
       <div style={{ margin: "4px 0 4px 40px" }}>
         <ItemWrapper>
-          <div style={{ margin: "8px", fontSize: "16px" }}>🙋‍♂️ {yesterday}</div>
-          <div style={{ margin: "8px", fontSize: "16px" }}>📢 {today}</div>
+          <div style={{ margin: "8px", fontSize: "0.8em" }}>🙋‍♂️ {yesterday}</div>
+          <div style={{ margin: "8px", fontSize: "0.8em" }}>📢 {today}</div>
         </ItemWrapper>
       </div>
     </>

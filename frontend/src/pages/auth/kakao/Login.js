@@ -5,11 +5,13 @@ import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { useAppDispatch } from "../../../app/hooks";
-import { customAxios } from './../../../api/customAxios';
-import { setAccessToken, setRefreshToken } from "../../../features/token/tokenSlice";
-import logo from "../../../assets/white-logo.png"
+import { customAxios } from "./../../../api/customAxios";
+import {
+  setAccessToken,
+  setRefreshToken,
+} from "../../../features/token/tokenSlice";
+import logo from "../../../assets/white-logo.png";
 /*global Kakao*/
-
 
 const Header = styled.div`
   display: flex;
@@ -21,36 +23,35 @@ const Header = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(255, 255, 255, 0.3) 0px 1px 4px;
-  img{
+  img {
     height: 32px;
   }
 `;
 
 const Container = styled.div`
-    margin: 30% 5%;
-    display: center;
-    align-items: center;
-    justify-content: center;
-`
+  margin: 30% 5%;
+  display: center;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Info = styled.p`
-    margin: 32px 0;
-`
+  margin: 32px 0;
+`;
 
 const InputContainer = styled.div`
-    margin: 8px 0;
-`
+  margin: 8px 0;
+`;
 const Title = styled.p`
-    font-size: 16px;
-    margin: 0 0 4px 8px;
-`
+  font-size: 16px;
+  margin: 0 0 4px 8px;
+`;
 const Warning = styled.p`
   font-size: 12px;
   margin: 4px 0 8px 8px;
   color: red;
   display: ${(props) => (props.active === false ? "none" : "block")};
 `;
-
 
 const InputBox = styled.div`
   width: 90%;
@@ -90,12 +91,12 @@ const Btn = styled.button`
   color: white;
 `;
 const RegisterText = styled.p`
-    margin: 8px;
-    display: flex;
-    justify-content: center;
-    font-size: 14px;
-    color: black;
-`
+  margin: 8px;
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: black;
+`;
 const KakaoLogin = styled.div`
   display: flex;
   justify-content: center;
@@ -107,106 +108,114 @@ const KakaoLogin = styled.div`
   }
 `;
 
-
-
 function Login() {
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-    const [phone, setPhone] = useState("");
-    const [pw, setPw] = useState("");
-    const [warn, setWarn] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [pw, setPw] = useState("");
+  const [warn, setWarn] = useState(false);
 
-    const onChangePhone = (e) => {
-        setPhone(
-          e.currentTarget.value
-            .replace(/[^0-9]/g, "")
-            .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
-            .replace(/(\-{1,2})$/g, "")
-        );
-    }
-    const onChangePw = (e) => {
-        setPw(e.currentTarget.value)
-    }
-    const activeWarn = () => {
-        setWarn(true)
-    }
-    const clickLogin = (phone, pw) => {
-        console.log(phone, pw);
-        const data = new FormData();
-        data.append("phone", phone.replaceAll("-", ""));
-        data.append("password", pw);
-
-        customAxios.post("accounts/login/", data).then((res) => {
-            dispatch(setAccessToken(res.data.token.access));
-            dispatch(setRefreshToken(res.data.token.refresh));
-            navigate("/", {replace:true});
-        }).catch((err)=> {
-            console.log(err)
-            activeWarn()
-        })
-    }
-    const clickKakaoLogin = () => {
-      Kakao.Auth.authorize({
-        redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
-      });
-    };
-
-
-
-    return (
-      <div>
-        <Header><img src={logo} alt="" /></Header>
-        <Container>
-          <div>
-            <Info>휴대폰 번호와 비밀번호를 입력해주세요🙂</Info>
-            <InputContainer>
-              <InputBox>
-                <BiUser size={20} color="707070" />
-                <Input
-                  type="text"
-                  placeholder="Phone"
-                  maxLength="13"
-                  onChange={onChangePhone}
-                  value={phone}
-                ></Input>
-              </InputBox>
-            </InputContainer>
-            <InputContainer>
-              <InputBox>
-                <MdOutlineLock size={20} color="707070" />
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  onChange={onChangePw}
-                  value={pw}
-                ></Input>
-              </InputBox>
-            </InputContainer>
-            <Warning active={warn}>
-              입력하신 휴대폰 번호 또는 비밀번호가 정확하지 않습니다.
-            </Warning>
-            <BtnBox>
-              <Btn onClick={() => clickLogin(phone, pw)}>로그인</Btn>
-            </BtnBox>
-            <Link to={"/register"} style={{ textDecoration: "none" }}>
-              <RegisterText>
-                {" "}
-                <span style={{ color: "#FF787F" }}>ZOA </span> 회원가입
-              </RegisterText>
-            </Link>
-            <KakaoLogin onClick={() => clickKakaoLogin(phone, pw)}>
-              <RiKakaoTalkFill
-                size={24}
-                color={"#F5C343"}
-                style={{ margin: "0 4px" }}
-              />
-              <p>카카오계정으로 로그인</p>
-            </KakaoLogin>
-          </div>
-        </Container>
-      </div>
+  const onChangePhone = (e) => {
+    setPhone(
+      e.currentTarget.value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+        .replace(/(\-{1,2})$/g, "")
     );
+  };
+  const onChangePw = (e) => {
+    setPw(e.currentTarget.value);
+  };
+  const activeWarn = () => {
+    setWarn(true);
+  };
+  const clickLogin = (phone, pw) => {
+    const data = new FormData();
+    data.append("phone", phone.replaceAll("-", ""));
+    data.append("password", pw);
+
+    customAxios
+      .post("accounts/login/", data)
+      .then((res) => {
+        dispatch(setAccessToken(res.data.token.access));
+        dispatch(setRefreshToken(res.data.token.refresh));
+        navigate("/", { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        activeWarn();
+      });
+  };
+  const clickKakaoLogin = () => {
+    Kakao.Auth.authorize({
+      redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
+    });
+  };
+  const onEnter = (e) => {
+    if (e.key == "Enter") {
+      clickLogin(phone, pw);
+    }
+  };
+
+  return (
+    <div>
+      <Header>
+        <img src={logo} alt="" />
+      </Header>
+      <Container>
+        <div>
+          <Info>휴대폰 번호와 비밀번호를 입력해주세요🙂</Info>
+          <InputContainer>
+            <InputBox>
+              <BiUser size={20} color="707070" />
+              <Input
+                type="text"
+                placeholder="Phone"
+                maxLength="13"
+                onChange={onChangePhone}
+                value={phone}
+                onKeyDown={onEnter}
+              ></Input>
+            </InputBox>
+          </InputContainer>
+          <InputContainer>
+            <InputBox>
+              <MdOutlineLock size={20} color="707070" />
+              <Input
+                type="password"
+                placeholder="Password"
+                onChange={onChangePw}
+                maxLength="20"
+                value={pw}
+                onKeyDown={onEnter}
+              ></Input>
+            </InputBox>
+          </InputContainer>
+          <Warning active={warn}>
+            입력하신 휴대폰 번호 또는 비밀번호가 정확하지 않습니다.
+          </Warning>
+          <BtnBox>
+            <Btn onClick={() => clickLogin(phone, pw)}>로그인</Btn>
+          </BtnBox>
+          <Link to={"/register"} style={{ textDecoration: "none" }}>
+            <RegisterText>
+              {" "}
+              <span style={{ color: "#FF787F" }}>ZOA </span> 회원가입
+            </RegisterText>
+          </Link>
+          <KakaoLogin onClick={() => clickKakaoLogin(phone, pw)}>
+            <RiKakaoTalkFill
+              size={24}
+              color={"#F5C343"}
+              style={{ margin: "0 4px" }}
+            />
+            <p>카카오계정으로 로그인</p>
+          </KakaoLogin>
+        </div>
+      </Container>
+    </div>
+  );
 }
 
 export default Login;

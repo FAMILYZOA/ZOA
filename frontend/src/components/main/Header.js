@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 const HeaderBox = styled.div`
   display: flex;
@@ -27,13 +28,14 @@ const EditFamilyIcon = styled.div`
 
 function Header() {
   const navigate = useNavigate();
+  const familyName = useAppSelector((state) => state.family.name);
   const MoveFamilyEdit = () => {
     navigate("/family/manage");
   };
   return (
     <HeaderBox>
       <FamilyName>
-        <p>부리부리 패밀리</p>
+        <p>{familyName}</p>
       </FamilyName>
       <EditFamilyIcon onClick={MoveFamilyEdit}>
         <FaUsers size="24" color="#ff787f" />

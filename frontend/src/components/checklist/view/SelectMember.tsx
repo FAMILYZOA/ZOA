@@ -4,18 +4,19 @@ import styled from "styled-components";
 const MemberDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 0 0.3em;
 `;
 
 const SelectedMemberProfileImg = styled.img`
-  height: 17.5vmin;
-  width: 17.5vmin;
-  border-radius: 8.75vmin;
+  height: 3.2em;
+  width: 3.2em;
+  border-radius: 1.6em;
   object-fit: fill;
 `;
 
 const UnselectedGroup = styled.div`
   display: flex;
-  width: 22.5vh;
+  width: 9em;
   flex-wrap: nowrap;
   overflow-x: hidden;
   float: right;
@@ -24,14 +25,14 @@ const UnselectedGroup = styled.div`
 const UnselectedMemberProfile = styled.div`
   width: auto;
   position: relative;
-  margin-left: 1vmin;
-  margin-top: 9vmin;
+  margin-left: 0.2em;
+  margin-top: 1.6em;
 `;
 
 const UnselectedMemberProfileImg = styled.img`
-  height: 9vmin;
-  width: 9vmin;
-  border-radius: 4.5vmin;
+  height: 1.6em;
+  width: 1.6em;
+  border-radius: 0.8em;
   object-fit: fill;
   opacity: 0.5;
 `;

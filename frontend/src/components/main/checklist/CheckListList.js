@@ -50,7 +50,6 @@ const NoList = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: calc((100vh - 520px) / 2);
 `;
 
 const NoListText = styled.p`
@@ -76,7 +75,7 @@ const CheckListList = () => {
     if (user >= 0) {
       axios({
         method: "get",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}`,
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}/todaycreate`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
