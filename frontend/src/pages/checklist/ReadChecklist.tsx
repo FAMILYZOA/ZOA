@@ -51,8 +51,8 @@ const CheckListTitle = styled.div`
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: calc(100vh - 56px);
   z-index: 2;
   background-color: rgba(102, 102, 102, 0.5);
   animation: fadein 0.5s;
@@ -100,6 +100,7 @@ const ModalDiv = styled.div`
 `;
 const ModalItem = styled.div<modalItemProps>`
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   z-index: 4;
   margin-bottom: 1vh;
@@ -153,14 +154,14 @@ const ModalItem = styled.div<modalItemProps>`
   }
 `;
 const ModalItemName = styled.div`
-  margin-right: 0.2em;
+  margin-right: 0.6em;
   font-weight: 700;
-  font-size: 0.4em;
+  font-size: 0.8em;
 `;
 const ModalItemImg = styled.img`
-  width: 1.4em;
-  height: 1.4em;
-  border-radius: 0.7em;
+  width: 2.0em;
+  height: 2.0em;
+  border-radius: 1.0em;
   object-fit: fill;
 `;
 
@@ -248,10 +249,10 @@ function ReadChecklist() {
               key={member.id}
               index={index}
             >
-              <ModalItemName>{member.name}</ModalItemName>
               <div>
                 <ModalItemImg src={member.image} />
               </div>
+              <ModalItemName>{member.name}</ModalItemName>
             </ModalItem>
           ))}
         </ModalDiv>

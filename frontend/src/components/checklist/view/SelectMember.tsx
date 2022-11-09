@@ -4,6 +4,7 @@ import styled from "styled-components";
 const MemberDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 0 0.3em;
 `;
 
 const SelectedMemberProfileImg = styled.img`
@@ -15,7 +16,7 @@ const SelectedMemberProfileImg = styled.img`
 
 const UnselectedGroup = styled.div`
   display: flex;
-  width: 22.5vh;
+  width: 9em;
   flex-wrap: nowrap;
   overflow-x: hidden;
   float: right;
