@@ -113,9 +113,14 @@ ${inviteLink}`;
     navigate("/");
   };
   const sendMessage = () => {
-    if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
-    } else {
+    if (os === "Android OS") {
+      window.location.href = `sms:?body=${smsUrl}`;
+      if(window.ReactNativeWebView){
+        window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+      }
+    }else if(os === "iOS") {
+      window.location.href = `sms:&body=${smsUrl}`
+    }else{
       console.log("모바일 환경이 아닙니다.");
     }
   };
@@ -130,16 +135,16 @@ ${inviteLink}`;
           imageUrl:
             "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
           link: {
-            mobileWebUrl: `/join/${id}`,
-            webUrl: `/join/${id}`,
+            mobileWebUrl: `${process.env.REACT_APP_FE_HOST}/join/${id}`,
+            webUrl: `${process.env.REACT_APP_FE_HOST}/join/${id}`,
           },
         },
         buttons: [
           {
             title: "ZOA에 참여하기",
             link: {
-              mobileWebUrl: "https://developers.kakao.com",
-              webUrl: "https://developers.kakao.com",
+              mobileWebUrl: `${process.env.REACT_APP_FE_HOST}/${id}`,
+              webUrl: `${process.env.REACT_APP_FE_HOST}/${id}`,
             },
           },
         ],

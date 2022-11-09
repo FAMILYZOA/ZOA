@@ -27,14 +27,28 @@ function CreateChecklist() {
     },
     []
   );
+  const [active, setActive] = useState(false);
 
   const receivers = (data) => {
-    console.log(data);
+    if (data.receiver.length === 0) {
+      setActive(false);
+    } else if (info.text === "") {
+      setActive(false);
+    } else {
+      setActive(true);
+    }
     setInfo((pre) => {
       return { ...pre, to_users_id: data.receiver };
     });
   };
   const todos = (data) => {
+    if (data.todo === "") {
+      setActive(false);
+    } else if (info.to_users_id.length === 0) {
+      setActive(false);
+    } else {
+      setActive(true);
+    }
     setInfo((pre) => {
       return { ...pre, text: data.todo };
     });
@@ -46,30 +60,38 @@ function CreateChecklist() {
   };
 
   const event = () => {
-    const data = new FormData();
-    data.append("text", info.text);
-    {
-      info.to_users_id.map((userId) => data.append("to_users_id", userId));
-    }
-    if (info.photo !== "") {
-      data.append("photo", info.photo);
-    }
-    //console.log(data);
-    axios({
-      method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-      data: data,
-    })
-      .then((res) => {
-        //console.log(res);
-        navigate("/checklist");
+    console.log(info);
+    if (info.text === "") {
+      setActive(false);
+    } else if (info.to_users_id.length === 0) {
+      setActive(false);
+    } else {
+      setActive(true);
+      const data = new FormData();
+      data.append("text", info.text);
+      {
+        info.to_users_id.map((userId) => data.append("to_users_id", userId));
+      }
+      if (info.photo !== "") {
+        data.append("photo", info.photo);
+      }
+      //console.log(data);
+      axios({
+        method: "POST",
+        url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        data: data,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          //console.log(res);
+          navigate("/checklist");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -79,7 +101,7 @@ function CreateChecklist() {
         <Receiver receivers={receivers}></Receiver>
         <TodoInput todos={todos}></TodoInput>
         <AddPhoto getPhoto={getPhoto}></AddPhoto>
-        <Button label="등록하기" click={event} active={true}></Button>
+        <Button label="등록하기" click={event} active={active}></Button>
       </Container>
     </div>
   );

@@ -53,7 +53,7 @@ function App() {
   const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
   });
-  
+
   const infoUpdate = () => {
     if (accessToken === "") {
       // 토큰이 없는 경우
@@ -86,7 +86,7 @@ function App() {
       }
     } else {
       // 토큰이 있는 경우
-      if (userId < 0) {
+      {
         // 유저 값이 없으면, 유저 정보 불러오기
         axios({
           method: "get",

@@ -32,6 +32,8 @@ function Main() {
     } else {
       if (!localStorage.getItem("access_token")) {
         navigate("/intro");
+      } else if (family < 0) {
+        navigate("/family/create");
       }
     }
   }, []);

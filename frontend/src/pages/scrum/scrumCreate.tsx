@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -7,7 +7,6 @@ import EmojiPicker, {
 import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -126,19 +125,10 @@ const DateSelector = () => {
     return `${year}.${month + 1}.${day}`;
   };
 
-  const dayBefore = () => {
-    setDate(new Date(date.setDate(date.getDate() - 1)));
-  };
-  const dayAfter = () => {
-    if (date < new Date()) {
-      setDate(new Date(date.setDate(date.getDate() + 1)));
-    }
-  };
+  
   return (
     <DateSelectorStyle>
-      <IoIosArrowBack fontSize={28} color={"#666666"} onClick={dayBefore} />
       <DateStyle>{dateFormat(date)}</DateStyle>
-      <IoIosArrowForward fontSize={28} color={"#666666"} onClick={dayAfter} />
     </DateSelectorStyle>
   );
 };
