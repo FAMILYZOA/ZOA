@@ -147,11 +147,13 @@ function PageTwo({ twoInfo }) {
     setConfirmPw(e.currentTarget.value);
   };
   useEffect(() => {
+    var regPw =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$/;
     if (confirmPw === "") {
       setPwCheck(false);
       setconrirmPwWarn(false);
     } else {
-      if (confirmPw !== pw) {
+      if (confirmPw !== pw || !regPw.test(confirmPw)) {
         setPwCheck(false);
         setconrirmPwWarn(true);
       } else {

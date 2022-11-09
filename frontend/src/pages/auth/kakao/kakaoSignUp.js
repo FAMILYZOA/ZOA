@@ -21,11 +21,11 @@ const Title = styled.p`
   margin: 0 0 8px 8px;
 `;
 const Warning = styled.p`
-    font-size: 12px;
-    margin: 4px 0 8px 8px;
-    color: red;
-    display: ${props => props.active == false ? 'none': 'block'}
-`
+  font-size: 12px;
+  margin: 4px 0 8px 8px;
+  color: red;
+  display: ${(props) => (props.active == false ? "none" : "block")};
+`;
 const Confirm = styled.p`
   font-size: 12px;
   margin: 4px 0 8px 8px;
@@ -53,10 +53,10 @@ const PhoneInput = styled.input`
   outline: none;
 `;
 const CheckText = styled.p`
-    font-size: 14px;
-    font-weight: bold;
-    margin: 0;
-`
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+`;
 
 const AgeSelectors = styled.div`
   margin: 8px 0;
@@ -107,9 +107,6 @@ const Btn = styled.button`
   color: white;
 `;
 
-
-
-
 function KakaoSignup() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -118,47 +115,51 @@ function KakaoSignup() {
     kakao_id: String(preinfo.id),
     name: preinfo.name,
     image: preinfo.profile,
-    phone: '',
-    birth: '',
+    phone: "",
+    birth: "",
   });
 
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
-  const [phone, setPhone] = useState('');
-  
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [phone, setPhone] = useState("");
 
   const onPhoneChange = (e) => {
-        setPhone(e.currentTarget.value
+    setPhone(
+      e.currentTarget.value
         .replace(/[^0-9]/g, "")
         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
         .replace(/(\-{1,2})$/g, "")
-    )}
-    useEffect(()=> {
-        if(phone.length === 13){
-            setInfo((pre)=>{return{
-                ...pre, phone:phone
-            }})
-        } else{
-            setInfo((pre)=> {
-                return{...pre, phone:''}
-            })
-        }
-    },[phone])
-    const onCertChange = (e) => {
-        setNum(e.currentTarget.value);
+    );
+  };
+  useEffect(() => {
+    if (phone.length === 13) {
+      setInfo((pre) => {
+        return {
+          ...pre,
+          phone: phone,
+        };
+      });
+    } else {
+      setInfo((pre) => {
+        return { ...pre, phone: "" };
+      });
     }
-    
-    const selectYear = (e) => {
-        setYear(e.target.value);
-    }
-    const selectMonth = (e) => {
-        setMonth(e.target.value);
-    }
-    const selectDay = (e) => {
-        setDay(e.target.value);
-    }
-    const [pwarn, setPwarn] = useState(false);
+  }, [phone]);
+  const onCertChange = (e) => {
+    setNum(e.currentTarget.value);
+  };
+
+  const selectYear = (e) => {
+    setYear(e.target.value);
+  };
+  const selectMonth = (e) => {
+    setMonth(e.target.value);
+  };
+  const selectDay = (e) => {
+    setDay(e.target.value);
+  };
+  const [pwarn, setPwarn] = useState(false);
   const [bwarn, setBwarn] = useState(false);
   const [nwarn, setNwarn] = useState(false);
   const [nconfirm, setNconfirm] = useState(false);
@@ -167,7 +168,6 @@ function KakaoSignup() {
   const [certifiNum, setNum] = useState("");
   // 인증 성공 여부
   const [cerCheck, setCheck] = useState(false);
-  
 
   const pushNum = (phone) => {
     setNconfirm(true);
@@ -177,9 +177,9 @@ function KakaoSignup() {
       method: "POST",
       url: `https://k7b103.p.ssafy.io/api/v1/event/`,
       data: data,
-    })
-  }
-  
+    });
+  };
+
   const clickCheck = (certifiNum) => {
     const data = new FormData();
     data.append("phone", phone.replaceAll("-", ""));
@@ -188,69 +188,73 @@ function KakaoSignup() {
       method: "POST",
       url: `https://k7b103.p.ssafy.io/api/v1/event/check/`,
       data: data,
-    }).then((res) => {
+    })
+      .then((res) => {
         if (res.status === 200) {
-            setNwarn(false);
-            setCconfirm(true);
-            setCheck(true);
-        } 
-    }).catch((err) => {
+          setNwarn(false);
+          setCconfirm(true);
+          setCheck(true);
+        }
+      })
+      .catch((err) => {
         if (err.response.status === 401) {
-            setCconfirm(false);
-            setNwarn(true);
-        }else if (err.response.status === 404) {
-            setCconfirm(false);
-            setNwarn(true);
+          setCconfirm(false);
+          setNwarn(true);
+        } else if (err.response.status === 404) {
+          setCconfirm(false);
+          setNwarn(true);
         } else if (err.response.status === 429) {
           console.log("짧은 시간안에 너무 많은 요청을 보냈습니다.");
         } else if (err.response.status === 500) {
           console.log("server error");
         }
-    })
-  }
-
+      });
+  };
 
   const push = () => {
-    if(cerCheck == false) {
-        setNwarn(true);
+    if (cerCheck == false) {
+      setNwarn(true);
     } else {
-        if (info.phone === '') {
-            setNconfirm(false);
-            setPwarn(true);
-        } else if(year === '' || month === '' || day===''){
-            setPwarn(false);
-            setBwarn(true);
-        } else {
-            const birth = String(year) + '-' + String(month) + '-' + String(day);
-            setInfo((pre) => {return{...pre, birth: birth}})
-            const data = new FormData();
-            data.append("kakao_id", info.kakao_id);
-            data.append("name", info.name);
-            data.append("image", info.image);
-            data.append("phone", info.phone.replaceAll("-", ""));
-            data.append("birth", birth);
-            axios({
-                method: "POST",
-                url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
-                data: data,
-            })
-            .then((res) => {
-                if (res.status === 201) {
-                    navigate("/");
-                }
-            }).catch((err) => {
-                if (err.response.status === 400) {
-                    console.log(err)
-                    alert('이미 가입된 회원입니다. 로그인을 해주세요.');
-                    navigate("/intro");
-                } else {
-                console.log("예상치 못한 에러군,,,");
-                }
-            })
-        }
-
+      if (info.phone === "") {
+        setNconfirm(false);
+        setPwarn(true);
+      } else if (year === "" || month === "" || day === "") {
+        setPwarn(false);
+        setBwarn(true);
+      } else {
+        const birth = String(year) + "-" + String(month) + "-" + String(day);
+        setInfo((pre) => {
+          return { ...pre, birth: birth };
+        });
+        const data = new FormData();
+        data.append("kakao_id", info.kakao_id);
+        data.append("name", info.name);
+        data.append("image", info.image);
+        data.append("phone", info.phone.replaceAll("-", ""));
+        data.append("birth", birth);
+        axios({
+          method: "POST",
+          url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
+          data: data,
+        })
+          .then((res) => {
+            if (res.status === 201) {
+              alert("회원가입에 성공하였습니다. 로그인 후 이용해주세요.");
+              navigate("/intro");
+            }
+          })
+          .catch((err) => {
+            if (err.response.status === 400) {
+              console.log(err);
+              alert("이미 가입된 회원입니다. 로그인을 해주세요.");
+              navigate("/intro");
+            } else {
+              console.log("예상치 못한 에러군,,,");
+            }
+          });
+      }
     }
-  }
+  };
   return (
     <div>
       <Header label={"회원가입"} back="false"></Header>
@@ -260,13 +264,13 @@ function KakaoSignup() {
           <Title>휴대폰 번호</Title>
           <PhoneInputBox>
             <PhoneInput
-                type="tel"
-                placeholder="휴대폰 11자리"
-                maxLength="13"
-                onChange={onPhoneChange}
-                value={phone}
+              type="tel"
+              placeholder="휴대폰 11자리"
+              maxLength="13"
+              onChange={onPhoneChange}
+              value={phone}
             ></PhoneInput>
-            <CheckText onClick={()=> pushNum(phone)}>인증번호 받기</CheckText>
+            <CheckText onClick={() => pushNum(phone)}>인증번호 받기</CheckText>
           </PhoneInputBox>
           <Warning active={pwarn}>휴대폰 번호를 확인해주세요.</Warning>
           <Confirm active={nconfirm}>인증번호를 전송하였습니다.</Confirm>
@@ -275,11 +279,11 @@ function KakaoSignup() {
           <Title>인증번호</Title>
           <PhoneInputBox>
             <PhoneInput
-                type="number"
-                placeholder="인증 번호 입력"
-                maxLength="6"
-                onChange={onCertChange}
-                value={certifiNum}
+              type="number"
+              placeholder="인증 번호 입력"
+              maxLength="6"
+              onChange={onCertChange}
+              value={certifiNum}
             ></PhoneInput>
             <CheckText onClick={() => clickCheck(certifiNum)}>확인</CheckText>
           </PhoneInputBox>
