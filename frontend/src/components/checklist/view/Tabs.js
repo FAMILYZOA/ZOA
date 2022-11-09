@@ -149,7 +149,11 @@ function TodoContents({ currentId }) {
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        setList(list.concat(res.data.results)); // 리스트 추가
+        if (list[0]?.id === currentId){
+          setList(list.concat(res.data.results)); // 리스트 추가
+        } else {
+          setList(res.data.results);
+        }
         preventRef.current = true;
       }
       setLoad(false); //로딩 종료
