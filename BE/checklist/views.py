@@ -94,7 +94,7 @@ class ChecklistTodayAPIView(GenericAPIView):
         checklist = Checklist.objects.filter(
             Q(to_users_id__exact=to_users_id) & 
             Q(created_at__year=year, created_at__month=month, created_at__day=day)
-        )
+        ).order_by('status')
         serializer = self.serializer_class(checklist, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
