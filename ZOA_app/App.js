@@ -12,6 +12,7 @@ import {
   View,
   Text,
   Button,
+  Alert,
   PermissionsAndroid,
   BackHandler,
   ActivityIndicator,
@@ -20,6 +21,7 @@ import {
   Linking,
   Platform,
   Toast,
+  ToastAndroid,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -31,7 +33,7 @@ import {useRef, useState, useEffect} from 'react';
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
-  const url = {uri: 'https://familyzoa.com'};
+  const url = {uri: 'https://k7b103.p.ssafy.io'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -225,7 +227,8 @@ true;
 
   const sendSMS = async () => {
     // 권한 요청
-    if (requestContactPermission()) {
+    const isPermitted = await requestContactPermission();
+    if (isPermitted) {
       // 보낼 사람 선택 -> 한명 or 여러명?
       const selected = await selectContactPhone();
       if (!selected) {
@@ -247,17 +250,24 @@ true;
             // 앱이 열렸을 때
             webViewRef.current.goBack(); // (임시) 이동되고나서, 전에 보던 페이지를 보기 위해
             if (!isOpened) {
-              alert('앱 실행이 실패했습니다');
+              // 플레이스토어 링크 제공
+              if (event.url.includes('kakao')) {
+                ToastAndroid.show(
+                  '카카오톡이 설치되어 있지 않습니다. Google Play Store로 이동합니다.',
+                  ToastAndroid.SHORT,
+                );
+                Linking.openURL('market://details?id=com.kakao.talk');
+              }
             }
           })
           .catch(err => {
             console.log(err);
             console.log('ERROR!!!');
           });
-        return true;
+        return false;
       }
     }
-    return false;
+    return true;
   };
 
   return (
