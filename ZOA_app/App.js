@@ -33,7 +33,7 @@ import {useRef, useState, useEffect} from 'react';
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
-  const url = {uri: 'https://k7b103.p.ssafy.io'};
+  const url = {uri: 'https://k7b103.p.ssafy.io/'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -248,7 +248,8 @@ true;
         SendIntentAndroid.openAppWithUri(event.url)
           .then(isOpened => {
             // 앱이 열렸을 때
-            webViewRef.current.goBack(); // (임시) 이동되고나서, 전에 보던 페이지를 보기 위해
+            //webViewRef.current.goBack();
+            //console.log('opened'); // (임시) 이동되고나서, 전에 보던 페이지를 보기 위해
             if (!isOpened) {
               // 플레이스토어 링크 제공
               if (event.url.includes('kakao')) {
@@ -266,6 +267,7 @@ true;
           });
         return false;
       }
+      return true;
     }
     return true;
   };

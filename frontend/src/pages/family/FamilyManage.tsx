@@ -113,9 +113,14 @@ ${inviteLink}`;
     navigate("/");
   };
   const sendMessage = () => {
-    if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
-    } else {
+    if (os === "Android OS") {
+      window.location.href = `sms:?body=${smsUrl}`;
+      if(window.ReactNativeWebView){
+        window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+      }
+    }else if(os === "iOS") {
+      window.location.href = `sms:&body=${smsUrl}`
+    }else{
       console.log("모바일 환경이 아닙니다.");
     }
   };

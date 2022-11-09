@@ -5,7 +5,10 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { detect } from "detect-browser";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import { AuthRefresh } from "../../api/customAxios";
 import { setUserImage } from "../../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 type modalType = {
   isOpen: boolean;
@@ -78,7 +81,9 @@ const FontModal = (props: modalType) => {
   const [tempImage, setTempImage] = useState<string>(props.currentImage);
   const [photo, setPhoto] = useState<File>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const accessToken = useAppSelector((state) => state.token.access);
+  const refreshToken = useAppSelector((state) => state.token.refresh);
 
   // 모바일 연동
   const getOS = () => {
@@ -154,8 +159,28 @@ const FontModal = (props: modalType) => {
           console.log(res.data);
           dispatch(setUserImage(res.data.image));
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(async (err) => {
+          switch (err.response.status) {
+            case 401:
+              const code = err.response.data.code;
+              if (code === "token_not_valid") {
+                const tokens = await AuthRefresh(refreshToken);
+                console.log(tokens);
+                if (tokens) {
+                  dispatch(setAccessToken(tokens.access));
+                  dispatch(setRefreshToken(tokens.refresh));
+                } else {
+                  dispatch(setAccessToken(""));
+                  dispatch(setRefreshToken(""));
+
+                  navigate("/login", { replace: true });
+                }
+              }
+              break;
+            default:
+              console.log(err);
+              break;
+          }
         });
       props.toggle(false);
     }
