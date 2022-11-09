@@ -19,6 +19,7 @@ const Btn = styled.button`
   border-radius: 30px;
   font-weight: bold;
   color: white;
+  opacity: ${(props) => (props.active === false ? 0.5 : 1)};
 `;
 
 function Button(props) {
@@ -26,7 +27,9 @@ function Button(props) {
   return (
     <Container>
       <BtnBox>
-        <Btn onClick={click}>{label}</Btn>
+        <Btn onClick={click} active={active}>
+          {label}
+        </Btn>
       </BtnBox>
     </Container>
   );
