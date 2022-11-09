@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import re
 
 
-password_field = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+password_field = serializers.CharField(max_length=20,min_length=8,write_only=True,required=True)
 
 
 # 핸드폰 중복 검사
@@ -49,7 +49,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
         if not phone.isdecimal() :
             raise serializers.ValidationError('휴대폰 번호는 숫자 형식이어야 합니다.')
-        REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
+        REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,20}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
             raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",'regex')
 
@@ -156,9 +156,9 @@ class ProfileRetriveSerializer(serializers.ModelSerializer):
 
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=12,min_length=8,write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
-    old_password = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+    password = serializers.CharField(max_length=20,min_length=8,write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(max_length=20,min_length=8,write_only=True,required=True)
+    old_password = serializers.CharField(max_length=20,min_length=8,write_only=True,required=True)
 
     class Meta:
         model = User
