@@ -47,7 +47,7 @@ function Test() {
           data.append("kakao_id", id);
           axios({
             method: "POST",
-            url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/`,
+            url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/`,
             data: data,
           })
             .then((result) => {

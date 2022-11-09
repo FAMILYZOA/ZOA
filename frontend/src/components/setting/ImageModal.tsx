@@ -5,7 +5,10 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { detect } from "detect-browser";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import { AuthRefresh } from "../../api/customAxios";
 import { setUserImage } from "../../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 type modalType = {
   isOpen: boolean;
@@ -29,21 +32,21 @@ const ModalContentDiv = styled.div`
 const ImageTitleDiv = styled.div`
   letter-spacing: 1.25px;
   color: #ff787f;
-  margin-bottom: 5.5vmin;
+  margin-bottom: 1em;
   text-align: center;
 `;
 const ImageBodyDiv = styled.div`
-  width: 44vmin;
-  height: 44vmin;
+  width: 8em;
+  height: 8em;
 `;
 const TempShowImage = styled.img`
-  width: 44vmin;
-  height: 44vmin;
-  border-radius: 22vmin;
+  width: 8em;
+  height: 8em;
+  border-radius: 4em;
 `;
 const ButtonDiv = styled.div`
   display: flex;
-  margin-top: 4.5vmin;
+  margin-top: 0.8em;
 `;
 const ConfirmButton = styled.div`
   display: flex;
@@ -51,12 +54,12 @@ const ConfirmButton = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 11vmin;
+  height: 2em;
 
   color: #fff;
   background-color: #ff787f;
-  border-radius: 2.2vmin;
-  margin-right: 2.2vmin;
+  border-radius: 0.4em;
+  margin-right: 0.4em;
 `;
 const CancelButton = styled.div`
   display: flex;
@@ -64,13 +67,13 @@ const CancelButton = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 12vmin;
+  height: 2.2em;
 
   box-sizing: border-box;
 
   color: #aaa;
   border: 2px solid #aaa;
-  border-radius: 2.25vmin;
+  border-radius: 0.4em;
 `;
 
 const FontModal = (props: modalType) => {
@@ -78,7 +81,9 @@ const FontModal = (props: modalType) => {
   const [tempImage, setTempImage] = useState<string>(props.currentImage);
   const [photo, setPhoto] = useState<File>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const accessToken = useAppSelector((state) => state.token.access);
+  const refreshToken = useAppSelector((state) => state.token.refresh);
 
   // 모바일 연동
   const getOS = () => {
@@ -154,8 +159,28 @@ const FontModal = (props: modalType) => {
           console.log(res.data);
           dispatch(setUserImage(res.data.image));
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(async (err) => {
+          switch (err.response.status) {
+            case 401:
+              const code = err.response.data.code;
+              if (code === "token_not_valid") {
+                const tokens = await AuthRefresh(refreshToken);
+                console.log(tokens);
+                if (tokens) {
+                  dispatch(setAccessToken(tokens.access));
+                  dispatch(setRefreshToken(tokens.refresh));
+                } else {
+                  dispatch(setAccessToken(""));
+                  dispatch(setRefreshToken(""));
+
+                  navigate("/login", { replace: true });
+                }
+              }
+              break;
+            default:
+              console.log(err);
+              break;
+          }
         });
       props.toggle(false);
     }

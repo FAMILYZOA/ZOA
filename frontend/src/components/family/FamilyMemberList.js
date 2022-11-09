@@ -7,19 +7,19 @@ import { setFamilyUsers } from "../../features/family/familySlice"
 
 const MemberInfo = styled.div`
   display: flex;
-  margin-bottom: 2vmin;
+  margin-bottom: 0.4em;
   align-items: center;
 `;
 const MemberProfile = styled.div`
-  height: 7vmin;
-  width: 7vmin;
-  border-radius: 3.5vmin;
-  margin-right: 1.5vmin;
+  height: 1.2em;
+  width: 1.2em;
+  border-radius: 0.6em;
+  margin-right: 0.3em;
 `;
 const MemberProfileImg = styled.img`
-  height: 7vmin;
-  width: 7vmin;
-  border-radius: 3.5vmin;
+  height: 1.2em;
+  width: 1.2em;
+  border-radius: 0.6em;
   object-fit: fill;
 `;
 
@@ -73,7 +73,7 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
   const onPostName = () => {
     axios({
       method: "post",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/name/${id}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/name/${id}/`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -106,7 +106,7 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
   const onEditName = () => {
     axios({
       method: "put",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/name/${id}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/name/${id}/`,
       headers: {
         Authorization: `Bearer ${token}`,
       },

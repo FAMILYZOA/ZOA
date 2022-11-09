@@ -80,6 +80,7 @@ const Text = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 20px;
 `;
 
 function Emojis({ scrum }) {

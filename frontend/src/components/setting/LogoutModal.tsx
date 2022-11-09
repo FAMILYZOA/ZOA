@@ -4,7 +4,7 @@ import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
 import { useAppDispatch } from "../../app/hooks";
-import { setAccessToken } from "../../features/token/tokenSlice";
+import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
 
 type modalType = {
   isOpen: boolean;
@@ -13,7 +13,7 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 5.5vmin;
+  right: 1em;
 `;
 
 const LogoutStyle = styled.div`
@@ -44,7 +44,7 @@ const LogoutDescStyle = styled.div`
   font-weight: 400;
   line-height: 36px;
 
-  height: 21vmin;
+  height: 3.7em;
   /* or 180% */
 
   display: flex;
@@ -62,7 +62,7 @@ const LogoutBtnStyle = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 12vmin;
+  height: 2.2em;
 
   font-family: "Inter";
   font-style: normal;
@@ -75,7 +75,7 @@ const LogoutBtnStyle = styled.div`
   color: #ffffff;
 
   background: #ff787f;
-  border-radius: 3vmin;
+  border-radius: 0.5em;
 `;
 
 const LogoutModal = (props: modalType) => {
@@ -85,10 +85,9 @@ const LogoutModal = (props: modalType) => {
 
   const modalStyle = {
     content: {
-      top: "35vh",
-      bottom: "35vh",
-      left: "4vw",
-      right: "4vw",
+      inset: "35% 5%",
+      width: "80%",
+      height: "30%",
       borderRadius: "2vh",
       border: "none",
       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
@@ -103,6 +102,7 @@ const LogoutModal = (props: modalType) => {
 
   const comfirmModal = () => {
     dispatch(setAccessToken("")); // 로그아웃 하기
+    dispatch(setRefreshToken(""))
     props.toggle(false);
     navigate("/intro", { replace: true });
   };

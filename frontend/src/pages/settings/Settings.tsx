@@ -12,6 +12,7 @@ import ImageModal from "../../components/setting/ImageModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
+import { setFamilyUsers } from "../../features/family/familySlice";
 import axios from "axios";
 import Header from "../../components/main/Header";
 
@@ -50,7 +51,7 @@ const ProfileImgCover = styled.div`
 const ProfileEditIcon = styled.div`
   position: absolute;
   font-size: 1.2em;
-  border-radius: 5vmin;
+  border-radius: 0.9em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,17 +79,17 @@ const UserName = styled.div`
   display: flex;
 `;
 const UserNameEdit = styled.div`
-  margin-left: 2.25vmin;
+  margin-left: 0.4em;
   color: #ff787f;
 `;
 
 const UserEmail = styled.div`
   position: absolute;
   top: 0;
-  right: 5.5vmin;
+  right: 1em;
 `;
 const SettingMenu = styled.div`
-  margin: 4.5vmin 6.5vmin;
+  margin: 0.8em 1.2em;
 `;
 const SettingItem = styled.div`
   display: flex;
@@ -130,14 +131,14 @@ const NameEditInput = styled.input`
   border-top-width: 0;
   border-bottom: 1;
   width: 30vw;
-  height: 5.5vmin;
+  height: 1em;
   background-color: transparent;
   border-color: #ffd5d7;
   outline: 0;
-  font-size: 5.5vmin;
   font-family: "Pretendard-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 1em;
 `;
 const theme = createTheme({
   palette: {
@@ -185,6 +186,7 @@ const Settings = () => {
   const fontLetter = ["작게", "보통", "크게"];
 
   const accessToken = useAppSelector((state) => state.token.access);
+  const familyId = useAppSelector((state) => state.family.id)
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
   const userKakao = useAppSelector((state) => state.user.kakaoId);
@@ -216,6 +218,20 @@ const Settings = () => {
         .then((res) => {
           console.log("Profile Name submitted");
           dispatch(setUserName(res.data.name));
+          axios({
+            method: "get",
+            url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((res) => {
+              dispatch(setFamilyUsers(res.data.users));
+              console.log("family fetched");
+            })
+            .catch((err) => {
+              console.error(err);
+            });
           setToggleEdit(false);
         })
         .catch((err) => {
