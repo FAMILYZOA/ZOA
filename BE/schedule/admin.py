@@ -3,10 +3,6 @@ from .models import Schedule
 
     
 class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'start_date', 'end_date', 'title', 'color', 'important_mark', 'get_writer', 'get_family')
-    def get_writer(self,obj):
-        return [writer.name for writer in obj.writer.all()]
-    def get_family(self,obj):
-        return [family.name for family in obj.family.all()]
+    list_display = ('id', 'start_date', 'end_date', 'title', 'color', 'important_mark', 'writer', 'family')
 
 admin.site.register(Schedule, ScheduleAdmin)
