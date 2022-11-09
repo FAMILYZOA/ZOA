@@ -12,8 +12,10 @@ WORKDIR /home/BE/
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
-RUN python3 manage.py test --keepdb
-RUN python3 manage.py collectstatic
+RUN pip install gunicorn
+
+RUN python3 manage.py test --keepdb --settings=apiserver.settings.develop
+
 EXPOSE 8000
 
-CMD ["gunicorn", "apiserver.wsgi", "--bind", "0.0.0.0:8000"]
+CMD ["bash", "-c", "python manage.py collectstatic --noinput --settings=apiserver.settings.develop && python manage.py migrate --settings=apiserver.settings.develop &&gunicorn apiserver.wsgi --env DJANGO_SETTINGS_MODULE=apiserver.settings.develop --bind 0.0.0.0:8000"]
