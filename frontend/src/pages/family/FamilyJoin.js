@@ -34,19 +34,30 @@ const Info = styled.div`
   margin: auto;
   font-size: 1.25em;
   text-align: center;
+  width: 100%;
 `;
 const ImgBox = styled.div`
-  width: 60%;
+  width: 60vw;
+  @media screen and (min-width: 720px) {
+    width: 432px;
+  }
   display: flex;
   /* align-items: center;
      */
+  overflow-x: scroll;
+  overflow-y: hidden;
   margin: 32px 0;
 `;
-const Image = styled.img`
+const Image = styled.div`
   width: 54px;
   height: 54px;
+  object-fit: fill;
   border: none;
   border-radius: 100px;
+  img {
+    width: 54px;
+    border-radius: 100px;
+  }
 `;
 const BtnBox = styled.div``;
 const Btn = styled.div`
@@ -123,7 +134,9 @@ function FamilyJoin() {
             </Info>
             <ImgBox>
               {family.users.map((item, index) => (
-                <Image key={index} src={item.image}></Image>
+                <Image key={index}>
+                  <img src={item.image} />
+                </Image>
               ))}
             </ImgBox>
             <BtnBox>
