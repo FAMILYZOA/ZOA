@@ -55,15 +55,15 @@ const FamilyInviteBox = styled.div`
 `;
 
 const IconBox = styled.div`
-  width: 2.4em;
-  height: 2.4em;
-  border-radius: 1.2em;
+  width: 2em;
+  height: 2em;
+  border-radius: 24px;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
   margin-right: 0.6em;
-  line-height: 2.8em;
+  line-height: 56px;
   text-align: center;
-  font-size: 1.8em;
+  font-size: 1.2em;
 `;
 
 const MessageBox20 = styled.div`
@@ -81,7 +81,7 @@ const FamilyMembersTitle = styled.div`
 `;
 
 const MemberBox = styled.div`
-  height: 20em;
+  height: calc(100vh - 20em - 56px);
   overflow-y: scroll;
 `;
 

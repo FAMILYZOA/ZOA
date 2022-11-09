@@ -137,6 +137,7 @@ const NameEditInput = styled.input`
   font-family: "Pretendard-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 1em;
 `;
 const theme = createTheme({
   palette: {
