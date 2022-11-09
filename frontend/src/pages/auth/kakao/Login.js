@@ -186,6 +186,7 @@ function Login() {
                 type="password"
                 placeholder="Password"
                 onChange={onChangePw}
+                maxLength="20"
                 value={pw}
                 onKeyDown={onEnter}
               ></Input>

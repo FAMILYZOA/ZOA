@@ -283,6 +283,7 @@ function PageTwo({ twoInfo }) {
           <Input
             type={"password"}
             placeholder="비밀번호 입력"
+            maxLength="20"
             onChange={onChangePw}
             value={pw}
           ></Input>
@@ -301,6 +302,7 @@ function PageTwo({ twoInfo }) {
           <Input
             type={"password"}
             placeholder="비밀번호 확인"
+            maxLength="20"
             onChange={onChangeConfirmPw}
             value={confirmPw}
           ></Input>
