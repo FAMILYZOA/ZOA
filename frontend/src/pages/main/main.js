@@ -22,12 +22,18 @@ function Main() {
   const [scrum, setScrum] = useState([]);
 
   useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
-      navigate("/intro");
-    } else {
-      if (localStorage.getItem("familyId")) {
+    if (localStorage.getItem("familyId")) {
+      if (localStorage.getItem("access_token")) {
         const familyId = localStorage.getItem("familyId");
         navigate(`/join/${familyId}`);
+      } else {
+        navigate("/intro");
+      }
+    } else {
+      if (!localStorage.getItem("access_token")) {
+        navigate("/intro");
+      } else if (family < 0) {
+        navigate("/family/create");
       }
     }
   }, []);

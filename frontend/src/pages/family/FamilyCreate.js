@@ -45,7 +45,7 @@ const FamilyPostButton = styled.button`
   background: linear-gradient(to left, #FE9B7C, #fec786);
   /* -webkit-background-clip: text;
   -webkit-text-fill-color: transparent; */
-  font-size: 3vmin;
+  font-size: 0.5em;
   .unactiveBtn {
     @include buttonDefault;
     background: linear-gradient(to left, #FE9B7C, #fec786);
@@ -67,7 +67,7 @@ const FamilyPostUnButton = styled.button`
   color: white;
   background: linear-gradient(to left, #FE9B7C, #fec786);
   opacity: 0.5;
-  font-size: 3vmin;
+  font-size: 0.5em;
   margin-left: 10%;
   margin-top: 20%;
 `

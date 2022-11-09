@@ -209,11 +209,13 @@ function PageTwo({ twoInfo }) {
     setConfirmPw(e.currentTarget.value);
   };
   useEffect(() => {
+    var regPw =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$/;
     if (confirmPw === "") {
       setPwCheck(false);
       setconrirmPwWarn(false);
     } else {
-      if (confirmPw !== pw) {
+      if (confirmPw !== pw || !regPw.test(confirmPw)) {
         setPwCheck(false);
         setconrirmPwWarn(true);
       } else {
@@ -286,7 +288,7 @@ function PageTwo({ twoInfo }) {
           ></Input>
         </InputBox>
         <PwInfo>
-          비밀번호는 영문 대소문자, 숫자, 특수기호를 모두 포함하여 8~20자로
+          비밀번호는 영문 대소문자, 숫자, 특수기호를 모두 포함하여 8~12자로
           입력해주세요.
         </PwInfo>
         <Warning active={pwWarn}>비밀번호를 확인해주세요.</Warning>

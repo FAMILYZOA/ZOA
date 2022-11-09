@@ -50,7 +50,7 @@ const ProfileImgCover = styled.div`
 const ProfileEditIcon = styled.div`
   position: absolute;
   font-size: 1.2em;
-  border-radius: 5vmin;
+  border-radius: 0.9em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,17 +78,17 @@ const UserName = styled.div`
   display: flex;
 `;
 const UserNameEdit = styled.div`
-  margin-left: 2.25vmin;
+  margin-left: 0.4em;
   color: #ff787f;
 `;
 
 const UserEmail = styled.div`
   position: absolute;
   top: 0;
-  right: 5.5vmin;
+  right: 1em;
 `;
 const SettingMenu = styled.div`
-  margin: 4.5vmin 6.5vmin;
+  margin: 0.8em 1.2em;
 `;
 const SettingItem = styled.div`
   display: flex;
@@ -130,11 +130,10 @@ const NameEditInput = styled.input`
   border-top-width: 0;
   border-bottom: 1;
   width: 30vw;
-  height: 5.5vmin;
+  height: 1em;
   background-color: transparent;
   border-color: #ffd5d7;
   outline: 0;
-  font-size: 5.5vmin;
   font-family: "Pretendard-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

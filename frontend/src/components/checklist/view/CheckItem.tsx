@@ -20,7 +20,7 @@ const DetailWrap = styled.div<propDetail>`
       `;
     } else {
       return css`
-        height: 22vmin;
+        height: 4em;
       `;
     }
   }}
@@ -30,11 +30,11 @@ const DetailWrap = styled.div<propDetail>`
 `;
 const CheckDetail = styled.div`
   position: relative;
-  height: 22vmin;
-  border-radius: 2.25vmin;
+  height: 4em;
+  border-radius: 0.4em;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  padding: 3.25vmin 4.5vmin;
-  margin-bottom: 4.5vmin;
+  padding: 0.6em 0.8em;
+  margin-bottom: 0.8em;
 `;
 const CheckDetailTitle = styled.div`
   font-size: 0.9em;
@@ -42,18 +42,18 @@ const CheckDetailTitle = styled.div`
 const CheckDetailDate = styled.div`
   color: #707070;
   font-size: 0.75em;
-  margin-top: 1vmin;
+  margin-top: 0.2em;
 `;
 const CheckDetailChevron = styled.div`
   position: absolute;
-  right: 4.5vmin;
-  top: 4.5vmin;
+  right: 0.8em;
+  top: 0.8em;
   color: #000;
 `;
 
 const CheckDiv = styled.div`
   display: flex;
-  margin-bottom: 4.5vmin;
+  margin-bottom: 0.8em;
 `;
 const CheckContent = styled.div`
   padding: 0.1px;
@@ -75,9 +75,9 @@ const CheckBox = styled.div<propStyle>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 6.5vmin;
-  height: 6.5vmin;
-  border-radius: 1vmin;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.2em;
   color: #fff;
 `;
 
@@ -91,9 +91,9 @@ const CheckTitle = styled.div<propStyle>`
       `;
     }
   }}
-  margin-left: 2.25vmin;
+  margin-left: 0.4em;
   font-size: 0.9em;
-  line-height: 6.5vmin;
+  line-height: 1.2em;
   font-weight: 400;
   flex: 1;
 `;

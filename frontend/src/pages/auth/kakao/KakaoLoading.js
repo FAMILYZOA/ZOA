@@ -3,8 +3,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { setAccessToken, setRefreshToken } from "../../../features/token/tokenSlice";
+import { useDispatch } from "react-redux";
+import {
+  setAccessToken,
+  setRefreshToken,
+} from "../../../features/token/tokenSlice";
+import { useAppSelector } from "../../../app/hooks";
 
 export const Background = styled.div`
   height: 100vh;
@@ -50,7 +54,7 @@ function Loading() {
           method: "GET",
           url: `https://kapi.kakao.com/v2/user/me`,
           headers: {
-            Authorization: `Bearer ${localStorage.token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }).then((res) => {
           const id = String(res.data.id);
@@ -62,15 +66,11 @@ function Loading() {
             data: data,
           })
             .then((result) => {
+              console.log(result);
               if (result.status === 200) {
-                dispatch(setAccessToken(result.data.token.access_token));
-                dispatch(setRefreshToken(result.data.token.refresh_token));
-                localStorage.setItem("access_token", result.data.token.access);
-                localStorage.setItem(
-                  "refresh_token",
-                  result.data.token.refresh
-                );
-                navigate("/");
+                dispatch(setAccessToken(result.data.token.access));
+                dispatch(setRefreshToken(result.data.token.refresh));
+                navigate("/", { replace: true });
               }
             })
             .catch((err) => {
