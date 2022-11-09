@@ -41,11 +41,11 @@ const HeaderLabel = styled.div`
 `;
 
 const CheckListViewBody = styled.div`
-  padding: 0.5em 0.35em;
+  padding: 5%;
 `;
 const CheckListTitle = styled.div`
-  margin: 16px 0;
-  font-size: 1.25em;
+  margin: 12px 8px;
+  font-size: 1em;
   font-weight: bold;
 `;
 
@@ -159,9 +159,9 @@ const ModalItemName = styled.div`
   font-size: 0.8em;
 `;
 const ModalItemImg = styled.img`
-  width: 2.0em;
-  height: 2.0em;
-  border-radius: 1.0em;
+  width: 2em;
+  height: 2em;
+  border-radius: 1em;
   object-fit: fill;
 `;
 
@@ -263,7 +263,10 @@ function ReadChecklist() {
           unSelectedMember={unSelectedMember}
           getModal={getModal}
         />
-        <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
+        <CheckListTitle>
+          <span style={{ color: "#FE9B7C" }}>{selectedMember.name}</span> 님의
+          체크리스트
+        </CheckListTitle>
         <Tabs current={selectedMember.id}></Tabs>
       </CheckListViewBody>
     </div>
