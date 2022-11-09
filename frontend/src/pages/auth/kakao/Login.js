@@ -152,6 +152,11 @@ function Login() {
       redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
     });
   };
+  const onEnter = (e) => {
+    if (e.key == "Enter") {
+      clickLogin(phone, pw);
+    }
+  };
 
   return (
     <div>
@@ -170,6 +175,7 @@ function Login() {
                 maxLength="13"
                 onChange={onChangePhone}
                 value={phone}
+                onKeyDown={onEnter}
               ></Input>
             </InputBox>
           </InputContainer>
@@ -181,6 +187,7 @@ function Login() {
                 placeholder="Password"
                 onChange={onChangePw}
                 value={pw}
+                onKeyDown={onEnter}
               ></Input>
             </InputBox>
           </InputContainer>
