@@ -76,7 +76,7 @@ function FamilyJoin() {
   const clickYes = () => {
     axios({
       method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/sign/${familyId}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/sign/${familyId}/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
@@ -94,7 +94,7 @@ function FamilyJoin() {
     } else {
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/family/get/${familyId}/`,
+        url: `${process.env.REACT_APP_BACK_HOST}/family/get/${familyId}/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

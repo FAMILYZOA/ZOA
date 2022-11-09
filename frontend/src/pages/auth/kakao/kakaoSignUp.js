@@ -236,7 +236,7 @@ function KakaoSignup() {
     data.append("phone", phone.replaceAll("-", ""));
     axios({
       method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/event/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/event/`,
       data: data,
     });
   };
@@ -247,7 +247,7 @@ function KakaoSignup() {
     data.append("certification", certifiNum);
     axios({
       method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/event/check/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/event/check/`,
       data: data,
     })
       .then((res) => {
@@ -295,7 +295,7 @@ function KakaoSignup() {
         data.append("birth", birth);
         axios({
           method: "POST",
-          url: `https://k7b103.p.ssafy.io/api/v1/accounts/kakao/sign/`,
+          url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
           data: data,
         })
           .then((res) => {

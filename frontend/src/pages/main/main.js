@@ -41,7 +41,7 @@ function Main() {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/scrums/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/scrums/`,
       headers: {
         Authorization: `Bearer ${access}`,
       },

@@ -99,7 +99,7 @@ const ContentsContainer = styled.div`
 
 function TodoContents({ currentId }) {
   const access = useAppSelector((state) => state.token.access);
-
+  const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
@@ -126,6 +126,7 @@ function TodoContents({ currentId }) {
     if (!endRef.current && target.isIntersecting && preventRef.current) {
       preventRef.current = false;
       setPage((prev) => prev + 1);
+      console.log(page);
     }
   };
 
@@ -135,7 +136,7 @@ function TodoContents({ currentId }) {
       setLoad(true);
       const res = await axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=0`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -149,9 +150,10 @@ function TodoContents({ currentId }) {
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        if (list[0]?.id === currentId){
+        if (target === currentId){
           setList(list.concat(res.data.results)); // 리스트 추가
         } else {
+          setTarget(currentId);
           setList(res.data.results);
         }
         preventRef.current = true;
@@ -174,7 +176,7 @@ function TodoContents({ currentId }) {
     data.append("status", 1);
     axios({
       method: "PUT",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${contentsId}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -233,6 +235,7 @@ function TodoContents({ currentId }) {
 
 function CompleteContents({ currentId }) {
   const access = useAppSelector((state) => state.token.access);
+  const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
@@ -253,13 +256,14 @@ function CompleteContents({ currentId }) {
 
   useEffect(() => {
     getTodo();
-  }, [page, flag, currentId]);
+  }, [page, currentId]);
 
   const obsHandler = (entries) => {
     const target = entries[0];
     if (!endRef.current && target.isIntersecting && preventRef.current) {
       preventRef.current = false;
       setPage((prev) => prev + 1);
+      console.log(page);
     }
   };
   const getTodo = useCallback(async () => {
@@ -268,7 +272,7 @@ function CompleteContents({ currentId }) {
       setLoad(true);
       const res = await axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=1`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=1`,
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -281,10 +285,11 @@ function CompleteContents({ currentId }) {
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        if (list[0]?.id === currentId){
-          setList((prev) => [...prev, ...res.data.results]);
+        if (target === currentId){
+          setList(list.concat(res.data.results));
         } else {
-          setList(res.data.results)
+          setTarget(currentId);
+          setList(res.data.results);
         } // 리스트 추가
         preventRef.current = true;
       }
@@ -306,7 +311,7 @@ function CompleteContents({ currentId }) {
     data.append("status", 0);
     axios({
       method: "PUT",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${contentsId}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -376,7 +381,7 @@ function Tabs({ current }) {
     if (current >= 0) {
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${current}`,
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -387,7 +392,7 @@ function Tabs({ current }) {
       });
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${current}`,
         headers: {
           Authorization: `Bearer ${access}`,
         },

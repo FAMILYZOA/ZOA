@@ -39,7 +39,7 @@ const CheckListItem = (item) => {
   const onPutCheckList = () => {
     axios({
       method: "put",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${item.id}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${item.id}`,
       data: {
         status: !item.status,
       },

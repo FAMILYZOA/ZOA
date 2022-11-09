@@ -93,7 +93,7 @@ const FamilyCreate = () => {
     console.log(accessToken)
     axios({
       method: "post",
-      url: 'https://k7b103.p.ssafy.io/api/v1/family/',
+      url: `${process.env.REACT_APP_BACK_HOST}/family/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
