@@ -85,52 +85,49 @@ function App() {
         console.log("family info initialized");
       }
     } else {
-      // 토큰이 있는 경우
-      {
-        // 유저 값이 없으면, 유저 정보 불러오기
-        axios({
-          method: "get",
-          url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((res) => {
-            dispatch(setUserId(res.data.id));
-            dispatch(setUserPhone(res.data.phone));
-            dispatch(setUserKakaoId(-1));
-            dispatch(setUserFamilyId(res.data.family_id));
-            dispatch(setUserBirth(res.data.birth));
-            dispatch(setUserImage(res.data.image));
-            dispatch(setUserName(res.data.name));
-            console.log("user fetched");
-            forceUpdate();
-            if (familyId < 0 && res.data.family_id) {
-              // 가족 정보가 없으면, 가족 정보 불러오기
-              axios({
-                method: "get",
-                url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
+      // 유저 값이 없으면, 유저 정보 불러오기
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((res) => {
+          dispatch(setUserId(res.data.id));
+          dispatch(setUserPhone(res.data.phone));
+          dispatch(setUserKakaoId(-1));
+          dispatch(setUserFamilyId(res.data.family_id));
+          dispatch(setUserBirth(res.data.birth));
+          dispatch(setUserImage(res.data.image));
+          dispatch(setUserName(res.data.name));
+          console.log("user fetched");
+          forceUpdate();
+          if (familyId < 0 && res.data.family_id) {
+            // 가족 정보가 없으면, 가족 정보 불러오기
+            axios({
+              method: "get",
+              url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+              .then((res) => {
+                dispatch(setFamilyId(res.data.id));
+                dispatch(setFamilyName(res.data.name));
+                dispatch(setFamilyCreatedAt(res.data.created_at));
+                dispatch(setFamilyUsers(res.data.users));
+                console.log("family fetched");
+                forceUpdate();
               })
-                .then((res) => {
-                  dispatch(setFamilyId(res.data.id));
-                  dispatch(setFamilyName(res.data.name));
-                  dispatch(setFamilyCreatedAt(res.data.created_at));
-                  dispatch(setFamilyUsers(res.data.users));
-                  console.log("family fetched");
-                  forceUpdate();
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
   };
 

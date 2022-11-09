@@ -12,6 +12,7 @@ import ImageModal from "../../components/setting/ImageModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
+import { setFamilyUsers } from "../../features/family/familySlice";
 import axios from "axios";
 import Header from "../../components/main/Header";
 
@@ -185,6 +186,7 @@ const Settings = () => {
   const fontLetter = ["작게", "보통", "크게"];
 
   const accessToken = useAppSelector((state) => state.token.access);
+  const familyId = useAppSelector((state) => state.family.id)
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
   const userKakao = useAppSelector((state) => state.user.kakaoId);
@@ -216,6 +218,20 @@ const Settings = () => {
         .then((res) => {
           console.log("Profile Name submitted");
           dispatch(setUserName(res.data.name));
+          axios({
+            method: "get",
+            url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((res) => {
+              dispatch(setFamilyUsers(res.data.users));
+              console.log("family fetched");
+            })
+            .catch((err) => {
+              console.error(err);
+            });
           setToggleEdit(false);
         })
         .catch((err) => {
