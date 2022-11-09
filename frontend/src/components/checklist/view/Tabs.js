@@ -282,15 +282,15 @@ function CompleteContents({ currentId }) {
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
         if (list[0]?.id === currentId){
-          setList(list.concat(res.data.results)); // 리스트 추가
+          setList((prev) => [...prev, ...res.data.results]);
         } else {
-          setList(res.data.results);
+          setList(res.data.results)
         } // 리스트 추가
         preventRef.current = true;
       }
       setLoad(false); //로딩 종료
     }
-  }, [page, flag]);
+  }, [page, currentId]);
 
   const clickItem = (id) => {
     if (click !== id) {
