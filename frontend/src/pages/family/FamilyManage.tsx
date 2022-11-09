@@ -130,16 +130,16 @@ ${inviteLink}`;
           imageUrl:
             "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
           link: {
-            mobileWebUrl: `/join/${id}`,
-            webUrl: `/join/${id}`,
+            mobileWebUrl: `${process.env.REACT_APP_FE_HOST}/join/${id}`,
+            webUrl: `${process.env.REACT_APP_FE_HOST}/join/${id}`,
           },
         },
         buttons: [
           {
             title: "ZOA에 참여하기",
             link: {
-              mobileWebUrl: "https://developers.kakao.com",
-              webUrl: "https://developers.kakao.com",
+              mobileWebUrl: `${process.env.REACT_APP_FE_HOST}/${id}`,
+              webUrl: `${process.env.REACT_APP_FE_HOST}/${id}`,
             },
           },
         ],
