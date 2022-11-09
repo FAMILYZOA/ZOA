@@ -22,7 +22,7 @@ const ScrumWrapper = styled.div`
 const ItemWrapper = styled.div`
   background-color: #eefbef;
   padding: 8px 4px;
-  font-size: 16px;
+  font-size: 0.8em;
 `;
 
 const ProfileWrapper = styled.div`
@@ -152,7 +152,6 @@ const ScrumHome = () => {
             style={{
               color: "#ff787f",
               fontWeight: "bolder",
-              fontSize: "20px",
               margin: "4px 20%",
             }}
           >
@@ -194,7 +193,7 @@ const ScrumHome = () => {
                 )}
               </MemberProfile>
             </ProfileWrapper>
-            <div style={{ margin: "3%", fontWeight: "bold", fontSize: "16px" }}>
+            <div style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}>
               {userName}
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -226,7 +225,7 @@ const ScrumHome = () => {
                   color: "#ff787f",
                   margin: "0px 0px 8px 44px",
                   cursor: "pointer",
-                  fontSize: "14px",
+                  fontSize: "0.7em",
                 }}
                 onClick={() => {
                   navigate(`/hello/create/`);

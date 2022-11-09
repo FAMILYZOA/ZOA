@@ -18,6 +18,7 @@ const Btn = styled.button`
   border: none;
   border-radius: 30px;
   font-weight: bold;
+  font-size: 1.5em;
   color: white;
 `;
 
