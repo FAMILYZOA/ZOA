@@ -264,8 +264,14 @@ function ReadChecklist() {
           getModal={getModal}
         />
         <CheckListTitle>
-          <span style={{ color: "#FE9B7C" }}>{selectedMember.name}</span> 님의
-          체크리스트
+          {selectedMember.set_name ? (
+            <span style={{ color: "#FE9B7C" }}>
+              {selectedMember.set_name} ({selectedMember.name})
+            </span>
+          ) : (
+            <span style={{ color: "#FE9B7C" }}>{selectedMember.name}</span>
+          )}
+          님의 체크리스트
         </CheckListTitle>
         <Tabs current={selectedMember.id}></Tabs>
       </CheckListViewBody>
