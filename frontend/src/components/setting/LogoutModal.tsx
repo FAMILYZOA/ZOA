@@ -13,7 +13,7 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 5.5vmin;
+  right: 1em;
 `;
 
 const LogoutStyle = styled.div`
@@ -44,7 +44,7 @@ const LogoutDescStyle = styled.div`
   font-weight: 400;
   line-height: 36px;
 
-  height: 21vmin;
+  height: 3.7em;
   /* or 180% */
 
   display: flex;
@@ -62,7 +62,7 @@ const LogoutBtnStyle = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 12vmin;
+  height: 2.2em;
 
   font-family: "Inter";
   font-style: normal;
@@ -75,7 +75,7 @@ const LogoutBtnStyle = styled.div`
   color: #ffffff;
 
   background: #ff787f;
-  border-radius: 3vmin;
+  border-radius: 0.5em;
 `;
 
 const LogoutModal = (props: modalType) => {

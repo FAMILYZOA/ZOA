@@ -34,11 +34,11 @@ const HeaderLabel = styled.div`
 `;
 
 const FamilyManageBody = styled.div`
-  padding: 4.5vmin;
+  padding: 0.8em;
 `;
 const FamilyManageGuide = styled.div`
-  margin-top: 2.25vmin;
-  margin-bottom: 6.5vmin;
+  margin-top: 0.4em;
+  margin-bottom: 1.2em;
   margin-left: 4px;
 `;
 const FamilyNameHighlight = styled.span`
@@ -49,44 +49,44 @@ const FamilyInviteBox = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  margin-bottom: 2.25vmin;
-  padding: 2.75vmin;
+  margin-bottom: 0.4em;
+  padding: 0.5em;
   border: 1px solid #ff787f;
 `;
 
 const IconBox = styled.div`
-  width: 13vmin;
-  height: 13vmin;
-  border-radius: 6.5vmin;
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 1.2em;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
-  margin-right: 3.5vmin;
-  line-height: 15.5vmin;
+  margin-right: 0.6em;
+  line-height: 2.8em;
   text-align: center;
-  font-size: 10vmin;
+  font-size: 1.8em;
 `;
 
 const MessageBox20 = styled.div`
-  margin-bottom: 1vmin;
+  margin-bottom: 0.2em;
 `;
 const MessageBox12 = styled.div`
-  font-size: 3.5vmin;
+  font-size: 0.65em;
 `;
 const FamilyMembersTitle = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 10vmin 0 4.5vmin;
-  font-size: 4.5vmin;
+  margin: 1.8em 0 0.8em;
+  font-size: 0.8em;
   font-weight: bold;
 `;
 
 const MemberBox = styled.div`
-  height: 110vmin;
+  height: 20em;
   overflow-y: scroll;
 `;
 
 const FamilyMembersEdit = styled.div`
-  font-size: 6.5vmin;
+  font-size: 1.2em;
   font-weight: 400;
 `;
 
