@@ -120,16 +120,14 @@ function PageOne({ oneInfo }) {
   };
 
   const sendNum = (phone) => {
-    if (phoneWarn === false) {
-      setSend(true);
-      const data = new FormData();
-      data.append("phone", phone.replaceAll("-", ""));
-      axios({
-        method: "POST",
-        url: `https://k7b103.p.ssafy.io/api/v1/event/`,
-        data: data,
-      });
-    }
+    setSend(true);
+    const data = new FormData();
+    data.append("phone", phone.replaceAll("-", ""));
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+      data: data,
+    });
   };
 
   const checkNum = (certi) => {
@@ -138,7 +136,7 @@ function PageOne({ oneInfo }) {
     data.append("certification", certi);
     axios({
       method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/event/check/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/event/check/`,
       data: data,
     })
       .then((res) => {

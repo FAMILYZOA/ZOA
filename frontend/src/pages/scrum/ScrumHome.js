@@ -113,7 +113,7 @@ const ScrumHome = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: `https://k7b103.p.ssafy.io/api/v1/scrums/?search=${day}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/scrums/?search=${day}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
