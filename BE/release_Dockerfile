@@ -12,6 +12,8 @@ WORKDIR /home/BE/
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
+RUN pip install gunicorn
+
 RUN python3 manage.py test --keepdb
 
 EXPOSE 8000
