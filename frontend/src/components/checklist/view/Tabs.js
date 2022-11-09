@@ -149,7 +149,7 @@ function TodoContents({ currentId }) {
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        if (list[0]?.id === currentId){
+        if (list[0]?.id === currentId) {
           setList(list.concat(res.data.results)); // 리스트 추가
         } else {
           setList(res.data.results);
@@ -201,7 +201,7 @@ function TodoContents({ currentId }) {
               </NoToggle>
               <Toggle id={li.id} current={click} photo={li.photo}>
                 <ToggleContainer>
-                  <p>From. {li.to_users_id.name}</p>
+                  <p>From. {li.from_user_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
@@ -281,10 +281,10 @@ function CompleteContents({ currentId }) {
         //   setList((prev) => [...prev, ...res.data.results].map((item) => (
         //     item ? {...item, active:false} : list
         //   ))); // 리스트 추가
-        if (list[0]?.id === currentId){
+        if (list[0]?.id === currentId) {
           setList((prev) => [...prev, ...res.data.results]);
         } else {
-          setList(res.data.results)
+          setList(res.data.results);
         } // 리스트 추가
         preventRef.current = true;
       }
