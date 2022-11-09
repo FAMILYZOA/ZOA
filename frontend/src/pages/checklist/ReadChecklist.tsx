@@ -41,7 +41,7 @@ const HeaderLabel = styled.div`
 `;
 
 const CheckListViewBody = styled.div`
-  padding: 3vmin 2vmin;
+  padding: 0.5em 0.35em;
 `;
 const CheckListTitle = styled.div`
   margin: 16px 0;
@@ -153,14 +153,14 @@ const ModalItem = styled.div<modalItemProps>`
   }
 `;
 const ModalItemName = styled.div`
-  margin-right: 1vmin;
+  margin-right: 0.2em;
   font-weight: 700;
-  font-size: 2vmin;
+  font-size: 0.4em;
 `;
 const ModalItemImg = styled.img`
-  width: 8vmin;
-  height: 8vmin;
-  border-radius: 4vmin;
+  width: 1.4em;
+  height: 1.4em;
+  border-radius: 0.7em;
   object-fit: fill;
 `;
 

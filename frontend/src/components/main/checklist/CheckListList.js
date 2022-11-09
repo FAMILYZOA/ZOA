@@ -50,7 +50,6 @@ const NoList = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: calc((100vh - 520px) / 2);
 `;
 
 const NoListText = styled.p`
