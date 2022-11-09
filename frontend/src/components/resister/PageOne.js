@@ -104,10 +104,11 @@ function PageOne({ oneInfo }) {
     );
   };
   useEffect(() => {
+    var regPhone = /^(010|011|016|017|018|019)-[0-9]{3,4}-[0-9]{4}$/;
     if (phone === "") {
       setPhoneWarn(false);
     } else {
-      if (phone.length !== 13) {
+      if (phone.length !== 13 || !regPhone.test(phone)) {
         setPhoneWarn(true);
       } else {
         setPhoneWarn(false);
