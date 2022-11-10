@@ -12,12 +12,27 @@ from rest_framework.parsers import MultiPartParser
 from .serializers import (
     KaKaoLoginSerializer,
     KaKaoSignupSerializer,
+    ProfileRetriveSerializer,
     SignupSerializer,
     LoginSerializer,
     RefreshTokenSerializer,
     ProfileSerializer,
     ChangePasswordSerializer,
+    PhonecheckSerializer,
     )
+
+
+# 휴대폰 중복 체크
+class PhonecheckAPIView(GenericAPIView):
+    serializer_class = PhonecheckSerializer
+    permission_classes = [ AllowAny ]
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            return Response("사용 가능한 번호입니다.", status=status.HTTP_200_OK)
+        else:
+            return Response("사용 중인 번호입니다.", status=status.HTTP_400_BAD_REQUEST)
+
 
 # 회원가입
 class SignupAPIView(GenericAPIView):
@@ -119,6 +134,12 @@ class ProfileAPIView(RetrieveUpdateAPIView):
     @swagger_auto_schema(operation_summary="회원정보 조회")
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = ProfileRetriveSerializer(instance)
+        return Response(serializer.data)
+
     @swagger_auto_schema(operation_summary="회원정보 수정")
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)

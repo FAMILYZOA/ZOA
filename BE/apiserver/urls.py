@@ -46,9 +46,16 @@ urlpatterns = [
     path('api/v1/checklist/', include('checklist.urls')),
     path('api/v1/scrums/', include('scrums.urls')),
     path('api/v1/event/', include('event.urls')),
+    path('api/v1/audio/', include('audios.urls')),
+    path('api/v1/calendar/', include('schedule.urls')),
 
     #swagger
     path('api/v1/swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('api/v1/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('api/v1/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]

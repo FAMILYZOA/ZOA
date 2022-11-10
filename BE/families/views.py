@@ -1,25 +1,17 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
-    CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView,GenericAPIView)
-from rest_framework import mixins
+    CreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView,GenericAPIView,RetrieveAPIView)
+from rest_framework import mixins,permissions
 from accounts.models import User
-from django.http import JsonResponse
+from accounts.permissions import InFamilyorBadResponsePermission
 from families.models import Family, FamilyInteractionName
-from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUpdateSerializer
+from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions
 
-class IsFamilyorBadResponsePermission(permissions.BasePermission) :
-    def has_permission(self,request,view) :
-        return request.user.is_authenticated 
-    def has_object_permission(self, request, view, obj):
-        if request.user.family_id == obj :
-            return True 
-        return False
 
 class FamilyCreateAPIView(GenericAPIView,mixins.CreateModelMixin) :
     serializer_class = FamilySerializer
@@ -43,7 +35,7 @@ class FamilyAPIView(RetrieveUpdateDestroyAPIView) :
     serializer_class = FamilyRetriveSerializer
     queryset=Family.objects.all()
     lookup_field = 'id'
-    permission_classes = [IsFamilyorBadResponsePermission]
+    permission_classes = [InFamilyorBadResponsePermission]
     @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -93,9 +85,10 @@ def UserJoinFamily(request,family_id) :
             return Response(context,status=status.HTTP_200_OK)
 
 class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
-
+    
     serializer_class = FamilyNameSetSerializer
     queryset = Family.objects.all()
+    permission_classes = [InFamilyorBadResponsePermission]
     lookup_field = 'id'
 
     def get_user(self) :
@@ -120,7 +113,7 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
         if to_user == from_user :
             return Response({f'자신의 이름은 설정할 수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
         
-        if not from_user.family_id or not to_user.family_id or from_user.family_id != to_user.family_id :
+        if  not to_user.family_id or from_user.family_id != to_user.family_id :
             return Response({f'우리 가족이 아닙니다.'},status=status.HTTP_403_FORBIDDEN)
         
         if FamilyInteractionName.objects.filter(to_user=to_user,from_user=from_user).exists() :
@@ -152,3 +145,12 @@ class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
     def perform_update(self, serializer):
         serializer.save()
 
+class FamilySignAPIView(RetrieveAPIView) :
+
+    serializer_class = FamilyUnAuthorizedRetriveSerializer
+    queryset=Family.objects.all()
+    lookup_field = 'id'
+    permission_classes = [ permissions.AllowAny ]
+    @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)

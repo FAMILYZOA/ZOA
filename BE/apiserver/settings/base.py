@@ -21,23 +21,17 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
 )
-
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )
+SECRET_KEY = env('SECRET_KEY')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -48,6 +42,8 @@ INSTALLED_APPS = [
     'checklist',
     'scrums',
     'event',
+    'audios',
+    'schedule',
 
     # default
     'django.contrib.admin',
@@ -58,8 +54,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #3rd-party
-    'rest_framework',
     'django_extensions',
+    'django_filters',
+    'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
@@ -103,10 +100,11 @@ WSGI_APPLICATION = 'apiserver.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = { 
 	'default': { 
     	'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'test', 
+        'NAME': 'zoa', 
         'USER': 'root', 
         'PASSWORD': env('MYSQL_PASSWORD'), 
         'HOST': 'k7b103.p.ssafy.io', 
@@ -181,8 +179,6 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -218,18 +214,17 @@ AWS_S3_OBJECT_PARAMETERS = {
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
-STATIC_URL = '/static/'
+STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 # 스태틱폴더를 따로 만들어서 앱에 종속되지 않고 접근할 수 있게한다. 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "assets",
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
