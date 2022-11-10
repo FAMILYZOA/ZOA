@@ -13,7 +13,7 @@ const MainText = styled.div`
 `;
 
 const InputBox = styled.div`
-  height: 120px;
+  height: 80px;
   border: none;
   border-radius: 10px;
   background-color: rgba(254, 199, 134, 0.25);
@@ -22,9 +22,9 @@ const InputTag = styled.textarea`
   border: none;
   outline: none;
   background: none;
-  margin: 10px 3%;
+  margin: 15px 3%;
   width: 94%;
-  height: 100px;
+  height: 60px;
   font-size: 0.7em;
   resize: none;
 `;
@@ -42,6 +42,7 @@ function TodoInput({ todos }) {
     <Container>
       <MainText>
         할 일이 무엇인가요? <span style={{ color: "red" }}>*</span>
+        <p style={{margin:"2px 0", fontSize:"0.7em", color:"#707070"}}>할 일은 20글자 이하로 작성해주세요.</p>
       </MainText>
       <InputBox>
         <InputTag
@@ -49,6 +50,7 @@ function TodoInput({ todos }) {
           onChange={onChange}
           value={todo}
           placeholder="할 일을 입력해주세요."
+          maxLength={20}
         />
       </InputBox>
     </Container>
