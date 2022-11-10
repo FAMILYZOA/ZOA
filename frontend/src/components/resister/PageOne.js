@@ -74,6 +74,7 @@ function PageOne({ oneInfo }) {
 
   const [nameWarn, setNameWarn] = useState(false);
   const [phoneWarn, setPhoneWarn] = useState(false);
+  const [phoneCheckWarn, setPhoneCheckWarn] = useState(false);
   const [certiWarn, setCertiWarn] = useState(false);
 
   const [send, setSend] = useState(false);
@@ -107,11 +108,14 @@ function PageOne({ oneInfo }) {
     var regPhone = /^(010|011|016|017|018|019)-[0-9]{3,4}-[0-9]{4}$/;
     if (phone === "") {
       setPhoneWarn(false);
+      setPhoneCheckWarn(false);
     } else {
       if (phone.length !== 13 || !regPhone.test(phone)) {
         setPhoneWarn(true);
+        setPhoneCheckWarn(false);
       } else {
         setPhoneWarn(false);
+        setPhoneCheckWarn(false);
       }
     }
   }, [phone]);
@@ -121,14 +125,29 @@ function PageOne({ oneInfo }) {
 
   const sendNum = (phone) => {
     if (phoneWarn === false) {
-      setSend(true);
       const data = new FormData();
       data.append("phone", phone.replaceAll("-", ""));
       axios({
         method: "POST",
-        url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+        url: `${process.env.REACT_APP_BACK_HOST}/accounts/phonecheck/`,
         data: data,
-      });
+      }).then((res)=>{
+        if(res.status === 200){
+          setSend(true);
+          data.append("phone", phone.replaceAll("-", ""));
+          axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+            data: data,
+          });
+        }
+      }).catch((err)=> {
+        if (err.response.status === 400){
+          setPhoneWarn(false);
+          setSend(false);
+          setPhoneCheckWarn(true);
+        }
+      })
     }
   };
 
@@ -218,6 +237,7 @@ function PageOne({ oneInfo }) {
           <CheckText onClick={() => sendNum(phone)}>인증번호 받기</CheckText>
         </InputBox>
         <Warning active={phoneWarn}>휴대폰 번호를 확인해주세요.</Warning>
+        <Warning active={phoneCheckWarn}>이미 가입된 번호입니다.</Warning>
         <Confirm active={send}>인증번호를 전송하였습니다.</Confirm>
       </Container>
 

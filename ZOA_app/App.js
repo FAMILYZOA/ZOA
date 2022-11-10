@@ -33,7 +33,7 @@ import {useRef, useState, useEffect} from 'react';
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
-  const url = {uri: 'https://k7b103.p.ssafy.io/'};
+  const url = {uri: 'https://k7b103.p.ssafy.io'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -139,30 +139,6 @@ const App = () => {
     }
   };
 
-  const requestPackageQueryPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.requestPackageQueryPermission,
-        {
-          title: '패키지 쿼리 사용 권한 요청',
-          message:
-            '패키지를 쿼리하기 위한 권한이 필요합니다.' +
-            '패키지를 쿼리하길 원하면 예를 눌러주세요.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
   const getPhotoFromCamera = async event => {
     if (await requestCameraPermission()) {
       launchCamera(camOpt, res => {
@@ -230,12 +206,14 @@ true;
     const isPermitted = await requestContactPermission();
     if (isPermitted) {
       // 보낼 사람 선택 -> 한명 or 여러명?
+
       const selected = await selectContactPhone();
       if (!selected) {
         return null;
       }
       // 선택한 사람에게 문자 보내기
       let {contact, selectedPhone} = selected;
+      //SendIntentAndroid.sendSms(selectedPhone.number, command);
       Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
     } else {
       console.log('거부하셨습니다.');
@@ -265,6 +243,8 @@ true;
             console.log(err);
             console.log('ERROR!!!');
           });
+        return false;
+      } else if (event.url.includes('sms')) {
         return false;
       }
       return true;
