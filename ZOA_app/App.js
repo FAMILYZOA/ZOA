@@ -27,6 +27,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import {selectContactPhone} from 'react-native-select-contact';
 import SendIntentAndroid from 'react-native-send-intent';
 import NetInfo from '@react-native-community/netinfo';
+import LinearGradient from 'react-native-linear-gradient';
 import {useRef, useState, useEffect} from 'react';
 
 const App = () => {
@@ -280,11 +281,23 @@ true;
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
         />
       ) : (
-        <View>
-          <Image source={require('./assets/error.png')} />
-          <Image source={require('./assets/error_desc.png')} />
-          <Image source={'./assets/error.png'} />
-        </View>
+        <LinearGradient
+          colors={['#FFEBE5', '#D8F1ED']}
+          angle={179.94}
+          style={errorStyle.errorView}>
+          <Image
+            source={require('./assets/error.png')}
+            style={errorStyle.img}
+          />
+          <Image
+            source={require('./assets/error_desc.png')}
+            style={errorStyle.desc}
+          />
+          <Image
+            source={require('./assets/logo_color.png')}
+            style={errorStyle.logo}
+          />
+        </LinearGradient>
       )}
 
       <ActionSheet
@@ -359,11 +372,30 @@ const actionSheetStyle = StyleSheet.create({
   },
 });
 
-const style = StyleSheet.create({
-  errorImg: {
+const errorStyle = StyleSheet.create({
+  errorView: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  img: {
     resizeMode: 'center',
-    width: '500',
-    height: '3-0',
+    width: 300,
+    top: 125,
+    padding: 0,
+  },
+
+  desc: {
+    resizeMode: 'center',
+    width: 300,
+  },
+
+  logo: {
+    resizeMode: 'center',
+    width: 100,
+    bottom: 150,
   },
 });
 
