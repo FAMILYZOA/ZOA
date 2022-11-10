@@ -22,7 +22,7 @@ DATABASES = {
         'HOST': 'k7b103.p.ssafy.io', 
         'PORT': '3306', 
         'TEST': {
-            'NAME': 'zoa_test',
+            'NAME': 'zoa_develop',
         },
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",

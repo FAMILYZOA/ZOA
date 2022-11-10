@@ -1,4 +1,6 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListCreateAPIView,ListAPIView,RetrieveUpdateDestroyAPIView,CreateAPIView,GenericAPIView
+from accounts.models import User
 from accounts.permissions import IsFamilyorBadResponsePermission,IsObjectAuthororBadResponsePermission
 from scrums.models import Scrum,Comment
 from rest_framework import status
@@ -61,23 +63,31 @@ class MainScrumAPIView(ListAPIView) :
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+from drf_yasg import openapi
+created_param = openapi.Parameter('created_at', openapi.IN_QUERY, description="조회할 날짜를 입력해주세요", type=openapi.TYPE_STRING,required=True)
+
 class ScrumDetailUpdateAPIView(RetrieveUpdateDestroyAPIView) :
 
     serializer_class = ScrumDetailSerializer
     queryset = Scrum.objects.all()
     lookup_field = 'id'
     
-    @swagger_auto_schema(operation_summary="스크럼 상세 조회")
+
+    @swagger_auto_schema(operation_summary="스크럼 상세 조회",manual_parameters=[created_param],operation_description='id는 조회할 user id를 입력해주세요')
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        if request.user.family_id == instance.family :
-            return Response(serializer.data)
-        return Response({'조회 권한이 없습니다.'},status=status.HTTP_403_FORBIDDEN)
+    def retrieve(self, request,id, *args, **kwargs):
+        try:
+            user = get_object_or_404(User,id=id)
+            instance = Scrum.objects.get(created_at=request.GET['created_at'],user=user)
+            serializer = self.get_serializer(instance)
+            if request.user.family_id == instance.family :
+                return Response(serializer.data)
+            return Response({'조회 권한이 없습니다.'},status=status.HTTP_403_FORBIDDEN)
+        except :
+            return Response({'해당 날짜에 작성된 스크럼이 없습니다.'},status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(operation_summary="스크럼 수정 (작성자만)")
+    @swagger_auto_schema(operation_summary="스크럼 수정 (작성자만)",operation_description='id는 수정할 scrum id를 입력해주세요')
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
@@ -92,7 +102,7 @@ class ScrumDetailUpdateAPIView(RetrieveUpdateDestroyAPIView) :
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(operation_summary="스크럼 삭제 (작성자만)")
+    @swagger_auto_schema(operation_summary="스크럼 삭제 (작성자만)",operation_description='id는 삭제할 scrum id를 입력해주세요')
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
