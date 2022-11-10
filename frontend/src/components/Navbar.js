@@ -21,6 +21,10 @@ const Container = styled.div`
   align-items: center;
 `;
 
+const StyledLink = styled(Link)`
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+`;
+
 const SelectBox = styled.div`
   width: 60%;
   height: 44px;
@@ -71,7 +75,7 @@ function Navbar() {
   return (
     <div>
       <Container active={active}>
-        <Link to="/">
+        <StyledLink to="/">
           {location.pathname === "/" ||
           location.pathname.includes("/checklist") ? (
             <SelectBox>
@@ -82,8 +86,8 @@ function Navbar() {
               <AiOutlineHome size={28} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
-        </Link>
-        <Link to="/hello">
+        </StyledLink>
+        <StyledLink to="/hello">
           {location.pathname.includes("/hello") ? (
             <SelectBox>
               <FaRegSmile size={28} color={"white"} />
@@ -93,8 +97,8 @@ function Navbar() {
               <FaRegSmile size={28} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
-        </Link>
-        <Link to="/settings">
+        </StyledLink>
+        <StyledLink to="/settings">
           {location.pathname.includes("/settings") ? (
             <SelectBox>
               <FaRegUser size={28} color={"white"} />
@@ -104,7 +108,7 @@ function Navbar() {
               <FaRegUser size={28} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
-        </Link>
+        </StyledLink>
       </Container>
     </div>
   );
