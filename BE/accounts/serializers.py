@@ -12,7 +12,7 @@ password_field = serializers.CharField(max_length=20,min_length=8,write_only=Tru
 
 # 핸드폰 중복 검사
 class PhonecheckSerializer(serializers.ModelSerializer):
-    phone = serializers.CharField(max_length=11, required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    phone = serializers.CharField(min_length=10,max_length=11, required=True, validators=[UniqueValidator(queryset=User.objects.all())])
     class Meta:
         model = User
         fields = ('phone',)
