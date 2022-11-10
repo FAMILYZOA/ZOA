@@ -56,6 +56,7 @@ function Navbar() {
   const location = useLocation();
   const [height, setHeight] = useState(window.innerHeight);
   const [active, setActive] = useState(false);
+  const [defaultActive, setDefaultActive] = useState(false);
   const handleResize = debounce(() => {
     setHeight(window.innerHeight);
   }, 50);
@@ -66,12 +67,14 @@ function Navbar() {
     };
   }, []);
   useEffect(() => {
-    if (height <= 600) {
-      setActive(true);
-    } else {
-      setActive(false);
+    if (!defaultActive) {
+      if (height <= 600) {
+        setActive(true);
+      } else {
+        setActive(false);
+      }
     }
-  }, [height]);
+  }, [height, defaultActive]);
   useEffect(() => {
     if (
       location.pathname === "/intro" ||
@@ -85,8 +88,10 @@ function Navbar() {
       location.pathname === "/register"
     ) {
       setActive(true);
+      setDefaultActive(true);
     } else {
       setActive(false);
+      setDefaultActive(false);
     }
   }, [location]);
 
