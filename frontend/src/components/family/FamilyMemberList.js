@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { setFamilyUsers } from "../../features/family/familySlice"
+import { setFamilyUsers } from "../../features/family/familySlice";
 
 const MemberInfo = styled.div`
   display: flex;
@@ -60,8 +60,9 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
       return name;
     }
   };
-  const familyId = useAppSelector((state) => state.family.id)
+  const familyId = useAppSelector((state) => state.family.id);
   const token = useAppSelector((state) => state.token.access);
+  const userId = useAppSelector((state) => state.user.id);
   const navigate = useNavigate();
   useEffect(() => {
     if (token.length === 0) {
@@ -71,28 +72,28 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
 
   // 이름 최초 수정 api
   const onPostName = () => {
-    axios({
-      method: "post",
-      url: `${process.env.REACT_APP_BACK_HOST}/family/name/${id}/`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: {
-        name: editName,
-      },
-    })
-      .then((res) => {
+    if (editName !== "") {
+      axios({
+        method: "post",
+        url: `${process.env.REACT_APP_BACK_HOST}/family/name/${id}/`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          name: editName,
+        },
+      }).then((res) => {
         axios({
           method: "get",
           url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-          .then((res) => {
-            dispatch(setFamilyUsers(res.data.users));
-          })
-      })
+        }).then((res) => {
+          dispatch(setFamilyUsers(res.data.users));
+        });
+      });
+    }
   };
 
   // 이름 수정 api
@@ -106,19 +107,17 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
       data: {
         name: editName,
       },
-    })
-      .then((res) => {
-        axios({
-          method: "get",
-          url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((res) => {
-            dispatch(setFamilyUsers(res.data.users));
-          })
-      })
+    }).then((res) => {
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        dispatch(setFamilyUsers(res.data.users));
+      });
+    });
   };
 
   const [editName, setEditName] = useState("");
@@ -129,7 +128,9 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
   // 이름 수정 창 여닫기
   const [edited, setEdited] = useState(false);
   const onClickEditButton = () => {
-    setEdited(!edited);
+    if (id !== userId) {
+      setEdited(!edited);
+    }
   };
 
   return (
@@ -141,7 +142,10 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
         <div>
           {edited === true ? (
             <InputContainer>
-              <NameEditInput placeholder={set_name} onChange={handleNameEdit} />
+              <NameEditInput
+                placeholder={set_name ? set_name : name}
+                onChange={handleNameEdit}
+              />
             </InputContainer>
           ) : (
             <div onClick={onClickEditButton}>{NameResult()}</div>
