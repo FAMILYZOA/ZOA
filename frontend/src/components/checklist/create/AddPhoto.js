@@ -15,7 +15,7 @@ const MainText = styled.div`
   font-size: 0.8em;
   font-weight: bold;
   text-align: start;
-  margin-bottom: 4px;
+  margin: 4px 0 6px 0;
 `;
 
 const Photo = styled.div`

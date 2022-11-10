@@ -48,13 +48,11 @@ const Text = styled.p`
 
 const NoList = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
 `;
 
 const NoListText = styled.p`
-  margin: 4px 8px;
-  text-align: center;
+  margin: 4px;
 `;
 
 const UserImg = styled.img`
@@ -75,18 +73,20 @@ const CheckListList = () => {
     if (user >= 0) {
       axios({
         method: "get",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}/todaycreate`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${user}/todaycreate`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
-          setList([...res.data.results]);
-          setList(
-            res.data.results.map((item) =>
+          if(res.data.length !== 0){
+            setList([...res.data.results]);
+            setList(
+              res.data.results.map((item) =>
               item ? { ...item, active: false } : list
-            )
-          );
+              )
+              );
+            }
         })
         .catch((err) => {
           console.log(err);
@@ -112,8 +112,8 @@ const CheckListList = () => {
           ) : (
             <NoList>
               <NoListText>
-                등록된 할 일이 없습니다.
-                <br />할 일을 등록해보세요🙂
+                오늘 등록된 할 일이 없습니다.
+                <br /> 할 일을 등록해보세요🙂
               </NoListText>
             </NoList>
           )}
@@ -122,7 +122,7 @@ const CheckListList = () => {
           <IconBox onClick={viewMore}>
             <FaPlusSquare size={16} color={" #ff787f"} />
           </IconBox>
-          <Text onClick={viewMore}>더보기</Text>
+          <Text onClick={viewMore}>체크리스트 전체 확인</Text>
         </ViewMoreBox>
       </ListBox>
     </CheckListWrapper>
