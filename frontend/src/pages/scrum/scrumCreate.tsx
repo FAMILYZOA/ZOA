@@ -55,7 +55,7 @@ const EmojiOuterStyle = styled.div`
 
 const DescStyle = styled.div`
   display: flex;
-  margin: 4px 5% 0;
+  margin: 4px 1em 0;
   align-items: center;
 `;
 
@@ -74,7 +74,7 @@ const RegistStyle = styled.div`
 
 const RegistBtnStyle = styled.button`
   width: 90vw;
-  height: 8vh;
+  height: 2.4em;
 
   background: linear-gradient(92.88deg, #fe9b7c 15.53%, #fec786 92.45%);
 
