@@ -15,9 +15,10 @@ class TestCaseSetUp(APITestCase)  :
         user = user.data['id']
     
     def create_scrum(self) :
+        global scrum_id
         self.authenticate()
-        self.client.post(reverse("scrums:scrum"),{'emoji':'😀','today':'축구함','yesterday':'농구함'})
-
+        response = self.client.post(reverse("scrums:scrum"),{'emoji':'😀','today':'축구함','yesterday':'농구함'})
+        scrum_id = response.data['id']
 class ScrumyCreateTestCase(TestCaseSetUp) :
 
     def test_1_create_scrum(self):
@@ -60,3 +61,27 @@ class ScrumRetriveTestCase(TestCaseSetUp):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['token']['access']}")
         response = self.client.get(reverse("scrums:scrum"))
         self.assertEqual(response.status_code,status.HTTP_403_FORBIDDEN)
+
+class ScrumReadTestCase(TestCaseSetUp) :
+
+    def test_1_retrive_scrum_user(self):
+        self.create_scrum()
+        today = date.today()
+        response = self.client.get(reverse("scrums:detail", kwargs={'id':user}), {"created_at" : today.strftime("%Y-%m-%d")})
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_2_retrive_not_find_scrum(self):
+        self.create_scrum()
+        today = date.today()
+        response = self.client.get(reverse("scrums:detail", kwargs={'id':0}), {"created_at" : today.strftime("%Y-%m-%d")})
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+    
+    def test_3_update_scrum_(self):
+        self.create_scrum()
+        response = self.client.put(reverse("scrums:detail", kwargs={'id':scrum_id}),{'today':'하하'})
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_4_delete_scrum(self):
+        self.create_scrum()
+        response = self.client.delete(reverse("scrums:detail", kwargs={'id':scrum_id}))
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
