@@ -222,7 +222,10 @@ const ScrumHome = () => {
           </div>
 
           <div>
-            {myScrum[0].emoji === "" ? (
+            {myScrum[0].emoji === "" && 
+            date.getFullYear() === new Date().getFullYear() &&
+            date.getMonth() === new Date().getMonth() &&
+            date.getDate() === new Date().getDate() ? (
               <div
                 style={{
                   color: "#ff787f",
