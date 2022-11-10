@@ -50,16 +50,24 @@ function Announcement({ scrum }) {
           item.today.length >= 1 ? (
             <Contents key={index}>
               <Text>📢 {item.today}</Text>
-              <From>
-                From.{item.set_name}({item.name})
-              </From>
+              {item.set_name ? (
+                <From>
+                  From.{item.set_name}({item.name})
+                </From>
+              ) : (
+                <From>From.{item.name}</From>
+              )}
             </Contents>
           ) : (
             <Contents key={index}>
               <Text>📢 오늘의 공지가 없습니다.</Text>
-              <From>
-                From.{item.set_name}({item.name})
-              </From>
+              {item.set_name ? (
+                <From>
+                  From.{item.set_name}({item.name})
+                </From>
+              ) : (
+                <From>From.{item.name}</From>
+              )}
             </Contents>
           )
         )
