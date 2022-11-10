@@ -110,7 +110,7 @@ function TodoContents({ currentId }) {
   const [click, setClick] = useState(-1);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.2 });
     if (obsRef.current) observer.observe(obsRef.current);
     return () => {
       observer.disconnect();
@@ -121,42 +121,51 @@ function TodoContents({ currentId }) {
     getTodo();
   }, [page, currentId]);
 
+  useEffect(() => {
+    preventRef.current = true;
+    endRef.current = false;
+  }, [currentId]);
+
   const obsHandler = (entries) => {
     const target = entries[0];
     if (!endRef.current && target.isIntersecting && preventRef.current) {
       preventRef.current = false;
       setPage((prev) => prev + 1);
-      console.log(page);
     }
   };
 
   const getTodo = useCallback(async () => {
+    if (currentId !== target) {
+      setPage(1);
+    }
     if (currentId >= 0 && page !== 0) {
       //글 불러오기
       setLoad(true);
-      const res = await axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
-      if (res.data) {
-        if (res.data.next === null) {
-          //마지막 페이지
-          endRef.current = true;
+      if (currentId === target || page === 1) {
+        const res = await axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+        if (res.data) {
+          if (res.data.next === null) {
+            //마지막 페이지
+            endRef.current = true;
+          }
+  
+          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+          //     item ? {...item, active:false} : list
+          //   ))); // 리스트 추가
+          if (target === currentId){
+            setList(list.concat(res.data.results)); // 리스트 추가
+          } else {
+            setTarget(currentId);
+            setList(res.data.results);
+          }
+          preventRef.current = true;
         }
-
-        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-        //     item ? {...item, active:false} : list
-        //   ))); // 리스트 추가
-        if (target === currentId){
-          setList(list.concat(res.data.results)); // 리스트 추가
-        } else {
-          setTarget(currentId);
-          setList(res.data.results);
-        }
-        preventRef.current = true;
       }
       setLoad(false); //로딩 종료
     }
@@ -228,7 +237,7 @@ function TodoContents({ currentId }) {
       ) : (
         <></>
       )}
-      <div ref={obsRef}></div>
+      <div ref={obsRef} style={{height: "20px"}}></div>
     </ContentsContainer>
   );
 }
@@ -242,7 +251,6 @@ function CompleteContents({ currentId }) {
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
-  const [flag, setFlag] = useState(true);
 
   const [click, setClick] = useState(-1);
 
@@ -258,42 +266,50 @@ function CompleteContents({ currentId }) {
     getTodo();
   }, [page, currentId]);
 
+  useEffect(() => {
+    preventRef.current = true;
+    endRef.current = false;
+  }, [currentId]);
+
   const obsHandler = (entries) => {
     const target = entries[0];
     if (!endRef.current && target.isIntersecting && preventRef.current) {
       preventRef.current = false;
       setPage((prev) => prev + 1);
-      console.log(page);
     }
   };
   const getTodo = useCallback(async () => {
-    //글 불러오기
+    if (currentId !== target) {
+      setPage(1);
+    }
     if (currentId >= 0 && page !== 0) {
       setLoad(true);
-      const res = await axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=1`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
-      if (res.data) {
-        if (res.data.next === null) {
-          //마지막 페이지
-          endRef.current = true;
+      if (currentId === target || page === 1) {
+        const res = await axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=1`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+        if (res.data) {
+          if (res.data.next === null) {
+            //마지막 페이지
+            endRef.current = true;
+          }
+          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+          //     item ? {...item, active:false} : list
+          //   ))); // 리스트 추가
+          if (target === currentId){
+            setList(list.concat(res.data.results));
+          } else {
+            setTarget(currentId);
+            setList(res.data.results);
+          } // 리스트 추가
+          preventRef.current = true;
         }
-        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-        //     item ? {...item, active:false} : list
-        //   ))); // 리스트 추가
-        if (target === currentId){
-          setList(list.concat(res.data.results));
-        } else {
-          setTarget(currentId);
-          setList(res.data.results);
-        } // 리스트 추가
-        preventRef.current = true;
+        setLoad(false); //로딩 종료
       }
-      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 

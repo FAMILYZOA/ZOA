@@ -18,3 +18,11 @@ class Scrum(models.Model) :
     family = models.ForeignKey(Family,on_delete=models.CASCADE,related_name='scrum')
     def __str__(self) :
         return self.emoji    
+
+class Comment(models.Model) :
+    id = models.BigAutoField(primary_key=True)
+    content = models.CharField(max_length=50)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='comment')
+    scrum = models.ForeignKey(Scrum,on_delete=models.CASCADE,related_name='comment')
+    family = models.ForeignKey(Family,on_delete=models.CASCADE,related_name='comment')
+    created_at = models.DateTimeField(auto_now_add=True)
