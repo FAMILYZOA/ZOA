@@ -50,7 +50,6 @@ function App() {
   const dispatch = useAppDispatch();
   const [, updateState] = useState<{}>();
   const forceUpdate = useCallback(() => updateState({}), []);
-  const navigate = useNavigate();
 
   const fontArray = ["16px", "20px", "24px"];
 
@@ -195,8 +194,6 @@ function App() {
               } else {
                 dispatch(setAccessToken(""));
                 dispatch(setRefreshToken(""));
-
-                navigate("/login", { replace: true });
               }
             }
             break;
