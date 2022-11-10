@@ -121,9 +121,6 @@ const ScrumHome = () => {
       .then((res) => {
         setScrums([...res.data]);
       })
-      .catch((err) => {
-        console.log(err);
-      });
   }, [day]);
 
   // 내 스크럼 저장할 state 선언

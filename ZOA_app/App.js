@@ -59,6 +59,8 @@ const App = () => {
     mediaType: 'photo',
     quality: 1,
     cameraType: 'back',
+    maxWitdh: 360,
+    maxHeight: 360,
     includeBase64: true,
     saveToPhoto: true,
   };

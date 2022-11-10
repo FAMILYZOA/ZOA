@@ -8,7 +8,6 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "../../../features/token/tokenSlice";
-import { useAppSelector } from "../../../app/hooks";
 
 export const Background = styled.div`
   height: 100vh;
@@ -47,7 +46,6 @@ function Loading() {
         if (data.access_token) {
           localStorage.setItem("token", data.access_token);
         } else {
-          console.log("실패");
           navigate("/intro");
         }
         axios({
@@ -66,7 +64,6 @@ function Loading() {
             data: data,
           })
             .then((result) => {
-              console.log(result);
               if (result.status === 200) {
                 dispatch(setAccessToken(result.data.token.access));
                 dispatch(setRefreshToken(result.data.token.refresh));
@@ -80,8 +77,6 @@ function Loading() {
                   name: res.data.kakao_account.profile.nickname,
                   profile: res.data.kakao_account.profile.profile_image_url,
                 });
-              } else {
-                console.log("예상치 못한 에러군,,,");
               }
             });
         });
