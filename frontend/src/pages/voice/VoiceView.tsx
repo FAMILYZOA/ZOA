@@ -19,18 +19,20 @@ const SelectHighlight = styled.div<highLightProps>`
   width: 50vw;
   height: 3px;
   position: absolute;
+  background-color: #FE9B7C;
   bottom: 0;
   ${({ isLeft }) => {
     if (isLeft) {
       return css`
-        left: 0;
+        object-position: left bottom;
       `;
     } else {
       return css`
-        right: 0;
+        object-position: right bottom;
       `
     }
   }}
+  transition: object-position 0.5s;
 `
 const VoiceMessageDiv = styled.div`
   margin: 4.5vmin;
@@ -44,9 +46,9 @@ const VoiceView = () => {
   return (
     <>
       <SelectViewDiv>
-        <SelectViewItem>{`미확인 메시지(${unViewedMessage.length})`}</SelectViewItem>
-        <SelectViewItem>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
-        <SelectHighlight />
+        <SelectViewItem onClick={() => (setIsLeft(true))}>{`미확인 메시지(${unViewedMessage.length})`}</SelectViewItem>
+        <SelectViewItem onClick={() => (setIsLeft(false))}>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
+        <SelectHighlight isLeft={isLeft}/>
       </SelectViewDiv>
     </>
   )

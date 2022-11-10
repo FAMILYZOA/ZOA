@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
-import { useNavigate } from "react-router-dom";
 import logo from "../../assets/white-logo.png";
 import { IoIosArrowBack } from "react-icons/io";
 

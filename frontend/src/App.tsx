@@ -39,6 +39,7 @@ import { setChecklistPhoto } from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 import { AuthRefresh } from "./api/customAxios";
 import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
+import { VoiceView } from "./pages/voice";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -234,6 +235,8 @@ function App() {
 
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
+
+          <Route path="/voice" element={<VoiceView />} />
 
           <Route path="/settings" element={<Settings />} />
         </Routes>
