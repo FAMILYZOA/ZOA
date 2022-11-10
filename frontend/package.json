@@ -26,6 +26,7 @@
     "dotenv": "^16.0.3",
     "emoji-picker-react": "^4.4.4",
     "git-cz": "^4.9.0",
+    "lodash": "4.17.21",
     "react": "^18.2.0",
     "react-dat-gui": "4.1.1",
     "react-device-detect": "^2.2.2",
