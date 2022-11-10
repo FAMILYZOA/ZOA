@@ -11,8 +11,6 @@ import React from 'react';
 import {
   View,
   Text,
-  Button,
-  Alert,
   PermissionsAndroid,
   BackHandler,
   ActivityIndicator,
@@ -20,20 +18,22 @@ import {
   Pressable,
   Linking,
   Platform,
-  Toast,
   ToastAndroid,
+  Image,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ActionSheet from 'react-native-actions-sheet';
 import {selectContactPhone} from 'react-native-select-contact';
 import SendIntentAndroid from 'react-native-send-intent';
+import NetInfo from '@react-native-community/netinfo';
 import {useRef, useState, useEffect} from 'react';
 
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
-  const url = {uri: 'https://k7b103.p.ssafy.io'};
+  const [connection, toggleConnection] = useState(false);
+  const url = {uri: 'https://familyzoa.com'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -68,6 +68,8 @@ const App = () => {
   const gallOpt = {
     mediaType: 'photo',
     quality: 1,
+    maxWitdh: 360,
+    maxHeight: 360,
     includeBase64: true,
   };
 
@@ -254,20 +256,36 @@ true;
     return true;
   };
 
+  useEffect(() => {
+    NetInfo.fetch().then(state => {
+      if (state.isConnected) {
+        toggleConnection(true);
+      }
+    });
+  }, []);
+
   return (
     <View style={{flex: 1}}>
-      <WebView
-        ref={webViewRef}
-        onLoadStart={() => webViewRef.current.injectJavaScript(INJECTED_CODE)}
-        originWhitelist={['*']}
-        renderLoading={loadingSpinner}
-        startInLoadingState={true}
-        style={{flex: 1}}
-        source={url}
-        onMessage={getMessage}
-        scrollEnabled={false}
-        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-      />
+      {connection ? (
+        <WebView
+          ref={webViewRef}
+          onLoadStart={() => webViewRef.current.injectJavaScript(INJECTED_CODE)}
+          originWhitelist={['*']}
+          renderLoading={loadingSpinner}
+          startInLoadingState={true}
+          style={{flex: 1}}
+          source={url}
+          onMessage={getMessage}
+          scrollEnabled={false}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+        />
+      ) : (
+        <View>
+          <Image source={require('./assets/error.png')} />
+          <Image source={require('./assets/error_desc.png')} />
+          <Image source={'./assets/error.png'} />
+        </View>
+      )}
 
       <ActionSheet
         ref={actionSheetRef}
@@ -338,6 +356,14 @@ const actionSheetStyle = StyleSheet.create({
     fontSize: 24,
 
     color: '#D82D34',
+  },
+});
+
+const style = StyleSheet.create({
+  errorImg: {
+    resizeMode: 'center',
+    width: '500',
+    height: '3-0',
   },
 });
 
