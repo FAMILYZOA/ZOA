@@ -32,7 +32,6 @@ function Test() {
           setToken(data.access_token);
           localStorage.setItem("token", data.access_token);
         } else {
-          console.log("실패");
           navigate("/intro");
         }
         axios({
@@ -63,8 +62,6 @@ function Test() {
                   name: res.data.kakao_account.profile.nickname,
                   profile: res.data.kakao_account.profile.profile_image_url,
                 });
-              } else {
-                console.log("예상치 못한 에러군,,,");
               }
             });
         });

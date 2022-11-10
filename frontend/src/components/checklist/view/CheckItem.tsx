@@ -119,7 +119,6 @@ function CheckItem({
 }: CheckItemProps) {
   const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
-    console.log(`${id} clicked`);
     axios({
       method: "put",
       url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${id}`,
@@ -131,12 +130,8 @@ function CheckItem({
       },
     })
       .then((res) => {
-        console.log(res.data.status);
         refreshCheckList(selectedMember.id);
       })
-      .catch((err) => {
-        console.error(err);
-      });
   };
 
   const onToggle = () => {

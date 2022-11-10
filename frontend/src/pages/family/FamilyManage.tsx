@@ -120,13 +120,10 @@ ${inviteLink}`;
       }
     }else if(os === "iOS") {
       window.location.href = `sms:&body=${smsUrl}`
-    }else{
-      console.log("모바일 환경이 아닙니다.");
     }
   };
   const shareKakao = () => {
     const host = process.env.REACT_APP_FE_HOST;
-    console.log(host);
     
     try {
       // link를 우리 앱의 deeplink로 바꿔야 함.
@@ -153,7 +150,6 @@ ${inviteLink}`;
         ],
       });
     } catch (err) {
-      console.log(err);
     }
   };
 

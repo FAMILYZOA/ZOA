@@ -48,7 +48,6 @@ function AddPhoto({ getPhoto }) {
   const checklistPhotoUpdate = () => {
     let current = store.getState().mobile.checklistPhoto;
     if (current && current !== plus) {
-      //console.log(current);
       // 업로드 작업
       const checklistImage = dataURLtoFile(current, `${makeid(6)}.jpg`);
       setFile(URL.createObjectURL(checklistImage));
@@ -62,7 +61,6 @@ function AddPhoto({ getPhoto }) {
   const [os, setOS] = useState(getOS());
 
   const saveFile = (e) => {
-    console.log(e);
     setFile(URL.createObjectURL(e.target.files[0]));
     setPhoto(e.target.files[0]);
   };

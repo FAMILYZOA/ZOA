@@ -286,7 +286,6 @@ const RegistBtn = (props: registBtnPRops) => {
               const code = err.response.data.code;
               if (code === "token_not_valid") {
                 const tokens = await AuthRefresh(refresh);
-                console.log(tokens);
                 if (tokens) {
                   dispatch(setAccessToken(tokens.access));
                   dispatch(setRefreshToken(tokens.refresh));
@@ -299,7 +298,6 @@ const RegistBtn = (props: registBtnPRops) => {
               }
               break;
             default:
-              console.log(err);
               break;
           }
         });

@@ -51,7 +51,6 @@ function SelectMember({
   const count: number = unSelectedMember.length;
   // 선택되지 않은 멤버 리스트, 임시로 더미데이터
   const onClick = (id: number) => {
-    console.log(`${id} clicked`);
     getModal();
   };
 

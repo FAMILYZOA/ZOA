@@ -87,10 +87,6 @@ function Receiver({ receivers }) {
     }
   }, [familyId]);
 
-  useEffect(() => {
-    console.log(family);
-  }, [family]);
-
   const [receiver, setReceiver] = useState([]);
   const active = (active, id, index) => {
     if (receiver.includes(id)) {

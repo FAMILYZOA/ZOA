@@ -91,15 +91,8 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
         })
           .then((res) => {
             dispatch(setFamilyUsers(res.data.users));
-            console.log("family fetched");
           })
-          .catch((err) => {
-            console.error(err);
-          });
       })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   // 이름 수정 api
@@ -124,15 +117,8 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
         })
           .then((res) => {
             dispatch(setFamilyUsers(res.data.users));
-            console.log("family fetched");
           })
-          .catch((err) => {
-            console.error(err);
-          });
       })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   const [editName, setEditName] = useState("");

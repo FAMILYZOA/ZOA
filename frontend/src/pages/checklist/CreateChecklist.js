@@ -62,7 +62,6 @@ function CreateChecklist() {
 
   const event = () => {
     if (allow) {
-      console.log(info);
       setAllow(false);
       if (info.text === "") {
         setActive(false);
@@ -76,7 +75,6 @@ function CreateChecklist() {
         if (info.photo !== "") {
           data.append("photo", info.photo);
         }
-        //console.log(data);
         axios({
           method: "POST",
           url: `${process.env.REACT_APP_BACK_HOST}/checklist/`,
@@ -86,12 +84,8 @@ function CreateChecklist() {
           data: data,
         })
           .then((res) => {
-            //console.log(res);
             navigate("/checklist");
           })
-          .catch((err) => {
-            console.log(err);
-          });
       }
     }
   };

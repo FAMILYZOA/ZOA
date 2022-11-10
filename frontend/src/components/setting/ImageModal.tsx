@@ -144,8 +144,6 @@ const FontModal = (props: modalType) => {
     const data = new FormData();
     if (photo !== undefined) {
       data.append("image", photo);
-      console.log(photo);
-      console.log(data);
       axios({
         method: "PUT",
         url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
@@ -155,8 +153,6 @@ const FontModal = (props: modalType) => {
         data: data,
       })
         .then((res) => {
-          console.log("Profile Image submitted");
-          console.log(res.data);
           dispatch(setUserImage(res.data.image));
         })
         .catch(async (err) => {
@@ -165,7 +161,6 @@ const FontModal = (props: modalType) => {
               const code = err.response.data.code;
               if (code === "token_not_valid") {
                 const tokens = await AuthRefresh(refreshToken);
-                console.log(tokens);
                 if (tokens) {
                   dispatch(setAccessToken(tokens.access));
                   dispatch(setRefreshToken(tokens.refresh));
@@ -178,7 +173,6 @@ const FontModal = (props: modalType) => {
               }
               break;
             default:
-              console.log(err);
               break;
           }
         });

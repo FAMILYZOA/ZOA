@@ -242,15 +242,12 @@ const Form = () => {
     loginForm.append("phone", phone.replaceAll("-", ""));
     loginForm.append("password", password);
 
-    console.log(loginForm.get("phone"));
-
     customAxios.post("accounts/login/", loginForm).then((response) => {
       setUserToken(response.data.token.access);
       dispatch(setAccessToken(response.data.token.access));
       alert("로그인 성공!");
       navigate('/scrum/create', {replace: true});
     }).catch((err) => {
-      console.log(err);
       alert("로그인이 실패하였습니다.")
     });
 

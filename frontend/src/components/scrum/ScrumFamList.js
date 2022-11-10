@@ -15,11 +15,7 @@ const ScrumFamList = () => {
         //   },
         })
         .then((res) => {
-          setFamScrum([...res.data])
-          console.log(famScrum)
-        })
-        .catch((err) => {
-          console.log(err)
+          setFamScrum([...res.data]);
         })
       }, []);
 

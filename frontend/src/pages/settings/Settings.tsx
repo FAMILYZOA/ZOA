@@ -216,7 +216,6 @@ const Settings = () => {
         data: data,
       })
         .then((res) => {
-          console.log("Profile Name submitted");
           dispatch(setUserName(res.data.name));
           axios({
             method: "get",
@@ -227,15 +226,10 @@ const Settings = () => {
           })
             .then((res) => {
               dispatch(setFamilyUsers(res.data.users));
-              console.log("family fetched");
             })
-            .catch((err) => {
-              console.error(err);
-            });
           setToggleEdit(false);
         })
         .catch((err) => {
-          console.error(err);
           setToggleEdit(false);
         });
     }

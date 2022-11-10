@@ -32,7 +32,6 @@ const CheckListPlusButton = styled.div`
 const CheckList = () => {
   const navigate = useNavigate();
   const plusClick = () => {
-    console.log('here');
     navigate("/checklist/create/")
   }
   return(
