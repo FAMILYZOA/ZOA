@@ -40,6 +40,9 @@ function Resister() {
         data.append("birth", info.birth);
         axios({
           method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           url: `${process.env.REACT_APP_BACK_HOST}/accounts/signup/`,
           data: data,
         })
