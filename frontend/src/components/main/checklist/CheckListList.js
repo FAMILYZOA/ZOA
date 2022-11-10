@@ -69,32 +69,39 @@ const CheckListList = () => {
   const userImg = useAppSelector((state) => state.user.image);
   const [list, setList] = useState([]);
 
+  const getChecklist = () => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/${user}/todaycreate`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if(res.data.length !== 0){
+          setList([...res.data]);
+          setList(
+            res.data.map((item) =>
+            item ? { ...item, active: false } : list
+            )
+            );
+          }
+      })
+  }
+
   useEffect(() => {
     if (user >= 0) {
-      axios({
-        method: "get",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${user}/todaycreate`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          console.log(res)
-          if(res.data.length !== 0){
-            setList([...res.data]);
-            setList(
-              res.data.map((item) =>
-              item ? { ...item, active: false } : list
-              )
-              );
-            }
-        })
+      getChecklist();
     }
   }, [user]);
 
   const viewMore = () => {
     navigate("/checklist");
   };
+
+  const checked = () => {
+    getChecklist();
+  }
 
   return (
     <CheckListWrapper>
@@ -104,7 +111,7 @@ const CheckListList = () => {
           {list.length !== 0 ? (
             <div>
               {list.map((item, idx) => (
-                <CheckListItem {...item} key={idx} />
+                <CheckListItem item={item} checked={checked} key={idx} />
               ))}
             </div>
           ) : (
