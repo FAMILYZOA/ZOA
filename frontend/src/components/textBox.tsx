@@ -11,7 +11,7 @@ type BoxProps = {
 };
 
 const TextBoxStyle = styled.div`
-  height: 16vh;
+  height: 6.4em;
   margin-left: 5%;
   margin-right: 5%;
 

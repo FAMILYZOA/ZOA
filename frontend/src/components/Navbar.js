@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { debounce } from "lodash";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
@@ -22,7 +23,7 @@ const Container = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 `;
 
 const SelectBox = styled.div`
@@ -53,7 +54,24 @@ const UnSelectBox = styled.div`
 
 function Navbar() {
   const location = useLocation();
+  const [height, setHeight] = useState(window.innerHeight);
   const [active, setActive] = useState(false);
+  const handleResize = debounce(() => {
+    setHeight(window.innerHeight);
+  }, 50);
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  useEffect(() => {
+    if (height <= 600) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  }, [height]);
   useEffect(() => {
     if (
       location.pathname === "/intro" ||
