@@ -28,6 +28,9 @@
             <data android:host="kakaolink"
                 android:scheme="kakao6fd6f2dafb83a7ddcb5526a77763213b" />
         </intent-filter>
+          <intent-filter>
+              <data android:scheme="facebook" />
+          </intent-filter>
       </activity>
     </application>
     <queries>
