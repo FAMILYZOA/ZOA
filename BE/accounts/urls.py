@@ -11,6 +11,7 @@ from .views import (
     LogoutAPIView,
     ProfileAPIView,
     PasswordAPIView,
+    PhonecheckAPIView,
 )
 
 app_name = 'accounts'
@@ -21,6 +22,8 @@ urlpatterns = [
     # 토큰 검증
     path('token_verify/', TokenVerifyView.as_view(), name='token_verify'),
     
+    # 휴대폰 중복 체크
+    path('phonecheck/', PhonecheckAPIView.as_view(), name="phonecheck"),
     # 회원가입
     path('signup/', SignupAPIView.as_view(), name="signup"),
     # 로그인

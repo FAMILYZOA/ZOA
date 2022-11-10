@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ZOA_app</string>
+    <string name="facebook_app_id">Facebook</string>
 </resources>
