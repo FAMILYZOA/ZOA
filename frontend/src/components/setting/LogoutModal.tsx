@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import axios from "axios";
 
 type modalType = {
   isOpen: boolean;
@@ -82,6 +83,8 @@ const LogoutModal = (props: modalType) => {
   const [isModal, toggleModal] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector(state => state.token.access);
+  const refreshToken = useAppSelector(state => state.token.refresh);
 
   const modalStyle = {
     content: {
@@ -101,10 +104,22 @@ const LogoutModal = (props: modalType) => {
   };
 
   const comfirmModal = () => {
-    dispatch(setAccessToken("")); // 로그아웃 하기
-    dispatch(setRefreshToken(""))
-    props.toggle(false);
-    navigate("/intro", { replace: true });
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_BACK_HOST}/accounts/logout/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        refresh: `${refreshToken}`
+      }
+    })
+      .then(() => {
+        dispatch(setAccessToken("")); // 로그아웃 하기
+        dispatch(setRefreshToken(""))
+        props.toggle(false);
+        navigate("/intro", { replace: true });
+      })
   };
 
   return (
