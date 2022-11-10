@@ -23,7 +23,7 @@ const TextBox = styled.p`
   margin: auto 8px;
 `;
 
-const CheckListItem = (item) => {
+const CheckListItem = ({item, checked}) => {
   // 체크 했을 때 스타일 설정
   let itemTextColor = "#000000";
   let textDecorationLine = "";
@@ -46,6 +46,8 @@ const CheckListItem = (item) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    }).then(()=>{
+      checked();
     })
   };
 
