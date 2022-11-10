@@ -43,19 +43,16 @@ const IconBox = styled.div`
 const Text = styled.p`
   color: #ff787f;
   margin: auto 8px;
-  font-size: 0.9rem;
+  font-size: 0.9em;
 `;
 
 const NoList = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: calc((100vh - 520px) / 2);
 `;
 
 const NoListText = styled.p`
-  margin: 4px 8px;
-  text-align: center;
+  margin: 4px;
 `;
 
 const UserImg = styled.img`
@@ -76,24 +73,24 @@ const CheckListList = () => {
     if (user >= 0) {
       axios({
         method: "get",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${user}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${user}/todaycreate`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
-          setList([...res.data.results]);
-          setList(
-            res.data.results.map((item) =>
+          console.log(res)
+          if(res.data.length !== 0){
+            setList([...res.data]);
+            setList(
+              res.data.map((item) =>
               item ? { ...item, active: false } : list
-            )
-          );
+              )
+              );
+            }
         })
-        .catch((err) => {
-          console.log(err);
-        });
     }
-  }, [user, list]);
+  }, [user]);
 
   const viewMore = () => {
     navigate("/checklist");
@@ -113,8 +110,8 @@ const CheckListList = () => {
           ) : (
             <NoList>
               <NoListText>
-                등록된 할 일이 없습니다.
-                <br />할 일을 등록해보세요🙂
+                오늘 등록된 할 일이 없습니다.
+                <br /> 할 일을 등록해보세요🙂
               </NoListText>
             </NoList>
           )}
@@ -123,7 +120,7 @@ const CheckListList = () => {
           <IconBox onClick={viewMore}>
             <FaPlusSquare size={16} color={" #ff787f"} />
           </IconBox>
-          <Text onClick={viewMore}>더보기</Text>
+          <Text onClick={viewMore}>체크리스트 전체 확인</Text>
         </ViewMoreBox>
       </ListBox>
     </CheckListWrapper>

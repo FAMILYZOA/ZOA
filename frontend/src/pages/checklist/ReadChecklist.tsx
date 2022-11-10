@@ -34,25 +34,25 @@ const Icon = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 1.25rem;
+  font-size: 1.25em;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
 `;
 
 const CheckListViewBody = styled.div`
-  padding: 3vmin 2vmin;
+  padding: 5%;
 `;
 const CheckListTitle = styled.div`
-  margin: 16px 0;
-  font-size: 1.25rem;
+  margin: 12px 8px;
+  font-size: 1em;
   font-weight: bold;
 `;
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: calc(100vh - 56px);
   z-index: 2;
   background-color: rgba(102, 102, 102, 0.5);
   animation: fadein 0.5s;
@@ -100,6 +100,7 @@ const ModalDiv = styled.div`
 `;
 const ModalItem = styled.div<modalItemProps>`
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   z-index: 4;
   margin-bottom: 1vh;
@@ -153,14 +154,14 @@ const ModalItem = styled.div<modalItemProps>`
   }
 `;
 const ModalItemName = styled.div`
-  margin-right: 1vmin;
+  margin-right: 0.6em;
   font-weight: 700;
-  font-size: 2vmin;
+  font-size: 0.8em;
 `;
 const ModalItemImg = styled.img`
-  width: 8vmin;
-  height: 8vmin;
-  border-radius: 4vmin;
+  width: 2em;
+  height: 2em;
+  border-radius: 1em;
   object-fit: fill;
 `;
 
@@ -248,10 +249,10 @@ function ReadChecklist() {
               key={member.id}
               index={index}
             >
-              <ModalItemName>{member.name}</ModalItemName>
               <div>
                 <ModalItemImg src={member.image} />
               </div>
+              <ModalItemName>{member.name}</ModalItemName>
             </ModalItem>
           ))}
         </ModalDiv>
@@ -262,7 +263,16 @@ function ReadChecklist() {
           unSelectedMember={unSelectedMember}
           getModal={getModal}
         />
-        <CheckListTitle>{selectedMember.name} 님의 체크리스트</CheckListTitle>
+        <CheckListTitle>
+          {selectedMember.set_name ? (
+            <span style={{ color: "#FE9B7C" }}>
+              {selectedMember.set_name} ({selectedMember.name})
+            </span>
+          ) : (
+            <span style={{ color: "#FE9B7C" }}>{selectedMember.name}</span>
+          )}
+          님의 체크리스트
+        </CheckListTitle>
         <Tabs current={selectedMember.id}></Tabs>
       </CheckListViewBody>
     </div>

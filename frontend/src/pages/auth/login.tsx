@@ -48,7 +48,7 @@ const HeaderLogoStyle = styled.p`
   -moz-background-clip: text;
   -moz-text-fill-color: transparent;
 
-  font-size: 2.5rem;
+  font-size: 2.5em;
   font-weight: bolder;
   margin: 0%;
 `;
@@ -68,7 +68,7 @@ const FormDescStyle = styled.p`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   line-height: 100%;
   /* or 16px */
 
@@ -150,7 +150,7 @@ const KakaoLoginBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   line-height: 100%;
   /* identical to box height, or 16px */
 
@@ -172,7 +172,7 @@ const SignupStyle = styled(Link)`
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   text-decoration: none;
   /* or 16px */
 
@@ -242,15 +242,12 @@ const Form = () => {
     loginForm.append("phone", phone.replaceAll("-", ""));
     loginForm.append("password", password);
 
-    console.log(loginForm.get("phone"));
-
     customAxios.post("accounts/login/", loginForm).then((response) => {
       setUserToken(response.data.token.access);
       dispatch(setAccessToken(response.data.token.access));
       alert("로그인 성공!");
       navigate('/scrum/create', {replace: true});
     }).catch((err) => {
-      console.log(err);
       alert("로그인이 실패하였습니다.")
     });
 

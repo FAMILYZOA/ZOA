@@ -1,18 +1,16 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-
 const Container = styled.div`
-    margin: 5%;
-    border-bottom: 1px solid #d9d9d9;
-
-`
+  border-bottom: 1px solid #d9d9d9;
+  margin: 8px 5%;
+`;
 const MainText = styled.div`
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-align: start;
-`
+  font-size: 0.8em;
+  font-weight: bold;
+  text-align: start;
+`;
 
 const UserContainer = styled.div`
   display: flex;
@@ -37,62 +35,58 @@ const UserContainer = styled.div`
 `;
 
 const UserBox = styled.div`
-    opacity: ${(props) => props.rc.includes(props.id) ? 1 : 0.5};
-    display: inline-block;
+  opacity: ${(props) => (props.rc.includes(props.id) ? 1 : 0.5)};
+  display: inline-block;
+  width: 64px;
+  height: 80px;
+  margin: 8px 8px 8px 0;
+  text-align: center;
+  img {
     width: 64px;
-    height: 80px;
-    margin: 8px 8px 8px 0;
-    text-align: center;
-    img{
-        width: 64px;
-        height: 64px;
-        border-radius: 100px;
-        margin: 0;
-    }
-    p{
-        margin: 0 auto;
-        font-size: 0.6rem;
-    }
-`
+    height: 64px;
+    border-radius: 100px;
+    margin: 0;
+  }
+  p {
+    margin: 0 auto;
+    font-size: 0.6em;
+  }
+`;
 
-
-function Receiver({receivers}) {
+function Receiver({ receivers }) {
   const [familyId, setId] = useState("");
   const [family, setFamily] = useState([]);
-  useEffect(()=> {
+  useEffect(() => {
     axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/accounts/profile/`,
-      headers: {Authorization: `Bearer ${localStorage.getItem('access_token')}`}
+      url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
     }).then((res) => {
-      setId(res.data.family_id)
-    })
-  }, [])
+      setId(res.data.family_id);
+    });
+  }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     if (familyId.length !== 0) {
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/family/${familyId}/`,
+        url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       }).then((res) => {
         setFamily(res.data.users);
         setFamily(
-          res.data.users.map((item) => (
-            item ? {...item, active:false} : family
-          ))
-        )
+          res.data.users.map((item) =>
+            item ? { ...item, active: false } : family
+          )
+        );
       });
     }
-  }, [familyId])
+  }, [familyId]);
 
-  useEffect(()=>{
-    console.log(family);
-  },[family])
-
-  
   const [receiver, setReceiver] = useState([]);
   const active = (active, id, index) => {
     if (receiver.includes(id)) {
@@ -107,7 +101,6 @@ function Receiver({receivers}) {
   useEffect(() => {
     receivers({ receiver: receiver });
   }, [receiver]);
-
 
   return (
     <Container>
@@ -126,7 +119,6 @@ function Receiver({receivers}) {
             <p>{item.name}</p>
           </UserBox>
         ))}
-        
       </UserContainer>
     </Container>
   );

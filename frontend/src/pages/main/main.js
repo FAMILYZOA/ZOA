@@ -22,12 +22,16 @@ function Main() {
   const [scrum, setScrum] = useState([]);
 
   useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
-      navigate("/intro");
-    } else {
-      if (localStorage.getItem("familyId")) {
+    if (localStorage.getItem("familyId")) {
+      if (localStorage.getItem("access_token")) {
         const familyId = localStorage.getItem("familyId");
         navigate(`/join/${familyId}`);
+      } else {
+        navigate("/intro");
+      }
+    } else {
+      if (!localStorage.getItem("access_token")) {
+        navigate("/intro");
       }
     }
   }, []);
@@ -35,7 +39,7 @@ function Main() {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/scrums/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/scrums/`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -49,10 +53,9 @@ function Main() {
             const code = err.response.data.code;
             if (code === "token_not_valid") {
               const tokens = await AuthRefresh(refresh).catch((err) => {
-                console.log(err);
+
                 navigate("/intro", { replace: true });
               });
-              console.log(tokens);
               if (tokens) {
                 dispatch(setAccessToken(tokens.access));
                 dispatch(setRefreshToken(tokens.refresh));
@@ -60,12 +63,10 @@ function Main() {
             }
             break;
           case 403:
-            console.log(localStorage.getItem("familyId"));
             if (localStorage.getItem("familyId")) {
               const familyId = localStorage.getItem("familyId");
               navigate(`/join/${familyId}`);
             } else {
-              console.log("여기");
               navigate("family/create/");
             }
             break;

@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
         android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustPan"
+        android:windowSoftInputMode="stateUnspecified"
         android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -28,6 +28,9 @@
             <data android:host="kakaolink"
                 android:scheme="kakao6fd6f2dafb83a7ddcb5526a77763213b" />
         </intent-filter>
+          <intent-filter>
+              <data android:scheme="facebook" />
+          </intent-filter>
       </activity>
     </application>
     <queries>

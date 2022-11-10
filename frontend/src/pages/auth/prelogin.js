@@ -5,15 +5,14 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper";
-import img1 from "../../assets/prelogin1.jpg"
-import img2 from "../../assets/prelogin2.jpg"
-import img3 from "../../assets/prelogin3.jpg"
+import img1 from "../../assets/prelogin1.jpg";
+import img2 from "../../assets/prelogin2.jpg";
+import img3 from "../../assets/prelogin3.jpg";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-
- SwiperCore.use([Navigation, Pagination, Autoplay]);
+SwiperCore.use([Navigation, Pagination, Autoplay]);
 
 /*global Kakao*/
 
@@ -83,7 +82,7 @@ const TextBox = styled.div`
 `;
 
 function SlideBox() {
-  return(
+  return (
     <ImgBox>
       <Swiper
         spaceBetween={0}
@@ -91,16 +90,19 @@ function SlideBox() {
         autoplay={{ delay: 4000 }}
         loop={true}
       >
-        <SwiperSlide><img src={img1} alt="" /></SwiperSlide>
-        <SwiperSlide><img src={img2} alt="" /></SwiperSlide>
-        <SwiperSlide><img src={img3} alt="" /></SwiperSlide>
-
+        <SwiperSlide>
+          <img src={img1} alt="" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src={img2} alt="" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src={img3} alt="" />
+        </SwiperSlide>
       </Swiper>
     </ImgBox>
-  )
+  );
 }
-
-
 
 function Btns() {
   const navigate = useNavigate();

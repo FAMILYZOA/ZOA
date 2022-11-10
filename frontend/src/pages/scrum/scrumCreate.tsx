@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -7,7 +7,6 @@ import EmojiPicker, {
 import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -21,8 +20,7 @@ import Header from "../../components/header";
 import TextBox from "../../components/textBox";
 
 const DateSelectorStyle = styled.div`
-  margin-top: 4vh;
-  margin-bottom: 3vh;
+  margin: 16px auto 24px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -35,7 +33,7 @@ const DateStyle = styled.p`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   line-height: 100%;
   /* or 20px */
 
@@ -83,7 +81,7 @@ const RegistBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.2em;
   line-height: 100%;
   /* or 24px */
 
@@ -126,19 +124,9 @@ const DateSelector = () => {
     return `${year}.${month + 1}.${day}`;
   };
 
-  const dayBefore = () => {
-    setDate(new Date(date.setDate(date.getDate() - 1)));
-  };
-  const dayAfter = () => {
-    if (date < new Date()) {
-      setDate(new Date(date.setDate(date.getDate() + 1)));
-    }
-  };
   return (
     <DateSelectorStyle>
-      <IoIosArrowBack fontSize={28} color={"#666666"} onClick={dayBefore} />
       <DateStyle>{dateFormat(date)}</DateStyle>
-      <IoIosArrowForward fontSize={28} color={"#666666"} onClick={dayAfter} />
     </DateSelectorStyle>
   );
 };
@@ -298,7 +286,6 @@ const RegistBtn = (props: registBtnPRops) => {
               const code = err.response.data.code;
               if (code === "token_not_valid") {
                 const tokens = await AuthRefresh(refresh);
-                console.log(tokens);
                 if (tokens) {
                   dispatch(setAccessToken(tokens.access));
                   dispatch(setRefreshToken(tokens.refresh));
@@ -311,7 +298,6 @@ const RegistBtn = (props: registBtnPRops) => {
               }
               break;
             default:
-              console.log(err);
               break;
           }
         });
@@ -324,7 +310,7 @@ const RegistBtn = (props: registBtnPRops) => {
     <RegistStyle>
       {/* 현재 disable 상태일 떄 css가 변화하지 않음 */}
       <RegistBtnStyle onClick={regist} disabled={isRegist}>
-        완료
+        등록하기
       </RegistBtnStyle>
     </RegistStyle>
   );

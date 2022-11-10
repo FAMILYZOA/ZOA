@@ -22,16 +22,13 @@ const FamilyMemberEdit = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/${familyId}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}/`,
       headers: {
         Authorization: `Bearer ${token}`
       },
     })
     .then((res) => {
       setUsers([...res.data.users])
-    })
-    .catch((err) => {
-      console.log(err)
     })
   }, [familyId, users]);
 

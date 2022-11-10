@@ -14,11 +14,12 @@ const Text = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 18px;
 `;
 const From = styled.p`
   text-align: end;
   margin: 4px 0 8px 0;
-  font-size: 0.7rem;
+  font-size: 0.7em;
   color: #444444;
   width: 95%;
 `;
@@ -46,22 +47,30 @@ function Announcement({ scrum }) {
         </Contents>
       ) : (
         scrum.map((item, index) =>
-            item.today.length > 1 ? (
-              <Contents key={index}>
-                <Text>📢 {item.today}</Text>
+          item.today.length >= 1 ? (
+            <Contents key={index}>
+              <Text>📢 {item.today}</Text>
+              {item.set_name ? (
                 <From>
                   From.{item.set_name}({item.name})
                 </From>
-              </Contents>
-            ) : (
-              <Contents key={index}>
-                <Text>📢 오늘의 공지가 없습니다.</Text>
+              ) : (
+                <From>From.{item.name}</From>
+              )}
+            </Contents>
+          ) : (
+            <Contents key={index}>
+              <Text>📢 오늘의 공지가 없습니다.</Text>
+              {item.set_name ? (
                 <From>
                   From.{item.set_name}({item.name})
                 </From>
-              </Contents>
-            )
+              ) : (
+                <From>From.{item.name}</From>
+              )}
+            </Contents>
           )
+        )
       )}
     </Slider>
   );

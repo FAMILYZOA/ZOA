@@ -57,7 +57,12 @@ const Toggle = styled.div`
   display: flex;
   width: 100%;
   border: none;
-  height: ${(props) => (props.id === props.current ? "78px" : "0")};
+  height: ${(props) =>
+    props.id === props.current
+      ? props.photo === null
+        ? "78px"
+        : "198px"
+      : "0"};
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 20px;
@@ -70,13 +75,22 @@ const Toggle = styled.div`
     font-size: 14px;
     color: #707070;
   }
-  div {
-    // display: ${(props) => (props.id === props.current ? "block" : "none")};
-    // transition: display 0.5s;
-    margin: 5%;
-  }
   transition: height 0.5s;
   overflow-y: hidden;
+`;
+const ToggleContainer = styled.div`
+  margin: 5%;
+  width: 100%;
+`;
+const ImgBox = styled.div`
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  img {
+    height: 120px;
+    width: auto;
+    margin: 0 auto;
+  }
 `;
 
 const ContentsContainer = styled.div`
@@ -85,7 +99,7 @@ const ContentsContainer = styled.div`
 
 function TodoContents({ currentId }) {
   const access = useAppSelector((state) => state.token.access);
-
+  const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
@@ -96,7 +110,7 @@ function TodoContents({ currentId }) {
   const [click, setClick] = useState(-1);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.2 });
     if (obsRef.current) observer.observe(obsRef.current);
     return () => {
       observer.disconnect();
@@ -107,6 +121,11 @@ function TodoContents({ currentId }) {
     getTodo();
   }, [page, currentId]);
 
+  useEffect(() => {
+    preventRef.current = true;
+    endRef.current = false;
+  }, [currentId]);
+
   const obsHandler = (entries) => {
     const target = entries[0];
     if (!endRef.current && target.isIntersecting && preventRef.current) {
@@ -116,27 +135,37 @@ function TodoContents({ currentId }) {
   };
 
   const getTodo = useCallback(async () => {
+    if (currentId !== target) {
+      setPage(1);
+    }
     if (currentId >= 0 && page !== 0) {
       //글 불러오기
       setLoad(true);
-      const res = await axios({
-        method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=0`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
-      if (res.data) {
-        if (res.data.next === null) {
-          //마지막 페이지
-          endRef.current = true;
+      if (currentId === target || page === 1) {
+        const res = await axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+        if (res.data) {
+          if (res.data.next === null) {
+            //마지막 페이지
+            endRef.current = true;
+          }
+  
+          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+          //     item ? {...item, active:false} : list
+          //   ))); // 리스트 추가
+          if (target === currentId){
+            setList(list.concat(res.data.results)); // 리스트 추가
+          } else {
+            setTarget(currentId);
+            setList(res.data.results);
+          }
+          preventRef.current = true;
         }
-
-        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-        //     item ? {...item, active:false} : list
-        //   ))); // 리스트 추가
-        setList(list.concat(res.data.results)); // 리스트 추가
-        preventRef.current = true;
       }
       setLoad(false); //로딩 종료
     }
@@ -156,7 +185,7 @@ function TodoContents({ currentId }) {
     data.append("status", 1);
     axios({
       method: "PUT",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${contentsId}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -181,14 +210,21 @@ function TodoContents({ currentId }) {
                 />
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
               </NoToggle>
-              <Toggle id={li.id} current={click}>
-                <div>
-                  <p>From. {li.to_users_id.name}</p>
+              <Toggle id={li.id} current={click} photo={li.photo}>
+                <ToggleContainer>
+                  <p>From. {li.from_user_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
                   </span>
-                </div>
+                  {li.photo !== null ? (
+                    <ImgBox>
+                      <img src={li.photo.image} />
+                    </ImgBox>
+                  ) : (
+                    <></>
+                  )}
+                </ToggleContainer>
               </Toggle>
             </div>
           ))}
@@ -201,20 +237,20 @@ function TodoContents({ currentId }) {
       ) : (
         <></>
       )}
-      <div ref={obsRef}></div>
+      <div ref={obsRef} style={{height: "20px"}}></div>
     </ContentsContainer>
   );
 }
 
 function CompleteContents({ currentId }) {
   const access = useAppSelector((state) => state.token.access);
+  const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [load, setLoad] = useState(1);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
-  const [flag, setFlag] = useState(true);
 
   const [click, setClick] = useState(-1);
 
@@ -228,7 +264,12 @@ function CompleteContents({ currentId }) {
 
   useEffect(() => {
     getTodo();
-  }, [page, flag, currentId]);
+  }, [page, currentId]);
+
+  useEffect(() => {
+    preventRef.current = true;
+    endRef.current = false;
+  }, [currentId]);
 
   const obsHandler = (entries) => {
     const target = entries[0];
@@ -238,30 +279,39 @@ function CompleteContents({ currentId }) {
     }
   };
   const getTodo = useCallback(async () => {
-    //글 불러오기
+    if (currentId !== target) {
+      setPage(1);
+    }
     if (currentId >= 0 && page !== 0) {
       setLoad(true);
-      const res = await axios({
-        method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${currentId}?page=${page}&search=1`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
-      if (res.data) {
-        if (res.data.next === null) {
-          //마지막 페이지
-          endRef.current = true;
+      if (currentId === target || page === 1) {
+        const res = await axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=1`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+        if (res.data) {
+          if (res.data.next === null) {
+            //마지막 페이지
+            endRef.current = true;
+          }
+          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+          //     item ? {...item, active:false} : list
+          //   ))); // 리스트 추가
+          if (target === currentId){
+            setList(list.concat(res.data.results));
+          } else {
+            setTarget(currentId);
+            setList(res.data.results);
+          } // 리스트 추가
+          preventRef.current = true;
         }
-        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-        //     item ? {...item, active:false} : list
-        //   ))); // 리스트 추가
-        setList((prev) => [...prev, ...res.data.results]); // 리스트 추가
-        preventRef.current = true;
+        setLoad(false); //로딩 종료
       }
-      setLoad(false); //로딩 종료
     }
-  }, [page, flag]);
+  }, [page, currentId]);
 
   const clickItem = (id) => {
     if (click !== id) {
@@ -277,7 +327,7 @@ function CompleteContents({ currentId }) {
     data.append("status", 0);
     axios({
       method: "PUT",
-      url: `https://k7b103.p.ssafy.io/api/v1/checklist/detail/${contentsId}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -347,7 +397,7 @@ function Tabs({ current }) {
     if (current >= 0) {
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${current}`,
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -358,7 +408,7 @@ function Tabs({ current }) {
       });
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/${current}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${current}`,
         headers: {
           Authorization: `Bearer ${access}`,
         },

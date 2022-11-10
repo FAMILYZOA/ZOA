@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Switch from "@mui/material/Switch";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { TbLogout } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
@@ -12,10 +12,8 @@ import ImageModal from "../../components/setting/ImageModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
+import { setFamilyUsers } from "../../features/family/familySlice";
 import axios from "axios";
-import Header from "../../components/main/Header";
-
-const ALLOW_FILE_EXTENSION = "jpg,jpeg,png";
 
 const SettingsHeader = styled.div`
   display: flex;
@@ -26,9 +24,9 @@ const SettingsHeader = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: 1;
 `;
 const SettingLabel = styled.div`
-  font-size: 20px;
   font-weight: bold;
   text-align: center;
   line-height: 56px;
@@ -49,8 +47,8 @@ const ProfileImgCover = styled.div`
 
 const ProfileEditIcon = styled.div`
   position: absolute;
-  font-size: 1.2rem;
-  border-radius: 5vmin;
+  font-size: 1.2em;
+  border-radius: 0.9em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,17 +76,17 @@ const UserName = styled.div`
   display: flex;
 `;
 const UserNameEdit = styled.div`
-  margin-left: 2.25vmin;
+  margin-left: 0.4em;
   color: #ff787f;
 `;
 
 const UserEmail = styled.div`
   position: absolute;
   top: 0;
-  right: 5.5vmin;
+  right: 1em;
 `;
 const SettingMenu = styled.div`
-  margin: 4.5vmin 6.5vmin;
+  margin: 0.8em 1.2em;
 `;
 const SettingItem = styled.div`
   display: flex;
@@ -96,7 +94,7 @@ const SettingItem = styled.div`
   align-items: center;
   border-bottom: 1px solid #f9d7d3;
   height: 48px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
 `;
 
 const SettingItemTitle = styled.div`
@@ -122,7 +120,7 @@ const SettingCopyright = styled.div`
 const SettingLogoutIcon = styled.div`
   height: 28px;
   width: 28px;
-  font-size: 1.4rem;
+  font-size: 1.4em;
 `;
 const NameEditInput = styled.input`
   border-left-width: 0;
@@ -130,14 +128,14 @@ const NameEditInput = styled.input`
   border-top-width: 0;
   border-bottom: 1;
   width: 30vw;
-  height: 5.5vmin;
+  height: 1em;
   background-color: transparent;
   border-color: #ffd5d7;
   outline: 0;
-  font-size: 5.5vmin;
   font-family: "Pretendard-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 1em;
 `;
 const theme = createTheme({
   palette: {
@@ -171,9 +169,9 @@ const Settings = () => {
     image: string;
   }>({
     phone: "",
-    name: "신짱구",
+    name: "",
     image:
-      "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
+      "",
   }); // 유저 프로필 정보
   const [toggleEdit, setToggleEdit] = useState<boolean>(false);
   const [version, setVersion] = useState<string>("1.0.0");
@@ -185,6 +183,7 @@ const Settings = () => {
   const fontLetter = ["작게", "보통", "크게"];
 
   const accessToken = useAppSelector((state) => state.token.access);
+  const familyId = useAppSelector((state) => state.family.id)
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
   const userKakao = useAppSelector((state) => state.user.kakaoId);
@@ -214,12 +213,20 @@ const Settings = () => {
         data: data,
       })
         .then((res) => {
-          console.log("Profile Name submitted");
           dispatch(setUserName(res.data.name));
+          axios({
+            method: "get",
+            url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((res) => {
+              dispatch(setFamilyUsers(res.data.users));
+            })
           setToggleEdit(false);
         })
         .catch((err) => {
-          console.error(err);
           setToggleEdit(false);
         });
     }
@@ -267,7 +274,7 @@ const Settings = () => {
           <UserEmail>{userKakao < 0 ? null : userKakao}</UserEmail>
         </NameEmailDiv>
         <SettingMenu>
-          <SettingItem>
+          {/* <SettingItem>
             <SettingItemTitle>푸시알림</SettingItemTitle>
             <SettingItemContentPush>
               <ThemeProvider theme={theme}>
@@ -279,7 +286,7 @@ const Settings = () => {
                 />
               </ThemeProvider>
             </SettingItemContentPush>
-          </SettingItem>
+          </SettingItem> */}
           <SettingItem onClick={() => toggleFontModal(true)}>
             <SettingItemTitle>글자크기</SettingItemTitle>
             <SettingItemContent>{fontLetter[fontSize]}</SettingItemContent>

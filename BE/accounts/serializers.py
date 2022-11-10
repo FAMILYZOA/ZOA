@@ -2,11 +2,21 @@ from accounts.manager import password_creator
 from accounts.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import re
 
 
-password_field = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+password_field = serializers.CharField(max_length=20,min_length=8,write_only=True,required=True)
+
+
+# 핸드폰 중복 검사
+class PhonecheckSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(max_length=11, required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    class Meta:
+        model = User
+        fields = ('phone',)
+        
 
 # 회원가입
 class SignupSerializer(serializers.ModelSerializer):
@@ -39,7 +49,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
         if not phone.isdecimal() :
             raise serializers.ValidationError('휴대폰 번호는 숫자 형식이어야 합니다.')
-        REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,12}$'
+        REGEX_PASSWORD = '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()])[\w\d!@#$%^&*()]{8,20}$'
         if not re.fullmatch(REGEX_PASSWORD, password):
             raise serializers.ValidationError("비밀번호는 숫자, 대/소문자, 특수문자를 사용해야 합니다.",'regex')
 
@@ -106,7 +116,7 @@ class RefreshTokenSerializer(serializers.Serializer):
             self.fail('bad_token')
 
 
-# 회원정보 조회/수정
+# 회원정보 수정
 class ProfileSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)
     class Meta:
@@ -129,11 +139,26 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class ProfileRetriveSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ('id','phone','name','birth','image','family_id')
+        extra_kwargs = {"phone": {"required": False},"name" : {"required" : False}}
+        read_only_fields = ('id','family_id','birth',)
+
+    def get_image(self,obj) :
+        if 'kakao' in obj.image.url :
+            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            return res
+        return obj.image.url
+
 # 비밀번호 변경
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=12,min_length=8,write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
-    old_password = serializers.CharField(max_length=12,min_length=8,write_only=True,required=True)
+    password = serializers.CharField(max_length=20,min_length=8,write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(max_length=20,min_length=8,write_only=True,required=True)
+    old_password = serializers.CharField(max_length=20,min_length=8,write_only=True,required=True)
 
     class Meta:
         model = User

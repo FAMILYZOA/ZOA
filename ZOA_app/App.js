@@ -12,6 +12,7 @@ import {
   View,
   Text,
   Button,
+  Alert,
   PermissionsAndroid,
   BackHandler,
   ActivityIndicator,
@@ -20,6 +21,7 @@ import {
   Linking,
   Platform,
   Toast,
+  ToastAndroid,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -31,7 +33,7 @@ import {useRef, useState, useEffect} from 'react';
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
-  const url = {uri: 'http://10.0.2.2:3000'};
+  const url = {uri: 'https://k7b103.p.ssafy.io'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -57,6 +59,8 @@ const App = () => {
     mediaType: 'photo',
     quality: 1,
     cameraType: 'back',
+    maxWitdh: 360,
+    maxHeight: 360,
     includeBase64: true,
     saveToPhoto: true,
   };
@@ -137,30 +141,6 @@ const App = () => {
     }
   };
 
-  const requestPackageQueryPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.requestPackageQueryPermission,
-        {
-          title: '패키지 쿼리 사용 권한 요청',
-          message:
-            '패키지를 쿼리하기 위한 권한이 필요합니다.' +
-            '패키지를 쿼리하길 원하면 예를 눌러주세요.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
   const getPhotoFromCamera = async event => {
     if (await requestCameraPermission()) {
       launchCamera(camOpt, res => {
@@ -225,14 +205,17 @@ true;
 
   const sendSMS = async () => {
     // 권한 요청
-    if (requestContactPermission()) {
+    const isPermitted = await requestContactPermission();
+    if (isPermitted) {
       // 보낼 사람 선택 -> 한명 or 여러명?
+
       const selected = await selectContactPhone();
       if (!selected) {
         return null;
       }
       // 선택한 사람에게 문자 보내기
       let {contact, selectedPhone} = selected;
+      //SendIntentAndroid.sendSms(selectedPhone.number, command);
       Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
     } else {
       console.log('거부하셨습니다.');
@@ -245,19 +228,30 @@ true;
         SendIntentAndroid.openAppWithUri(event.url)
           .then(isOpened => {
             // 앱이 열렸을 때
-            webViewRef.current.goBack(); // (임시) 이동되고나서, 전에 보던 페이지를 보기 위해
+            //webViewRef.current.goBack();
+            //console.log('opened'); // (임시) 이동되고나서, 전에 보던 페이지를 보기 위해
             if (!isOpened) {
-              alert('앱 실행이 실패했습니다');
+              // 플레이스토어 링크 제공
+              if (event.url.includes('kakao')) {
+                ToastAndroid.show(
+                  '카카오톡이 설치되어 있지 않습니다. Google Play Store로 이동합니다.',
+                  ToastAndroid.SHORT,
+                );
+                Linking.openURL('market://details?id=com.kakao.talk');
+              }
             }
           })
           .catch(err => {
             console.log(err);
             console.log('ERROR!!!');
           });
-        return true;
+        return false;
+      } else if (event.url.includes('sms')) {
+        return false;
       }
+      return true;
     }
-    return false;
+    return true;
   };
 
   return (

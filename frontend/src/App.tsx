@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from "./pages/settings";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
 import FamilyCreate from "./pages/family/FamilyCreate";
@@ -35,12 +35,14 @@ import {
   setFamilyUsers,
 } from "./features/family/familySlice";
 import axios from "axios";
-import { Buffer } from "buffer";
 import { setChecklistPhoto } from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
+import { AuthRefresh } from "./api/customAxios";
+import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
+  const refreshToken = useAppSelector((state) => state.token.refresh);
   const userId = useAppSelector((state) => state.user.id);
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
@@ -48,12 +50,12 @@ function App() {
   const [, updateState] = useState<{}>();
   const forceUpdate = useCallback(() => updateState({}), []);
 
-  const fontArray = ["4.5vmin", "5.5vmin", "6.5vmin"];
+  const fontArray = ["16px", "20px", "24px"];
 
   const [fontStyle, setFontStyle] = useState<{ fontSize: string }>({
     fontSize: fontArray[fontSize],
   });
-  
+
   const infoUpdate = () => {
     if (accessToken === "") {
       // 토큰이 없는 경우
@@ -82,55 +84,43 @@ function App() {
             },
           ])
         );
-        console.log("family info initialized");
       }
     } else {
-      // 토큰이 있는 경우
-      if (userId < 0) {
-        // 유저 값이 없으면, 유저 정보 불러오기
-        axios({
-          method: "get",
-          url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((res) => {
-            dispatch(setUserId(res.data.id));
-            dispatch(setUserPhone(res.data.phone));
-            dispatch(setUserKakaoId(-1));
-            dispatch(setUserFamilyId(res.data.family_id));
-            dispatch(setUserBirth(res.data.birth));
-            dispatch(setUserImage(res.data.image));
-            dispatch(setUserName(res.data.name));
-            console.log("user fetched");
-            forceUpdate();
-            if (familyId < 0 && res.data.family_id) {
-              // 가족 정보가 없으면, 가족 정보 불러오기
-              axios({
-                method: "get",
-                url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
+      // 유저 값이 없으면, 유저 정보 불러오기
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((res) => {
+          dispatch(setUserId(res.data.id));
+          dispatch(setUserPhone(res.data.phone));
+          dispatch(setUserKakaoId(-1));
+          dispatch(setUserFamilyId(res.data.family_id));
+          dispatch(setUserBirth(res.data.birth));
+          dispatch(setUserImage(res.data.image));
+          dispatch(setUserName(res.data.name));
+          forceUpdate();
+          if (familyId < 0 && res.data.family_id) {
+            // 가족 정보가 없으면, 가족 정보 불러오기
+            axios({
+              method: "get",
+              url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+              .then((res) => {
+                dispatch(setFamilyId(res.data.id));
+                dispatch(setFamilyName(res.data.name));
+                dispatch(setFamilyCreatedAt(res.data.created_at));
+                dispatch(setFamilyUsers(res.data.users));
+                forceUpdate();
               })
-                .then((res) => {
-                  dispatch(setFamilyId(res.data.id));
-                  dispatch(setFamilyName(res.data.name));
-                  dispatch(setFamilyCreatedAt(res.data.created_at));
-                  dispatch(setFamilyUsers(res.data.users));
-                  console.log("family fetched");
-                  forceUpdate();
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
+          }
+        })
     }
   };
 
@@ -178,11 +168,28 @@ function App() {
       data: data,
     })
       .then((res) => {
-        console.log("Profile Image submitted");
         dispatch(setUserImage(res.data.image));
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(async (err) => {
+        switch (err.response.status) {
+          case 401:
+            const code = err.response.data.code;
+            if (code === "token_not_valid") {
+              const tokens = await AuthRefresh(refreshToken);
+              //console.log(tokens);
+              if (tokens) {
+                dispatch(setAccessToken(tokens.access));
+                dispatch(setRefreshToken(tokens.refresh));
+              } else {
+                dispatch(setAccessToken(""));
+                dispatch(setRefreshToken(""));
+              }
+            }
+            break;
+          default:
+            console.log(err);
+            break;
+        }
       });
   };
 
@@ -191,7 +198,6 @@ function App() {
       try {
         document.addEventListener("message", getMessageFromDevice);
       } catch (err) {
-        console.error(err);
       }
     },
   };

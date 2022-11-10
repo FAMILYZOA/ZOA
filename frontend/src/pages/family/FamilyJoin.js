@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
-import userImg from "../../assets/bong.png";
 import logo from "../../assets/white-logo.png";
 import { useDispatch } from "react-redux";
 import { setFamilyId } from "../../features/family/familySlice";
@@ -32,21 +31,33 @@ const Container = styled.div`
 `;
 const Info = styled.div`
   margin: auto;
-  font-size: 1.25rem;
+  font-size: 1.25em;
   text-align: center;
+  width: 100%;
 `;
 const ImgBox = styled.div`
-  width: 60%;
+  width: 60vw;
+  @media screen and (min-width: 720px) {
+    width: 432px;
+  }
   display: flex;
   /* align-items: center;
      */
+  overflow-x: scroll;
+  overflow-y: hidden;
   margin: 32px 0;
 `;
-const Image = styled.img`
+const Image = styled.div`
   width: 54px;
   height: 54px;
+  object-fit: fill;
   border: none;
   border-radius: 100px;
+  img {
+    width: 54px;
+    height: 54px;
+    border-radius: 100px;
+  }
 `;
 const BtnBox = styled.div``;
 const Btn = styled.div`
@@ -60,7 +71,7 @@ const Btn = styled.div`
   border-radius: 30px;
   background: linear-gradient(45deg, #fec786, #ff787f);
   color: white;
-  font-size: 1.25rem;
+  font-size: 1.25em;
   opacity: ${(props) => (props.active === true ? 1 : 0.5)};
 `;
 
@@ -76,7 +87,7 @@ function FamilyJoin() {
   const clickYes = () => {
     axios({
       method: "POST",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/sign/${familyId}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/sign/${familyId}/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
@@ -94,7 +105,7 @@ function FamilyJoin() {
     } else {
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/family/get/${familyId}/`,
+        url: `${process.env.REACT_APP_BACK_HOST}/family/get/${familyId}/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -123,7 +134,9 @@ function FamilyJoin() {
             </Info>
             <ImgBox>
               {family.users.map((item, index) => (
-                <Image key={index} src={item.image}></Image>
+                <Image key={index}>
+                  <img src={item.image} />
+                </Image>
               ))}
             </ImgBox>
             <BtnBox>

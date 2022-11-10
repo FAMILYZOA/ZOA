@@ -8,7 +8,7 @@ import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { detect } from "detect-browser";
 
 const HeaderBox = styled.div`
@@ -34,11 +34,11 @@ const HeaderLabel = styled.div`
 `;
 
 const FamilyManageBody = styled.div`
-  padding: 4.5vmin;
+  padding: 0.8em;
 `;
 const FamilyManageGuide = styled.div`
-  margin-top: 2.25vmin;
-  margin-bottom: 6.5vmin;
+  margin-top: 0.4em;
+  margin-bottom: 1.2em;
   margin-left: 4px;
 `;
 const FamilyNameHighlight = styled.span`
@@ -49,44 +49,44 @@ const FamilyInviteBox = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  margin-bottom: 2.25vmin;
-  padding: 2.75vmin;
+  margin-bottom: 0.4em;
+  padding: 0.5em;
   border: 1px solid #ff787f;
 `;
 
 const IconBox = styled.div`
-  width: 13vmin;
-  height: 13vmin;
-  border-radius: 6.5vmin;
+  width: 2em;
+  height: 2em;
+  border-radius: 24px;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
-  margin-right: 3.5vmin;
-  line-height: 15.5vmin;
+  margin-right: 0.6em;
+  line-height: 56px;
   text-align: center;
-  font-size: 10vmin;
+  font-size: 1.2em;
 `;
 
 const MessageBox20 = styled.div`
-  margin-bottom: 1vmin;
+  margin-bottom: 0.2em;
 `;
 const MessageBox12 = styled.div`
-  font-size: 3.5vmin;
+  font-size: 0.65em;
 `;
 const FamilyMembersTitle = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 10vmin 0 4.5vmin;
-  font-size: 4.5vmin;
+  margin: 1.8em 0 0.8em;
+  font-size: 0.8em;
   font-weight: bold;
 `;
 
 const MemberBox = styled.div`
-  height: 110vmin;
+  height: calc(100vh - 20em - 56px);
   overflow-y: scroll;
 `;
 
 const FamilyMembersEdit = styled.div`
-  font-size: 6.5vmin;
+  font-size: 1.2em;
   font-weight: 400;
 `;
 
@@ -113,13 +113,18 @@ ${inviteLink}`;
     navigate("/");
   };
   const sendMessage = () => {
-    if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
-    } else {
-      console.log("모바일 환경이 아닙니다.");
+    if (os === "Android OS") {
+      window.location.href = `sms:?body=${smsUrl}`;
+      if(window.ReactNativeWebView){
+        window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+      }
+    }else if(os === "iOS") {
+      window.location.href = `sms:&body=${smsUrl}`
     }
   };
   const shareKakao = () => {
+    const host = process.env.REACT_APP_FE_HOST;
+    
     try {
       // link를 우리 앱의 deeplink로 바꿔야 함.
       window.Kakao.Share.sendDefault({
@@ -130,22 +135,21 @@ ${inviteLink}`;
           imageUrl:
             "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
           link: {
-            mobileWebUrl: `/join/${id}`,
-            webUrl: `/join/${id}`,
+            mobileWebUrl: `${host}/join/${id}`,
+            webUrl: `${host}/join/${id}`,
           },
         },
         buttons: [
           {
             title: "ZOA에 참여하기",
             link: {
-              mobileWebUrl: "https://developers.kakao.com",
-              webUrl: "https://developers.kakao.com",
+              mobileWebUrl: `${host}/join/${id}`,
+              webUrl: `${host}o/join/${id}`,
             },
           },
         ],
       });
     } catch (err) {
-      console.log(err);
     }
   };
 

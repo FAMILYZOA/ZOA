@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
-import { useAppDispatch } from "../../app/hooks";
-import { setAccessToken } from "../../features/token/tokenSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import axios from "axios";
 
 type modalType = {
   isOpen: boolean;
@@ -13,7 +14,7 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 5.5vmin;
+  right: 1em;
 `;
 
 const LogoutStyle = styled.div`
@@ -44,7 +45,7 @@ const LogoutDescStyle = styled.div`
   font-weight: 400;
   line-height: 36px;
 
-  height: 21vmin;
+  height: 3.7em;
   /* or 180% */
 
   display: flex;
@@ -62,7 +63,7 @@ const LogoutBtnStyle = styled.div`
   justify-content: center;
 
   width: 35vw;
-  height: 12vmin;
+  height: 2.2em;
 
   font-family: "Inter";
   font-style: normal;
@@ -75,20 +76,21 @@ const LogoutBtnStyle = styled.div`
   color: #ffffff;
 
   background: #ff787f;
-  border-radius: 3vmin;
+  border-radius: 0.5em;
 `;
 
 const LogoutModal = (props: modalType) => {
   const [isModal, toggleModal] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector(state => state.token.access);
+  const refreshToken = useAppSelector(state => state.token.refresh);
 
   const modalStyle = {
     content: {
-      top: "35vh",
-      bottom: "35vh",
-      left: "4vw",
-      right: "4vw",
+      inset: "35% 5%",
+      width: "80%",
+      height: "30%",
       borderRadius: "2vh",
       border: "none",
       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
@@ -102,9 +104,22 @@ const LogoutModal = (props: modalType) => {
   };
 
   const comfirmModal = () => {
-    dispatch(setAccessToken("")); // 로그아웃 하기
-    props.toggle(false);
-    navigate('/intro', {replace:true,});
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_BACK_HOST}/accounts/logout/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        refresh: `${refreshToken}`
+      }
+    })
+      .then(() => {
+        dispatch(setAccessToken("")); // 로그아웃 하기
+        dispatch(setRefreshToken(""))
+        props.toggle(false);
+        navigate("/intro", { replace: true });
+      })
   };
 
   return (
