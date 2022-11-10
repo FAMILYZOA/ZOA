@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 
 const MemberInfo = styled.div`
   display: flex;
@@ -18,18 +18,6 @@ const MemberProfileImg = styled.img`
   border-radius: 1.4em;
   object-fit: fill;
 `;
-
-/*
-
-props = {
-  member: {
-    set_name: "사용자가 커스텀 설정한 이름",
-    name: "본인이 설정한 이름"
-    image: "프로필 이미지"
-  },
-}
-
-*/
 
 const FamilyMember = (props: {
   member: { id: number; name: string; image: string; set_name: string };

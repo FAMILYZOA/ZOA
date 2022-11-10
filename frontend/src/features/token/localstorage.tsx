@@ -25,12 +25,10 @@ export const loadRefreshToken = () => {
 
 export const saveTokens = (state:any) => {
     try{
-        console.log(state);
         const accessToken = JSON.stringify(state.token.value.access);
         const refreshToken = JSON.stringify(state.token.value.refresh);
         localStorage.setItem('access_token', accessToken);
         localStorage.setItem('refresh_token', refreshToken);
     } catch (err) {
-        console.log(err);
     }
 }

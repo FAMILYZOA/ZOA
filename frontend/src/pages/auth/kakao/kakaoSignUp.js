@@ -279,10 +279,6 @@ function KakaoSignup() {
         } else if (err.response.status === 404) {
           setCconfirm(false);
           setNwarn(true);
-        } else if (err.response.status === 429) {
-          console.log("짧은 시간안에 너무 많은 요청을 보냈습니다.");
-        } else if (err.response.status === 500) {
-          console.log("server error");
         }
       });
   };
@@ -321,11 +317,8 @@ function KakaoSignup() {
           })
           .catch((err) => {
             if (err.response.status === 400) {
-              console.log(err);
               alert("이미 가입된 회원입니다. 로그인을 해주세요.");
               navigate("/intro");
-            } else {
-              console.log("예상치 못한 에러군,,,");
             }
           });
       }

@@ -89,9 +89,6 @@ const CheckListList = () => {
               );
             }
         })
-        .catch((err) => {
-          console.log(err);
-        });
     }
   }, [user]);
 

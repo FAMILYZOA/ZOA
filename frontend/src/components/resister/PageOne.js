@@ -173,12 +173,8 @@ function PageOne({ oneInfo }) {
         } else if (err.response.status === 404) {
           setCheck(false);
           setCertiWarn(true);
-        } else if (err.response.status === 429) {
-          console.log("짧은 시간안에 너무 많은 요청을 보냈습니다.");
-        } else if (err.response.status === 500) {
-          console.log("server error");
         }
-      });
+    })
   };
 
   useEffect(() => {

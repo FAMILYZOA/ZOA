@@ -35,7 +35,6 @@ import {
   setFamilyUsers,
 } from "./features/family/familySlice";
 import axios from "axios";
-import { Buffer } from "buffer";
 import { setChecklistPhoto } from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 import { AuthRefresh } from "./api/customAxios";
@@ -85,7 +84,6 @@ function App() {
             },
           ])
         );
-        console.log("family info initialized");
       }
     } else {
       // 유저 값이 없으면, 유저 정보 불러오기
@@ -104,7 +102,6 @@ function App() {
           dispatch(setUserBirth(res.data.birth));
           dispatch(setUserImage(res.data.image));
           dispatch(setUserName(res.data.name));
-          console.log("user fetched");
           forceUpdate();
           if (familyId < 0 && res.data.family_id) {
             // 가족 정보가 없으면, 가족 정보 불러오기
@@ -120,17 +117,10 @@ function App() {
                 dispatch(setFamilyName(res.data.name));
                 dispatch(setFamilyCreatedAt(res.data.created_at));
                 dispatch(setFamilyUsers(res.data.users));
-                console.log("family fetched");
                 forceUpdate();
               })
-              .catch((err) => {
-                console.error(err);
-              });
           }
         })
-        .catch((err) => {
-          console.error(err);
-        });
     }
   };
 
@@ -178,7 +168,6 @@ function App() {
       data: data,
     })
       .then((res) => {
-        console.log("Profile Image submitted");
         dispatch(setUserImage(res.data.image));
       })
       .catch(async (err) => {
@@ -209,7 +198,6 @@ function App() {
       try {
         document.addEventListener("message", getMessageFromDevice);
       } catch (err) {
-        console.error(err);
       }
     },
   };

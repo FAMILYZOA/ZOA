@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { BsCheckLg } from "react-icons/bs";
 import { FaChevronUp } from "react-icons/fa";
 import axios from "axios";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
 
 interface propStyle {
   status?: any;
@@ -119,7 +119,6 @@ function CheckItem({
 }: CheckItemProps) {
   const accessToken = useAppSelector((state) => state.token.access);
   const onClick = (id: number) => {
-    console.log(`${id} clicked`);
     axios({
       method: "put",
       url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${id}`,
@@ -131,12 +130,8 @@ function CheckItem({
       },
     })
       .then((res) => {
-        console.log(res.data.status);
         refreshCheckList(selectedMember.id);
       })
-      .catch((err) => {
-        console.error(err);
-      });
   };
 
   const onToggle = () => {
