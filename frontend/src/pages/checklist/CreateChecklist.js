@@ -18,6 +18,7 @@ const Container = styled.div`
 
 function CreateChecklist() {
   const navigate = useNavigate();
+  const [allow, setAllow] = useState(true);
 
   const [info, setInfo] = useState(
     {
@@ -60,37 +61,38 @@ function CreateChecklist() {
   };
 
   const event = () => {
-    console.log(info);
-    if (info.text === "") {
-      setActive(false);
-    } else if (info.to_users_id.length === 0) {
-      setActive(false);
-    } else {
-      setActive(true);
-      const data = new FormData();
-      data.append("text", info.text);
-      {
+    if (allow) {
+      console.log(info);
+      setAllow(false);
+      if (info.text === "") {
+        setActive(false);
+      } else if (info.to_users_id.length === 0) {
+        setActive(false);
+      } else {
+        setActive(true);
+        const data = new FormData();
+        data.append("text", info.text);
         info.to_users_id.map((userId) => data.append("to_users_id", userId));
-      }
-      if (info.photo !== "") {
-        data.append("photo", info.photo);
-      }
-      //console.log(data);
-      axios({
-        method: "POST",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        data: data,
-      })
-        .then((res) => {
-          //console.log(res);
-          navigate("/checklist");
+        if (info.photo !== "") {
+          data.append("photo", info.photo);
+        }
+        //console.log(data);
+        axios({
+          method: "POST",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/`,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          data: data,
         })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((res) => {
+            //console.log(res);
+            navigate("/checklist");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     }
   };
 
