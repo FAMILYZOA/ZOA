@@ -8,11 +8,11 @@ interface highLightProps {
 const SelectViewDiv = styled.div`
   display: flex;
   position: relative;
-  height: 13.25vmin;
+  height: 2.4em;
 `
 const SelectViewItem = styled.div`
   text-align: center;
-  line-height: 13.25vmin;
+  line-height: 2.4em;
   flex: 1;
 `
 const SelectHighlight = styled.div<highLightProps>`
@@ -24,19 +24,23 @@ const SelectHighlight = styled.div<highLightProps>`
   ${({ isLeft }) => {
     if (isLeft) {
       return css`
-        object-position: left bottom;
+        left: 0;
       `;
     } else {
       return css`
-        object-position: right bottom;
+        left: 50%;
       `
     }
   }}
-  transition: object-position 0.5s;
+  transition: left 0.2s;
 `
 const VoiceMessageDiv = styled.div`
-  margin: 4.5vmin;
+  margin: 0.8em;
+  background: linear-gradient(45deg, #fec786, #ff787f);
 `
+const UnviewedVoices = () => {
+  
+}
 
 const VoiceView = () => {
   const [unViewedMessage, setUnViewedMessage] = useState<{id: string}[]>([]);
@@ -50,6 +54,11 @@ const VoiceView = () => {
         <SelectViewItem onClick={() => (setIsLeft(false))}>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
         <SelectHighlight isLeft={isLeft}/>
       </SelectViewDiv>
+      <VoiceMessageDiv>
+      {
+        isLeft ? (<></>) : (<></>)
+      }
+      </VoiceMessageDiv>
     </>
   )
 }
