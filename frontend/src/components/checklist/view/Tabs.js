@@ -131,32 +131,38 @@ function TodoContents({ currentId }) {
   };
 
   const getTodo = useCallback(async () => {
+    if (currentId !== target) {
+      setPage(1);
+    }
     if (currentId >= 0 && page !== 0) {
       //글 불러오기
       setLoad(true);
-      const res = await axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
-      if (res.data) {
-        if (res.data.next === null) {
-          //마지막 페이지
-          endRef.current = true;
+      if (currentId === target || page === 1) {
+        const res = await axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+        if (res.data) {
+          console.log(res.data);
+          if (res.data.next === null) {
+            //마지막 페이지
+            endRef.current = true;
+          }
+  
+          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
+          //     item ? {...item, active:false} : list
+          //   ))); // 리스트 추가
+          if (target === currentId){
+            setList(list.concat(res.data.results)); // 리스트 추가
+          } else {
+            setTarget(currentId);
+            setList(res.data.results);
+          }
+          preventRef.current = true;
         }
-
-        //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-        //     item ? {...item, active:false} : list
-        //   ))); // 리스트 추가
-        if (target === currentId){
-          setList(list.concat(res.data.results)); // 리스트 추가
-        } else {
-          setTarget(currentId);
-          setList(res.data.results);
-        }
-        preventRef.current = true;
       }
       setLoad(false); //로딩 종료
     }
@@ -256,7 +262,7 @@ function CompleteContents({ currentId }) {
 
   useEffect(() => {
     getTodo();
-  }, [page, currentId]);
+  }, [page]);
 
   const obsHandler = (entries) => {
     const target = entries[0];
