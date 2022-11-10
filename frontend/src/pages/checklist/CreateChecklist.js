@@ -78,7 +78,7 @@ function CreateChecklist() {
       //console.log(data);
       axios({
         method: "POST",
-        url: `https://k7b103.p.ssafy.io/api/v1/checklist/`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

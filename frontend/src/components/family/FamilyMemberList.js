@@ -73,7 +73,7 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
   const onPostName = () => {
     axios({
       method: "post",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/name/${id}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/name/${id}/`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -106,7 +106,7 @@ const FamilyMemberList = ({ id, name, image, set_name }) => {
   const onEditName = () => {
     axios({
       method: "put",
-      url: `https://k7b103.p.ssafy.io/api/v1/family/name/${id}/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/family/name/${id}/`,
       headers: {
         Authorization: `Bearer ${token}`,
       },

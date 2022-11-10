@@ -20,8 +20,7 @@ import Header from "../../components/header";
 import TextBox from "../../components/textBox";
 
 const DateSelectorStyle = styled.div`
-  margin-top: 4vh;
-  margin-bottom: 3vh;
+  margin: 16px auto 24px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -82,7 +81,7 @@ const RegistBtnStyle = styled.button`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5em;
+  font-size: 1.2em;
   line-height: 100%;
   /* or 24px */
 
@@ -125,7 +124,6 @@ const DateSelector = () => {
     return `${year}.${month + 1}.${day}`;
   };
 
-  
   return (
     <DateSelectorStyle>
       <DateStyle>{dateFormat(date)}</DateStyle>
@@ -314,7 +312,7 @@ const RegistBtn = (props: registBtnPRops) => {
     <RegistStyle>
       {/* 현재 disable 상태일 떄 css가 변화하지 않음 */}
       <RegistBtnStyle onClick={regist} disabled={isRegist}>
-        완료
+        등록하기
       </RegistBtnStyle>
     </RegistStyle>
   );

@@ -59,7 +59,7 @@ function Receiver({ receivers }) {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `https://k7b103.p.ssafy.io/api/v1/accounts/profile/`,
+      url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
@@ -72,7 +72,7 @@ function Receiver({ receivers }) {
     if (familyId.length !== 0) {
       axios({
         method: "GET",
-        url: `https://k7b103.p.ssafy.io/api/v1/family/${familyId}/`,
+        url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

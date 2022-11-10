@@ -9,7 +9,7 @@ const ScrumFamList = () => {
     useEffect(() => {
         axios({
           method: "get",
-          url: 'https://k7b103.p.ssafy.io/api/v1/scrums',
+          url: `${process.env.REACT_APP_BACK_HOST}/scrums`,
         //   headers: {
         //     Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3MjIyMTgxLCJpYXQiOjE2NjcxMzU3ODEsImp0aSI6IjdjYzJjNzQxNGM2NzQ4NTJhODUwM2YxZjA5ZWJjZmQ4IiwidXNlcl9pZCI6MjJ9.sYu0f1nB9shYD9KY1AKR0GPynCxQNCl4xRururBIO5w'
         //   },
