@@ -82,10 +82,11 @@ function Navbar() {
       location.pathname === "/register" ||
       location.pathname === "/kakaoLoading" ||
       location.pathname === "/family/manage" ||
-      location.pathname === "/family/create" ||
+      location.pathname === "/family/create/" ||
       location.pathname === "/family/edit" ||
       location.pathname === "/login" ||
-      location.pathname === "/register"
+      location.pathname === "/register" ||
+      location.pathname.includes("join")
     ) {
       setActive(true);
       setDefaultActive(true);

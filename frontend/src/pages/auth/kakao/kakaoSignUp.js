@@ -125,11 +125,11 @@ const Btn = styled.button`
 function KakaoSignup() {
   const location = useLocation();
   const navigate = useNavigate();
-  // const preinfo = location.state;
+  const preinfo = location.state;
   const [info, setInfo] = useState({
-    // kakao_id: String(preinfo.id),
-    // name: preinfo.name,
-    // image: preinfo.profile,
+    kakao_id: String(preinfo.id),
+    name: preinfo.name,
+    image: preinfo.profile,
     phone: "",
     birth: "",
   });
