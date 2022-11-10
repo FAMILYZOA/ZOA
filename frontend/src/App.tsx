@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from "./pages/settings";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
 import FamilyCreate from "./pages/family/FamilyCreate";
@@ -38,15 +38,19 @@ import axios from "axios";
 import { Buffer } from "buffer";
 import { setChecklistPhoto } from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
+import { AuthRefresh } from "./api/customAxios";
+import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
+  const refreshToken = useAppSelector((state) => state.token.refresh);
   const userId = useAppSelector((state) => state.user.id);
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
   const dispatch = useAppDispatch();
   const [, updateState] = useState<{}>();
   const forceUpdate = useCallback(() => updateState({}), []);
+  const navigate = useNavigate();
 
   const fontArray = ["16px", "20px", "24px"];
 
@@ -178,8 +182,28 @@ function App() {
         console.log("Profile Image submitted");
         dispatch(setUserImage(res.data.image));
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(async (err) => {
+        switch (err.response.status) {
+          case 401:
+            const code = err.response.data.code;
+            if (code === "token_not_valid") {
+              const tokens = await AuthRefresh(refreshToken);
+              //console.log(tokens);
+              if (tokens) {
+                dispatch(setAccessToken(tokens.access));
+                dispatch(setRefreshToken(tokens.refresh));
+              } else {
+                dispatch(setAccessToken(""));
+                dispatch(setRefreshToken(""));
+
+                navigate("/login", { replace: true });
+              }
+            }
+            break;
+          default:
+            console.log(err);
+            break;
+        }
       });
   };
 
