@@ -75,7 +75,7 @@ const CheckListList = () => {
     if (user >= 0) {
       axios({
         method: "get",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${user}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/${user}/todaycreate`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

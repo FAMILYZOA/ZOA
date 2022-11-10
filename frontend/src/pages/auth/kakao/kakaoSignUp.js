@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Header from "../../../components/header";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from "../../../assets/white-logo.png";
+
+const Header = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(255, 255, 255, 0.3) 0px 1px 4px;
+  img {
+    height: 32px;
+  }
+`;
 
 const Container = styled.div`
   margin: 20% 5%;
@@ -317,7 +332,9 @@ function KakaoSignup() {
   };
   return (
     <div>
-      <Header label={"회원가입"} back="false"></Header>
+      <Header>
+        <img src={logo} alt="" />
+      </Header>
       <Container>
         <Info>추가 정보를 입력해주세요🙂</Info>
         <InputBox>
@@ -353,25 +370,25 @@ function KakaoSignup() {
         <InputBox>
           <Title>생년월일</Title>
           <AgeSelectors>
-          <AgeSelector onChange={selectYear}>
-            <option value="">연도</option>
-            {yearArr.map((y) => {
-              return <option value={y.toString()}>{y}년</option>;
-            })}
-          </AgeSelector>
-          <AgeSelector onChange={selectMonth}>
-            <option value="">월</option>
-            {monthArr.map((m) => {
-              return <option value={m.toString()}>{m}월</option>;
-            })}
-          </AgeSelector>
-          <AgeSelector onChange={selectDay}>
-            <option value="">일</option>
-            {dayArr.map((d) => {
-              return <option value={d.toString()}>{d}일</option>;
-            })}
-          </AgeSelector>
-        </AgeSelectors>
+            <AgeSelector onChange={selectYear}>
+              <option value="">연도</option>
+              {yearArr.map((y) => {
+                return <option value={y.toString()}>{y}년</option>;
+              })}
+            </AgeSelector>
+            <AgeSelector onChange={selectMonth}>
+              <option value="">월</option>
+              {monthArr.map((m) => {
+                return <option value={m.toString()}>{m}월</option>;
+              })}
+            </AgeSelector>
+            <AgeSelector onChange={selectDay}>
+              <option value="">일</option>
+              {dayArr.map((d) => {
+                return <option value={d.toString()}>{d}일</option>;
+              })}
+            </AgeSelector>
+          </AgeSelectors>
           <Warning active={bwarn}>생년월일을 확인해주세요.</Warning>
         </InputBox>
         <BtnBox>

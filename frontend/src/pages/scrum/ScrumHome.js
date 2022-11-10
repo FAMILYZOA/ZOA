@@ -8,6 +8,32 @@ import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import { Emoji } from "emoji-picker-react";
 
+const DateBox = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.5);
+`;
+const ArrowIconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  margin: 4px;
+  color: ${(props) => (props.active === true ? "black" : "#bebebe")};
+`;
+const DateValue = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ff787f;
+  font-size: 20px;
+  font-weight: bold;
+  margin: auto 40px;
+`;
+
 const ScrumBox = styled.div`
   height: calc(95vh - 180px);
   overflow-y: scroll;
@@ -134,51 +160,30 @@ const ScrumHome = () => {
   return (
     <>
       <Header label="안녕" />
+      <DateBox>
+        <ArrowIconBox onClick={onHandleBeforeDate} active={true}>
+          <BsChevronLeft />
+        </ArrowIconBox>
+        <DateValue>
+          {date.getFullYear()}. {date.getMonth() + 1}. {date.getDate()}
+        </DateValue>
+        {date.getFullYear() === new Date().getFullYear() &&
+        date.getMonth() === new Date().getMonth() &&
+        date.getDate() === new Date().getDate() ? (
+          <ArrowIconBox active={false}>
+            <BsChevronRight />
+          </ArrowIconBox>
+        ) : (
+          <ArrowIconBox active={true} onClick={onHandleAfterDate}>
+            <BsChevronRight />
+          </ArrowIconBox>
+        )}
+      </DateBox>
       <div style={{ margin: "5%" }}>
         <div
           style={{
-            justifyContent: "center",
-            display: "flex",
-            alignItems: "center",
-            height: "32px",
-          }}
-        >
-          <BsChevronLeft
-            onClick={onHandleBeforeDate}
-            style={{ margin: "4px" }}
-            size={16}
-          />
-          <div
-            style={{
-              color: "#ff787f",
-              fontWeight: "bolder",
-              margin: "4px 20%",
-            }}
-          >
-            {date.getFullYear()}. {date.getMonth() + 1}. {date.getDate()}
-          </div>
-          {date.getFullYear() === new Date().getFullYear() &&
-          date.getMonth() === new Date().getMonth() &&
-          date.getDate() === new Date().getDate() ? (
-            <div
-              style={{
-                color: "#bebebe",
-                margin: "4px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <BsChevronRight size={16} />
-            </div>
-          ) : (
-            <BsChevronRight size={16} onClick={onHandleAfterDate} />
-          )}
-        </div>
-
-        <div
-          style={{
-            height: "calc(100vh - 180px)",
-            margin: "4px auto",
+            height: "calc(100vh - 190px)",
+            margin: "auto",
             overflowY: "scroll",
           }}
         >
@@ -193,7 +198,9 @@ const ScrumHome = () => {
                 )}
               </MemberProfile>
             </ProfileWrapper>
-            <div style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}>
+            <div
+              style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}
+            >
               {userName}
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -207,12 +214,8 @@ const ScrumHome = () => {
                 "아직 작성된 스크럼이 없어요 😢"
               ) : (
                 <>
-                  <div style={{ margin: "8px" }}>
-                    🙋‍♂️ {myScrum[0].yesterday}
-                  </div>
-                  <div style={{ margin: "8px" }}>
-                    📢 {myScrum[0].today}
-                  </div>
+                  <div style={{ margin: "8px" }}>🙋‍♂️ {myScrum[0].yesterday}</div>
+                  <div style={{ margin: "8px" }}>📢 {myScrum[0].today}</div>
                 </>
               )}
             </ItemWrapper>
