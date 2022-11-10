@@ -53,7 +53,7 @@ class ScrumSerializer(ImageSerializer) :
             return False
 
 class ScrumDetailSerializer(ScrumSerializer) :
-
+    emoji = serializers.CharField(max_length=7,required=False)
     comment = CommentSerializer(many=True,read_only=True)
     class Meta: 
         model = Scrum
