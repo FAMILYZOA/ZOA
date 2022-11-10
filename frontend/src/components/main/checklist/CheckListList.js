@@ -79,20 +79,18 @@ const CheckListList = () => {
         },
       })
         .then((res) => {
+          console.log(res)
           if(res.data.length !== 0){
-            setList([...res.data.results]);
+            setList([...res.data]);
             setList(
-              res.data.results.map((item) =>
+              res.data.map((item) =>
               item ? { ...item, active: false } : list
               )
               );
             }
         })
-        .catch((err) => {
-          console.log(err);
-        });
     }
-  }, [user, list]);
+  }, [user]);
 
   const viewMore = () => {
     navigate("/checklist");

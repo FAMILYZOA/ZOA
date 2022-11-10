@@ -33,7 +33,6 @@ function Resister() {
     if (info.phone.length === 11 && info.name.length > 0) {
       setNext(true);
       if (info.birth.length === 10) {
-        console.log("here?");
         const data = new FormData();
         data.append("phone", info.phone);
         data.append("password", info.password);
@@ -51,7 +50,6 @@ function Resister() {
             }
           })
           .catch((err) => {
-            console.log(err);
             if (err.response.status === 400) {
               alert("이미 가입된 회원입니다. 로그인 후 이용해주세요.");
               navigate("/intro");

@@ -143,7 +143,6 @@ function Login() {
         navigate("/", { replace: true });
       })
       .catch((err) => {
-        console.log(err);
         activeWarn();
       });
   };

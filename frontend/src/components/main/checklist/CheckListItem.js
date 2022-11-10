@@ -46,7 +46,7 @@ const CheckListItem = (item) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }).catch((err) => console.log(err));
+    })
   };
 
   return (

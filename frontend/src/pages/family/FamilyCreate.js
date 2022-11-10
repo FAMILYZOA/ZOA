@@ -114,7 +114,6 @@ const FamilyCreate = () => {
   const accessToken = useAppSelector((state) => state.token.access);
 
   const onPostFam = () => {
-    console.log(accessToken);
     axios({
       method: "post",
       url: `${process.env.REACT_APP_BACK_HOST}/family/`,
@@ -126,12 +125,8 @@ const FamilyCreate = () => {
       },
     })
       .then((res) => {
-        //console.log(res.data)
         navigate("/", { replace: true });
       })
-      .catch((err) => {
-        console.log(err);
-      });
   };
   const moveToBack = () => {
     navigate("/intro");

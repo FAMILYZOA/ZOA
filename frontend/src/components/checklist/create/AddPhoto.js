@@ -3,10 +3,8 @@ import styled from "styled-components";
 import plus from "../../../assets/plus.png";
 import { BsTrashFill } from "react-icons/bs";
 import { detect } from "detect-browser";
-import { useAppSelector } from "../../../app/hooks";
 import store from "../../../app/store";
 import { dataURLtoFile, makeid } from "../../../features/mobile/mobileUtil";
-import { selectMobileChecklistPhoto } from "../../../features/mobile/mobileSlice";
 
 const Container = styled.div`
   margin: 0 5% 8px;
@@ -15,7 +13,7 @@ const MainText = styled.div`
   font-size: 0.8em;
   font-weight: bold;
   text-align: start;
-  margin-bottom: 4px;
+  margin: 4px 0 6px 0;
 `;
 
 const Photo = styled.div`
@@ -48,7 +46,6 @@ function AddPhoto({ getPhoto }) {
   const checklistPhotoUpdate = () => {
     let current = store.getState().mobile.checklistPhoto;
     if (current && current !== plus) {
-      //console.log(current);
       // 업로드 작업
       const checklistImage = dataURLtoFile(current, `${makeid(6)}.jpg`);
       setFile(URL.createObjectURL(checklistImage));
@@ -62,7 +59,6 @@ function AddPhoto({ getPhoto }) {
   const [os, setOS] = useState(getOS());
 
   const saveFile = (e) => {
-    console.log(e);
     setFile(URL.createObjectURL(e.target.files[0]));
     setPhoto(e.target.files[0]);
   };

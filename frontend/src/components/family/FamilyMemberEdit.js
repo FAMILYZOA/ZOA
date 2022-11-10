@@ -30,9 +30,6 @@ const FamilyMemberEdit = () => {
     .then((res) => {
       setUsers([...res.data.users])
     })
-    .catch((err) => {
-      console.log(err)
-    })
   }, [familyId, users]);
 
 

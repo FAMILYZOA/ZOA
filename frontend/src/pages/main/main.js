@@ -53,10 +53,9 @@ function Main() {
             const code = err.response.data.code;
             if (code === "token_not_valid") {
               const tokens = await AuthRefresh(refresh).catch((err) => {
-                console.log(err);
+
                 navigate("/intro", { replace: true });
               });
-              console.log(tokens);
               if (tokens) {
                 dispatch(setAccessToken(tokens.access));
                 dispatch(setRefreshToken(tokens.refresh));
@@ -64,12 +63,10 @@ function Main() {
             }
             break;
           case 403:
-            console.log(localStorage.getItem("familyId"));
             if (localStorage.getItem("familyId")) {
               const familyId = localStorage.getItem("familyId");
               navigate(`/join/${familyId}`);
             } else {
-              console.log("여기");
               navigate("family/create/");
             }
             break;
