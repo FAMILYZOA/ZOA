@@ -120,14 +120,16 @@ function PageOne({ oneInfo }) {
   };
 
   const sendNum = (phone) => {
-    setSend(true);
-    const data = new FormData();
-    data.append("phone", phone.replaceAll("-", ""));
-    axios({
-      method: "POST",
-      url: `${process.env.REACT_APP_BACK_HOST}/event/`,
-      data: data,
-    });
+    if (phoneWarn === false) {
+      setSend(true);
+      const data = new FormData();
+      data.append("phone", phone.replaceAll("-", ""));
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+        data: data,
+      });
+    }
   };
 
   const checkNum = (certi) => {
