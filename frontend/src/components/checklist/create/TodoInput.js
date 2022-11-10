@@ -50,7 +50,7 @@ function TodoInput({ todos }) {
           onChange={onChange}
           value={todo}
           placeholder="할 일을 입력해주세요."
-          maxLength={20}
+          maxLength={19}
         />
       </InputBox>
     </Container>
