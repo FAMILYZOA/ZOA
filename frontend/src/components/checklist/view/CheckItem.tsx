@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { BsCheckLg } from "react-icons/bs";
 import { FaChevronUp } from "react-icons/fa";
 import axios from "axios";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
 
 interface propStyle {
   status?: any;

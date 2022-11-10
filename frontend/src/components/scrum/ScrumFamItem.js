@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;

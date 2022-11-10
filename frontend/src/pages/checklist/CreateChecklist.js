@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "../../components/header";
 import Receiver from "../../components/checklist/create/Receiver";
 import TodoInput from "../../components/checklist/create/TodoInput";

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Switch from "@mui/material/Switch";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { TbLogout } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
@@ -14,9 +14,6 @@ import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
 import { setFamilyUsers } from "../../features/family/familySlice";
 import axios from "axios";
-import Header from "../../components/main/Header";
-
-const ALLOW_FILE_EXTENSION = "jpg,jpeg,png";
 
 const SettingsHeader = styled.div`
   display: flex;
@@ -172,9 +169,9 @@ const Settings = () => {
     image: string;
   }>({
     phone: "",
-    name: "신짱구",
+    name: "",
     image:
-      "https://user-images.githubusercontent.com/97648026/197681290-d733b42c-bc46-4af7-b149-96dd02150234.png",
+      "",
   }); // 유저 프로필 정보
   const [toggleEdit, setToggleEdit] = useState<boolean>(false);
   const [version, setVersion] = useState<string>("1.0.0");

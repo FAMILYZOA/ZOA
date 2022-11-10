@@ -8,7 +8,7 @@ import { AiFillHome } from "react-icons/ai";
 
 import { FamilyMember } from "../../components/family";
 
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { detect } from "detect-browser";
 
 const HeaderBox = styled.div`

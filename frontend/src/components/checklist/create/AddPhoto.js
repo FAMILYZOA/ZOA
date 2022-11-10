@@ -3,10 +3,8 @@ import styled from "styled-components";
 import plus from "../../../assets/plus.png";
 import { BsTrashFill } from "react-icons/bs";
 import { detect } from "detect-browser";
-import { useAppSelector } from "../../../app/hooks";
 import store from "../../../app/store";
 import { dataURLtoFile, makeid } from "../../../features/mobile/mobileUtil";
-import { selectMobileChecklistPhoto } from "../../../features/mobile/mobileSlice";
 
 const Container = styled.div`
   margin: 0 5% 8px;

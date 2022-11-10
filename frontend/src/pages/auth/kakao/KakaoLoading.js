@@ -8,7 +8,6 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "../../../features/token/tokenSlice";
-import { useAppSelector } from "../../../app/hooks";
 
 export const Background = styled.div`
   height: 100vh;
