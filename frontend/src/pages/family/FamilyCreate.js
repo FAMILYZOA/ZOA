@@ -1,10 +1,17 @@
 import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/white-logo.png";
 import { IoIosArrowBack } from "react-icons/io";
+import {
+  setFamilyCreatedAt,
+  setFamilyId,
+  setFamilyName,
+  setFamilyUsers,
+} from "../../features/family/familySlice";
+
 
 const HeaderBox = styled.div`
   display: grid;
@@ -101,6 +108,7 @@ const FamilyCreate = () => {
   const [familyName, setFamilyName] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleFamilyNameInput = (e) => {
     setFamilyName(e.target.value);
@@ -125,6 +133,19 @@ const FamilyCreate = () => {
       },
     })
       .then((res) => {
+        axios({
+          method: "get",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+          .then((res) => {
+            dispatch(setFamilyId(res.data.id));
+            dispatch(setFamilyName(res.data.name));
+            dispatch(setFamilyCreatedAt(res.data.created_at));
+            dispatch(setFamilyUsers(res.data.users));
+          })
         navigate("/", { replace: true });
       })
   };
