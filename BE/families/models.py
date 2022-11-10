@@ -17,3 +17,8 @@ class FamilyInteractionName(models.Model) :
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='to_family_name',)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='from_family_name',)
     name = models.CharField(max_length=12)
+
+
+class InvitationCodeFamily(models.Model): 
+    family_id = models.ForeignKey(Family,on_delete=models.CASCADE,related_name='invitationcode')
+    code = models.CharField(max_length=33)

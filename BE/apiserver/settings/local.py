@@ -32,6 +32,8 @@ DATABASES = {
         },
      } 
 }
+
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 # 스태틱폴더를 따로 만들어서 앱에 종속되지 않고 접근할 수 있게한다. 

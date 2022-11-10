@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from accounts.models import User
-from families.models import Family, FamilyInteractionName
+from families.models import Family, FamilyInteractionName, InvitationCodeFamily
+
 
 class FamilySerializer(serializers.ModelSerializer) :
     class Meta: 
         model = Family
         fields= '__all__'
+
 
 class FamilyNameSetSerializer(serializers.ModelSerializer) :
 
@@ -47,7 +49,7 @@ class FamilyRetriveSerializer(serializers.ModelSerializer) :
     users = UserSerializer(many=True,read_only=True)
     class Meta: 
         model = Family 
-        fields =('id','name','created_at','users')
+        fields =('id','name','created_at','code','users')
 
 class UserUnAuthorizedSerializer(serializers.ModelSerializer) :
     image = serializers.SerializerMethodField()
@@ -72,3 +74,9 @@ class FamilyUpdateSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Family 
         fields = ('id','name')
+
+
+class InvitationCodeFamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvitationCodeFamily
+        fields = '__all__'
