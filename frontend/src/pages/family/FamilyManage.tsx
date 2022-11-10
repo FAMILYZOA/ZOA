@@ -125,6 +125,9 @@ ${inviteLink}`;
     }
   };
   const shareKakao = () => {
+    const host = process.env.REACT_APP_FE_HOST;
+    console.log(host);
+    
     try {
       // link를 우리 앱의 deeplink로 바꿔야 함.
       window.Kakao.Share.sendDefault({
@@ -135,16 +138,16 @@ ${inviteLink}`;
           imageUrl:
             "https://user-images.githubusercontent.com/97648026/197706989-acd007d6-05be-445c-8a70-ac98abeaee90.png",
           link: {
-            mobileWebUrl: `${process.env.REACT_APP_FE_HOST}/join/${id}`,
-            webUrl: `${process.env.REACT_APP_FE_HOST}/join/${id}`,
+            mobileWebUrl: `${host}/join/${id}`,
+            webUrl: `${host}/join/${id}`,
           },
         },
         buttons: [
           {
             title: "ZOA에 참여하기",
             link: {
-              mobileWebUrl: `${process.env.REACT_APP_FE_HOST}/${id}`,
-              webUrl: `${process.env.REACT_APP_FE_HOST}/${id}`,
+              mobileWebUrl: `${host}/join/${id}`,
+              webUrl: `${host}o/join/${id}`,
             },
           },
         ],
