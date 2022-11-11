@@ -14,7 +14,7 @@ const Container = styled.div`
   }
   position: fixed;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgb(255, 255, 255);
   border-radius: 20px 20px 0 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   display: ${(props) => (props.active === true ? "none" : "grid")};
@@ -56,6 +56,7 @@ function Navbar() {
   const location = useLocation();
   const [height, setHeight] = useState(window.innerHeight);
   const [active, setActive] = useState(false);
+  const [defaultActive, setDefaultActive] = useState(false);
   const handleResize = debounce(() => {
     setHeight(window.innerHeight);
   }, 50);
@@ -66,12 +67,14 @@ function Navbar() {
     };
   }, []);
   useEffect(() => {
-    if (height <= 600) {
-      setActive(true);
-    } else {
-      setActive(false);
+    if (!defaultActive) {
+      if (height <= 600) {
+        setActive(true);
+      } else {
+        setActive(false);
+      }
     }
-  }, [height]);
+  }, [height, defaultActive]);
   useEffect(() => {
     if (
       location.pathname === "/intro" ||
@@ -79,14 +82,17 @@ function Navbar() {
       location.pathname === "/register" ||
       location.pathname === "/kakaoLoading" ||
       location.pathname === "/family/manage" ||
-      location.pathname === "/family/create" ||
+      location.pathname === "/family/create/" ||
       location.pathname === "/family/edit" ||
       location.pathname === "/login" ||
-      location.pathname === "/register"
+      location.pathname === "/register" ||
+      location.pathname.includes("join")
     ) {
       setActive(true);
+      setDefaultActive(true);
     } else {
       setActive(false);
+      setDefaultActive(false);
     }
   }, [location]);
 
