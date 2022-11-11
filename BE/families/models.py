@@ -23,4 +23,4 @@ class FamilyInteractionName(models.Model) :
 
 class InvitationCodeFamily(models.Model): 
     family_id = models.ForeignKey(Family,on_delete=models.CASCADE,related_name='invitationcode',db_column='family_id')
-    code = models.CharField(max_length=33)
+    invitationcode = models.CharField(max_length=33)

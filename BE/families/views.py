@@ -174,7 +174,7 @@ class InviteCodeFamilyAPIView(GenericAPIView):
                 return Response(f'{request.user.name}님은 가족에 가입되어 있지 않습니다.',status=status.HTTP_400_BAD_REQUEST)
         if request.user.family_id.id == family_id:
             serializer = self.serializer_class(data={
-                "code" : self.make_family_invitation_code(),
+                "invitationcode" : self.make_family_invitation_code(),
                 "family_id" : family_id,
             })
             if serializer.is_valid(raise_exception=True):
@@ -187,14 +187,14 @@ class InviteCodeFamilyAPIView(GenericAPIView):
 class InviteCodeSignFamilyAPIView(GenericAPIView):
     serializer_class = FamilySerializer
     def post(self, request):
-        code = request.data['code']
-        invitationcode = get_object_or_404(InvitationCodeFamily, code=code)
-        family_id = invitationcode.family_id.id
+        invitationcode = request.data['invitationcode']
+        invitationcode1 = get_object_or_404(InvitationCodeFamily, invitationcode=invitationcode)
+        family_id = invitationcode1.family_id.id
         family = get_object_or_404(Family,id=family_id)
         if request.user.is_authenticated :
             if request.user.family_id :
                 return Response(f'{request.user.name}님은 이미 가족에 가입되어 있습니다.',status=status.HTTP_400_BAD_REQUEST)
             else :
                 family.users.add(request.user)
-                invitationcode.delete()
+                invitationcode1.delete()
                 return Response(f"{family}에 가입되었습니다", status=status.HTTP_200_OK)
