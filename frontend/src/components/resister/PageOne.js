@@ -131,23 +131,25 @@ function PageOne({ oneInfo }) {
         method: "POST",
         url: `${process.env.REACT_APP_BACK_HOST}/accounts/phonecheck/`,
         data: data,
-      }).then((res)=>{
-        if(res.status === 200){
-          setSend(true);
-          data.append("phone", phone.replaceAll("-", ""));
-          axios({
-            method: "POST",
-            url: `${process.env.REACT_APP_BACK_HOST}/event/`,
-            data: data,
-          });
-        }
-      }).catch((err)=> {
-        if (err.response.status === 400){
-          setPhoneWarn(false);
-          setSend(false);
-          setPhoneCheckWarn(true);
-        }
       })
+        .then((res) => {
+          if (res.status === 200) {
+            setSend(true);
+            setPhoneCheckWarn(false);
+            axios({
+              method: "POST",
+              url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+              data: data,
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            setPhoneWarn(false);
+            setSend(false);
+            setPhoneCheckWarn(true);
+          }
+        });
     }
   };
 
@@ -174,7 +176,7 @@ function PageOne({ oneInfo }) {
           setCheck(false);
           setCertiWarn(true);
         }
-    })
+      });
   };
 
   useEffect(() => {

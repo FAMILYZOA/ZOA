@@ -102,6 +102,7 @@ const ScrumHome = () => {
   const userId = useAppSelector((state) => state.user.id);
   const userImg = useAppSelector((state) => state.user.image);
   const userName = useAppSelector((state) => state.user.name);
+  const familyId = useAppSelector((state) => state.family.id);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -117,10 +118,9 @@ const ScrumHome = () => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-      .then((res) => {
-        setScrums([...res.data]);
-      })
+    }).then((res) => {
+      setScrums([...res.data]);
+    });
   }, [day]);
 
   // 내 스크럼 저장할 state 선언
@@ -208,7 +208,16 @@ const ScrumHome = () => {
           <div style={{ margin: "4px 0 4px 40px" }}>
             <ItemWrapper>
               {myScrum[0].emoji === "" ? (
-                "아직 작성된 스크럼이 없어요 😢"
+                <>
+                  <div>작성된 스크럼이 없습니다.</div>
+                  {date.getFullYear() === new Date().getFullYear() &&
+                  date.getMonth() === new Date().getMonth() &&
+                  date.getDate() === new Date().getDate() ? (
+                    <div>안녕으로 가족과 오늘의 안녕을 공유해보세요🥰 </div>
+                  ) : (
+                    <></>
+                  )}
+                </>
               ) : (
                 <>
                   <div style={{ margin: "8px" }}>🙋‍♂️ {myScrum[0].yesterday}</div>
@@ -219,7 +228,7 @@ const ScrumHome = () => {
           </div>
 
           <div>
-            {myScrum[0].emoji === "" && 
+            {myScrum[0].emoji === "" &&
             date.getFullYear() === new Date().getFullYear() &&
             date.getMonth() === new Date().getMonth() &&
             date.getDate() === new Date().getDate() ? (
@@ -234,7 +243,7 @@ const ScrumHome = () => {
                   navigate(`/hello/create/`);
                 }}
               >
-                스크럼 작성하러 가기
+                '안녕' 작성하러 가기
                 <BsChevronRight />
               </div>
             ) : (
@@ -242,9 +251,13 @@ const ScrumHome = () => {
             )}
           </div>
           {/* 여기부터 가족 */}
-          {famScrum.slice(0, -2).map((item, index) => (
-            <ScrumFamItem {...item} key={index} />
-          ))}
+          {familyId > 0 ? (
+            famScrum
+              .slice(0, -2)
+              .map((item, index) => <ScrumFamItem {...item} key={index} />)
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

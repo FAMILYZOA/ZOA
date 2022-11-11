@@ -14,7 +14,7 @@ const Container = styled.div`
   }
   position: fixed;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgb(255, 255, 255);
   border-radius: 20px 20px 0 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   display: ${(props) => (props.active === true ? "none" : "grid")};
@@ -82,10 +82,11 @@ function Navbar() {
       location.pathname === "/register" ||
       location.pathname === "/kakaoLoading" ||
       location.pathname === "/family/manage" ||
-      location.pathname === "/family/create" ||
+      location.pathname === "/family/create/" ||
       location.pathname === "/family/edit" ||
       location.pathname === "/login" ||
-      location.pathname === "/register"
+      location.pathname === "/register" ||
+      location.pathname.includes("join")
     ) {
       setActive(true);
       setDefaultActive(true);
