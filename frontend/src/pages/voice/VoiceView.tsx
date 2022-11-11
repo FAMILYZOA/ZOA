@@ -136,6 +136,7 @@ const VoiceView = () => {
               set_name={message.set_name}
               audio={message.audio}
               created_at={message.created_at}
+              key={message.id}
             />
           ))}
         </>) : (<>
@@ -146,6 +147,7 @@ const VoiceView = () => {
               set_name={message.set_name}
               audio={message.audio}
               created_at={message.created_at}
+              key={message.id}
             />
           ))}
         </>)
