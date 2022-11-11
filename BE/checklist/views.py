@@ -13,7 +13,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.pagination import PageNumberPagination
 from .models import Checklist, Photo
 from accounts.models import User
-from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer
+from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer, MainChecklistSerializer
 
 
 class ChecklistCreateAPIView(GenericAPIView):
@@ -87,7 +87,7 @@ class ChecklistSearchAPIView(ListAPIView):
 
 
 class ChecklistTodayAPIView(GenericAPIView):
-    serializer_class = ChecklistSerializer
+    serializer_class = MainChecklistSerializer
     def get(self, request, to_users_id):
         today = datetime.today()
         year, month, day = today.year, today.month, today.day
