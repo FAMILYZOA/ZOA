@@ -80,3 +80,9 @@ class InvitationCodeFamilySerializer(serializers.ModelSerializer):
     class Meta:
         model = InvitationCodeFamily
         fields = '__all__'
+
+
+class CodeFamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvitationCodeFamily
+        fields = ('invitationcode',)
