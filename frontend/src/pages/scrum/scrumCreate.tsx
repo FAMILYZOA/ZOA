@@ -198,6 +198,7 @@ const EmojiSelector = (props: EmojiProps) => {
         <EmojiPicker
           onEmojiClick={props.emojiSelect}
           skinTonesDisabled={true}
+          searchDisabled={true}
           width={"99%"}
           height={"99%"}
         />
