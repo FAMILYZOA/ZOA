@@ -49,3 +49,14 @@ code {
     rgba(61, 185, 164, 0.1)
   );
 }
+
+#backGround {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(
+    180deg,
+    rgba(254, 155, 125, 0.1),
+    rgba(61, 185, 164, 0.1)
+  );
+}
