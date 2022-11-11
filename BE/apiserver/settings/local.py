@@ -41,7 +41,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# Login Part
+# # Login Part
 # LOGGING = {
 #     'version': 1,
 #     'filters': {
