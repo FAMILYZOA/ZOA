@@ -14,6 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 import uuid
 import base64
 import codecs
+import datetime
 
 
 class FamilyCreateAPIView(GenericAPIView,mixins.CreateModelMixin) :
@@ -166,8 +167,11 @@ class InviteCodeFamilyAPIView(GenericAPIView):
         return base64.urlsafe_b64encode(
             codecs.encode(uuid.uuid4().bytes, "base64").rstrip()
         ).decode()[:32]
-
+    
+    
     def get(self, request, family_id):
+        if not request.user.family_id :
+                return Response(f'{request.user.name}님은 가족에 가입되어 있지 않습니다.',status=status.HTTP_400_BAD_REQUEST)
         if request.user.family_id.id == family_id:
             serializer = self.serializer_class(data={
                 "code" : self.make_family_invitation_code(),
@@ -175,6 +179,7 @@ class InviteCodeFamilyAPIView(GenericAPIView):
             })
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
+            id = serializer.data['id']
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response("본인이 속한 가족으로만 초대할 수 있습니다.", status=status.HTTP_400_BAD_REQUEST)
 
