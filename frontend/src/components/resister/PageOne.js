@@ -79,6 +79,7 @@ function PageOne({ oneInfo }) {
 
   const [send, setSend] = useState(false);
   const [check, setCheck] = useState(false);
+  const [disphone, setDisphone] = useState(false);
 
   const [btnActive, setBtnActive] = useState(false);
 
@@ -166,6 +167,7 @@ function PageOne({ oneInfo }) {
         if (res.status === 200) {
           setCertiWarn(false);
           setCheck(true);
+          setDisphone(true);
         }
       })
       .catch((err) => {
@@ -231,6 +233,7 @@ function PageOne({ oneInfo }) {
             maxLength="13"
             onChange={onChangePhone}
             value={phone}
+            disabled ={disphone}
           ></Input>
           <CheckText onClick={() => sendNum(phone)}>인증번호 받기</CheckText>
         </InputBox>
