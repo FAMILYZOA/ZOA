@@ -7,6 +7,42 @@ import ScrumFamItem from "../../components/scrum/ScrumFamItem";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import { Emoji } from "emoji-picker-react";
+import { BsQuestionCircleFill } from "react-icons/bs";
+import guide from "../../assets/hello_guide.png"
+import Modal from "react-modal";
+
+
+const ImgTag = styled.img`
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+`
+
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`;
+
+const Icon = styled.div`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderLabel = styled.div`
+  font-size: 1.25em;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+`;
+
+
 
 const DateBox = styled.div`
   width: 100%;
@@ -32,17 +68,6 @@ const DateValue = styled.div`
   font-size: 20px;
   font-weight: bold;
   margin: auto 40px;
-`;
-
-const ScrumBox = styled.div`
-  height: calc(95vh - 180px);
-  overflow-y: scroll;
-  margin: 5%;
-`;
-
-const ScrumWrapper = styled.div`
-  // background-color: transparent;
-  // margin: 12px;
 `;
 
 const ItemWrapper = styled.div`
@@ -141,6 +166,7 @@ const ScrumHome = () => {
     image: "",
     id: "",
     user_id: "",
+    set_name: "",
   });
 
   // 받아온 스크럼 data에서 스크럼 작성 id 와 유저 id 비교하기
@@ -154,9 +180,44 @@ const ScrumHome = () => {
     }
   }
 
+  const [showModal, setShowModal] = useState(false);  
+  const openModal = () => {
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyle = {
+    content: {
+      inset:" 2% 2%",
+      width: "96%",
+      height: "96%",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0"
+    },
+  };
+
   return (
     <>
-      <Header label="안녕" />
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+        onClick={closeModal}
+      >
+        <ImgTag src={guide} alt="" onClick={closeModal} />
+      </Modal>
+      <HeaderBox>
+        <div></div>
+        <HeaderLabel>안녕</HeaderLabel>
+        <Icon onClick={openModal}>
+          <BsQuestionCircleFill size="24" color="#ff787f" />
+        </Icon>
+      </HeaderBox>
       <DateBox>
         <ArrowIconBox onClick={onHandleBeforeDate} active={true}>
           <BsChevronLeft />
@@ -198,7 +259,7 @@ const ScrumHome = () => {
             <div
               style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}
             >
-              {userName}
+              나 ({userName})
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               <Emoji unified={myScrum[0].emoji} size={20} />

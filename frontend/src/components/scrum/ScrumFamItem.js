@@ -24,7 +24,7 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumFamItem = ({ id, emoji, name, yesterday, today, image }) => {
+const ScrumFamItem = ({ id, emoji, name, yesterday, today, image, set_name }) => {
   const navigate = useNavigate();
 
   return (
@@ -35,9 +35,14 @@ const ScrumFamItem = ({ id, emoji, name, yesterday, today, image }) => {
             <MemberProfileImg src={image} />
           </MemberProfile>
         </ProfileWrapper>
+        {set_name ? 
+        <div style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}>
+          {set_name} ({name})
+        </div> :
         <div style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}>
           {name}
         </div>
+        }
         <div style={{ display: "flex", alignItems: "center" }}>
           <Emoji unified={emoji} size={20} />
         </div>
