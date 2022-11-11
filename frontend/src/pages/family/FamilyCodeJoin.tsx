@@ -82,24 +82,27 @@ const FamilyCodeJoin = () => {
     setCode(e.target.value);
   }
   const handleSubmit = () => {
-    //요청 후
-    // 성공시
-    // axios({
-    //   method: "get",
-    //   url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //   },
-    // })
-    //   .then((res) => {
-    //     dispatch(setFamilyId(res.data.id));
-    //     dispatch(setFamilyName(res.data.name));
-    //     dispatch(setFamilyCreatedAt(res.data.created_at));
-    //     dispatch(setFamilyUsers(res.data.users));
-    //   })
-    // navigate("/", { replace: true });
-    // // 실패시
-    // setIsVaild(false);
+    console.log(code);
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_BACK_HOST}/family/invitation_code/sign/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        invitationcode: `${code}`,
+      }
+    })
+      .then((res) => {
+        dispatch(setFamilyId(res.data.id));
+        dispatch(setFamilyName(res.data.name));
+        dispatch(setFamilyCreatedAt(res.data.created_at));
+        dispatch(setFamilyUsers(res.data.users));
+        navigate("/", { replace: true });
+      })
+      .catch(() => {
+        setIsVaild(false);
+      })
   }
 
   useEffect(() => {
@@ -125,7 +128,7 @@ const FamilyCodeJoin = () => {
               onChange={handleCodeChange}
             />
           </div>
-          <ValidMessage>{isValid ? "유효한 코드가 아닙니다." : ""}</ValidMessage>
+          <ValidMessage>{isValid ? "" : "유효한 코드가 아닙니다."}</ValidMessage>
         </div>
         <FamilyParticipateBtn isCode={!!code} disabled={!code} onClick={handleSubmit}>
           참여하기
