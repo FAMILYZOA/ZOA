@@ -4,13 +4,17 @@ from rest_framework.generics import (
 from rest_framework import mixins,permissions
 from accounts.models import User
 from accounts.permissions import InFamilyorBadResponsePermission
-from families.models import Family, FamilyInteractionName
-from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer
+from families.models import Family, FamilyInteractionName, InvitationCodeFamily
+from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer, InvitationCodeFamilySerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+import uuid
+import base64
+import codecs
+import datetime
 
 
 class FamilyCreateAPIView(GenericAPIView,mixins.CreateModelMixin) :
@@ -154,3 +158,43 @@ class FamilySignAPIView(RetrieveAPIView) :
     @swagger_auto_schema(operation_summary="가족 및 멤버 조회")
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+class InviteCodeFamilyAPIView(GenericAPIView):
+    serializer_class = InvitationCodeFamilySerializer
+    
+    def make_family_invitation_code(length=32):
+        return base64.urlsafe_b64encode(
+            codecs.encode(uuid.uuid4().bytes, "base64").rstrip()
+        ).decode()[:32]
+    
+    
+    def get(self, request, family_id):
+        if not request.user.family_id :
+                return Response(f'{request.user.name}님은 가족에 가입되어 있지 않습니다.',status=status.HTTP_400_BAD_REQUEST)
+        if request.user.family_id.id == family_id:
+            serializer = self.serializer_class(data={
+                "code" : self.make_family_invitation_code(),
+                "family_id" : family_id,
+            })
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            id = serializer.data['id']
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response("본인이 속한 가족으로만 초대할 수 있습니다.", status=status.HTTP_400_BAD_REQUEST)
+
+
+class InviteCodeSignFamilyAPIView(GenericAPIView):
+    serializer_class = FamilySerializer
+    def post(self, request):
+        code = request.data['code']
+        invitationcode = get_object_or_404(InvitationCodeFamily, code=code)
+        family_id = invitationcode.family_id.id
+        family = get_object_or_404(Family,id=family_id)
+        if request.user.is_authenticated :
+            if request.user.family_id :
+                return Response(f'{request.user.name}님은 이미 가족에 가입되어 있습니다.',status=status.HTTP_400_BAD_REQUEST)
+            else :
+                family.users.add(request.user)
+                invitationcode.delete()
+                return Response(f"{family}에 가입되었습니다", status=status.HTTP_200_OK)
