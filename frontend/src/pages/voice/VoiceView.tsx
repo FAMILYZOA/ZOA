@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { useAppSelector } from "../../app/hooks";
+import { VoiceMessage } from "../../components/voice"
 
 interface highLightProps {
   isLeft?: boolean;
@@ -39,7 +42,6 @@ const SelectHighlight = styled.div<highLightProps>`
 `
 const VoiceMessageDiv = styled.div`
   margin: 0.8em;
-  background: linear-gradient(45deg, #fec786, #ff787f);
 `
 const HeaderBox = styled.div`
   display: grid;
@@ -82,9 +84,39 @@ const Header = () => {
 }
 
 const VoiceView = () => {
-  const [unViewedMessage, setUnViewedMessage] = useState<{id: string}[]>([]);
-  const [keptMessage, setKeptMessage] = useState<{id: string}[]>([]);
+  const [unViewedMessage, setUnViewedMessage] = useState<{
+    id: number, 
+    image: string, 
+    set_name: string, 
+    audio: string, 
+    created_at: string
+  }[]>([]);
+  const [keptMessage, setKeptMessage] = useState<{
+    id: number, 
+    image: string, 
+    set_name: string, 
+    audio: string, 
+    created_at: string
+  }[]>([]);
   const [isLeft, setIsLeft] = useState<boolean>(true);
+  const accessToken = useAppSelector(state => state.token.access)
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_BACK_HOST}/audio/?search=0`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setUnViewedMessage(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  },[])
 
   return (
     <>
@@ -96,7 +128,27 @@ const VoiceView = () => {
       </SelectViewDiv>
       <VoiceMessageDiv>
       {
-        isLeft ? (<></>) : (<></>)
+        isLeft ? (<>
+          {unViewedMessage.map((message) => (
+            <VoiceMessage 
+              id={message.id}
+              image={message.image}
+              set_name={message.set_name}
+              audio={message.audio}
+              created_at={message.created_at}
+            />
+          ))}
+        </>) : (<>
+          {keptMessage.map((message) => (
+            <VoiceMessage 
+              id={message.id}
+              image={message.image}
+              set_name={message.set_name}
+              audio={message.audio}
+              created_at={message.created_at}
+            />
+          ))}
+        </>)
       }
       </VoiceMessageDiv>
     </>

@@ -4,48 +4,49 @@ import { FaPlay, FaPause } from "react-icons/fa"
 
 const VoiceMessageDiv = styled.div`
   display: flex;
+  align-items: center;
 `
 const VoiceSenderDiv = styled.div`
-  width: 17.5vmin;
-  height: 17.5vmin;
-  margin-right: 4.5vmin;
+  width: 64px;
+  height: 64px;
+  margin-right: 16px;
 `
 const VoiceSenderImg = styled.img`
-  width: 17.5vmin;
-  height: 17.5vmin;
-  border-radius: 9vmin;
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
   object-fit: fill;
 `
 const VoiceDiv = styled.div`
   display: flex;
   position: relative;
-  justify-content: center;
   align-items: center;
-  height: 11vmin;
-  width: 46.5vmin;
+  height: 40px;
+  width: 168px;
   background-color: #fdaf97;
-  border-radius: 5.5vmin;
+  border-radius: 20px;
 `
 const VoiceIconDiv = styled.div`
-  height: 9vmin;
-  width: 9vmin;
-  margin: 1vmin 4.5vmin 1vmin 1vmin;
-  border-radius: 4.5vmin;
+  height: 32px;
+  width: 32px;
+  margin: 4px 16px 4px 4px;
+  border-radius: 16px;
   background-color: #fff;
   text-align: center;
-  line-height: 9vmin;
+  line-height: 36px;
+  color: #FEC786;
 `
 const VoiceTimeDiv = styled.div`
   color: #fff;
 `
 const VoiceTimeDifference = styled.div`
   font-size: 0.6rem;
-  bottom: -4.5vmin;
-  right: 4.5vmin;
+  bottom: -16px;
+  right: 16px;
 `
 const SenderName = styled.div`
-  width: 17.5vmin;
-  margin: 2.25vmin 0 4.5vmin;
+  width: 64px;
+  margin: 8px 0 16px;
   text-align: center;
 `
 type VoiceMessageProps = {
