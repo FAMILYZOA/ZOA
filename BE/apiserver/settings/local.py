@@ -72,6 +72,7 @@ if DEBUG:
     ]
     INSTALLED_APPS += [
         'debug_toolbar',
+        'sslserver',
     ]
     INTERNAL_IPS = ['127.0.0.1', ]
 
