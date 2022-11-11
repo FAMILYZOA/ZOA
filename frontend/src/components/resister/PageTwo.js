@@ -91,24 +91,8 @@ const AgeSelector = styled.select`
   padding: 4px;
 `;
 
-const BtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 56px auto;
-`;
-const Btn = styled.button`
-  width: 90%;
-  height: 56px;
-  margin: auto;
-  background: linear-gradient(45deg, #fec786, #fe9b7c);
-  border: none;
-  border-radius: 30px;
-  font-weight: bold;
-  color: white;
-  opacity: ${(props) => (props.active ? "1" : "0.5")};
-`;
 
-function PageTwo({ twoInfo }) {
+function PageTwo({ twoInfo, activeBtn }) {
   const [pw, setPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [year, setYear] = useState("");
@@ -238,6 +222,10 @@ function PageTwo({ twoInfo }) {
     }
   }, [pwWarn, pwConfirm, pwCheck, confirmPwWarn]);
 
+  useEffect(()=>{
+    activeBtn({active: btnActive})
+  }, [btnActive])
+
   const selectYear = (e) => {
     setYear(e.target.value);
   };
@@ -260,7 +248,22 @@ function PageTwo({ twoInfo }) {
     }
   }, [year, month, day]);
 
-  const nextBtn = () => {
+  // const nextBtn = () => {
+  //   if (
+  //     pwWarn === false &&
+  //     pwConfirm === true &&
+  //     pwCheck === true &&
+  //     confirmPwWarn === false
+  //   ) {
+  //     const birth = String(year) + "-" + String(month) + "-" + String(day);
+  //     twoInfo({
+  //       password: pw,
+  //       birth: birth,
+  //     });
+  //   }
+  // };
+
+  useEffect(()=>{
     if (
       pwWarn === false &&
       pwConfirm === true &&
@@ -273,7 +276,7 @@ function PageTwo({ twoInfo }) {
         birth: birth,
       });
     }
-  };
+  },[pw, confirmPw, year, month, day ])
 
   return (
     <div>
@@ -337,11 +340,11 @@ function PageTwo({ twoInfo }) {
         <Warning active={birthWarn}>생년월일을 모두 선택해주세요.</Warning>
       </Container>
 
-      <BtnBox>
+      {/* <BtnBox>
         <Btn onClick={nextBtn} active={btnActive}>
           회원가입
         </Btn>
-      </BtnBox>
+      </BtnBox> */}
     </div>
   );
 }

@@ -10,7 +10,26 @@ const Container = styled.div`
   margin: 10% 5%;
 `;
 
+const BtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 56px auto;
+`;
+const Btn = styled.button`
+  width: 90%;
+  height: 56px;
+  margin: auto;
+  background: linear-gradient(45deg, #fec786, #fe9b7c);
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  color: white;
+  opacity: ${(props) => (props.active ? "1" : "0.5")};
+`;
+
+
 function Resister() {
+  const [btnActive, setBtnActive] = useState(false);
   const navigate = useNavigate();
   const [info, setInfo] = useState({
     phone: "",
@@ -31,8 +50,13 @@ function Resister() {
   };
   useEffect(() => {
     if (info.phone.length === 11 && info.name.length > 0) {
-      setNext(true);
-      if (info.birth.length === 10) {
+    }
+  }, [info]);
+  const activeBtn = (data) => {
+    setBtnActive(data.active);
+  }
+
+  const nextBtn = () => {
         const data = new FormData();
         data.append("phone", info.phone);
         data.append("password", info.password);
@@ -47,20 +71,20 @@ function Resister() {
           data: data,
         })
           .then((res) => {
+            console.log(res);
             if (res.status === 201) {
               alert("회원가입에 성공하였습니다. 로그인 후 이용해주세요.");
               navigate("/login");
             }
           })
           .catch((err) => {
+            console.log(err);
             if (err.response.status === 400) {
               alert("이미 가입된 회원입니다. 로그인 후 이용해주세요.");
               navigate("/intro");
             }
           });
-      }
-    }
-  }, [info]);
+  };
   return (
     <div>
       <Header label="회원가입" back="true"></Header>
@@ -68,7 +92,14 @@ function Resister() {
         {next === false ? (
           <PageOne oneInfo={oneInfo}></PageOne>
         ) : (
-          <PageTwo twoInfo={twoInfo}></PageTwo>
+          <>
+            <PageTwo twoInfo={twoInfo} activeBtn={activeBtn}></PageTwo>
+            <BtnBox>
+              <Btn onClick={nextBtn} active={btnActive}>
+                회원가입
+              </Btn>
+            </BtnBox>
+          </>
         )}
       </Container>
     </div>

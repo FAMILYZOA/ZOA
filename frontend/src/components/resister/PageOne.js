@@ -135,6 +135,7 @@ function PageOne({ oneInfo }) {
         .then((res) => {
           if (res.status === 200) {
             setSend(true);
+            setPhoneCheckWarn(false);
             axios({
               method: "POST",
               url: `${process.env.REACT_APP_BACK_HOST}/event/`,
