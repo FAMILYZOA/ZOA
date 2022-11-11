@@ -49,7 +49,7 @@ class FamilyRetriveSerializer(serializers.ModelSerializer) :
     users = UserSerializer(many=True,read_only=True)
     class Meta: 
         model = Family 
-        fields =('id','name','created_at','code','users')
+        fields =('id','name','created_at','invitationcode','users')
 
 class UserUnAuthorizedSerializer(serializers.ModelSerializer) :
     image = serializers.SerializerMethodField()
@@ -80,3 +80,9 @@ class InvitationCodeFamilySerializer(serializers.ModelSerializer):
     class Meta:
         model = InvitationCodeFamily
         fields = '__all__'
+
+
+class CodeFamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvitationCodeFamily
+        fields = ('invitationcode',)

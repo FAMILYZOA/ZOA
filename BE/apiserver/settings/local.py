@@ -41,7 +41,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# Login Part
+
+# # Login Part
 # LOGGING = {
 #     'version': 1,
 #     'filters': {
@@ -71,7 +72,7 @@ if DEBUG:
     ]
     INSTALLED_APPS += [
         'debug_toolbar',
-        'sslserver'
+        'sslserver',
     ]
     INTERNAL_IPS = ['127.0.0.1', ]
 
