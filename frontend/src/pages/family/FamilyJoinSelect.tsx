@@ -26,27 +26,6 @@ const Header = styled.div`
     height: 32px;
   }
 `;
-const HeaderLogoStyle = styled.div`
-  background: rgb(255, 120, 127);
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 120, 127, 1) 0%,
-    rgba(254, 199, 134, 1) 100%
-  );
-
-  background-size: 100%;
-  background-repeat: repeat;
-
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-background-clip: text;
-  -moz-text-fill-color: transparent;
-
-  font-size: 2.4em;
-  font-weight: bolder;
-  margin: 0%;
-`;
 const Greetings = styled.div`
   text-align: center;
   font-size: 2.4em;
