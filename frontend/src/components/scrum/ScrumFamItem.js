@@ -5,6 +5,7 @@ import { Emoji } from "emoji-picker-react";
 const ItemWrapper = styled.div`
   background-color: #eefbef;
   padding: 4px 0;
+  border-radius: 10px;
 `;
 
 const ProfileWrapper = styled.div`

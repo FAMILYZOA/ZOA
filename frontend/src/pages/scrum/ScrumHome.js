@@ -74,6 +74,7 @@ const ItemWrapper = styled.div`
   background-color: #eefbef;
   padding: 8px 4px;
   font-size: 0.8em;
+  border-radius: 10px;
 `;
 
 const ProfileWrapper = styled.div`
