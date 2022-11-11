@@ -198,6 +198,7 @@ const EmojiSelector = (props: EmojiProps) => {
         <EmojiPicker
           onEmojiClick={props.emojiSelect}
           skinTonesDisabled={true}
+          searchDisabled={true}
           width={"99%"}
           height={"99%"}
         />
@@ -318,7 +319,7 @@ const RegistBtn = (props: registBtnPRops) => {
 
 const ScrumCreate = () => {
   return (
-    <div>
+    <div style={{paddingBottom:"64px"}}>
       <Header label="안녕" back={true}></Header>
       <div>
         <DateSelector></DateSelector>
