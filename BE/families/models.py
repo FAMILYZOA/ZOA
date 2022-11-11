@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-import datetime
+from datetime import timedelta
+from django.db.models.functions import Now
 
 # Create your models here.
 
@@ -21,5 +22,5 @@ class FamilyInteractionName(models.Model) :
 
 
 class InvitationCodeFamily(models.Model): 
-    family_id = models.ForeignKey(Family,on_delete=models.CASCADE,related_name='invitationcode')
+    family_id = models.ForeignKey(Family,on_delete=models.CASCADE,related_name='invitationcode',db_column='family_id')
     code = models.CharField(max_length=33)
