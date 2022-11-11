@@ -318,7 +318,7 @@ const RegistBtn = (props: registBtnPRops) => {
 
 const ScrumCreate = () => {
   return (
-    <div style={{paddingBottom:"64px"}}>
+    <div>
       <Header label="안녕" back={true}></Header>
       <div>
         <DateSelector></DateSelector>
