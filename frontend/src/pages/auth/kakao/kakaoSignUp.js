@@ -383,7 +383,7 @@ function KakaoSignup() {
           <Title>인증번호</Title>
           <PhoneInputBox>
             <PhoneInput
-              type="number"
+              type="text"
               placeholder="인증 번호 입력"
               maxLength="6"
               onChange={onCertChange}
