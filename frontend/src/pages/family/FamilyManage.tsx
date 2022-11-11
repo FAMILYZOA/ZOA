@@ -10,6 +10,8 @@ import { FamilyMember } from "../../components/family";
 
 import styled from "styled-components";
 import { detect } from "detect-browser";
+import { FaCode } from "react-icons/fa";
+import axios from "axios";
 
 const HeaderBox = styled.div`
   display: grid;
@@ -92,7 +94,7 @@ const FamilyMembersEdit = styled.div`
 
 const FamilyManage = () => {
   const familyMembersList = useAppSelector((state) => state.family.users);
-  const token = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
+  const accessToken = useAppSelector((state) => state.token.access); // redux로 중앙으로부터 token값을 가져온다.
   const id = useAppSelector((state) => state.family.id);
   const familyName = useAppSelector((state) => state.family.name);
   const userName = useAppSelector((state) => state.user.name);
@@ -152,6 +154,27 @@ ${inviteLink}`;
     } catch (err) {
     }
   };
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('코드가 복사되었습니다!');
+    } catch (error) {
+      alert('코드복사가 실패하였습니다. 나중에 다시 시도해주세요.')
+    }
+  };
+  const shareCode = () => {
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_BACK_HOST}/family/invitation_code/${id}/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        const code = res.data.invitationcode;
+        handleCopy(code);
+      })
+  };
 
   return (
     <>
@@ -188,6 +211,15 @@ ${inviteLink}`;
             <MessageBox12>
               주소록에 있는 친구에게 메시지를 보내세요.
             </MessageBox12>
+          </div>
+        </FamilyInviteBox>
+        <FamilyInviteBox onClick={shareCode}>
+          <IconBox>
+            <FaCode />
+          </IconBox>
+          <div>
+            <MessageBox20>초대코드 복사</MessageBox20>
+            <MessageBox12>초대코드로 가족에 초대하세요.</MessageBox12>
           </div>
         </FamilyInviteBox>
         <FamilyMembersTitle>
