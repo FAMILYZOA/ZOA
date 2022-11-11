@@ -99,7 +99,7 @@ const FamilyManage = () => {
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
 
   // android 딥링크 설정 필요 -> firebase dynamic link 설정되면 사용
-  const inviteLink: string = "(초대링크)";
+  const inviteLink: string = `${process.env.REACT_APP_FE_HOST}/join/${id}`;
   const os = detect()?.os;
   let smsUrl: string = `ZOA에서 초대장이 왔습니다!
 ${userName}님과 함께하세요!
@@ -144,7 +144,7 @@ ${inviteLink}`;
             title: "ZOA에 참여하기",
             link: {
               mobileWebUrl: `${host}/join/${id}`,
-              webUrl: `${host}o/join/${id}`,
+              webUrl: `${host}/join/${id}`,
             },
           },
         ],
