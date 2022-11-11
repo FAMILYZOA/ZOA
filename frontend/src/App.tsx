@@ -39,6 +39,8 @@ import { setChecklistPhoto } from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 import { AuthRefresh } from "./api/customAxios";
 import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
+import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
+import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -226,6 +228,8 @@ function App() {
           <Route path="/family/manage" element={<FamilyManage />}></Route>
           <Route path="/family/create" element={<FamilyCreate />}></Route>
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
+          <Route path="/family/select" element={<FamilyJoinSelect />}></Route>
+          <Route path="/family/code" element={<FamilyCodeJoin />}></Route>
 
           <Route path="/" element={<Main />} />
 

@@ -82,7 +82,9 @@ function Navbar() {
       location.pathname === "/register" ||
       location.pathname === "/kakaoLoading" ||
       location.pathname === "/family/manage" ||
-      location.pathname === "/family/create/" ||
+      location.pathname === "/family/create" ||
+      location.pathname === "/family/select" ||
+      location.pathname === "/family/code" ||
       location.pathname === "/family/edit" ||
       location.pathname === "/login" ||
       location.pathname === "/register" ||
