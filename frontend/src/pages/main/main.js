@@ -67,7 +67,7 @@ function Main() {
               const familyId = localStorage.getItem("familyId");
               navigate(`/join/${familyId}`);
             } else {
-              navigate("family/create/");
+              navigate("family/select/");
             }
             break;
           default:
