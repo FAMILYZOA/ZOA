@@ -5,7 +5,7 @@ from rest_framework import mixins,permissions
 from accounts.models import User
 from accounts.permissions import InFamilyorBadResponsePermission
 from families.models import Family, FamilyInteractionName, InvitationCodeFamily
-from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer, InvitationCodeFamilySerializer
+from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer, InvitationCodeFamilySerializer, CodeFamilySerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -185,7 +185,7 @@ class InviteCodeFamilyAPIView(GenericAPIView):
 
 
 class InviteCodeSignFamilyAPIView(GenericAPIView):
-    serializer_class = FamilySerializer
+    serializer_class = CodeFamilySerializer
     def post(self, request):
         invitationcode = request.data['invitationcode']
         invitationcode1 = get_object_or_404(InvitationCodeFamily, invitationcode=invitationcode)
