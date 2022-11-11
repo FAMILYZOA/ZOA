@@ -16,11 +16,12 @@ class AudioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AudioListSerializer(serializers.ModelSerializer) :
-    image = serializers.CharField(source='from_user_id.image',read_only=True)
+    name = serializers.CharField(source='from_user_id.name',read_only=True)
+    image = serializers.SerializerMethodField()
     set_name = serializers.SerializerMethodField()
     class Meta :
         model = Audio
-        fields = ('id','image','set_name','audio','created_at',)
+        fields = ('id','image','name','set_name','audio','created_at',)
 
     def get_set_name(self,obj) :
         from_user = obj.from_user_id
