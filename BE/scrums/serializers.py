@@ -43,10 +43,12 @@ class ScrumSerializer(ImageSerializer) :
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
+        #쿼리 호출 
+        print(obj)
         to_user = obj.user
         if to_user == from_user :
             return '나'
-        
+        #쿼리 호출 
         if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
         else :

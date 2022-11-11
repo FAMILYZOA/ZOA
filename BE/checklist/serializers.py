@@ -23,21 +23,29 @@ class GetImageSerializer(serializers.ModelSerializer):
 
 class  ChecklistSerializer(serializers.ModelSerializer):
     photo = GetImageSerializer(read_only=True)
-    to_users_id = GetUserNameSerializer(read_only=True)
     from_user_id = GetUserNameSerializer(read_only=True)
     family_name = serializers.SerializerMethodField()
     class Meta: 
         model = Checklist
-        fields= ('id', 'text', 'status', 'created_at', 'from_user_id', 'to_users_id', 'family_name', 'photo')
+        fields= ('id', 'text', 'status', 'created_at', 'from_user_id', 'family_name', 'photo')
 
     def get_family_name(self,obj) :
         from_user = obj.from_user_id
         to_user = obj.to_users_id
         
+        if to_user == from_user :
+            return '나'
+        #쿼리 호출 
         if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
         else :
-            return "본인입니다."
+            return False
+    
+class  MainChecklistSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Checklist
+        fields= ('id', 'text', 'status',)
+
 
 
 class ChecklistCreateSerializer(serializers.ModelSerializer):
