@@ -209,6 +209,19 @@ function KakaoSignup() {
     );
   };
   useEffect(() => {
+    var regPhone = /^(010|011|016|017|018|019)-[0-9]{3,4}-[0-9]{4}$/;
+    if (phone === "") {
+      setPwarn(false);
+      setPhoneCheckWarn(false);
+    } else {
+      if (phone.length !== 13 || !regPhone.test(phone)) {
+        setPwarn(true);
+        setPhoneCheckWarn(false);
+      } else {
+        setPhoneCheckWarn(false);
+        setPwarn(false);
+      }
+    }
     if (phone.length === 13) {
       setInfo((pre) => {
         return {
@@ -235,7 +248,9 @@ function KakaoSignup() {
   const selectDay = (e) => {
     setDay(e.target.value);
   };
+  const [disphone, setDisphone] = useState(false);
   const [pwarn, setPwarn] = useState(false);
+  const [phoneCheckWarn, setPhoneCheckWarn] = useState(false);
   const [bwarn, setBwarn] = useState(false);
   const [nwarn, setNwarn] = useState(false);
   const [nconfirm, setNconfirm] = useState(false);
@@ -246,17 +261,36 @@ function KakaoSignup() {
   const [cerCheck, setCheck] = useState(false);
 
   const pushNum = (phone) => {
-    setNconfirm(true);
-    const data = new FormData();
-    data.append("phone", phone.replaceAll("-", ""));
-    axios({
-      method: "POST",
-      url: `${process.env.REACT_APP_BACK_HOST}/event/`,
-      data: data,
-    });
+    if (pwarn === false) {
+      const data = new FormData();
+      data.append("phone", phone.replaceAll("-", ""));
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_BACK_HOST}/accounts/phonecheck/`,
+        data: data,
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            setNconfirm(true);
+            axios({
+              method: "POST",
+              url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+              data: data,
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            setPwarn(false);
+            setNconfirm(false);
+            setPhoneCheckWarn(true);
+          }
+        });
+    }
   };
 
   const clickCheck = (certifiNum) => {
+    console.log(disphone);
     const data = new FormData();
     data.append("phone", phone.replaceAll("-", ""));
     data.append("certification", certifiNum);
@@ -270,6 +304,7 @@ function KakaoSignup() {
           setNwarn(false);
           setCconfirm(true);
           setCheck(true);
+          setDisphone(true);
         }
       })
       .catch((err) => {
@@ -284,7 +319,7 @@ function KakaoSignup() {
   };
 
   const push = () => {
-    if (cerCheck == false) {
+    if (cerCheck === false) {
       setNwarn(true);
     } else {
       if (info.phone === "") {
@@ -294,33 +329,52 @@ function KakaoSignup() {
         setPwarn(false);
         setBwarn(true);
       } else {
+        if (String(month).length === 1 && String(day).length === 1) {
+          const birth =
+            String(year) + "-0" + String(month) + "-0" + String(day);
+          setInfo((pre) => {
+            return { ...pre, birth: birth };
+          });
+        } else if (String(month).length === 1) {
+          const birth = String(year) + "-0" + String(month) + "-" + String(day);
+          setInfo((pre) => {
+            return { ...pre, birth: birth };
+          });
+        } else if (String(day).length === 1) {
+          const birth = String(year) + "-" + String(month) + "-0" + String(day);
+          setInfo((pre) => {
+            return { ...pre, birth: birth };
+          });
+        }
         const birth = String(year) + "-" + String(month) + "-" + String(day);
         setInfo((pre) => {
           return { ...pre, birth: birth };
         });
-        const data = new FormData();
-        data.append("kakao_id", info.kakao_id);
-        data.append("name", info.name);
-        data.append("image", info.image);
-        data.append("phone", info.phone.replaceAll("-", ""));
-        data.append("birth", birth);
-        axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
-          data: data,
-        })
-          .then((res) => {
-            if (res.status === 201) {
-              alert("회원가입이 완료되었습니다. 로그인 후 이용해주세요.")
-              navigate("/");
-            }
+        if (info.birth.length === 10) {
+          const data = new FormData();
+          data.append("kakao_id", info.kakao_id);
+          data.append("name", info.name);
+          data.append("image", info.image);
+          data.append("phone", info.phone.replaceAll("-", ""));
+          data.append("birth", birth);
+          axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
+            data: data,
           })
-          .catch((err) => {
-            if (err.response.status === 400) {
-              alert("이미 가입된 회원입니다. 로그인을 해주세요.");
-              navigate("/intro");
-            }
-          });
+            .then((res) => {
+              if (res.status === 201) {
+                alert("회원가입이 완료되었습니다. 로그인 후 이용해주세요.");
+                navigate("/");
+              }
+            })
+            .catch((err) => {
+              if (err.response.status === 400) {
+                alert("이미 가입된 회원입니다. 로그인을 해주세요.");
+                navigate("/intro");
+              }
+            });
+        }
       }
     }
   };
@@ -340,17 +394,19 @@ function KakaoSignup() {
               maxLength="13"
               onChange={onPhoneChange}
               value={phone}
+              disabled = {disphone}
             ></PhoneInput>
             <CheckText onClick={() => pushNum(phone)}>인증번호 받기</CheckText>
           </PhoneInputBox>
           <Warning active={pwarn}>휴대폰 번호를 확인해주세요.</Warning>
+          <Warning active={phoneCheckWarn}>이미 가입된 번호입니다.</Warning>
           <Confirm active={nconfirm}>인증번호를 전송하였습니다.</Confirm>
         </InputBox>
         <InputBox>
           <Title>인증번호</Title>
           <PhoneInputBox>
             <PhoneInput
-              type="number"
+              type="text"
               placeholder="인증 번호 입력"
               maxLength="6"
               onChange={onCertChange}

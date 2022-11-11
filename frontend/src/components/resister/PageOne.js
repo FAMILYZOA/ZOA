@@ -79,6 +79,7 @@ function PageOne({ oneInfo }) {
 
   const [send, setSend] = useState(false);
   const [check, setCheck] = useState(false);
+  const [disphone, setDisphone] = useState(false);
 
   const [btnActive, setBtnActive] = useState(false);
 
@@ -131,23 +132,25 @@ function PageOne({ oneInfo }) {
         method: "POST",
         url: `${process.env.REACT_APP_BACK_HOST}/accounts/phonecheck/`,
         data: data,
-      }).then((res)=>{
-        if(res.status === 200){
-          setSend(true);
-          data.append("phone", phone.replaceAll("-", ""));
-          axios({
-            method: "POST",
-            url: `${process.env.REACT_APP_BACK_HOST}/event/`,
-            data: data,
-          });
-        }
-      }).catch((err)=> {
-        if (err.response.status === 400){
-          setPhoneWarn(false);
-          setSend(false);
-          setPhoneCheckWarn(true);
-        }
       })
+        .then((res) => {
+          if (res.status === 200) {
+            setSend(true);
+            setPhoneCheckWarn(false);
+            axios({
+              method: "POST",
+              url: `${process.env.REACT_APP_BACK_HOST}/event/`,
+              data: data,
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            setPhoneWarn(false);
+            setSend(false);
+            setPhoneCheckWarn(true);
+          }
+        });
     }
   };
 
@@ -164,6 +167,7 @@ function PageOne({ oneInfo }) {
         if (res.status === 200) {
           setCertiWarn(false);
           setCheck(true);
+          setDisphone(true);
         }
       })
       .catch((err) => {
@@ -174,7 +178,7 @@ function PageOne({ oneInfo }) {
           setCheck(false);
           setCertiWarn(true);
         }
-    })
+      });
   };
 
   useEffect(() => {
@@ -229,6 +233,7 @@ function PageOne({ oneInfo }) {
             maxLength="13"
             onChange={onChangePhone}
             value={phone}
+            disabled ={disphone}
           ></Input>
           <CheckText onClick={() => sendNum(phone)}>인증번호 받기</CheckText>
         </InputBox>
