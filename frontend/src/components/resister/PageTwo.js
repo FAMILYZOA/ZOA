@@ -270,11 +270,31 @@ function PageTwo({ twoInfo, activeBtn }) {
       pwCheck === true &&
       confirmPwWarn === false
     ) {
-      const birth = String(year) + "-" + String(month) + "-" + String(day);
-      twoInfo({
-        password: pw,
-        birth: birth,
-      });
+      if(String(month).length === 1 && String(day).length === 1) {
+        const birth = String(year) + "-0" + String(month) + "-0" + String(day);
+        twoInfo({
+          password: pw,
+          birth: birth,
+        });
+      } else if (String(month).length === 1){
+        const birth = String(year) + "-0" + String(month) + "-" + String(day);
+        twoInfo({
+          password: pw,
+          birth: birth,
+        });
+      } else if (String(day).length === 1){
+        const birth = String(year) + "-" + String(month) + "-0" + String(day);
+        twoInfo({
+          password: pw,
+          birth: birth,
+        });
+      } else {
+        const birth = String(year) + "-" + String(month) + "-" + String(day);
+        twoInfo({
+          password: pw,
+          birth: birth,
+        });
+      }
     }
   },[pw, confirmPw, year, month, day ])
 

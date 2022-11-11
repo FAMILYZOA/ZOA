@@ -42,6 +42,7 @@ function Resister() {
     setInfo((pre) => {
       return { ...pre, phone: data.phone, name: data.name };
     });
+    setNext(true);
   };
   const twoInfo = (data) => {
     setInfo((pre) => {
@@ -57,12 +58,14 @@ function Resister() {
   }
 
   const nextBtn = () => {
-        const data = new FormData();
-        data.append("phone", info.phone);
-        data.append("password", info.password);
-        data.append("name", info.name);
-        data.append("birth", info.birth);
-        axios({
+    if(info.birth.length === 10){
+
+      const data = new FormData();
+      data.append("phone", info.phone);
+      data.append("password", info.password);
+      data.append("name", info.name);
+      data.append("birth", info.birth);
+      axios({
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -70,10 +73,10 @@ function Resister() {
           url: `${process.env.REACT_APP_BACK_HOST}/accounts/signup/`,
           data: data,
         })
-          .then((res) => {
-            console.log(res);
-            if (res.status === 201) {
-              alert("회원가입에 성공하였습니다. 로그인 후 이용해주세요.");
+        .then((res) => {
+          console.log(res);
+          if (res.status === 201) {
+            alert("회원가입에 성공하였습니다. 로그인 후 이용해주세요.");
               navigate("/login");
             }
           })
@@ -84,7 +87,8 @@ function Resister() {
               navigate("/intro");
             }
           });
-  };
+        };
+      }
   return (
     <div>
       <Header label="회원가입" back="true"></Header>
