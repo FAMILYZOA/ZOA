@@ -14,8 +14,6 @@ RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 RUN pip install gunicorn
 
-RUN python manage.py crontab add
-
 RUN python3 manage.py test --keepdb --settings=apiserver.settings.develop
 
 EXPOSE 8000
