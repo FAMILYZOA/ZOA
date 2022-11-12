@@ -206,23 +206,27 @@ const onHandleAfterDate = () => {
     setEdit(true);
   }
   const saveEdit = () => {
-    const data = new FormData();
-    data.append("emoji", editEmoji)
-    data.append("yesterday", editYesterday)
-    data.append("today", editToday)
-    axios({
-      method: "PUT",
-      url: `${process.env.REACT_APP_BACK_HOST}/scrums/${scrum.id}/`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data:data,
-    }).then((res)=>{
-        if(res.status === 200) {
-            alert('성공적으로 수정되었습니다!')
-            setEdit(false);
-        }
-    })
+    if(editToday.length === 0 || editYesterday.length === 0) {
+        alert('내용을 작성해주세요!')
+    } else {
+        const data = new FormData();
+        data.append("emoji", editEmoji)
+        data.append("yesterday", editYesterday)
+        data.append("today", editToday)
+        axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_BACK_HOST}/scrums/${scrum.id}/`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data:data,
+        }).then((res)=>{
+            if(res.status === 200) {
+                alert('성공적으로 수정되었습니다!')
+                setEdit(false);
+            }
+        })
+    }
   }
   const onEnter = (e) => {
     if (e.key === "Enter") {
