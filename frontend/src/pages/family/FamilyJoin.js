@@ -143,7 +143,10 @@ function FamilyJoin() {
               <Btn active={true} onClick={clickYes}>
                 네
               </Btn>
-              <Btn active={false} onClick={() => navigate("/family/create")}>
+              <Btn active={false} onClick={() => {
+                localStorage.removeItem("familyId");
+                navigate("/family/create");
+              }}>
                 아니오
               </Btn>
             </BtnBox>
