@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'storages',
-    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -222,7 +221,3 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
 )
-
-CRONJOBS = [
-    ('*/1 * * * *', 'families.cron.DeleteCodeObject'),
-]
