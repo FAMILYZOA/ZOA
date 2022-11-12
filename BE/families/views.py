@@ -170,7 +170,7 @@ class InviteCodeFamilyAPIView(GenericAPIView):
     
     
     def get(self, request, family_id):
-        time = datetime.datetime.now()-datetime.timedelta(minutes=1)
+        time = datetime.datetime.now()-datetime.timedelta(minutes=5)
         data = InvitationCodeFamily.objects.filter(created_at__lt=time)
         data.delete()
 
@@ -183,7 +183,6 @@ class InviteCodeFamilyAPIView(GenericAPIView):
             })
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-            id = serializer.data['id']
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response("본인이 속한 가족으로만 초대할 수 있습니다.", status=status.HTTP_400_BAD_REQUEST)
 
@@ -200,5 +199,4 @@ class InviteCodeSignFamilyAPIView(GenericAPIView):
                 return Response(f'{request.user.name}님은 이미 가족에 가입되어 있습니다.',status=status.HTTP_400_BAD_REQUEST)
             else :
                 family.users.add(request.user)
-                invitationcode1.delete()
                 return Response(f"{family}에 가입되었습니다", status=status.HTTP_200_OK)
