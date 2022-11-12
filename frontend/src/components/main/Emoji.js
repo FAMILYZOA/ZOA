@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { BrowserView, MobileView } from "react-device-detect";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
@@ -65,10 +65,6 @@ const EmojiWrapper = styled.div`
   background-clip: content-box, border-box;
 `;
 
-const EmojiText = styled.p`
-  border-radius: 100px;
-  margin: auto;
-`;
 
 const Contents = styled.div`
   margin: 16px 0px;
