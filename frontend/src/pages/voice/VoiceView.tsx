@@ -103,7 +103,7 @@ const VoiceView = () => {
   const [isLeft, setIsLeft] = useState<boolean>(true);
   const accessToken = useAppSelector(state => state.token.access)
 
-  useEffect(() => {
+  const getVoice = () => {
     axios({
       method: "GET",
       url: `${process.env.REACT_APP_BACK_HOST}/audio/?search=0`,
@@ -112,26 +112,70 @@ const VoiceView = () => {
       },
     })
       .then((res) => {
-        console.log(res.data);
         setUnViewedMessage(res.data);
       })
       .catch((err) => {
         console.error(err);
       })
-  },[])
+    axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_BACK_HOST}/audio/?search=1`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        setKeptMessage(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
+  useEffect(() => {
+    getVoice();
+  },[isLeft])
+
+  const getIndex = (index : number, type: boolean) => {
+    if (!type) {
+      const tempVoice = unViewedMessage
+      tempVoice.splice(index, 1);
+      setUnViewedMessage([...tempVoice]);
+      setKeptMessage([{
+        id: -1,
+        image: '',
+        set_name: '',
+        audio: '',
+        created_at: '',
+        name: '',
+      } ,...keptMessage]);
+    } else {
+      const tempVoice = keptMessage
+      tempVoice.splice(index, 1);
+      setUnViewedMessage([{
+        id: -1,
+        image: '',
+        set_name: '',
+        audio: '',
+        created_at: '',
+        name: '',
+      },...unViewedMessage]);
+      setKeptMessage([...tempVoice]);
+    }
+  };
 
   return (
     <>
       <Header />
       <SelectViewDiv>
-        <SelectViewItem onClick={() => (setIsLeft(true))}>{`미확인 메시지(${unViewedMessage.length})`}</SelectViewItem>
-        <SelectViewItem onClick={() => (setIsLeft(false))}>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
+        <SelectViewItem onClick={() => {setIsLeft(true); getVoice();}}>{`미확인 메시지(${unViewedMessage.length})`}</SelectViewItem>
+        <SelectViewItem onClick={() => {setIsLeft(false); getVoice();}}>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
         <SelectHighlight isLeft={isLeft}/>
       </SelectViewDiv>
       <VoiceMessageDiv>
       {
         isLeft ? (<>
-          {unViewedMessage.map((message) => (
+          {unViewedMessage.map((message, index) => (
             <VoiceMessage 
               id={message.id}
               image={message.image}
@@ -140,10 +184,13 @@ const VoiceView = () => {
               created_at={message.created_at}
               key={message.id}
               name={message.name}
+              type={false}
+              index={index}
+              getIndex={getIndex}
             />
           ))}
         </>) : (<>
-          {keptMessage.map((message) => (
+          {keptMessage.map((message, index) => (
             <VoiceMessage 
               id={message.id}
               image={message.image}
@@ -152,6 +199,9 @@ const VoiceView = () => {
               created_at={message.created_at}
               key={message.id}
               name={message.name}
+              type={true}
+              index={index}
+              getIndex={getIndex}
             />
           ))}
         </>)

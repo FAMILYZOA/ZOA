@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components"
 import { FaPlay, FaPause } from "react-icons/fa"
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useAppSelector } from "../../app/hooks";
+import axios from "axios";
 
 const VoiceMessageDiv = styled.div`
   display: flex;
@@ -52,6 +55,15 @@ const SenderName = styled.div`
   text-align: center;
   font-size: 0.7em;
 `
+const FavoriteIconDiv = styled.div`
+  width: 32px;
+  height: 32px;
+  margin-left: 20px;
+  text-align: center;
+  line-height: 36px;
+  color: #FF787F;
+`
+
 type VoiceMessageProps = {
   id: number,
   image: string,
@@ -59,13 +71,18 @@ type VoiceMessageProps = {
   audio: string, // url
   created_at: string, // date
   name: string,
+  type: boolean,
+  index: number,
+  getIndex: (index: number, type: boolean) => void,
 }
 
-const VoiceMessage = ({ id, image, set_name, audio, created_at, name }: VoiceMessageProps) => {
+const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
-  const voiceDuration= voice.duration;
+  const voiceDuration = voice.duration;
+  const accessToken = useAppSelector(state => state.token.access);
+
   useEffect(() => {
       isPlaying ? voice.play() : voice.pause();
     },
@@ -124,6 +141,25 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name }: VoiceMes
     }
   }
 
+  const handleFavorite = () => {
+    axios({
+      method: "PUT",
+      url: `${process.env.REACT_APP_BACK_HOST}/audio/${id}/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        status: !type,
+      }
+    })
+      .then(() => {
+        getIndex(index, type);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
   return (
     <>
       <VoiceMessageDiv>
@@ -134,9 +170,12 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name }: VoiceMes
           <VoiceIconDiv onClick={togglePlay}>
             {isPlaying ? <FaPause /> : <FaPlay /> }
           </VoiceIconDiv>
-          <VoiceTimeDiv>{`${String(Math.floor((voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration - voicePlayingTime) % 60))).slice(-2)}`}</VoiceTimeDiv>
+          <VoiceTimeDiv>{`${String(Math.floor((voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration - voicePlayingTime) % 60))).slice(-2)}` !== 'NaN : aN' ? `${String(Math.floor((voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration - voicePlayingTime) % 60))).slice(-2)}` : '0 : 00'}</VoiceTimeDiv>
           <VoiceTimeDifference>{timeDifference(new Date(created_at))}</VoiceTimeDifference>
         </VoiceDiv>
+        <FavoriteIconDiv onClick={() => {handleFavorite()}}>
+          {type ? <AiFillHeart /> : <AiOutlineHeart /> }
+        </FavoriteIconDiv>
       </VoiceMessageDiv>
       <SenderName>{set_name ? set_name : name}</SenderName>
     </>
