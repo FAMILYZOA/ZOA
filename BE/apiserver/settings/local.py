@@ -14,29 +14,23 @@ environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )
 
-# DATABASES = { 
-# 	'default': { 
-#     	'ENGINE': 'django.db.backends.mysql', 
-#         'NAME': 'zoa', 
-#         'USER': 'root', 
-#         'PASSWORD': env('MYSQL_PASSWORD'), 
-#         'HOST': 'k7b103.p.ssafy.io', 
-#         'PORT': '3306', 
-#         'TEST': {
-#             'NAME': 'zoa_test',
-#         },
-#         'OPTIONS': {
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#             'charset': 'utf8mb4',
-#             'use_unicode': True,
-#         },
-#      } 
-# }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DATABASES = { 
+	'default': { 
+    	'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'zoa', 
+        'USER': 'root', 
+        'PASSWORD': env('MYSQL_PASSWORD'), 
+        'HOST': 'k7b103.p.ssafy.io', 
+        'PORT': '3306', 
+        'TEST': {
+            'NAME': 'zoa_test',
+        },
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
+     } 
 }
 
 
