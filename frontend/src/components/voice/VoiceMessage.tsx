@@ -55,9 +55,10 @@ type VoiceMessageProps = {
   set_name: string,
   audio: string, // url
   created_at: string, // date
+  name: string,
 }
 
-const VoiceMessage = ({ id, image, set_name, audio, created_at }: VoiceMessageProps) => {
+const VoiceMessage = ({ id, image, set_name, audio, created_at, name }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const togglePlay = () => {
@@ -84,7 +85,7 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at }: VoiceMessagePr
           <VoiceTimeDifference></VoiceTimeDifference>
         </VoiceDiv>
       </VoiceMessageDiv>
-      <SenderName>{set_name}</SenderName>
+      <SenderName>{set_name ? set_name : name}</SenderName>
     </>
   )
 }
