@@ -170,6 +170,10 @@ class InviteCodeFamilyAPIView(GenericAPIView):
     
     
     def get(self, request, family_id):
+        time = datetime.datetime.now()-datetime.timedelta(minutes=1)
+        data = InvitationCodeFamily.objects.filter(created_at__lt=time)
+        data.delete()
+
         if not request.user.family_id :
                 return Response(f'{request.user.name}님은 가족에 가입되어 있지 않습니다.',status=status.HTTP_400_BAD_REQUEST)
         if request.user.family_id.id == family_id:
