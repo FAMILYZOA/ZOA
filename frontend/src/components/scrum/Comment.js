@@ -14,6 +14,11 @@ const CommentList = styled.div`
   }
   margin-top: 16px;
 `;
+
+const Blank = styled.div`
+  opacity: 0;
+  height: 56px;
+`
 const CommentBox = styled.div`
   display: flex;
   margin-bottom: 8px;
@@ -150,6 +155,7 @@ function Comment({ id, comments }) {
         ) : (
           <></>
         )}
+        <Blank></Blank>
       </CommentList>
     </>
   );
