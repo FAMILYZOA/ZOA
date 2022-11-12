@@ -223,7 +223,7 @@ function ReadChecklist() {
 
   const navigate = useNavigate();
   const navigateToHome = () => {
-    navigate("/family/manage");
+    navigate(-1);
   };
   const navigateToCreate = () => {
     navigate("/checklist/create");
