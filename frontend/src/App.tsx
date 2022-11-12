@@ -15,6 +15,7 @@ import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
 import FamilyJoin from "./pages/family/FamilyJoin";
+import ScrumDetail from "./pages/scrum/ScrumDetail";
 
 import Navbar from "./components/Navbar";
 
@@ -235,6 +236,7 @@ function App() {
 
           <Route path="/hello/" element={<ScrumHome />}></Route>
           <Route path="/hello/create" element={<ScrumCreate />}></Route>
+          <Route path="/hello/detail" element={<ScrumDetail />}></Route>
 
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />

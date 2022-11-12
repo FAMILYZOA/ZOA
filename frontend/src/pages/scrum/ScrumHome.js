@@ -201,6 +201,18 @@ const ScrumHome = () => {
     },
   };
 
+  const moveToDetail = () => {
+    navigate("/hello/detail", {
+      state: {
+        image: myScrum[0].image,
+        id: myScrum[0].id,
+        user_id: myScrum[0].user_id,
+        set_name: "나",
+        name: userName,
+      },
+    });
+  };
+
   return (
     <>
       <Modal
@@ -246,48 +258,110 @@ const ScrumHome = () => {
             overflowY: "scroll",
           }}
         >
-          {/* 프로필 이미지, 이름, 이모지 */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <ProfileWrapper>
-              <MemberProfile>
-                {myScrum[0].image === "" ? (
-                  <MemberProfileImg src={userImg} />
-                ) : (
-                  <MemberProfileImg src={myScrum[0].image} />
-                )}
-              </MemberProfile>
-            </ProfileWrapper>
-            <div
-              style={{ margin: "3%", fontWeight: "bold", fontSize: "0.8em" }}
-            >
-              나 ({userName})
-            </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Emoji unified={myScrum[0].emoji} size={20} />
-            </div>
-          </div>
-
-          <div style={{ margin: "4px 0 4px 40px" }}>
-            <ItemWrapper>
-              {myScrum[0].emoji === "" ? (
-                <>
-                  <div style={{margin:"8px"}}>작성된 안녕이 없습니다.</div>
-                  {date.getFullYear() === new Date().getFullYear() &&
-                  date.getMonth() === new Date().getMonth() &&
-                  date.getDate() === new Date().getDate() ? (
-                    <div style={{margin:"8px"}}>가족과 오늘의 안녕을 공유해보세요🥰 </div>
+          {myScrum[0].emoji !== "" ? (
+            <div onClick={moveToDetail}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <ProfileWrapper>
+                  <MemberProfile>
+                    {myScrum[0].image === "" ? (
+                      <MemberProfileImg src={userImg} />
+                    ) : (
+                      <MemberProfileImg src={myScrum[0].image} />
+                    )}
+                  </MemberProfile>
+                </ProfileWrapper>
+                <div
+                  style={{
+                    margin: "3%",
+                    fontWeight: "bold",
+                    fontSize: "0.8em",
+                  }}
+                >
+                  나 ({userName})
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Emoji unified={myScrum[0].emoji} size={20} />
+                </div>
+              </div>
+              <div style={{ margin: "4px 0 4px 40px" }}>
+                <ItemWrapper>
+                  {myScrum[0].emoji === "" ? (
+                    <>
+                      <div style={{ margin: "8px" }}>
+                        작성된 안녕이 없습니다.
+                      </div>
+                      {date.getFullYear() === new Date().getFullYear() &&
+                      date.getMonth() === new Date().getMonth() &&
+                      date.getDate() === new Date().getDate() ? (
+                        <div style={{ margin: "8px" }}>
+                          가족과 오늘의 안녕을 공유해보세요🥰{" "}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   ) : (
-                    <></>
+                    <>
+                      <div style={{ margin: "8px" }}>
+                        🙋‍♂️ {myScrum[0].yesterday}
+                      </div>
+                      <div style={{ margin: "8px" }}>📢 {myScrum[0].today}</div>
+                    </>
                   )}
-                </>
-              ) : (
-                <>
-                  <div style={{ margin: "8px" }}>🙋‍♂️ {myScrum[0].yesterday}</div>
-                  <div style={{ margin: "8px" }}>📢 {myScrum[0].today}</div>
-                </>
-              )}
-            </ItemWrapper>
-          </div>
+                </ItemWrapper>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <ProfileWrapper>
+                  <MemberProfile>
+                    {myScrum[0].image === "" ? (
+                      <MemberProfileImg src={userImg} />
+                    ) : (
+                      <MemberProfileImg src={myScrum[0].image} />
+                    )}
+                  </MemberProfile>
+                </ProfileWrapper>
+                <div
+                  style={{
+                    margin: "3%",
+                    fontWeight: "bold",
+                    fontSize: "0.8em",
+                  }}
+                >
+                  나 ({userName})
+                </div>
+              </div>
+              <div style={{ margin: "4px 0 4px 40px" }}>
+                <ItemWrapper>
+                  {myScrum[0].emoji === "" ? (
+                    <>
+                      <div style={{ margin: "8px" }}>
+                        작성된 안녕이 없습니다.
+                      </div>
+                      {date.getFullYear() === new Date().getFullYear() &&
+                      date.getMonth() === new Date().getMonth() &&
+                      date.getDate() === new Date().getDate() ? (
+                        <div style={{ margin: "8px" }}>
+                          가족과 오늘의 안녕을 공유해보세요🥰{" "}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ margin: "8px" }}>
+                        🙋‍♂️ {myScrum[0].yesterday}
+                      </div>
+                      <div style={{ margin: "8px" }}>📢 {myScrum[0].today}</div>
+                    </>
+                  )}
+                </ItemWrapper>
+              </div>
+            </>
+          )}
 
           <div>
             {myScrum[0].emoji === "" &&
