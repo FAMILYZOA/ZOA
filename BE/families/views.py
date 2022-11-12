@@ -15,6 +15,7 @@ import uuid
 import base64
 import codecs
 import datetime
+import threading
 
 
 class FamilyCreateAPIView(GenericAPIView,mixins.CreateModelMixin) :
@@ -168,14 +169,16 @@ class InviteCodeFamilyAPIView(GenericAPIView):
             codecs.encode(uuid.uuid4().bytes, "base64").rstrip()
         ).decode()[:32]
     
-    
-    def get(self, request, family_id):
+    def timer_delete(self):
         time = datetime.datetime.now()-datetime.timedelta(minutes=5)
         data = InvitationCodeFamily.objects.filter(created_at__lt=time)
         data.delete()
+        threading.Timer(1, self.timer_delete).start()
 
+    def get(self, request, family_id):
+        self.timer_delete()
         if not request.user.family_id :
-                return Response(f'{request.user.name}님은 가족에 가입되어 있지 않습니다.',status=status.HTTP_400_BAD_REQUEST)
+            return Response(f'{request.user.name}님은 가족에 가입되어 있지 않습니다.',status=status.HTTP_400_BAD_REQUEST)
         if request.user.family_id.id == family_id:
             serializer = self.serializer_class(data={
                 "invitationcode" : self.make_family_invitation_code(),
