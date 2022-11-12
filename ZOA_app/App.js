@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {Fragment} from 'react';
 
 import {
   View,
@@ -20,6 +20,8 @@ import {
   Platform,
   ToastAndroid,
   Image,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -28,12 +30,14 @@ import {selectContactPhone} from 'react-native-select-contact';
 import SendIntentAndroid from 'react-native-send-intent';
 import NetInfo from '@react-native-community/netinfo';
 import LinearGradient from 'react-native-linear-gradient';
+import {request, PERMISSIONS} from 'react-native-permissions';
 import {useRef, useState, useEffect} from 'react';
 
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
+  const [os, setOs] = useState('');
   const url = {uri: 'https://familyzoa.com'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
@@ -110,9 +114,13 @@ const App = () => {
           buttonPositive: 'OK',
         },
       );
+
+      console.log(granted);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('a');
         return true;
       } else {
+        console.log('b');
         return false;
       }
     } catch (err) {
@@ -144,8 +152,22 @@ const App = () => {
     }
   };
 
-  const getPhotoFromCamera = async event => {
-    if (await requestCameraPermission()) {
+  const getPhotoFromCamera = async () => {
+    if (os === 'ios') {
+      request(PERMISSIONS.IOS.CAMERA).then(result => {
+        launchCamera(camOpt, res => {
+          if (res.didCancel) {
+            actionSheetRef.current.hide();
+          }
+          if (res.assets) {
+            webViewRef.current.postMessage(
+              JSON.stringify({from: command, photo: res.assets[0].base64}),
+            );
+            actionSheetRef.current.hide();
+          }
+        });
+      });
+    } else {
       launchCamera(camOpt, res => {
         if (res.didCancel) {
           actionSheetRef.current.hide();
@@ -161,7 +183,21 @@ const App = () => {
   };
 
   const getPhotoFromGallery = async () => {
-    if (await requestCameraPermission()) {
+    if (os === 'ios') {
+      request(PERMISSIONS.IOS.MEDIA_LIBRARY).then(result => {
+        launchImageLibrary(gallOpt, res => {
+          if (res.didCancel) {
+            actionSheetRef.current.hide();
+          }
+          if (res.assets) {
+            webViewRef.current.postMessage(
+              JSON.stringify({from: command, photo: res.assets[0].base64}),
+            );
+            actionSheetRef.current.hide();
+          }
+        });
+      });
+    } else {
       launchImageLibrary(gallOpt, res => {
         if (res.didCancel) {
           actionSheetRef.current.hide();
@@ -208,25 +244,39 @@ true;
 
   const sendSMS = async () => {
     // 권한 요청
-    const isPermitted = await requestContactPermission();
-    if (isPermitted) {
-      // 보낼 사람 선택 -> 한명 or 여러명?
-
-      const selected = await selectContactPhone();
-      if (!selected) {
-        return null;
-      }
-      // 선택한 사람에게 문자 보내기
-      let {contact, selectedPhone} = selected;
-      //SendIntentAndroid.sendSms(selectedPhone.number, command);
-      Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
+    if (os === 'ios') {
+      console.log('test');
+      request(PERMISSIONS.IOS.CONTACTS).then(async () => {
+        const selected = await selectContactPhone();
+        if (!selected) {
+          return null;
+        }
+        // 선택한 사람에게 문자 보내기
+        let {contact, selectedPhone} = selected;
+        //SendIntentAndroid.sendSms(selectedPhone.number, command);
+        //Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
+      });
     } else {
-      console.log('거부하셨습니다.');
+      const isPermitted = await requestContactPermission();
+      if (isPermitted) {
+        // 보낼 사람 선택 -> 한명 or 여러명?
+
+        const selected = await selectContactPhone();
+        if (!selected) {
+          return null;
+        }
+        // 선택한 사람에게 문자 보내기
+        let {contact, selectedPhone} = selected;
+        //SendIntentAndroid.sendSms(selectedPhone.number, command);
+        Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
+      } else {
+        console.log('거부하셨습니다.');
+      }
     }
   };
 
   const onShouldStartLoadWithRequest = event => {
-    if (Platform.OS === 'android') {
+    if (os === 'android') {
       if (event.url.includes('intent')) {
         SendIntentAndroid.openAppWithUri(event.url)
           .then(isOpened => {
@@ -263,67 +313,74 @@ true;
         toggleConnection(true);
       }
     });
+    setOs(Platform.OS);
   }, []);
 
   return (
-    <View style={{flex: 1}}>
-      {connection ? (
-        <WebView
-          ref={webViewRef}
-          onLoadStart={() => webViewRef.current.injectJavaScript(INJECTED_CODE)}
-          originWhitelist={['*']}
-          renderLoading={loadingSpinner}
-          startInLoadingState={true}
-          style={{flex: 1}}
-          source={url}
-          onMessage={getMessage}
-          scrollEnabled={false}
-          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        />
-      ) : (
-        <LinearGradient
-          colors={['#FFEBE5', '#D8F1ED']}
-          angle={179.94}
-          style={errorStyle.errorView}>
-          <Image
-            source={require('./assets/error.png')}
-            style={errorStyle.img}
+    <Fragment>
+      <SafeAreaView style={{backgroundColor: '#FFCDBE'}} />
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        {os === 'ios' ? <StatusBar color={'#ffcdbe'} /> : <View />}
+        {connection ? (
+          <WebView
+            ref={webViewRef}
+            onLoadStart={() =>
+              webViewRef.current.injectJavaScript(INJECTED_CODE)
+            }
+            originWhitelist={['*']}
+            renderLoading={loadingSpinner}
+            startInLoadingState={true}
+            style={{flex: 1}}
+            source={url}
+            onMessage={getMessage}
+            scrollEnabled={false}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           />
-          <Image
-            source={require('./assets/error_desc.png')}
-            style={errorStyle.desc}
-          />
-          <Image
-            source={require('./assets/logo_color.png')}
-            style={errorStyle.logo}
-          />
-        </LinearGradient>
-      )}
+        ) : (
+          <LinearGradient
+            colors={['#FFEBE5', '#D8F1ED']}
+            angle={179.94}
+            style={errorStyle.errorView}>
+            <Image
+              source={require('./assets/error.png')}
+              style={errorStyle.img}
+            />
+            <Image
+              source={require('./assets/error_desc.png')}
+              style={errorStyle.desc}
+            />
+            <Image
+              source={require('./assets/logo_color.png')}
+              style={errorStyle.logo}
+            />
+          </LinearGradient>
+        )}
 
-      <ActionSheet
-        ref={actionSheetRef}
-        containerStyle={actionSheetStyle.indicator}>
-        <View>
-          <Pressable
-            style={actionSheetStyle.gallery}
-            onPress={getPhotoFromGallery}>
-            <Text style={actionSheetStyle.text}>사진첩에서 불러오기</Text>
-          </Pressable>
-          <Pressable
-            style={actionSheetStyle.camera}
-            onPress={getPhotoFromCamera}>
-            <Text style={actionSheetStyle.text}>사진 촬영</Text>
-          </Pressable>
-          <Pressable
-            style={actionSheetStyle.cancel}
-            onPress={() => {
-              actionSheetRef.current.hide();
-            }}>
-            <Text style={actionSheetStyle.cancelText}>취소</Text>
-          </Pressable>
-        </View>
-      </ActionSheet>
-    </View>
+        <ActionSheet
+          ref={actionSheetRef}
+          containerStyle={actionSheetStyle.indicator}>
+          <View>
+            <Pressable
+              style={actionSheetStyle.gallery}
+              onPress={getPhotoFromGallery}>
+              <Text style={actionSheetStyle.text}>사진첩에서 불러오기</Text>
+            </Pressable>
+            <Pressable
+              style={actionSheetStyle.camera}
+              onPress={getPhotoFromCamera}>
+              <Text style={actionSheetStyle.text}>사진 촬영</Text>
+            </Pressable>
+            <Pressable
+              style={actionSheetStyle.cancel}
+              onPress={() => {
+                actionSheetRef.current.hide();
+              }}>
+              <Text style={actionSheetStyle.cancelText}>취소</Text>
+            </Pressable>
+          </View>
+        </ActionSheet>
+      </SafeAreaView>
+    </Fragment>
   );
 };
 
