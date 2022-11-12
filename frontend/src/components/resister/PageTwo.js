@@ -44,7 +44,7 @@ const InputBox = styled.div`
 `;
 
 const Input = styled.input`
-  width: 60%;
+  width: 100%;
   height: 40px;
   border: none;
   background: none;
@@ -331,7 +331,7 @@ function PageTwo({ twoInfo, activeBtn }) {
           ></Input>
           <CheckText></CheckText>
         </InputBox>
-        <Warning active={confirmPwWarn}>비밀번호가 다릅니다.</Warning>
+        <Warning active={confirmPwWarn}>비밀번호를 확인해주세요.</Warning>
         <Confirm active={pwCheck}>비밀번호가 확인되었습니다.</Confirm>
       </Container>
 
