@@ -350,7 +350,7 @@ function CompleteContents({ currentId }) {
                 </IconBox>
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
               </NoToggle>
-              <Toggle id={li.id} current={click}>
+              <Toggle id={li.id} current={click} photo={li.photo}>
                 <ToggleContainer>
                   <p>From. {li.from_user_id.name}</p>
                   <span>
