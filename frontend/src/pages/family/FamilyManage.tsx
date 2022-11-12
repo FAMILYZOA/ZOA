@@ -157,7 +157,7 @@ ${inviteLink}`;
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      alert('코드가 복사되었습니다!');
+      alert('초대코드가 복사되었습니다! \n 초대할 가족에게 전달해주세요 🥰');
     } catch (error) {
       alert('코드복사가 실패하였습니다. 나중에 다시 시도해주세요.')
     }
