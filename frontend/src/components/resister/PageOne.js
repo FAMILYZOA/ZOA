@@ -37,7 +37,7 @@ const InputBox = styled.div`
 `;
 
 const Input = styled.input`
-  width: 60%;
+  width: 100%;
   height: 40px;
   border: none;
   background: none;
