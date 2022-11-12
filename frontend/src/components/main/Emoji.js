@@ -99,7 +99,6 @@ function Emojis({ scrum }) {
     });
   };
   const date = new Date();
-  console.log(date);
   const day =
     date.getFullYear() +
     "-" +

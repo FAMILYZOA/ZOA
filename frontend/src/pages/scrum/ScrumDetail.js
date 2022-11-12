@@ -81,7 +81,6 @@ function ScrumDetail() {
   //props 값
   const { state } = useLocation();
   const today = state.selectday
-  console.log(today);
   // 날짜 설정
   const [date, setDate] = useState(new Date());
   useEffect(()=> {
