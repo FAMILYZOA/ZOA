@@ -41,6 +41,7 @@ import { AuthRefresh } from "./api/customAxios";
 import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
+import { VoiceView } from "./pages/voice";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -230,6 +231,8 @@ function App() {
           <Route path="/family/edit" element={<FamilyNameEdit />}></Route>
           <Route path="/family/select" element={<FamilyJoinSelect />}></Route>
           <Route path="/family/code" element={<FamilyCodeJoin />}></Route>
+
+          <Route path="/voice" element={<VoiceView />}></Route>
 
           <Route path="/" element={<Main />} />
 

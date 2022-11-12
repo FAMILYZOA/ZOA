@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components"
 import { FaPlay, FaPause } from "react-icons/fa"
 
@@ -40,14 +40,17 @@ const VoiceTimeDiv = styled.div`
   color: #fff;
 `
 const VoiceTimeDifference = styled.div`
+  position: absolute;
   font-size: 0.6rem;
   bottom: -16px;
   right: 16px;
+  color: #444;
 `
 const SenderName = styled.div`
   width: 64px;
   margin: 8px 0 16px;
   text-align: center;
+  font-size: 0.7em;
 `
 type VoiceMessageProps = {
   id: number,
@@ -60,14 +63,64 @@ type VoiceMessageProps = {
 
 const VoiceMessage = ({ id, image, set_name, audio, created_at, name }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [voice] = useState(new Audio(audio));
+  const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
+  const voiceDuration= voice.duration;
+  useEffect(() => {
+      isPlaying ? voice.play() : voice.pause();
+    },
+    [isPlaying]
+  );
+
+  useEffect(() => {
+    voice.addEventListener('ended', () => setIsPlaying(false));
+    return () => {
+      voice.removeEventListener('ended', () => {
+        setIsPlaying(false);
+        setVoicePlayingTime(0);
+      });
+    };
+  }, []);
+
 
   const togglePlay = () => {
-    if (isPlaying) {
+    if (!isPlaying) {
       // 재생
-      setIsPlaying(false);
+      setIsPlaying(true);
+      setInterval(() => {
+        if (voice.duration !== voice.currentTime) {
+          setVoicePlayingTime(voice.currentTime);
+        } else {
+          setVoicePlayingTime(0);
+        }
+      }, 50);
     } else {
       // 정지
-      setIsPlaying(true);
+      setIsPlaying(false);
+    }
+  }
+
+  const timeDifference = (time: Date) => {
+    const tempTime = new Date().getTime();
+    const createTime = time.getTime();
+    const timeDif = (tempTime - createTime) / 1000;
+
+    if (timeDif > 12 * 30 * 24 * 3600) {
+      return String(Math.floor(timeDif / (12 * 30 * 24 * 3600))) + '년 전'
+    } else if (timeDif > 30 * 24 * 3600) {
+      return String(Math.floor(timeDif / (30 * 24 * 3600))) + '개월 전'
+    } else if (timeDif > 7 * 24 * 3600) {
+      return String(Math.floor(timeDif / (7 * 24 * 3600))) + '주 전'
+    } else if (timeDif > 24 * 3600) {
+      return String(Math.floor(timeDif / (24 * 3600))) + '일 전'
+    } 
+    // else if (timeDif > 3600) {
+    //   return String(Math.floor(timeDif / (3600))) + '시간 전'
+    // } else if (timeDif > 60) {
+    //   return String(Math.floor(timeDif / (60))) + '분 전'
+    // } 
+    else {
+      return '오늘'
     }
   }
 
@@ -81,8 +134,8 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name }: VoiceMes
           <VoiceIconDiv onClick={togglePlay}>
             {isPlaying ? <FaPause /> : <FaPlay /> }
           </VoiceIconDiv>
-          <VoiceTimeDiv></VoiceTimeDiv>
-          <VoiceTimeDifference></VoiceTimeDifference>
+          <VoiceTimeDiv>{`${String(Math.floor((voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration - voicePlayingTime) % 60))).slice(-2)}`}</VoiceTimeDiv>
+          <VoiceTimeDifference>{timeDifference(new Date(created_at))}</VoiceTimeDifference>
         </VoiceDiv>
       </VoiceMessageDiv>
       <SenderName>{set_name ? set_name : name}</SenderName>
