@@ -72,7 +72,7 @@ const DateValue = styled.div`
 
 const ItemWrapper = styled.div`
   background-color: #eefbef;
-  padding: 8px 4px;
+  padding: 4px 4px;
   font-size: 0.8em;
   border-radius: 10px;
 `;
@@ -271,11 +271,11 @@ const ScrumHome = () => {
             <ItemWrapper>
               {myScrum[0].emoji === "" ? (
                 <>
-                  <div>작성된 스크럼이 없습니다.</div>
+                  <div style={{margin:"4px"}}>작성된 안녕이 없습니다.</div>
                   {date.getFullYear() === new Date().getFullYear() &&
                   date.getMonth() === new Date().getMonth() &&
                   date.getDate() === new Date().getDate() ? (
-                    <div>안녕으로 가족과 오늘의 안녕을 공유해보세요🥰 </div>
+                    <di style={{margin:"4px"}}>가족과 오늘의 안녕을 공유해보세요🥰 </di>
                   ) : (
                     <></>
                   )}
