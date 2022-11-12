@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from "./pages/settings";
-import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
 import FamilyCreate from "./pages/family/FamilyCreate";
@@ -15,6 +15,7 @@ import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
 import FamilyJoin from "./pages/family/FamilyJoin";
+import ScrumDetail from "./pages/scrum/ScrumDetail";
 
 import Navbar from "./components/Navbar";
 
@@ -235,6 +236,7 @@ function App() {
 
           <Route path="/hello/" element={<ScrumHome />}></Route>
           <Route path="/hello/create" element={<ScrumCreate />}></Route>
+          <Route path="/hello/detail" element={<ScrumDetail />}></Route>
 
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
