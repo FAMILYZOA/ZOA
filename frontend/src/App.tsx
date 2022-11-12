@@ -41,6 +41,7 @@ import { AuthRefresh } from "./api/customAxios";
 import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
+import NotFound from "./pages/error/NotFound";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -240,6 +241,8 @@ function App() {
           <Route path="/checklist/create" element={<CreateChecklist />} />
 
           <Route path="/settings" element={<Settings />} />
+
+          <Route path="/*" element={<NotFound />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>
