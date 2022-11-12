@@ -7,16 +7,14 @@ type BoxProps = {
   emojiCode?: string | undefined;
   preview: string;
   value: string;
+  maxLength: number;
   setter: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const TextBoxStyle = styled.div`
-  height: 6.4em;
-  margin-left: 5%;
-  margin-right: 5%;
-
+  height: 4em;
+  margin: 0 5%;
   background-color: #fff1e1;
-
   border-radius: 10px;
 `;
 
@@ -25,21 +23,22 @@ const TextAreaEmojiStyle = styled.div`
   padding: 10px;
 `;
 const TextAreaStyle = styled.textarea`
-  width: 90%;
-  height: 13vh;
+  width: 100%;
+  height: 100%;
   background-color: transparent;
   margin-left: 5px;
   border: none;
   resize: none;
 `;
 const TextAreaInnerStyle = styled.textarea`
-  width: 90%;
-  height: 13vh;
+  width: 100%;
+  height: 100%;
   background-color: transparent;
-  font-size: 0.8em;
+  font-size: 1em;
   margin-left: 5px;
   border: none;
   resize: none;
+  font-family: 'Pretendard' ;
 `;
 
 const TextBox = (props: BoxProps) => {
@@ -55,6 +54,7 @@ const TextBox = (props: BoxProps) => {
             value={props.value}
             placeholder={props.preview}
             onChange={onChange}
+            maxLength={props.maxLength}
           />
         </TextAreaEmojiStyle>
       ) : (
@@ -63,6 +63,7 @@ const TextBox = (props: BoxProps) => {
             value={props.value}
             placeholder={props.preview}
             onChange={onChange}
+            maxLength={props.maxLength}
           />
         </TextAreaEmojiStyle>
       )}

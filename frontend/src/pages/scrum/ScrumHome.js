@@ -271,11 +271,11 @@ const ScrumHome = () => {
             <ItemWrapper>
               {myScrum[0].emoji === "" ? (
                 <>
-                  <div style={{margin:"4px"}}>작성된 안녕이 없습니다.</div>
+                  <div style={{margin:"8px"}}>작성된 안녕이 없습니다.</div>
                   {date.getFullYear() === new Date().getFullYear() &&
                   date.getMonth() === new Date().getMonth() &&
                   date.getDate() === new Date().getDate() ? (
-                    <di style={{margin:"4px"}}>가족과 오늘의 안녕을 공유해보세요🥰 </di>
+                    <div style={{margin:"8px"}}>가족과 오늘의 안녕을 공유해보세요🥰 </div>
                   ) : (
                     <></>
                   )}
