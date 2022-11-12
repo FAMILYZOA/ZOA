@@ -209,6 +209,7 @@ const ScrumHome = () => {
         user_id: myScrum[0].user_id,
         set_name: "나",
         name: userName,
+        selectday: day,
       },
     });
   };
@@ -390,7 +391,7 @@ const ScrumHome = () => {
           {familyId > 0 ? (
             famScrum
               .slice(0, -2)
-              .map((item, index) => <ScrumFamItem {...item} key={index} />)
+              .map((item, index) => <ScrumFamItem {...item} day={day} key={index} />)
           ) : (
             <></>
           )}

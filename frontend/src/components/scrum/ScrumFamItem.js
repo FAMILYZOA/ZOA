@@ -25,7 +25,7 @@ const MemberProfileImg = styled.img`
   object-fit: fill;
 `;
 
-const ScrumFamItem = ({ id, emoji, name, yesterday, today, image, set_name, user_id }) => {
+const ScrumFamItem = ({ id, emoji, name, yesterday, today, image, set_name, user_id, day }) => {
   const navigate = useNavigate();
   const moveToDetail = () => {
     navigate("/hello/detail", {
@@ -35,6 +35,7 @@ const ScrumFamItem = ({ id, emoji, name, yesterday, today, image, set_name, user
         user_id: user_id,
         name: name,
         set_name: set_name,
+        selectday:day
       },
     });
   };

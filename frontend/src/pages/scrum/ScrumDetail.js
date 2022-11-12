@@ -78,8 +78,18 @@ const HrTag = styled.div`
 `;
 
 function ScrumDetail() {
+  //props 값
+  const { state } = useLocation();
+  const today = state.selectday
+  console.log(today);
   // 날짜 설정
   const [date, setDate] = useState(new Date());
+  useEffect(()=> {
+      date.setFullYear(Number(today.slice(0,4)));
+      date.setMonth(Number(today.slice(5,7)) - 1);
+      date.setDate(Number(today.slice(8,10)));
+    }, [])
+
   const day =
     date.getFullYear() +
     "-" +
@@ -89,18 +99,14 @@ function ScrumDetail() {
   // 전 날로 가기
   const onHandleBeforeDate = () => {
     setDate(new Date(date.setDate(date.getDate() - 1)));
-  };
-  // 다음날로 가기
-  const onHandleAfterDate = () => {
+};
+// 다음날로 가기
+const onHandleAfterDate = () => {
     setDate(new Date(date.setDate(date.getDate() + 1)));
   };
 
   // redux 값 불러오는 곳
   const token = useAppSelector((state) => state.token.access);
-  const userName = useAppSelector((state) => state.user.name);
-
-  //props 값
-  const { state } = useLocation();
 
   // 해당날짜, 해당 id 스크럼 요청
   const [scrum, setScrum] = useState({});
