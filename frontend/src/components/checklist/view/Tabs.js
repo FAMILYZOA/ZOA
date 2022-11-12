@@ -351,13 +351,20 @@ function CompleteContents({ currentId }) {
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
               </NoToggle>
               <Toggle id={li.id} current={click}>
-                <div>
-                  <p>From. {li.from_users_id.name}</p>
+                <ToggleContainer>
+                  <p>From. {li.from_user_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
                   </span>
-                </div>
+                  {li.photo !== null ? (
+                    <ImgBox>
+                      <img src={li.photo.image} />
+                    </ImgBox>
+                  ) : (
+                    <></>
+                  )}
+                </ToggleContainer>
               </Toggle>
             </div>
           ))}
