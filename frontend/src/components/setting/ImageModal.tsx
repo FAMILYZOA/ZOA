@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { detect } from "detect-browser";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import { setFamilyUsers } from "../../features/family/familySlice";
 import { AuthRefresh } from "../../api/customAxios";
 import { setUserImage } from "../../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -84,6 +85,7 @@ const FontModal = (props: modalType) => {
   const navigate = useNavigate();
   const accessToken = useAppSelector((state) => state.token.access);
   const refreshToken = useAppSelector((state) => state.token.refresh);
+  const familyId = useAppSelector(state => state.family.id);
 
   // 모바일 연동
   const getOS = () => {
@@ -154,6 +156,18 @@ const FontModal = (props: modalType) => {
       })
         .then((res) => {
           dispatch(setUserImage(res.data.image));
+          if (familyId >= 0){
+            axios({
+              method: "get",
+              url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+              .then((res) => {
+                dispatch(setFamilyUsers(res.data.users));
+              })
+          }
         })
         .catch(async (err) => {
           switch (err.response.status) {
