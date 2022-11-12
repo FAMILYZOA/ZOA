@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { BrowserView, MobileView } from "react-device-detect";
-import { Emoji } from "emoji-picker-react";
-import { useNavigate } from 'react-router-dom';
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 const Container = styled.div`
   margin: 5%;
@@ -65,6 +64,10 @@ const EmojiWrapper = styled.div`
   background-clip: content-box, border-box;
 `;
 
+const EmojiText = styled.p`
+  border-radius: 100px;
+  margin: auto;
+`;
 
 const Contents = styled.div`
   margin: 16px 0px;
@@ -81,26 +84,6 @@ const Text = styled.div`
 `;
 
 function Emojis({ scrum }) {
-  const navigate = useNavigate();
-  const moveToDetail = (props) => {
-    navigate("/hello/detail", {
-      state: {
-        image: props.image,
-        id: props.id,
-        user_id: props.user_id,
-        name: props.name,
-        set_name: props.set_name,
-        selectday: props.selectday
-      },
-    });
-  };
-  const date = new Date();
-  const day =
-    date.getFullYear() +
-    "-" +
-    ("00" + (date.getMonth() + 1).toString()).slice(-2) +
-    "-" +
-    ("00" + date.getDate().toString()).slice(-2);
   return (
     <Container>
       <BrowserView>
@@ -112,19 +95,7 @@ function Emojis({ scrum }) {
           ) : (
             <>
               {scrum.map((item, index) => (
-                <EmojiBox
-                  key={index}
-                  onClick={() =>
-                    moveToDetail({
-                      image: item.image,
-                      id: item.id,
-                      user_id: item.user_id,
-                      name: item.name,
-                      set_name: item.set_name,
-                      selectday: day,
-                    })
-                  }
-                >
+                <EmojiBox key={index}>
                   <EmojiWrapper>
                     <Emoji unified={item.emoji} />
                   </EmojiWrapper>
@@ -145,19 +116,7 @@ function Emojis({ scrum }) {
           ) : (
             <>
               {scrum.map((item, index) => (
-                <EmojiBox
-                  key={index}
-                  onClick={() =>
-                    moveToDetail({
-                      image: item.image,
-                      id: item.id,
-                      user_id: item.user_id,
-                      name: item.name,
-                      set_name: item.set_name,
-                      selectday: day,
-                    })
-                  }
-                >
+                <EmojiBox key={index}>
                   <EmojiWrapper>
                     <Emoji unified={item.emoji} />
                   </EmojiWrapper>
