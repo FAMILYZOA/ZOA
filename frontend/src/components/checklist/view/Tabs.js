@@ -352,7 +352,7 @@ function CompleteContents({ currentId }) {
               </NoToggle>
               <Toggle id={li.id} current={click}>
                 <div>
-                  <p>From. {li.from_users_id.name}</p>
+                  <p>From. {li.from_user_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
