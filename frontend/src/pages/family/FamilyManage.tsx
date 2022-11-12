@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
@@ -12,6 +12,11 @@ import styled from "styled-components";
 import { detect } from "detect-browser";
 import { FaCode } from "react-icons/fa";
 import axios from "axios";
+import { IoMdClose } from "react-icons/io";
+
+interface modalBackProps {
+  toggle?: boolean;
+}
 
 const HeaderBox = styled.div`
   display: grid;
@@ -91,6 +96,138 @@ const FamilyMembersEdit = styled.div`
   font-size: 1.2em;
   font-weight: 400;
 `;
+const ModalBack = styled.div<modalBackProps>`
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 56px);
+  z-index: 2;
+  background-color: rgba(102, 102, 102, 0.5);
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+const ModalDiv = styled.div<modalBackProps>`
+  position: absolute;
+  padding: 20px;
+  width: 70vw;
+  height: 22vh;
+  left: 10vw;
+  top: 35vh;
+  z-index: 3;
+  border-radius: 12px;
+  background-color: #fff;
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`
+const ModalContent = styled.div`
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`
+const CloseDiv = styled.div`
+  position: absolute;
+  top: -0.25em;
+  right: -0.25em;
+  width: 1em;
+  height: 1em;
+`
+const Modal24 = styled.div`
+  font-weight: 600;
+  margin-bottom: 0.4em;
+`
+const Modal16 = styled.div`
+  font-size: 0.8em;
+  margin-bottom: 0.8em;
+`
+const ModalHighlight = styled.span`
+  font-weight: bold;
+  color: #ff787f;
+`
+const Modal12 = styled.div`
+  font-size: 0.6em;
+  margin-bottom: 1.8em;
+`
+const ConfrimButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 2em;
+  font-size: 0.8em;
+  color: #fff;
+  background: linear-gradient(269.68deg, #FF787F 2.43%, #FEC786 44.73%, #F6CC91 58.19%, #BBF1E8 94.73%);
+  border-radius: 12px;
+`
 
 const FamilyManage = () => {
   const familyMembersList = useAppSelector((state) => state.family.users);
@@ -99,6 +236,7 @@ const FamilyManage = () => {
   const familyName = useAppSelector((state) => state.family.name);
   const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
+  const [isModal, setIsModal] = useState(false);
 
   // android 딥링크 설정 필요 -> firebase dynamic link 설정되면 사용
   const inviteLink: string = `${process.env.REACT_APP_FE_HOST}/join/${id}`;
@@ -157,7 +295,7 @@ ${inviteLink}`;
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      alert('초대코드가 복사되었습니다! \n 초대할 가족에게 전달해주세요 🥰');
+      setIsModal(true);
     } catch (error) {
       alert('코드복사가 실패하였습니다. 나중에 다시 시도해주세요.')
     }
@@ -185,7 +323,30 @@ ${inviteLink}`;
         <HeaderLabel>멤버 관리</HeaderLabel>
         <div></div>
       </HeaderBox>
-
+      {isModal && <ModalBack onClick={() => setIsModal(false)} />}
+      {isModal && <ModalDiv>
+        <ModalContent>
+          <div>
+            <CloseDiv onClick={() => setIsModal(false)}>
+              <IoMdClose/>
+            </CloseDiv>
+            <Modal24>초대코드가 복사되었습니다!</Modal24>
+            <Modal16>
+              {"초대코드 유효기간은 "}
+              <ModalHighlight>5분</ModalHighlight>
+              {" 입니다."}
+            </Modal16>
+            <Modal12>
+              위 주의사항을 확인 후 초대코드를 전달해주세요!
+            </Modal12>
+            <ConfrimButton onClick={() => setIsModal(false)}>
+              <div>
+                확인
+              </div>
+            </ConfrimButton>
+          </div>
+        </ModalContent>  
+      </ModalDiv>}
       <FamilyManageBody>
         <FamilyManageGuide>
           <div>
