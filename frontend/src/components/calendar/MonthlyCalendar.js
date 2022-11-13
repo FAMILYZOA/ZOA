@@ -5,6 +5,60 @@ import { useAppSelector } from "../../app/hooks";
 import { BsChevronLeft, BsChevronRight, } from "react-icons/bs";
 import Modal from "./Modal";
 
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+`;
+
+const Icon = styled.div`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderLabel = styled.div`
+  font-size: 1.25em;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+`;
+
+
+const DateBox = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.5);
+`;
+const ArrowIconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  margin: 4px;
+  color: ${(props) => (props.active === true ? "black" : "#bebebe")};
+`;
+const DateValue = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ff787f;
+  font-size: 20px;
+  font-weight: bold;
+  margin: auto 40px;
+`;
+
+
+
+
+
 const MonthlyCalendar = (props) => {
     const {year, month, setYearAndMonth} = props;
 
@@ -18,6 +72,8 @@ const MonthlyCalendar = (props) => {
     const [before, setBefore] = useState([]);  // 이전 달 날짜 채우기
     const [after, setAfter] = useState([]);  // 다음 달 날짜 채우기
     const [schedule, setSchedule] = useState([]);  // 이번 달 일정 채우기
+    const [howday, setHowday] = useState(0);
+
 
     // 월별 일정 조회 api 요청
     const getSchedule = async () => {
@@ -65,10 +121,13 @@ const MonthlyCalendar = (props) => {
         let calendar = [];
         calendar = [...Array(afterDay + 1).keys()].slice(1);
 
+        setHowday((before.length + after.length + calendar.length)/7);
+        console.log(howday);
         setBefore([...before])
         setAfter([...after])
         setCalendar([...calendar])
     };
+    
 
     // 한 달 전으로
     const onHandleBeforeMonth = () => {
@@ -100,63 +159,83 @@ const MonthlyCalendar = (props) => {
         setModalDate(date);
     };
 
-    return(
-        <>
-            {modalOpen &&
-            <Modal
-              setModalOpen={setModalOpen}
-              schedule={schedule}
-              date={modalDate}
-            >
-                </Modal>}
-            {/* 연, 월 이동 */}
-            <div style={{display: "flex"}}>
-                <BsChevronLeft onClick={onHandleBeforeMonth} />
-                <div>
-                    {presDate.getFullYear()}. {presDate.getMonth() + 1}
-                </div>
-                <BsChevronRight onClick={onHandleAfterMonth} />
-            </div>
-            {/* 요일 */}
-            <WeeklyWrapper style={{display: "flex"}}>
-                {weekly.map((item, index) => {
-                    return <div weekly key={index}>{item}</div>
-                })}
-            </WeeklyWrapper>
-            {/* 달력 그리기 */}
-            <MonthWrapper>
-                {before.map((item, index) => {
-                    return (
-                        <NotMonthDay key={index}>
-                            <CalendarDate>{item}</CalendarDate>
-                        </NotMonthDay>
-                    )
-                })}
-                {calendar.map((item, index) => {
-                    return (
-                        <OnMonthDay key={index}>
-                            <CalendarDate
-                                onClick={()=>showModal(item)}
-                            >{item}</CalendarDate>
-                        </OnMonthDay>
-                    )
-                })}
-                {after.map((item, index) => {
-                    return (
-                        <NotMonthDay key={index}>
-                            <CalendarDate>{item}</CalendarDate>
-                        </NotMonthDay>
-                    )
-                })}
-            </MonthWrapper>
-        </>
-    )
+    return (
+      <>
+        {modalOpen && (
+          <Modal
+            setModalOpen={setModalOpen}
+            schedule={schedule}
+            date={modalDate}
+          ></Modal>
+        )}
+        <HeaderBox>
+          <div></div>
+          <HeaderLabel>가족 캘린더</HeaderLabel>
+          <></>
+        </HeaderBox>
+        {/* 연, 월 이동 */}
+        <DateBox>
+          <ArrowIconBox onClick={onHandleBeforeMonth} active={true}>
+            <BsChevronLeft />
+          </ArrowIconBox>
+          <DateValue>
+            {presDate.getFullYear()}. {presDate.getMonth() + 1}
+          </DateValue>
+          <ArrowIconBox active={true} onClick={onHandleAfterMonth}>
+            <BsChevronRight />
+          </ArrowIconBox>
+        </DateBox>
+        {/* 요일 */}
+        <WeeklyWrapper>
+          {weekly.map((item, index) => {
+            return (
+              <div weekly key={index}>
+                <WeekText color={item}>{item}</WeekText>
+              </div>
+            );
+          })}
+        </WeeklyWrapper>
+        {/* 달력 그리기 */}
+        <MonthWrapper>
+          {before.map((item, index) => {
+            return (
+              <NotMonthDay key={index}>
+                <CalendarDate howweek={howday}>{item}</CalendarDate>
+              </NotMonthDay>
+            );
+          })}
+          {calendar.map((item, index) => {
+            return (
+              <OnMonthDay key={index}>
+                <CalendarDate howweek={howday} onClick={() => showModal(item)}>
+                  {item}
+                </CalendarDate>
+              </OnMonthDay>
+            );
+          })}
+          {after.map((item, index) => {
+            return (
+              <NotMonthDay key={index}>
+                <CalendarDate howweek={howday}>{item}</CalendarDate>
+              </NotMonthDay>
+            );
+          })}
+        </MonthWrapper>
+      </>
+    );
 };
 
     const WeeklyWrapper = styled.div`
+        width: 100%;
         display: grid;
-        gird-template-rows: repeat(7, 1fr);
+        grid-template-columns: repeat(7, 1fr);
     `
+    const WeekText = styled.div`
+      display: flex;
+      justify-content: center;
+      margin: 4vh auto;
+      color: ${(props) => props.color === "일" ? "#FF787F" : (props.color === "토" ? "#3DB9A4" : "black")};
+    `;
 
     const MonthWrapper = styled.div`
         display: grid;
@@ -174,7 +253,7 @@ const MonthlyCalendar = (props) => {
     const CalendarDate = styled.div`
         display: flex;
         justify-content: center;
-
+        margin: ${props => props.howweek === 5 ? " 0 auto 10vh" : "0 auto 8vh"};
         color: ${(props) => props.color};
     `
 
