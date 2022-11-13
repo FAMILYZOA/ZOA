@@ -5,8 +5,16 @@ import { useAppSelector } from "../../../app/hooks";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { BiCheckbox } from "react-icons/bi";
 import Spinner from "../../../assets/Spinner.gif";
+import Modal from "react-modal";
 
 const Container = styled.div``;
+
+const ImgTag = styled.img`
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+`;
 
 const TabBox = styled.div`
   display: grid;
@@ -196,8 +204,45 @@ function TodoContents({ currentId }) {
     });
   };
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalimg, setImg] = useState("");
+  const openModal = (imgurl) => {
+    setShowModal(true);
+    setImg(imgurl);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyle = {
+    overlay: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    content: {
+      inset: "auto 10%",
+      width: "80%",
+      height: "auto",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0",
+      margin: "auto"
+    },
+  };
+
   return (
     <ContentsContainer>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+        onClick={closeModal}
+      >
+        <ImgTag src={modalimg} alt="" onClick={closeModal} />
+      </Modal>
       {list && (
         <>
           {list.map((li, index) => (
@@ -219,7 +264,7 @@ function TodoContents({ currentId }) {
                   </span>
                   {li.photo !== null ? (
                     <ImgBox>
-                      <img src={li.photo.image} />
+                      <img src={li.photo.image} alt="" onClick={()=>{openModal(li.photo.image)}}/>
                     </ImgBox>
                   ) : (
                     <></>
@@ -232,12 +277,12 @@ function TodoContents({ currentId }) {
       )}
       {load ? (
         <div>
-          <img src={Spinner} />
+          <img src={Spinner} alt="" />
         </div>
       ) : (
         <></>
       )}
-      <div ref={obsRef} style={{height: "20px"}}></div>
+      <div ref={obsRef} style={{ height: "20px" }}></div>
     </ContentsContainer>
   );
 }
@@ -338,8 +383,46 @@ function CompleteContents({ currentId }) {
     });
   };
 
+    const [showModal, setShowModal] = useState(false);
+    const [modalimg, setImg] = useState("");
+    const openModal = (imgurl) => {
+      setShowModal(true);
+      setImg(imgurl);
+    };
+    const closeModal = () => {
+      setShowModal(false);
+    };
+    const modalStyle = {
+      overlay: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      content: {
+        inset: "auto 10%",
+        width: "80%",
+        height: "auto",
+        border: "none",
+        backgroundColor: "rgba(0,0,0,0)",
+        display: "flex",
+        justifyContent: "center",
+        padding: "0",
+        margin: "auto",
+      },
+    };
+
+
   return (
     <ContentsContainer>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+        onClick={closeModal}
+      >
+        <ImgTag src={modalimg} alt="" onClick={closeModal} />
+      </Modal>
       {list && (
         <>
           {list.map((li, index) => (
@@ -359,7 +442,13 @@ function CompleteContents({ currentId }) {
                   </span>
                   {li.photo !== null ? (
                     <ImgBox>
-                      <img src={li.photo.image} />
+                      <img
+                        src={li.photo.image}
+                        alt=""
+                        onClick={() => {
+                          openModal(li.photo.image);
+                        }}
+                      />
                     </ImgBox>
                   ) : (
                     <></>
@@ -372,7 +461,7 @@ function CompleteContents({ currentId }) {
       )}
       {load ? (
         <div>
-          <img src={Spinner} />
+          <img src={Spinner} alt="" />
         </div>
       ) : (
         <></>
