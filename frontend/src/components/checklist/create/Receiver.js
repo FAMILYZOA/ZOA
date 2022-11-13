@@ -55,12 +55,15 @@ const UserBox = styled.div`
 `;
 
 function Receiver({ receivers }) {
+  const myId = useAppSelector((state)=> state.user.id);
   const tmpfamily = useAppSelector((state) => state.family.users);
   const [family, setFamily] = useState([]);
 
   useEffect(() => {
+    const my = tmpfamily.filter((item)=> item.id === myId)
+    const notmy = tmpfamily.filter((item)=> item.id !== myId)
     setFamily(
-      tmpfamily.map((item) => (item ? { ...item, active: false } : family))
+      [...my, ...notmy].map((item) => (item ? { ...item, active: false } : family))
     );
   }, [tmpfamily]);
 
