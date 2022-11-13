@@ -35,6 +35,7 @@ import {useRef, useState, useEffect} from 'react';
 
 const App = () => {
   const [canGoBack, setCanGoBack] = useState(false);
+  const [message, setMessage] = useState('');
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
@@ -58,6 +59,8 @@ const App = () => {
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', onPress);
     };
+
+    // iOS 뒤로가기 스와이프에 이벤트 리스너를 등록한다.
   }, [canGoBack]);
 
   const camOpt = {
@@ -79,18 +82,22 @@ const App = () => {
   };
 
   const getMessage = async event => {
-    let message = event.nativeEvent.data;
-    if (message.includes(',')) {
-      const messages = message.split(',');
-      message = messages[0];
+    if (event.nativeEvent.data.includes(',')) {
+      const messages = event.nativeEvent.data.split(',');
+      setMessage(messages[0]);
       setCommand(messages[1]);
+    } else {
+      setMessage(event.nativeEvent.data);
+      if (event.nativeEvent.data === 'navigationStateChange') {
+        setCanGoBack(event.nativeEvent.canGoBack);
+      }
     }
+  };
+
+  useEffect(() => {
     switch (message) {
       case 'imagePicker':
         actionSheetRef.current.show();
-        break;
-      case 'navigationStateChange':
-        setCanGoBack(event.nativeEvent.canGoBack);
         break;
       case 'inviteSMS':
         sendSMS();
@@ -98,7 +105,8 @@ const App = () => {
       default:
         break;
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message, command]);
 
   const requestCameraPermission = async () => {
     try {
@@ -117,10 +125,8 @@ const App = () => {
 
       console.log(granted);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('a');
         return true;
       } else {
-        console.log('b');
         return false;
       }
     } catch (err) {
@@ -245,7 +251,6 @@ true;
   const sendSMS = async () => {
     // 권한 요청
     if (os === 'ios') {
-      console.log('test');
       request(PERMISSIONS.IOS.CONTACTS).then(async () => {
         const selected = await selectContactPhone();
         if (!selected) {
@@ -254,7 +259,7 @@ true;
         // 선택한 사람에게 문자 보내기
         let {contact, selectedPhone} = selected;
         //SendIntentAndroid.sendSms(selectedPhone.number, command);
-        //Linking.openURL(`sms:${selectedPhone.number}?body=${command}`);
+        Linking.openURL(`sms:${selectedPhone.number}&body=${command}`);
       });
     } else {
       const isPermitted = await requestContactPermission();
@@ -303,6 +308,10 @@ true;
         return false;
       }
       return true;
+    } else if (os === 'ios') {
+      if (event.url.includes('intent')) {
+        console.log(event.url);
+      }
     }
     return true;
   };
@@ -335,6 +344,7 @@ true;
             onMessage={getMessage}
             scrollEnabled={false}
             onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+            allowsBackForwardNavigationGestures={true}
           />
         ) : (
           <LinearGradient
