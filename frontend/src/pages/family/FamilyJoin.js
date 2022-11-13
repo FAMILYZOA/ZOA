@@ -83,6 +83,7 @@ function FamilyJoin() {
   const familyId = params.familyId;
   const access = useAppSelector((state) => state.token.access);
   const [family, setFamily] = useState("");
+  const haveFam = useAppSelector((state)=>state.family.id);
 
   const clickYes = () => {
     axios({
@@ -94,6 +95,7 @@ function FamilyJoin() {
     }).then((res) => {
       dispatch(setFamilyId(localStorage.getItem("familyId")));
       localStorage.removeItem("familyId");
+      alert(`${family.name}에 성공적으로 가입되었습니다! 메인페이지로 이동합니다.`)
       navigate("/");
     });
   };
@@ -103,15 +105,20 @@ function FamilyJoin() {
     if (!localStorage.getItem("access_token")) {
       navigate("/intro");
     } else {
-      axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACK_HOST}/family/get/${familyId}/`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }).then((res) => {
-        setFamily(res.data);
-      });
+        axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/get/${familyId}/`,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }).then((res) => {
+          setFamily(res.data);
+        });
+        if (haveFam > 0) {
+          localStorage.removeItem("familyId");
+          alert("이미 가족에 가입되어있습니다. 메인페이지로 이동합니다!");
+          navigate("/");
+        }
     }
   }, []);
 
@@ -144,6 +151,7 @@ function FamilyJoin() {
                 네
               </Btn>
               <Btn active={false} onClick={() => {
+                alert(`${family.name}가입을 거절하셨습니다. 가족 생성 페이지로 이동합니다.`)
                 localStorage.removeItem("familyId");
                 navigate("/family/create");
               }}>
