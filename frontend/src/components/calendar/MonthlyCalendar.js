@@ -233,7 +233,7 @@ const MonthlyCalendar = (props) => {
     const WeekText = styled.div`
       display: flex;
       justify-content: center;
-      margin: 4vh auto;
+      margin: 3vh auto;
       color: ${(props) => props.color === "일" ? "#FF787F" : (props.color === "토" ? "#3DB9A4" : "black")};
     `;
 
