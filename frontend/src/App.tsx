@@ -42,6 +42,7 @@ import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
 import { VoiceView } from "./pages/voice";
+import VoiceRecord from './pages/voice/VoiceRecord';
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -233,6 +234,8 @@ function App() {
           <Route path="/family/code" element={<FamilyCodeJoin />}></Route>
 
           <Route path="/voice" element={<VoiceView />}></Route>
+          <Route path="/voiceRecord" element={<VoiceRecord />}></Route>
+
 
           <Route path="/" element={<Main />} />
 
