@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'storages',
 ]
 
+#middleware
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -98,6 +99,7 @@ WSGI_APPLICATION = 'apiserver.wsgi.application'
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
+#DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -106,7 +108,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
-
+#Password
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -125,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+#Swagger
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS' :{
         'Bearer':{
@@ -139,6 +141,7 @@ SWAGGER_SETTINGS = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
+#Language/Timezone
 LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
@@ -156,10 +159,12 @@ USE_TZ = False
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
+#user
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+#JWT
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer','JWT',),
     'ALGORITHM': env('Algorithm'),
@@ -170,12 +175,15 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
+#Naver cloud sms
 SMS_SECRET = {
     'SMSServiceId' : env('SMSServiceId'),
     'SMSAccessKey' : env('SMSAccessKey'),
     'SMSSecretKey' : env('SMSSecretKey'),
     'FromUser' : env('FromUser'),
 }
+
+#AWS S3
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_REGION = 'ap-northeast-2'
@@ -188,6 +196,42 @@ AWS_S3_OBJECT_PARAMETERS = {
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
+# import firebase_admin
+# from firebase_admin import credentials
+
+# cred_path = os.path.join(BASE_DIR,"firebase.json")
+# cred = credentials.Certificate(cred_path)
+# firebase_admin.initialize_app(cred)
+
+# firebase 
+import json 
+from django.core.exceptions import ImproperlyConfigured
+
+secret_json = os.path.join(BASE_DIR,'firebase.json')
+with open(secret_json) as f :
+    secrets = json.loads(f.read())
+
+def get_secret(setting,secrets=secrets) :
+    try : 
+        return secrets[setting]
+    except KeyError :
+        error_msg = f"Set the {setting} environment variable"
+        raise ImproperlyConfigured(error_msg)
+service_account_key = {
+    "type" : get_secret('type'),
+    "project_id" : get_secret('project_id'),
+    "private_key_id" : get_secret('private_key_id'),
+    "private_key" : get_secret('private_key'),
+    "client_email" : get_secret('client_email'),
+    "client_id" : get_secret('client_id'),
+    "auth_uri" : get_secret('auth_uri'),
+    "token_uri" : get_secret('token_uri'),
+    "auth_provider_x509_cert_url" : get_secret('auth_provider_x509_cert_url'),
+    "client_x509_cert_url" : get_secret('client_x509_cert_url'),
+
+}
+
+#Static
 STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 # 스태틱폴더를 따로 만들어서 앱에 종속되지 않고 접근할 수 있게한다. 
@@ -196,9 +240,10 @@ STATICFILES_DIRS = [
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+#Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
 
+#CORS
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -221,3 +266,4 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
 )
+
