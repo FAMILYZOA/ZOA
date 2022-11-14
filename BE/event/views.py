@@ -30,4 +30,3 @@ class AuthenticationAcceptAPIView(GenericAPIView) :
         if obj.created_at < naive_now-timedelta(minutes=5) :
             return Response({'인증 기간이 만료되었습니다. 인증 기간은 5분입니다.'},status=status.HTTP_401_UNAUTHORIZED)
         return Response(status=status.HTTP_200_OK)
-
