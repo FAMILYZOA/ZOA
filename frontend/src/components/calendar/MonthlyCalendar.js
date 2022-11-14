@@ -3,7 +3,62 @@ import styled from "styled-components";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import { BsChevronLeft, BsChevronRight, } from "react-icons/bs";
-import Modal from "./Modal";
+import Modal from "react-modal";
+import { IoIosClose } from "react-icons/io"
+import { RiDeleteBinLine } from "react-icons/ri";
+import { BsCheck } from "react-icons/bs";
+
+const ModalBox = styled.div`
+    width: 90%;
+    height: 64%;
+    margin: 30% 5%;
+    border-radius: 30px;
+    background-color: white;
+    padding: 10% 5% 5%;
+    position: relative;
+`
+const CloseIcon = styled.div`
+    margin: 5% 5% 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+`
+const DeleteIcon = styled.div`
+  margin: 5% 5% 0;
+  display: ${props=> props.state === "read" ? "flex" : "none"};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+const SaveIcon = styled.div`
+  margin: 5% 5% 0;
+  display: ${(props) => (props.state === "create" ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+const ModalDateBox = styled.div`
+  margin: 5% auto 0;
+  font-weight: bold;
+`;
+const ModalDate = styled.span`
+  background: linear-gradient(45deg, #ff787f, #fec786);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 2em;
+  font-weight: bold;
+`;
+const ModalContents = styled.div`
+    margin: 5% auto 0;
+`
 
 const HeaderBox = styled.div`
   display: grid;
@@ -13,12 +68,6 @@ const HeaderBox = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-`;
-
-const Icon = styled.div`
-  margin: auto;
-  display: flex;
-  align-items: center;
 `;
 
 const HeaderLabel = styled.div`
@@ -54,9 +103,6 @@ const DateValue = styled.div`
   font-weight: bold;
   margin: auto 40px;
 `;
-
-
-
 
 
 const MonthlyCalendar = (props) => {
@@ -153,21 +199,77 @@ const MonthlyCalendar = (props) => {
     const [modalDate, setModalDate] = useState("");
 
     // 모달 설정
-    const [modalOpen, setModalOpen] = useState(false);
-    const showModal = (date) => {
-        setModalOpen(true);
-        setModalDate(date);
+    // view=list read=한개 create=create
+    const [state, setState] = useState("view")
+    const [showModal, setShowModal] = useState(false);
+    const openModal = (date) => {
+      setShowModal(true);
+      const zerodate = ("00" + date).slice(-2);
+      setModalDate( `${presDate.getFullYear()}. ${presDate.getMonth() + 1}. ${zerodate}`);
     };
+    const closeModal = () => {
+      setShowModal(false);
+    };
+    const modalStyle = {
+      overlay: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems:"center",
+        backgroundColor: "rgba(136, 136, 136, 0.5)",
+        backdropFilter: "blur(2px)",
+        width: "100vw",
+        height: "100vh",
+      },
+      content: {
+        inset: " auto ",
+        width: "100vw",
+        height: "100vh",
+        border: "none",
+        backgroundColor: "rgba(0,0,0,0)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems:"center",
+      },
+    };
+
+    const deleteSchedule = () => {
+        
+    }
+    const saveSchedule = () => {
+        
+    }
 
     return (
       <>
-        {modalOpen && (
-          <Modal
-            setModalOpen={setModalOpen}
-            schedule={schedule}
-            date={modalDate}
-          ></Modal>
-        )}
+        <Modal
+          isOpen={showModal}
+          onRequestClose={closeModal}
+          ariaHideApp={false}
+          style={modalStyle}
+          onClick={() => setShowModal(false)}
+        >
+          <ModalBox>
+            <CloseIcon onClick={() => setShowModal(false)}>
+              <IoIosClose size={32} color="#888888" />
+            </CloseIcon>
+            <DeleteIcon onClick={() => deleteSchedule()} state={state}>
+              <RiDeleteBinLine size={28} color="#888888" />
+            </DeleteIcon>
+            <SaveIcon onClick={() => saveSchedule()} state={state}>
+              <BsCheck size={32} color="#888888" />
+            </SaveIcon>
+            <ModalDateBox>
+                <ModalDate> 
+                    {modalDate}
+
+                </ModalDate>
+            </ModalDateBox>
+            <ModalContents>
+
+
+            </ModalContents>
+          </ModalBox>
+        </Modal>
         <HeaderBox>
           <div></div>
           <HeaderLabel>가족 캘린더</HeaderLabel>
@@ -207,7 +309,7 @@ const MonthlyCalendar = (props) => {
           {calendar.map((item, index) => {
             return (
               <OnMonthDay key={index}>
-                <CalendarDate howweek={howday} onClick={() => showModal(item)}>
+                <CalendarDate howweek={howday} onClick={() => openModal(item)}>
                   {item}
                 </CalendarDate>
               </OnMonthDay>
