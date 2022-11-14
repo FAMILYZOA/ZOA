@@ -5,8 +5,9 @@ import time
 import requests,json
 import random
 from django.conf import settings
-from event.models import PhoneAuthentication 
+from event.models import PhoneAuthentication, Device
 from rest_framework import serializers
+from accounts.models import User
 class ValidationError403(ValidationError) :
     status_code = status.HTTP_403_FORBIDDEN
 class ValidationError406(ValidationError) :
@@ -97,3 +98,17 @@ class PhoneAuthenticationAcceptSerializer(serializers.ModelSerializer) :
     class Meta :
         model = PhoneAuthentication
         fields = ('phone','certification')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = User
+        fields = ('id', 'name', 'family_id',)
+
+
+class FCMLoginSerializer(serializers.ModelSerializer) :
+    user = UserSerializer(read_only=True)
+    fcmToken = serializers.CharField(max_length=500, required=True)
+    class Meta :
+        model = Device
+        fields = ('user', 'id', 'fcmToken', 'active')
