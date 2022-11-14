@@ -39,7 +39,7 @@ const App = () => {
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
-  const url = {uri: 'http://172.20.10.8:3000'};
+  const url = {uri: 'http://familyzoa.com'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
