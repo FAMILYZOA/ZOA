@@ -70,6 +70,7 @@ const Btn = styled.div`
   font-size: 1em;
   color: #444;
   opacity: ${(props) => (props.active === false ? 0.5 : 1)};
+  transition: opacity 0.2s;
 `;
 
 const BtnIcon = styled.div`

@@ -52,15 +52,21 @@ const UserBox = styled.div`
     margin: 0 auto;
     font-size: 0.6em;
   }
+  transition: opacity 0.2s;
 `;
 
 function Receiver({ receivers }) {
+  const userId = useAppSelector(state => state.user.id)
   const tmpfamily = useAppSelector((state)=> state.family.users)
   const [family, setFamily] = useState([]);
 
   useEffect(() => {
     setFamily(
-      tmpfamily.map((item) => (item ? { ...item, active: false } : family))
+      tmpfamily.filter((item) => {
+        if (item.id !== userId) {
+          return item ? { ...item, active: false } : family
+        }
+      })
     );
   }, [tmpfamily]);
 
