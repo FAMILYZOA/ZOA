@@ -91,6 +91,7 @@ const VoiceView = () => {
     audio: string, 
     created_at: string
     name:string
+    second: number,
   }[]>([]);
   const [keptMessage, setKeptMessage] = useState<{
     id: number, 
@@ -98,7 +99,8 @@ const VoiceView = () => {
     set_name: string, 
     audio: string, 
     created_at: string
-    name:string
+    name:string,
+    second: number,
   }[]>([]);
   const [isLeft, setIsLeft] = useState<boolean>(true);
   const accessToken = useAppSelector(state => state.token.access)
@@ -148,6 +150,7 @@ const VoiceView = () => {
         audio: '',
         created_at: '',
         name: '',
+        second: 0,
       } ,...keptMessage]);
     } else {
       const tempVoice = keptMessage
@@ -159,6 +162,7 @@ const VoiceView = () => {
         audio: '',
         created_at: '',
         name: '',
+        second: 0,
       },...unViewedMessage]);
       setKeptMessage([...tempVoice]);
     }
@@ -187,6 +191,7 @@ const VoiceView = () => {
               type={false}
               index={index}
               getIndex={getIndex}
+              second={message.second}
             />
           ))}
         </>) : (<>
@@ -202,6 +207,7 @@ const VoiceView = () => {
               type={true}
               index={index}
               getIndex={getIndex}
+              second={message.second}
             />
           ))}
         </>)

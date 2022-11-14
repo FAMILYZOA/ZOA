@@ -73,14 +73,15 @@ type VoiceMessageProps = {
   name: string,
   type: boolean,
   index: number,
+  second: number,
   getIndex: (index: number, type: boolean) => void,
 }
 
-const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex }: VoiceMessageProps) => {
+const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex, second }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
-  const voiceDuration = voice.duration;
+  const voiceDuration = second;
   const accessToken = useAppSelector(state => state.token.access);
 
   useEffect(() => {
@@ -170,7 +171,7 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
           <VoiceIconDiv onClick={togglePlay}>
             {isPlaying ? <FaPause /> : <FaPlay /> }
           </VoiceIconDiv>
-          <VoiceTimeDiv>{`${String(Math.floor((voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration - voicePlayingTime) % 60))).slice(-2)}` !== 'NaN : aN' ? `${String(Math.floor((voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration - voicePlayingTime) % 60))).slice(-2)}` : '0 : 00'}</VoiceTimeDiv>
+          <VoiceTimeDiv>{`${String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime) % 60))).slice(-2)}` !== 'NaN : aN' ? `${String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime) % 60))).slice(-2)}` : '0 : 00'}</VoiceTimeDiv>
           <VoiceTimeDifference>{timeDifference(new Date(created_at))}</VoiceTimeDifference>
         </VoiceDiv>
         <FavoriteIconDiv onClick={() => {handleFavorite()}}>

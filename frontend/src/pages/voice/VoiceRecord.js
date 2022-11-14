@@ -31,6 +31,7 @@ const VoiceRecBtnDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
+  position: relative;
 `;
 
 const VoiceRecBtn = styled.div`
@@ -43,6 +44,9 @@ const VoiceRecBtn = styled.div`
   box-sizing: border-box;
   text-align: center;
   line-height: 19em;
+  z-index: 3;
+  opacity: ${(props) => (props.isRecord === false ? 0.8 : 1)};
+  transition: opacity 0.5s;
 `;
 
 const BtnBox = styled.div`
@@ -74,6 +78,76 @@ const BtnIcon = styled.div`
   line-height: 0.5em;
 `;
 
+const BtnAnimation = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  width: 11em;
+  height: 11em;
+  border-radius: 5.5em;
+  border: 3px solid #fe9b7c;
+  z-index: 1;
+  animation: running-item 1s ease-in 0s infinite;
+  @keyframes running-item {
+    from {
+      opacity: 1;
+      width: 11em;
+      height: 11em;
+      border-radius: 5.5em;
+    }
+    to {
+      opacity: 0;
+      width: 14em;
+      height: 14em;
+      border-radius: 7em;
+    }
+  }
+  @-moz-keyframes running-item {
+    from {
+      opacity: 1;
+      width: 11em;
+      height: 11em;
+      border-radius: 5.5em;
+    }
+    to {
+      opacity: 0;
+      width: 14em;
+      height: 14em;
+      border-radius: 7em;
+    }
+  }
+  @-webkit-keyframes running-item {
+    from {
+      opacity: 1;
+      width: 11em;
+      height: 11em;
+      border-radius: 5.5em;
+    }
+    to {
+      opacity: 0;
+      width: 14em;
+      height: 14em;
+      border-radius: 7em;
+    }
+  }
+  @-o-keyframes running-item {
+    from {
+      opacity: 1;
+      width: 11em;
+      height: 11em;
+      border-radius: 5.5em;
+    }
+    to {
+      opacity: 0;
+      width: 14em;
+      height: 14em;
+      border-radius: 7em;
+    }
+  }
+`;
+
 function VoiceRecord() {
   const navigate = useNavigate();
   const [allow, setAllow] = useState(true);
@@ -87,8 +161,8 @@ function VoiceRecord() {
   const [isRecord, setIsRecord] = useState(false);
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
-  const accessToken = useAppSelector(state => state.token.access);
-  const userName = useAppSelector(state => state.user.name);
+  const accessToken = useAppSelector((state) => state.token.access);
+  const userName = useAppSelector((state) => state.user.name);
 
   const [info, setInfo] = useState({
     audio: "",
@@ -153,10 +227,14 @@ function VoiceRecord() {
   };
 
   const onSubmitAudioFile = useCallback(() => {
-    const sound = new File([audioUrl], `${userName}-${String(new Date().getTime())}.mp3`, {
-      lastModified: new Date().getTime(),
-      type: "audio/mpeg",
-    });
+    const sound = new File(
+      [audioUrl],
+      `${userName}-${String(new Date().getTime())}.mp3`,
+      {
+        lastModified: new Date().getTime(),
+        type: "audio/mpeg",
+      }
+    );
     console.log(sound);
     const data = new FormData();
     data.append("audio", sound);
@@ -176,7 +254,7 @@ function VoiceRecord() {
       })
       .catch((err) => {
         console.error(err);
-      })
+      });
   }, [audioUrl]);
 
   return (
@@ -186,9 +264,13 @@ function VoiceRecord() {
         <Receiver receivers={receivers}></Receiver>
         <VoiceRecDiv>
           <VoiceRecBtnDiv>
-            <VoiceRecBtn onClick={onRec ? onRecAudio : offRecAudio}>
+            <VoiceRecBtn
+              onClick={onRec ? onRecAudio : offRecAudio}
+              isRecord={isRecord}
+            >
               <Icon path={mdiMicrophonePlus} size={"8em"} color="#fff" />
             </VoiceRecBtn>
+            {isRecord && <BtnAnimation />}
           </VoiceRecBtnDiv>
           <BtnBox>
             <Btn
@@ -200,7 +282,7 @@ function VoiceRecord() {
                 <Icon path={mdiMicrophonePlus} size={"2em"} color="#FF787F" />
               </BtnIcon>
               <div style={{ flex: "1", textAlign: "center" }}>
-                음성메시지 보내기
+                {"음성메시지 보내기"}
               </div>
             </Btn>
           </BtnBox>
