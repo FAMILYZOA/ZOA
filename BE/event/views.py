@@ -46,9 +46,9 @@ class FCMLoginView(CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class FCMLogoutAPIView(CreateAPIView):
+class FCMLogoutAPIView(GenericAPIView):
     def delete(self, request, FCM_id):
         FCM_token = get_object_or_404(Device, id=FCM_id)
         if FCM_token.user == request.user:
             FCM_token.delete()
-            return Response("로그아웃 되었습니다.", status=status.HTTP_204_NO_CONTENT)  
+            return Response({"로그아웃 되었습니다."}, status=status.HTTP_204_NO_CONTENT)  

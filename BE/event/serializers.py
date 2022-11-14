@@ -100,14 +100,14 @@ class PhoneAuthenticationAcceptSerializer(serializers.ModelSerializer) :
         fields = ('phone','certification')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserinfoSerializer(serializers.ModelSerializer):
     class Meta :
         model = User
         fields = ('id', 'name', 'family_id',)
 
 
 class FCMLoginSerializer(serializers.ModelSerializer) :
-    user = UserSerializer(read_only=True)
+    user = UserinfoSerializer(read_only=True)
     fcmToken = serializers.CharField(max_length=500, required=True)
     class Meta :
         model = Device
