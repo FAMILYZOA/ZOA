@@ -455,10 +455,20 @@ const MonthlyCalendar = (props) => {
         })}
         {calendar.map((item, index) => {
           return (
-            <OnMonthDay key={index}>
-              <CalendarDate howweek={howday} onClick={() => openModal(item)}>
-                {item}
-              </CalendarDate>
+            <OnMonthDay key={index} onClick={() => openModal(item)}>
+              <CalendarDate howweek={howday}>{item}</CalendarDate>
+              <ScheduleBox howweek={howday}>
+                {monthSchedule.map((sc, idx) => {
+                  <div key={idx}>
+                    {sc.start_date.slice(-2) ===
+                    ("00" + item.toString()).slice(-2) ? (
+                      <ScTitle color={sc.color}>{sc.title}</ScTitle>
+                    ) : (
+                      <></>
+                    )}
+                  </div>;
+                })}
+              </ScheduleBox>
             </OnMonthDay>
           );
         })}
@@ -466,6 +476,7 @@ const MonthlyCalendar = (props) => {
           return (
             <NotMonthDay key={index}>
               <CalendarDate howweek={howday}>{item}</CalendarDate>
+              <ScheduleBox howweek={howday}></ScheduleBox>
             </NotMonthDay>
           );
         })}
@@ -508,11 +519,30 @@ const OnMonthDay = styled.div`
 const CalendarDate = styled.div`
   display: flex;
   justify-content: center;
-  @media screen and (max-height: 700px) {
+  /* @media screen and (max-height: 700px) {
     margin: 0 auto 60px;
   }
-  margin: ${(props) => (props.howweek === 5 ? " 0 auto 10vh" : "0 auto 8vh")};
+  margin: ${(props) =>
+    props.howweek === 5 ? " 0 auto 10vh" : "0 auto 8vh"}; */
   color: ${(props) => props.color};
+`;
+const ScheduleBox = styled.div`
+  @media screen and (max-height: 700px) {
+    height: 60px;
+  }
+  height: ${(props) => (props.howweek === 5 ? "10vh" : "8vh")};
+`;
+const ScTitle = styled.div`
+  color: ${(props) => props.color};
+  border: none;
+  border-radius: 5px;
+  height: 16px;
+  width: 100%;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-overflow: ellipsis;
 `;
 const MinMargin = styled.div`
   height: 64px;
