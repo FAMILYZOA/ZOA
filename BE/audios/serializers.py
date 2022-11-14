@@ -8,7 +8,7 @@ from .models import Audio
 class AudioSerializer(serializers.ModelSerializer):
 
     audio = serializers.FileField(
-        validators=[FileExtensionValidator(allowed_extensions=['m4a', 'mp3', 'mpeg'])])
+        validators=[FileExtensionValidator(allowed_extensions=['m4a', 'mp3'])])
 
     class Meta:
         model = Audio
