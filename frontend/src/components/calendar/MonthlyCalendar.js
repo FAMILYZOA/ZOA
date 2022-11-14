@@ -221,6 +221,7 @@ const MonthlyCalendar = (props) => {
             );
           })}
         </MonthWrapper>
+        <MinMargin></MinMargin>
       </>
     );
 };
@@ -238,9 +239,10 @@ const MonthlyCalendar = (props) => {
     `;
 
     const MonthWrapper = styled.div`
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-    `
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+
+    `;
 
     const NotMonthDay = styled.div`
         color: #bebebe;
@@ -253,8 +255,14 @@ const MonthlyCalendar = (props) => {
     const CalendarDate = styled.div`
         display: flex;
         justify-content: center;
+        @media screen and (max-height:740px){
+            margin: 0 auto 60px;
+        }
         margin: ${props => props.howweek === 5 ? " 0 auto 10vh" : "0 auto 8vh"};
         color: ${(props) => props.color};
+    `
+    const MinMargin = styled.div`
+        height: 64px;
     `
 
 
