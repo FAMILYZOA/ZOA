@@ -1,5 +1,5 @@
 from django.urls import path
-from event.views import AuthenticationAcceptAPIView, PhoneAuthenticationView, FCMAuthenticationView, 
+from event.views import AuthenticationAcceptAPIView, PhoneAuthenticationView
 
 app_name = 'event'
 
