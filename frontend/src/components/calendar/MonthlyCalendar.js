@@ -356,7 +356,7 @@ const MonthlyCalendar = (props) => {
         dailyschedule={dailyschedule}
       >
         <ModalBox show={showModal}>
-          <CloseIcon onClick={() => setShowModal(false)}>
+          <CloseIcon onClick={closeModal}>
             <IoIosClose size={32} color="#888888" />
           </CloseIcon>
           <DeleteIcon onClick={() => deleteSchedule()} state={state}>
