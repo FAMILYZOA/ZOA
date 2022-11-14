@@ -39,7 +39,7 @@ const App = () => {
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
-  const url = {uri: 'https://familyzoa.com'};
+  const url = {uri: 'http://172.20.10.8:3000'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -65,10 +65,8 @@ const App = () => {
 
   const camOpt = {
     mediaType: 'photo',
-    quality: 1,
+    quality: 0.7,
     cameraType: 'back',
-    maxWitdh: 360,
-    maxHeight: 360,
     includeBase64: true,
     saveToPhoto: true,
   };
@@ -76,8 +74,6 @@ const App = () => {
   const gallOpt = {
     mediaType: 'photo',
     quality: 1,
-    maxWitdh: 360,
-    maxHeight: 360,
     includeBase64: true,
   };
 
@@ -166,6 +162,8 @@ const App = () => {
             actionSheetRef.current.hide();
           }
           if (res.assets) {
+            console.log(res.assets[0].height);
+            console.log(res.assets[0].width);
             webViewRef.current.postMessage(
               JSON.stringify({from: command, photo: res.assets[0].base64}),
             );
@@ -309,8 +307,10 @@ true;
       }
       return true;
     } else if (os === 'ios') {
-      if (event.url.includes('intent')) {
+      if (event.url.includes('kakaolink')) {
         console.log(event.url);
+        Linking.openURL(event.url);
+        return false;
       }
     }
     return true;
