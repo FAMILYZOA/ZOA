@@ -5,5 +5,7 @@ app_name = 'event'
 
 urlpatterns = [
     path('', PhoneAuthenticationView.as_view(), name="sms_post"),
+
     path('check/', AuthenticationAcceptAPIView.as_view(), name="sms_checker"),
+    
 ]
