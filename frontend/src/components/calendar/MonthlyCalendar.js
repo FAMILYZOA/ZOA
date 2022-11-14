@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import { IoIosClose } from "react-icons/io"
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
+import { HiPlusCircle } from "react-icons/hi";
 
 const ModalBox = styled.div`
     width: 90%;
@@ -106,7 +107,7 @@ const DateValue = styled.div`
 
 
 const MonthlyCalendar = (props) => {
-    const {year, month, setYearAndMonth} = props;
+    const {year, month, setYearAndMonth, backgroundColor} = props;
 
     // redux 값 불러오는 곳
     const token = useAppSelector((state) => state.token.access)
@@ -117,22 +118,23 @@ const MonthlyCalendar = (props) => {
     const [calendar, setCalendar] = useState([]);  // 현재 달 날짜 채우기
     const [before, setBefore] = useState([]);  // 이전 달 날짜 채우기
     const [after, setAfter] = useState([]);  // 다음 달 날짜 채우기
-    const [schedule, setSchedule] = useState([]);  // 이번 달 일정 채우기
+    const [monthSchedule, setMonthSchedule] = useState([]);  // 이번 달 일정 채우기
     const [howday, setHowday] = useState(0);
 
 
     // 월별 일정 조회 api 요청
-    const getSchedule = async () => {
+    const getMonthSchedule = () => {
         axios({
             method: "GET",
-            url: `https://k7b103.p.ssafy.io/api/v1/calendar/schedule/${year}-${month}`,
+            url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${year}-${month}`,
             headers: {
                 Authorization: `Bearer ${token}`,
             }
         }).then((res) => {
-            setSchedule(res.data)
+            setMonthSchedule(res.data)
         })
     };
+    console.log(monthSchedule);
 
     // 오늘 날짜 찾기
     const [today, setToday] = useState(0);
@@ -142,7 +144,7 @@ const MonthlyCalendar = (props) => {
     };
 
     useEffect(() => {
-        getSchedule();
+        getMonthSchedule();
         getCalendar();
         setYearAndMonth(presDate.getFullYear(), presDate.getMonth() + 1);
         goToday();
@@ -168,7 +170,6 @@ const MonthlyCalendar = (props) => {
         calendar = [...Array(afterDay + 1).keys()].slice(1);
 
         setHowday((before.length + after.length + calendar.length)/7);
-        console.log(howday);
         setBefore([...before])
         setAfter([...after])
         setCalendar([...calendar])
@@ -232,12 +233,42 @@ const MonthlyCalendar = (props) => {
       },
     };
 
+
+    const [dailyschedule, setDailySchedule] = useState([]);
+    // 일별 일정 조회
+    const getDailySchedule = () => {
+      if (state === "view") {
+        axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${year}-${month}-${modalDate.slice(-2)}`,
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then((res) => {
+          if (res.status === 200) {
+            setDailySchedule(res.data)
+          }
+          if (res.status === 404) {
+            setDailySchedule([])
+            setDailySchedule(res.data)
+          }
+        })
+      }
+    };
+
+
+    useEffect(() => {
+      getDailySchedule();
+    }, [state, modalDate.slice(-2)])
+    console.log(`${modalDate.slice(-2)}일 일정`, dailyschedule);
+
     const deleteSchedule = () => {
         
     }
     const saveSchedule = () => {
         
     }
+
 
     return (
       <>
@@ -247,6 +278,7 @@ const MonthlyCalendar = (props) => {
           ariaHideApp={false}
           style={modalStyle}
           onClick={() => setShowModal(false)}
+          dailyschedule={dailyschedule}
         >
           <ModalBox>
             <CloseIcon onClick={() => setShowModal(false)}>
@@ -261,12 +293,33 @@ const MonthlyCalendar = (props) => {
             <ModalDateBox>
                 <ModalDate> 
                     {modalDate}
-
                 </ModalDate>
             </ModalDateBox>
             <ModalContents>
-
-
+              {/* scheduleview */}
+                    {dailyschedule.map((item, id) => {
+                      return (
+                        <DailyScheduleWrapper dailyschedule key={id}>
+                        <ColorBox style={{backgroundColor: `${item.color}`}}/>
+                          <div style={{display: "block"}}>
+                          {item.title}
+                          <DailyDateWrapper>
+                            {item.start_date === item.end_date ? (
+                              <div>
+                                {item.start_date.slice(5, 7)}/{item.start_date.slice(8, 10)}
+                              </div>
+                            ): (
+                              <div>
+                                {item.start_date.slice(5, 7)}/{item.start_date.slice(8, 10)} ~ {item.end_date.slice(5, 7)}/{item.end_date.slice(8, 10)}
+                              </div>
+                            )}
+                          </DailyDateWrapper>
+                          </div>
+                        </DailyScheduleWrapper>
+                      );
+                    })}
+                    <PlusButtonWrapper><HiPlusCircle/></PlusButtonWrapper>
+              {/* scheduleview 끝 */}
             </ModalContents>
           </ModalBox>
         </Modal>
@@ -367,5 +420,34 @@ const MonthlyCalendar = (props) => {
         height: 64px;
     `
 
+    const ColorBox = styled.div`
+      background-color: ${(props) => props.backgroundColor};
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      margin-right: 4px;
+    `
+
+    const DailyScheduleWrapper = styled.div`
+      display: flex;
+      margin-left: 6px;
+      margin-bottom: 20px;
+    `
+
+    const DailyDateWrapper = styled.div`
+      color: #666666;
+    `
+
+    const PlusButtonWrapper = styled.button`
+      background-color: transparent;
+      background: linear-gradient(45deg, #fec786, #fe9b7c);
+      /* -webkit-background-clip: text; */
+      /* -webkit-text-fill-color: transparent; */
+      border: none;
+      border-radius: 50%;
+      font-size: xx-large;
+      color: white;
+      cursor: pointer;
+    `;
 
 export default MonthlyCalendar;
