@@ -22,11 +22,11 @@ const fadeInUp = keyframes`
 `;
 const fadeInDown = keyframes`
   0% {
-    opacity: 0;
+    opacity: 1;
     transform: translateZ(0);    
   }
   to {
-    opacity: 1;
+    opacity: 0;
     transform: translate3d(0, 100%, 0);
   }
 `;
