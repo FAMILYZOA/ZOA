@@ -7,15 +7,20 @@ import Modal from "react-modal";
 import { IoIosClose } from "react-icons/io"
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
+import { FaPlus } from "react-icons/fa";
+import CreateSchedule from "./CreateSchedule";
+
 
 const ModalBox = styled.div`
-    width: 90%;
-    height: 64%;
-    margin: 30% 5%;
+    width: 80vw;
+    height: 500px;
+    /* margin: 30% 5%; */
+    top: 100px;
+    left: auto;
     border-radius: 30px;
     background-color: white;
     padding: 10% 5% 5%;
-    position: relative;
+    position: absolute;
 `
 const CloseIcon = styled.div`
     margin: 5% 5% 0;
@@ -44,6 +49,30 @@ const SaveIcon = styled.div`
   top: 0;
   right: 0;
 `;
+const PlusIcon = styled.div`
+  margin: 0 5% 5%;
+  display: ${(props) => (props.state === "view" ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 1.8em;
+  font-weight: bold;
+  div {
+    background: linear-gradient(45deg, #ff787f, #fec786);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 30px;
+    color: white;
+    font-size: 1.8em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
 const ModalDateBox = styled.div`
   margin: 5% auto 0;
   font-weight: bold;
@@ -53,7 +82,7 @@ const ModalDate = styled.span`
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: bold;
 `;
 const ModalContents = styled.div`
@@ -109,6 +138,8 @@ const MonthlyCalendar = (props) => {
     const {year, month, setYearAndMonth} = props;
 
     // redux 값 불러오는 곳
+    const userId = useAppSelector((state)=> state.user.id);
+    const familyId = useAppSelector((state)=> state.family.id);
     const token = useAppSelector((state) => state.token.access)
 
     const weekly = ["일", "월", "화", "수", "목", "금", "토"];
@@ -202,6 +233,15 @@ const MonthlyCalendar = (props) => {
     // view=list read=한개 create=create
     const [state, setState] = useState("view")
     const [showModal, setShowModal] = useState(false);
+    const [content, setContent] = useState({
+      title: "",
+      color: "",
+      important_mark: false,
+      writer: userId,
+      start_date: "",
+      end_date: "",
+      family: familyId,
+    });
     const openModal = (date) => {
       setShowModal(true);
       const zerodate = ("00" + date).slice(-2);
@@ -236,7 +276,29 @@ const MonthlyCalendar = (props) => {
         
     }
     const saveSchedule = () => {
-        
+        const data = new FormData();
+        data.append("title", content.title);
+        data.append("color", content.color);
+        data.append("important_mark", content.important_mark);
+        data.append("writer", content.writer);
+        data.append("start_date", content.start_date);
+        data.append("end_date", content.end_date);
+        data.append("family", content.family);
+        axios({
+          method: "POST",
+          url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/?date=${content.start_date}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: data,
+        });
+
+    }
+    const addSchedule = () => {
+        setState("create");
+    }
+    const schedules = (data) => {
+        setContent({...data});
     }
 
     return (
@@ -258,15 +320,18 @@ const MonthlyCalendar = (props) => {
             <SaveIcon onClick={() => saveSchedule()} state={state}>
               <BsCheck size={32} color="#888888" />
             </SaveIcon>
+            <PlusIcon onClick={() => addSchedule()} state={state}>
+                <div>
+                    <FaPlus size={32} />
+                </div>
+            </PlusIcon>
             <ModalDateBox>
-                <ModalDate> 
-                    {modalDate}
-
-                </ModalDate>
+              <ModalDate>{modalDate}</ModalDate>
             </ModalDateBox>
             <ModalContents>
-
-
+                {state === "create" ? (
+                    <CreateSchedule schedules={schedules} date={modalDate}></CreateSchedule>
+                ) : (<></>)}
             </ModalContents>
           </ModalBox>
         </Modal>
@@ -291,7 +356,7 @@ const MonthlyCalendar = (props) => {
         <WeeklyWrapper>
           {weekly.map((item, index) => {
             return (
-              <div weekly key={index}>
+              <div key={index}>
                 <WeekText color={item}>{item}</WeekText>
               </div>
             );
@@ -357,7 +422,7 @@ const MonthlyCalendar = (props) => {
     const CalendarDate = styled.div`
         display: flex;
         justify-content: center;
-        @media screen and (max-height:740px){
+        @media screen and (max-height:700px){
             margin: 0 auto 60px;
         }
         margin: ${props => props.howweek === 5 ? " 0 auto 10vh" : "0 auto 8vh"};
