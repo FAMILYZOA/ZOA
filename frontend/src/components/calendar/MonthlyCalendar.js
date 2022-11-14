@@ -7,7 +7,6 @@ import Modal from "react-modal";
 import { IoIosClose } from "react-icons/io";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
-import { HiPlusCircle } from "react-icons/hi";
 import { FaPlus } from "react-icons/fa";
 import CreateSchedule from "./CreateSchedule";
 
@@ -260,6 +259,7 @@ const MonthlyCalendar = (props) => {
   const closeModal = () => {
     setState("view");
     setShowModal(false);
+    setDailySchedule([]);
   };
   const modalStyle = {
     overlay: {
@@ -296,11 +296,10 @@ const MonthlyCalendar = (props) => {
           Authorization: `Bearer ${token}`,
         },
       }).then((res) => {
-        if (res.status === 200) {
-          setDailySchedule(res.data);
-        }
         if (res.status === 404) {
           setDailySchedule([]);
+        }
+        if (res.status === 200) {
           setDailySchedule(res.data);
         }
       });
@@ -382,6 +381,12 @@ const MonthlyCalendar = (props) => {
               ></CreateSchedule>
             ) : state === "view" ? (
               <>
+                {dailyschedule.length === 0 ? (
+                  <div style={{color: "#666666"}}>
+                    이날의 일정이 없습니다.
+                  </div>
+                ) : 
+                <>
                 {dailyschedule.map((item, id) => {
                   return (
                     <DailyScheduleWrapper dailyschedule key={id}>
@@ -407,9 +412,8 @@ const MonthlyCalendar = (props) => {
                     </DailyScheduleWrapper>
                   );
                 })}
-                <PlusButtonWrapper>
-                  <HiPlusCircle />
-                </PlusButtonWrapper>
+                </>
+                }
               </>
             ) : (
               <>{/* one들어가야함 */}</>
