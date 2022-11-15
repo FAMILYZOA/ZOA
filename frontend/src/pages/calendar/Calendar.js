@@ -47,7 +47,7 @@ const Calendar = () => {
         month={date.month}
         day={date.day}
         setYearAndMonth={setYearAndMonth}
-        monthSchedule={monthSchedule}
+        monthSchedules={monthSchedule}
       />
     </>
   )

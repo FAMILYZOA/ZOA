@@ -144,7 +144,12 @@ const DateValue = styled.div`
 `;
 
 const MonthlyCalendar = (props) => {
-  const { year, month, setYearAndMonth, monthSchedule } = props;
+  const { year, month, setYearAndMonth, monthSchedules } = props;
+  const [monthSchedule, setMonthSchedule] = useState([...monthSchedules]);
+
+  useEffect(()=>{
+    setMonthSchedule(monthSchedules);
+  },[monthSchedules])
 
   // redux 값 불러오는 곳
   const userId = useAppSelector((state) => state.user.id);
@@ -246,6 +251,7 @@ const MonthlyCalendar = (props) => {
   };
   const closeModal = () => {
     setState("view");
+    
     setShowModal(false);
     setDailySchedule([]);
   };
@@ -317,6 +323,7 @@ const MonthlyCalendar = (props) => {
       if (res.status === 201) {
         alert("일정이 성공적으로 등록되었습니다!");
         setState("view");
+        setMonthSchedule(monthSchedule.concat(res.data));
       }
     });
   };
