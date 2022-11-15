@@ -222,7 +222,7 @@ function CreateSchedule({ date, schedules, state }) {
             <DatePicker
               onChange={(date) => onChangeEnddate(date)}
               startDate={thisdate}
-              minDate={new Date()}
+              minDate = {new Date(thisdate)}
               locale={ko}
               placeholder={thisdate}
               customInput={
