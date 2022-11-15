@@ -587,6 +587,9 @@ const ScTitle = styled.div`
   border-radius: 5px;
   height: 16px;
   width: 13vw;
+  @media screen and (min-width: 720px) {
+    width: calc(10vh - 4px);
+  }
   font-size: 12px;
   display: flex;
   justify-content: center;
@@ -595,6 +598,9 @@ const ScTitle = styled.div`
   p {
     margin: auto 2px;
     width: calc(13vw - 4px);
+    @media screen and (min-width: 720px) {
+      width: calc(10vh - 8px);
+    }
     text-overflow: hidden;
     overflow: hidden;
     white-space: nowrap;
@@ -606,19 +612,15 @@ const ScTitle3 = styled.div`
   border: none;
   height: 16px;
   width: calc(13vw + 4px);
+  @media screen and (min-width: 720px) {
+    width: calc(10vh);
+  }
   font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: -1;
   /* text-overflow: ellipsis; */
-  p {
-    margin: auto 2px;
-    width: calc(13vw - 4px);
-    text-overflow: hidden;
-    overflow: hidden;
-    white-space: nowrap;
-  }
 `;
 const ScTitle2 = styled.div`
   margin: ${(props) =>
@@ -629,6 +631,9 @@ const ScTitle2 = styled.div`
     props.a === "start" ? "5px 0 0 5px" : "0 5px 5px 0"};
   height: 16px;
   width: 13vw;
+  @media screen and (min-width: 720px) {
+    width: calc(10vh - 4px);
+  }
   font-size: 12px;
   display: flex;
   align-items: center;
@@ -637,6 +642,9 @@ const ScTitle2 = styled.div`
   p {
     margin: auto 2px;
     width: 200%;
+    @media screen and (min-width: 720px) {
+      width: calc(10vh - 8px);
+    }
     text-overflow: ${(props) => (props.a === "start" ? "visible" : "hidden")};
     overflow: ${(props) => (props.a === "start" ? "visible" : "hidden")};
     white-space: nowrap;
