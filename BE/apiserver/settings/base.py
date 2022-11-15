@@ -203,7 +203,9 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # cred = credentials.Certificate(cred_path)
 # firebase_admin.initialize_app(cred)
 
-# firebase 
+# firebase
+import firebase_admin
+from firebase_admin import credentials 
 import json 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -230,6 +232,8 @@ service_account_key = {
     "client_x509_cert_url" : get_secret('client_x509_cert_url'),
 
 }
+cred = credentials.Certificate(service_account_key)
+firebase_admin.initialize_app(cred)
 
 #Static
 STATIC_URL = '/assets/'
