@@ -9,15 +9,17 @@ import Comment from "../../components/scrum/Comment";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { FiCheckSquare } from "react-icons/fi";
-import EmojiPicker, {
-  Emoji,
-  EmojiStyle,
-  EmojiClickData,
-} from "emoji-picker-react";
+import EmojiPicker, { Emoji} from "emoji-picker-react";
 import Modal from "react-modal";
 
 const Container = styled.div`
   margin: 5%;
+`;
+const ImgTag = styled.img`
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 `;
 
 const DateBox = styled.div`
@@ -201,6 +203,34 @@ const onHandleAfterDate = () => {
     },
   };
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalimg, setImg] = useState("");
+  const openModal = (imgurl) => {
+    setShowModal(true);
+    setImg(imgurl);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyleImg = {
+    overlay: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    content: {
+      inset: "auto 10%",
+      width: "80%",
+      height: "auto",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0",
+      margin: "auto",
+    },
+  };
+
 
   const clickEdit = () => {
     setEdit(true);
@@ -236,6 +266,15 @@ const onHandleAfterDate = () => {
 
   return (
     <>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyleImg}
+        onClick={closeModal}
+      >
+        <ImgTag src={modalimg} alt="" onClick={closeModal} />
+      </Modal>
       <Header label={"안녕"} back="true"></Header>
       <DateBox>
         <ArrowIconBox onClick={onHandleBeforeDate} active={true}>
@@ -259,7 +298,12 @@ const onHandleAfterDate = () => {
       {blank === true ? (
         <Container>
           <Profile>
-            <UserImg src={state.image}></UserImg>
+            <UserImg
+              src={state.image}
+              onClick={() => {
+                openModal(state.image);
+              }}
+            ></UserImg>
             <NameEmojiBox>
               {state.set_name !== false ? (
                 <p>
@@ -285,7 +329,12 @@ const onHandleAfterDate = () => {
         <Container>
           <Profile2>
             <Profile>
-              <UserImg src={state.image}></UserImg>
+              <UserImg
+                src={state.image}
+                onClick={() => {
+                  openModal(state.image);
+                }}
+              ></UserImg>
               <NameEmojiBox>
                 {state.set_name !== false ? (
                   <p>
@@ -376,7 +425,12 @@ const onHandleAfterDate = () => {
       ) : (
         <Container>
           <Profile>
-            <UserImg src={state.image}></UserImg>
+            <UserImg
+              src={state.image}
+              onClick={() => {
+                openModal(state.image);
+              }}
+            ></UserImg>
             <NameEmojiBox>
               {state.set_name !== false ? (
                 <p>
