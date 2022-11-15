@@ -30,4 +30,4 @@ body = 'body'
 deep_link = 'familyzoa.com'
 device_list = get_group_user_token(family_id)
 for device in device_list :
-    send_to_firebase_cloud_messaging(device.fcmToken,title,body,deep_link)
+    send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
