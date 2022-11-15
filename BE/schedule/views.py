@@ -44,7 +44,8 @@ class SearchScheduleAPIView(GenericAPIView):
             Q(start_date__month__lte=month.month) & 
             Q(family_id=request.user.family_id)
         ).order_by('start_date')
-        serializer = ScheduleSerializer(schedule, many=True)
+        result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
+        serializer = ScheduleSerializer(result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -58,7 +59,8 @@ class CreateSearchScheduleAPIView(GenericAPIView):
             Q(end_date__gte=date) & 
             Q(family_id=request.user.family_id)
         ).order_by('start_date')
-        serializer = ScheduleSerializer(schedule, many=True)
+        result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
+        serializer = ScheduleSerializer(result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_summary="date 입력 양식: YYYY-MM-DD, end_date 입력안하면 date값으로 입력됨", request_body=ScheduleSerializer)
