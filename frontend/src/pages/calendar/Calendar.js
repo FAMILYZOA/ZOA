@@ -38,6 +38,7 @@ const Calendar = () => {
           Authorization: `Bearer ${token}`,
         },
       }).then((res) => {
+        console.log(res.data);
         setMonthSchedule(res.data);
       });
     };

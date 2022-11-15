@@ -569,11 +569,66 @@ const MonthlyCalendar = (props) => {
                 {monthSchedule.map((sc, idx) => {
                   return (
                     <div key={idx}>
-                      {/* 범위 안에 */}
-                      {Number(sc.start_date.slice(-2)) <=
-                        Number(("00" + item).slice(-2)) &&
-                      Number(("00" + item).slice(-2)) <=
-                        Number(sc.end_date.slice(-2)) ? (
+                      {/* 시작 종료 다른달 */}
+                      {sc.start_date.slice(5, 7) !== sc.end_date.slice(5, 7) ? (
+                        // 시작과 같은 달
+                        Number(sc.start_date.slice(5, 7)) ===
+                        Number(presDate.getMonth() + 1) ? (
+                          Number(sc.start_date.slice(-2)) <=
+                          Number(("00" + item).slice(-2)) ? (
+                            sc.start_date.slice(-2) ===
+                            ("00" + item).slice(-2) ? (
+                              // 시작 날짜
+                              <>
+                                <ScTitle2 a={"start"} color={sc.color}>
+                                  <p a={"start"}>{sc.title}</p>
+                                </ScTitle2>
+                              </>
+                            ) : (
+                              //중간날짜
+                              <ScTitle3 color={sc.color}>
+                                <p></p>
+                              </ScTitle3>
+                            )
+                          ) : (
+                            <></>
+                          )
+                        ) : // 종료와 같은 달
+                        Number(sc.end_date.slice(5, 7)) ===
+                          Number(presDate.getMonth() + 1) ? (
+                          Number(("00" + item).slice(-2)) <=
+                          Number(sc.end_date.slice(-2)) ? (
+                            ("00" + item).slice(-2) ===
+                            sc.end_date.slice(-2) ? (
+                              //종료날짜
+                              <>
+                                <ScTitle2 a={"end"} color={sc.color}>
+                                  <p></p>
+                                </ScTitle2>
+                              </>
+                            ) : (
+                              //중간날짜
+                              <>
+                                <ScTitle3 color={sc.color}>
+                                  <p></p>
+                                </ScTitle3>
+                              </>
+                            )
+                          ) : (
+                            <></>
+                          )
+                        ) : (
+                          //중간달
+                          <ScTitle3 color={sc.color}>
+                            <p></p>
+                          </ScTitle3>
+                        )
+                      ) : // 시작 종료 같은 달
+                      // 범위 안에
+                      Number(sc.start_date.slice(-2)) <=
+                          Number(("00" + item).slice(-2)) &&
+                        Number(("00" + item).slice(-2)) <=
+                          Number(sc.end_date.slice(-2)) ? (
                         //하루치
                         sc.start_date.slice(-2) === sc.end_date.slice(-2) ? (
                           <>
