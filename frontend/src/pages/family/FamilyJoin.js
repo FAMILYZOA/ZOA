@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
 import logo from "../../assets/white-logo.png";
-import { useDispatch } from "react-redux";
 import { setFamilyId } from "../../features/family/familySlice";
 
 const Header = styled.div`
@@ -78,10 +77,9 @@ const Btn = styled.div`
 function FamilyJoin() {
   const navigate = useNavigate();
   const params = useParams();
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
   const familyId = params.familyId;
-  const access = useAppSelector((state) => state.token.access);
+  const accessToken = useAppSelector((state) => state.token.access);
   const [family, setFamily] = useState("");
   const haveFam = useAppSelector((state)=>state.family.id);
 
@@ -90,7 +88,7 @@ function FamilyJoin() {
       method: "POST",
       url: `${process.env.REACT_APP_BACK_HOST}/family/sign/${familyId}/`,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => {
       dispatch(setFamilyId(localStorage.getItem("familyId")));
@@ -120,7 +118,7 @@ function FamilyJoin() {
           navigate("/");
         }
     }
-  }, []);
+  }, [haveFam]);
 
   return (
     <div>
