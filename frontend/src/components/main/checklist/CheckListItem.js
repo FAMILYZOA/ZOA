@@ -9,8 +9,6 @@ const Container = styled.div`
   width: 100%;
   align-items: center;
   margin-bottom: 4px;
-  opacity: ${(props) => (props.isDisplay ? 1 : 0)};
-  transition: opacity 0.5s;
 `;
 
 const IconBox = styled.div`
@@ -21,27 +19,20 @@ const IconBox = styled.div`
 
 const TextBox = styled.p`
   text-decoration: ${(props) =>
-    props.active === true ? "line-through #808080" : null};
-  color: ${(props) => (props.active === true ? "#808080" : "black")};
+    props.active ? "line-through #808080" : "line-through transparent"};
+  color: ${(props) => (props.active ? "#808080" : "black")};
   margin: auto 8px;
+  transition: color 0.5s;
 `;
 
-const CheckListItem = ({item, checked}) => {
-  const [isDisplay, setIsDisplay] = useState(true);
+const CheckListItem = ({ item, checked }) => {
   // 체크 했을 때 스타일 설정
-  let itemTextColor = "#000000";
-  let textDecorationLine = "";
-
-  if (item.status === true) {
-    itemTextColor = "#808080";
-    textDecorationLine = "line-through";
-  }
-
   const token = useAppSelector((state) => state.token.access);
+  const [isDisplay, setIsDisplay] = useState(item.status);
 
   // 체크리스트 완료 api
   const onPutCheckList = () => {
-    setIsDisplay(false);
+    setIsDisplay(!item.status);
     setTimeout(() => {
       axios({
         method: "put",
@@ -52,14 +43,14 @@ const CheckListItem = ({item, checked}) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then(()=>{
+      }).then(() => {
         checked();
-      })
-    }, 600)
+      });
+    }, 600);
   };
 
   return (
-    <Container isDisplay={isDisplay}>
+    <Container>
       <IconBox
         onClick={() => {
           onPutCheckList(item.id);
@@ -72,11 +63,7 @@ const CheckListItem = ({item, checked}) => {
         )}
       </IconBox>
       {/* <TextBox active={item.active}>{item.text}</TextBox> */}
-      <TextBox
-        style={{ color: itemTextColor, textDecorationLine: textDecorationLine }}
-      >
-        {item.text}
-      </TextBox>
+      <TextBox active={isDisplay}>{item.text}</TextBox>
     </Container>
   );
 };
