@@ -2,6 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useAppSelector } from "../../app/hooks";
+import { confirmAlert } from "react-confirm-alert";
+import "./react-confirm-alert.css";
 
 
 const CommentList = styled.div`
@@ -90,6 +93,8 @@ const CommnetBtn = styled.div`
 `;
 
 function Comment({ id, comments }) {
+  const myId = useAppSelector((state)=>state.user.id);
+  const token = useAppSelector((state)=> state.token.access);
   const [content, setContent] = useState("");
   const [list, setList] = useState(comments);
   const onChange = (e) => {
@@ -104,7 +109,7 @@ function Comment({ id, comments }) {
         method: "POST",
         url: `${process.env.REACT_APP_BACK_HOST}/scrums/comment/${id}/`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${token}`,
         },
         data: data,
       }).then((res) => {
@@ -123,6 +128,41 @@ function Comment({ id, comments }) {
       clickPost();
     }
   };
+
+  const clickDelete = ({commentId, userId}) => {
+    if(userId === myId){
+      confirmAlert({
+        title: '정말로 댓글을 삭제하시겠습니까?',
+        buttons : [
+            {label: '네',
+            onClick: () => {
+              deleteComment(commentId)
+            }},
+            {
+              label: '아니오',
+            }
+        ]
+      })
+    } else {
+      alert('본인이 작성한 댓글만 수정, 삭제가 가능합니다.')
+    }
+  }
+
+  const deleteComment = (commentId) => {
+    axios({
+      method: "DELETE",
+      url: `${process.env.REACT_APP_BACK_HOST}/scrums/${commentId}/comment/`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res)=> {
+      if (res.status === 204) {
+        const newList = list.filter((item)=> item.id !== commentId);
+        setList(newList);
+        alert('댓글이 성공적으로 삭제되었습니다.')
+      }
+    })
+  }
 
   return (
     <>
@@ -145,12 +185,12 @@ function Comment({ id, comments }) {
             .slice(0)
             .reverse()
             .map((item, index) => (
-              <CommentBox key={index}>
-                <ImgBox>
-                  <img src={item.image} alt="" />
-                </ImgBox>
-                <CommentContent>{item.content}</CommentContent>
-              </CommentBox>
+                <CommentBox key={index} onClick={() => clickDelete({commentId: item.id, userId: item.user_id})}>
+                  <ImgBox>
+                    <img src={item.image} alt="" />
+                  </ImgBox>
+                  <CommentContent>{item.content}</CommentContent>
+                </CommentBox>
             ))
         ) : (
           <></>

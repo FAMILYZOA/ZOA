@@ -22,8 +22,8 @@ const NotFound = () => {
 const NotFoundWrapper = styled.div`
   overflow: hidden;
   background-color: transparent;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,7 +31,7 @@ const NotFoundWrapper = styled.div`
 
 const NotFoundImageWrapper = styled.div`
   min-width: 300px;
-  width: 50%;
+  width: 100%;
   height: 90%;
   max-width: 800px;
   max-height: 800px;
@@ -53,8 +53,10 @@ const MainLink = styled.div`
   -webkit-text-decoration: none;
   text-decoration: none;
   color: black;
-  top: 300px;
-  left: 5%;
+  bottom: 5%;
+  left: 50% !important;
+  transform: translate(-50%);
+
   font-weight: 700;
   @media screen and (max-width: 1320px) {
     left: 30%;

@@ -12,12 +12,15 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 2.5vh;
+  right: 1em;
 `;
 
 const ModalContentDiv = styled.div`
-  width: 85vw;
-  margin: 3vh 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 96%;
+  margin: 1.2em 0 0;
 `;
 
 const FontDescStyle = styled.div`
@@ -105,7 +108,7 @@ const FontBtnStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  margin: auto;
+  margin: 0 auto;
   margin-top: 20px;
   width: 35%;
 
@@ -136,16 +139,13 @@ const FontModal = (props: modalType) => {
 
   const modalStyle = {
     content: {
-      top: "27.5vh",
-      bottom: "27.5vh",
-      left: "4vw",
-      right: "4vw",
+      inset: "30% 5%",
       borderRadius: "2vh",
       border: "none",
       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       display: "flex",
       justifyContent: "center",
-      padding: "3.5vw",
+      padding: "1.4em",
     },
   };
 
