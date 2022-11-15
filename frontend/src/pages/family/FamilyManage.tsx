@@ -62,13 +62,13 @@ const FamilyInviteBox = styled.div`
 `;
 
 const IconBox = styled.div`
-  width: 2em;
+  width: 2em !important;
   height: 2em;
-  border-radius: 24px;
+  border-radius: 1em;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
   margin-right: 0.6em;
-  line-height: 56px;
+  line-height: 2.2em;
   text-align: center;
   font-size: 1.2em;
 `;
@@ -142,10 +142,11 @@ const ModalBack = styled.div<modalBackProps>`
 const ModalDiv = styled.div<modalBackProps>`
   position: absolute;
   padding: 20px;
-  width: 70vw;
+  width: 70%;
   height: 22vh;
-  left: 10vw;
-  top: 35vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 3;
   border-radius: 12px;
   background-color: #fff;
