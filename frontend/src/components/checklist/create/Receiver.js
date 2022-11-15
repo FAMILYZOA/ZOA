@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useAppSelector } from "../../../app/hooks";
 
 const Container = styled.div`
   border-bottom: 1px solid #d9d9d9;
@@ -54,38 +55,17 @@ const UserBox = styled.div`
 `;
 
 function Receiver({ receivers }) {
-  const [familyId, setId] = useState("");
+  const myId = useAppSelector((state)=> state.user.id);
+  const tmpfamily = useAppSelector((state) => state.family.users);
   const [family, setFamily] = useState([]);
-  useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    }).then((res) => {
-      setId(res.data.family_id);
-    });
-  }, []);
 
   useEffect(() => {
-    if (familyId.length !== 0) {
-      axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}/`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }).then((res) => {
-        setFamily(res.data.users);
-        setFamily(
-          res.data.users.map((item) =>
-            item ? { ...item, active: false } : family
-          )
-        );
-      });
-    }
-  }, [familyId]);
+    const my = tmpfamily.filter((item)=> item.id === myId)
+    const notmy = tmpfamily.filter((item)=> item.id !== myId)
+    setFamily(
+      [...my, ...notmy].map((item) => (item ? { ...item, active: false } : family))
+    );
+  }, [tmpfamily]);
 
   const [receiver, setReceiver] = useState([]);
   const active = (active, id, index) => {

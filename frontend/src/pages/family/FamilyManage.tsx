@@ -62,13 +62,13 @@ const FamilyInviteBox = styled.div`
 `;
 
 const IconBox = styled.div`
-  width: 2em;
+  width: 2em !important;
   height: 2em;
-  border-radius: 24px;
+  border-radius: 1em;
   background: linear-gradient(150.19deg, #ff787f 9.11%, #fec786 93.55%);
   color: #fff;
   margin-right: 0.6em;
-  line-height: 56px;
+  line-height: 2.2em;
   text-align: center;
   font-size: 1.2em;
 `;
@@ -142,10 +142,11 @@ const ModalBack = styled.div<modalBackProps>`
 const ModalDiv = styled.div<modalBackProps>`
   position: absolute;
   padding: 20px;
-  width: 70vw;
+  width: 70%;
   height: 22vh;
-  left: 10vw;
-  top: 35vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 3;
   border-radius: 12px;
   background-color: #fff;
@@ -185,7 +186,7 @@ const ModalDiv = styled.div<modalBackProps>`
       opacity: 1;
     }
   }
-`
+`;
 const ModalContent = styled.div`
   position: relative;
   display: flex;
@@ -193,30 +194,30 @@ const ModalContent = styled.div`
   height: 100%;
   justify-content: center;
   align-items: center;
-`
+`;
 const CloseDiv = styled.div`
   position: absolute;
   top: -0.25em;
   right: -0.25em;
   width: 1em;
   height: 1em;
-`
+`;
 const Modal24 = styled.div`
   font-weight: 600;
   margin-bottom: 0.4em;
-`
+`;
 const Modal16 = styled.div`
   font-size: 0.8em;
   margin-bottom: 0.8em;
-`
+`;
 const ModalHighlight = styled.span`
   font-weight: bold;
   color: #ff787f;
-`
+`;
 const Modal12 = styled.div`
   font-size: 0.6em;
   margin-bottom: 1.8em;
-`
+`;
 const ConfrimButton = styled.div`
   display: flex;
   justify-content: center;
@@ -225,9 +226,15 @@ const ConfrimButton = styled.div`
   height: 2em;
   font-size: 0.8em;
   color: #fff;
-  background: linear-gradient(269.68deg, #FF787F 2.43%, #FEC786 44.73%, #F6CC91 58.19%, #BBF1E8 94.73%);
+  background: linear-gradient(
+    269.68deg,
+    #ff787f 2.43%,
+    #fec786 44.73%,
+    #f6cc91 58.19%,
+    #bbf1e8 94.73%
+  );
   border-radius: 12px;
-`
+`;
 
 const FamilyManage = () => {
   const familyMembersList = useAppSelector((state) => state.family.users);
@@ -254,17 +261,22 @@ ${inviteLink}`;
   };
   const sendMessage = () => {
     if (os === "Android OS") {
-      window.location.href = `sms:?body=${smsUrl}`;
-      if(window.ReactNativeWebView){
+      if (window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+      } else {
+        window.location.href = `sms:?body=${smsUrl}`;
       }
-    }else if(os === "iOS") {
-      window.location.href = `sms:&body=${smsUrl}`
+    } else if (os === "iOS") {
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(`inviteSMS,${smsUrl}`);
+      } else {
+        window.location.href = `sms:&body=${smsUrl}`;
+      }
     }
   };
   const shareKakao = () => {
     const host = process.env.REACT_APP_FE_HOST;
-    
+
     try {
       // link를 우리 앱의 deeplink로 바꿔야 함.
       window.Kakao.Share.sendDefault({
@@ -289,15 +301,20 @@ ${inviteLink}`;
           },
         ],
       });
-    } catch (err) {
-    }
+    } catch (err) {}
   };
   const handleCopy = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      if (os === "iOS") {
+        setTimeout(async () => await navigator.clipboard.writeText(text));
+      } else if (os === "Android OS") {
+      } else {
+        await navigator.clipboard.writeText(text);
+      }
       setIsModal(true);
     } catch (error) {
-      alert('코드복사가 실패하였습니다. 나중에 다시 시도해주세요.')
+      console.log(error);
+      alert("코드복사가 실패하였습니다. 나중에 다시 시도해주세요.");
     }
   };
   const shareCode = () => {
@@ -307,11 +324,10 @@ ${inviteLink}`;
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    })
-      .then((res) => {
-        const code = res.data.invitationcode;
-        handleCopy(code);
-      })
+    }).then((res) => {
+      const code = res.data.invitationcode;
+      handleCopy(code);
+    });
   };
 
   return (
@@ -324,29 +340,27 @@ ${inviteLink}`;
         <div></div>
       </HeaderBox>
       {isModal && <ModalBack onClick={() => setIsModal(false)} />}
-      {isModal && <ModalDiv>
-        <ModalContent>
-          <div>
-            <CloseDiv onClick={() => setIsModal(false)}>
-              <IoMdClose/>
-            </CloseDiv>
-            <Modal24>초대코드가 복사되었습니다!</Modal24>
-            <Modal16>
-              {"초대코드 유효기간은 "}
-              <ModalHighlight>5분</ModalHighlight>
-              {" 입니다."}
-            </Modal16>
-            <Modal12>
-              위 주의사항을 확인 후 초대코드를 전달해주세요!
-            </Modal12>
-            <ConfrimButton onClick={() => setIsModal(false)}>
-              <div>
-                확인
-              </div>
-            </ConfrimButton>
-          </div>
-        </ModalContent>  
-      </ModalDiv>}
+      {isModal && (
+        <ModalDiv>
+          <ModalContent>
+            <div>
+              <CloseDiv onClick={() => setIsModal(false)}>
+                <IoMdClose />
+              </CloseDiv>
+              <Modal24>초대코드가 복사되었습니다!</Modal24>
+              <Modal16>
+                {"초대코드 유효기간은 "}
+                <ModalHighlight>5분</ModalHighlight>
+                {" 입니다."}
+              </Modal16>
+              <Modal12>위 주의사항을 확인 후 초대코드를 전달해주세요!</Modal12>
+              <ConfrimButton onClick={() => setIsModal(false)}>
+                <div>확인</div>
+              </ConfrimButton>
+            </div>
+          </ModalContent>
+        </ModalDiv>
+      )}
       <FamilyManageBody>
         <FamilyManageGuide>
           <div>

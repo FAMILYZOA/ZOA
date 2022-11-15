@@ -20,6 +20,9 @@ const HeaderBox = styled.div`
 
 const IconBox = styled.div`
   margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const HeaderLabel = styled.div`

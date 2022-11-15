@@ -43,6 +43,7 @@ import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
 import NotFound from "./pages/error/NotFound";
+import { detect, detectOS } from "detect-browser";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -139,9 +140,11 @@ function App() {
   }, [accessToken]);
 
   // =================================================== 모바일 연동 ==============================================
+  const os = detect()?.os;
   // React Native에서 메시지를 보내면 할 행동
   const getMessageFromDevice = (e: any) => {
     const data = JSON.parse(e.data);
+    console.log(data);
     // 사진일 경우 BackEnd에 수정 요청 보내기
     if (data.photo) {
       // 프로필사진 수정
@@ -200,7 +203,11 @@ function App() {
   window.__WEBVIEW_BRIDGE__ = {
     init() {
       try {
-        document.addEventListener("message", getMessageFromDevice);
+        if(os === 'android'){
+         document.addEventListener("message", getMessageFromDevice);
+        }else if(os === 'iOS'){
+          window.addEventListener("message", getMessageFromDevice);
+        }
       } catch (err) {
       }
     },
