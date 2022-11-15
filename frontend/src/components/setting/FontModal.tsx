@@ -139,7 +139,7 @@ const FontModal = (props: modalType) => {
 
   const modalStyle = {
     content: {
-      inset: "30% 5%",
+      inset: "25% 5%",
       borderRadius: "2vh",
       border: "none",
       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",

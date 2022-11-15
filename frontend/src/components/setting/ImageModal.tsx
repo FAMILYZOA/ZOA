@@ -101,7 +101,7 @@ const FontModal = (props: modalType) => {
 
   const modalStyle = {
     content: {
-      inset: "35% 5%",
+      inset: "30% 5%",
       width: "80%",
       borderRadius: "2vh",
       border: "none",

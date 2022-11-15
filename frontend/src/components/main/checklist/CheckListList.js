@@ -111,7 +111,7 @@ const CheckListList = () => {
           {list.length !== 0 ? (
             <div>
               {list.map((item, idx) => (
-                <CheckListItem item={item} checked={checked} key={idx} />
+                <CheckListItem item={item} checked={checked} key={item.id} />
               ))}
             </div>
           ) : (
