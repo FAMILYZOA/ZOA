@@ -160,20 +160,6 @@ const MonthlyCalendar = (props) => {
   // const [monthSchedule, setMonthSchedule] = useState([]); // 이번 달 일정 채우기
   const [howday, setHowday] = useState(0);
 
-  // // 월별 일정 조회 api 요청
-  // const getMonthSchedule = () => {
-  //   axios({
-  //     method: "GET",
-  //     url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${year}-${month}`,
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }).then((res) => {
-  //     setMonthSchedule(res.data);
-  //   });
-  // };
-  // console.log(monthSchedule);
-
   // 오늘 날짜 찾기
   const [today, setToday] = useState(0);
   const goToday = () => {
@@ -503,15 +489,6 @@ const MonthlyCalendar = (props) => {
                       ) : (
                         <></>
                       )}
-                      {/* {sc.start_date.slice(-2) === ("00" + item).slice(-2) ? (
-                        <>
-                          <ScTitle color={sc.color}>
-                            <p>{sc.title}</p>
-                          </ScTitle>
-                        </>
-                      ) : (
-                        <></>
-                      )} */}
                     </div>
                   );
                 })}
@@ -566,11 +543,6 @@ const OnMonthDay = styled.div`
 const CalendarDate = styled.div`
   display: flex;
   justify-content: center;
-  /* @media screen and (max-height: 700px) {
-    margin: 0 auto 60px;
-  }
-  margin: ${(props) =>
-    props.howweek === 5 ? " 0 auto 10vh" : "0 auto 8vh"}; */
   color: ${(props) => props.color};
 `;
 const ScheduleBox = styled.div`
