@@ -21,7 +21,7 @@ def send_to_firebase_cloud_messaging(token, title, body, deep_link):
 
 def get_group_user_token(family_id):
     user_list = User.objects.filter(family_id=family_id)
-    device_list = [device for device in Device.objects.filter(유저아이디__in = user_list)]
+    device_list = [device for device in Device.objects.filter(user__in = user_list)]
     return device_list
 
 family_id = 1
