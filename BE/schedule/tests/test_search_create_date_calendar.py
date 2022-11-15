@@ -50,7 +50,7 @@ class DateCalendarTestCase(TestCaseSetUp) :
         self.authenticate()
         today = date.today()
         response = self.client.get(reverse("calendar:create_search_calendar", kwargs={'date': today}))
-        self.assertEqual(response.data, '스케줄이 없습니다.')
+        self.assertEqual(response.data, [])
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     # end_date 없을 때
