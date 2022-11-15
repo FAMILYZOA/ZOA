@@ -96,7 +96,14 @@ const ModalDiv = styled.div`
   position: absolute;
   top: 13vh;
   right: 2vh;
+  height: 75vh;
+  overflow-y: scroll;
   z-index: 3;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const ModalItem = styled.div<modalItemProps>`
   display: flex;

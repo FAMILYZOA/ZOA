@@ -9,6 +9,11 @@ import Modal from "react-modal";
 
 const Container = styled.div``;
 
+const CheckItem = styled.div`
+  opacity: ${(props) => (props.isDisplay ? 1 : 0)};
+  transition: opacity 0.5s;
+`;
+
 const ImgTag = styled.img`
   object-fit: fill;
   width: 100%;
@@ -114,6 +119,7 @@ function TodoContents({ currentId }) {
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
+  const [select, setSelect] = useState(-1);
 
   const [click, setClick] = useState(-1);
 
@@ -188,20 +194,24 @@ function TodoContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    const tempList = [...list];
-    const data = new FormData();
-    data.append("status", 1);
-    axios({
-      method: "PUT",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-      data: data,
-    }).then((res) => {
-      tempList.splice(index, 1);
-      setList(tempList);
-    });
+    setSelect(index);
+    setTimeout(() => {
+      const tempList = [...list];
+      const data = new FormData();
+      data.append("status", 1);
+      axios({
+        method: "PUT",
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        data: data,
+      }).then((res) => {
+        setSelect(-1);
+        tempList.splice(index, 1);
+        setList(tempList);
+      });
+    },600)
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -245,13 +255,14 @@ function TodoContents({ currentId }) {
       </Modal>
       {list && (
         <>
-          {list.map((li, index) => (
-            <div key={index}>
+          {list.map((li, index) => {
+            return(
+            <CheckItem key={index} isDisplay={select !== index}>
               <NoToggle>
                 <BiCheckbox
                   size={32}
                   color="#FF787F"
-                  onClick={() => check(li.id, index)}
+                  onClick={() => {check(li.id, index)}}
                 />
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
               </NoToggle>
@@ -271,8 +282,8 @@ function TodoContents({ currentId }) {
                   )}
                 </ToggleContainer>
               </Toggle>
-            </div>
-          ))}
+            </CheckItem>
+          )})}
         </>
       )}
       {load ? (
@@ -296,6 +307,7 @@ function CompleteContents({ currentId }) {
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
+  const [select, setSelect] = useState(-1);
 
   const [click, setClick] = useState(-1);
 
@@ -367,20 +379,24 @@ function CompleteContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    const data = new FormData();
-    const tempList = [...list];
-    data.append("status", 0);
-    axios({
-      method: "PUT",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-      data: data,
-    }).then((res) => {
-      tempList.splice(index, 1);
-      setList(tempList);
-    });
+    setSelect(index);
+    setTimeout(() => {
+      const data = new FormData();
+      const tempList = [...list];
+      data.append("status", 0);
+      axios({
+        method: "PUT",
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        data: data,
+      }).then((res) => {
+        setSelect(-1);
+        tempList.splice(index, 1);
+        setList(tempList);
+      });
+    }, 600)
   };
 
     const [showModal, setShowModal] = useState(false);
@@ -425,10 +441,11 @@ function CompleteContents({ currentId }) {
       </Modal>
       {list && (
         <>
-          {list.map((li, index) => (
-            <div key={index}>
+          {list.map((li, index) => {
+            return (
+            <CheckItem key={index} isDisplay={select !== index}>
               <NoToggle>
-                <IconBox onClick={() => check(li.id, index)}>
+                <IconBox onClick={() => {check(li.id, index)}}>
                   <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
                 </IconBox>
                 <p onClick={() => clickItem(li.id)}>{li.text}</p>
@@ -455,8 +472,8 @@ function CompleteContents({ currentId }) {
                   )}
                 </ToggleContainer>
               </Toggle>
-            </div>
-          ))}
+            </CheckItem>
+          )})}
         </>
       )}
       {load ? (
