@@ -36,7 +36,6 @@ const Calendar = () => {
         setMonthSchedule(res.data);
       });
     };
-    console.log(monthSchedule);
     useEffect(() => {
       getMonthSchedule();
     }, [date.month])

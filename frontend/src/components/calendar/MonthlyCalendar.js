@@ -144,7 +144,7 @@ const DateValue = styled.div`
 `;
 
 const MonthlyCalendar = (props) => {
-  const { year, month, setYearAndMonth, backgroundColor, monthSchedule } = props;
+  const { year, month, setYearAndMonth, monthSchedule } = props;
 
   // redux 값 불러오는 곳
   const userId = useAppSelector((state) => state.user.id);
@@ -157,7 +157,6 @@ const MonthlyCalendar = (props) => {
   const [calendar, setCalendar] = useState([]); // 현재 달 날짜 채우기
   const [before, setBefore] = useState([]); // 이전 달 날짜 채우기
   const [after, setAfter] = useState([]); // 다음 달 날짜 채우기
-  // const [monthSchedule, setMonthSchedule] = useState([]); // 이번 달 일정 채우기
   const [howday, setHowday] = useState(0);
 
   // 오늘 날짜 찾기
@@ -168,7 +167,6 @@ const MonthlyCalendar = (props) => {
   };
 
   useEffect(() => {
-    // getMonthSchedule();
     getCalendar();
     setYearAndMonth(presDate.getFullYear(), presDate.getMonth() + 1);
     goToday();
@@ -237,6 +235,7 @@ const MonthlyCalendar = (props) => {
   });
   const openModal = (date) => {
     setShowModal(true);
+    getDailySchedule();
     const zerodate = ("00" + date).slice(-2);
     setModalDate(
       `${presDate.getFullYear()}. ${presDate.getMonth() + 1}. ${zerodate}`
