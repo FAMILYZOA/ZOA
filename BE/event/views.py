@@ -37,6 +37,11 @@ class AuthenticationAcceptAPIView(GenericAPIView) :
 class FCMLoginView(CreateAPIView):
     serializer_class = FCMLoginSerializer
     def post(self, request) :
+        try:
+            title = request.data['title']
+            body = request.data['body']
+        except Exception:
+            return Response("제목과 내용을 입력해주세요.", status=status.HTTP_400_BAD_REQUEST)
         FCM_token = request.data['fcmToken']
         if Device.objects.filter(fcmToken=FCM_token):
             return Response("이미 등록된 토큰입니다.", status=status.HTTP_400_BAD_REQUEST)
@@ -44,8 +49,6 @@ class FCMLoginView(CreateAPIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=self.request.user, active=True)
             device_list = get_group_user_token(self.request.user.family_id)
-            title = 'title test'
-            body = 'body test'
             deep_link = 'familyzoa.com'
             for device in device_list :
                 send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
