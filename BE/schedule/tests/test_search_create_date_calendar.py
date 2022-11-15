@@ -51,7 +51,6 @@ class DateCalendarTestCase(TestCaseSetUp) :
         today = date.today()
         response = self.client.get(reverse("calendar:create_search_calendar", kwargs={'date': today}))
         self.assertEqual(response.data, [])
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     # end_date 없을 때
     def test_create_schedule(self):
