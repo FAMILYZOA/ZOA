@@ -18,8 +18,8 @@ const HeaderBox = styled.div`
 
 const FamilyName = styled.div`
   margin: 16px;
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 1.25em;
+  font-weight: 900;
   color: #ff787f;
 `;
 const EditFamilyIcon = styled.div`
