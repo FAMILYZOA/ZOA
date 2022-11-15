@@ -463,14 +463,59 @@ const MonthlyCalendar = (props) => {
               <CalendarDate howweek={howday}>{item}</CalendarDate>
               <ScheduleBox howweek={howday}>
                 {monthSchedule.map((sc, idx) => {
-                  <div key={idx}>
-                    {sc.start_date.slice(-2) ===
-                    ("00" + item.toString()).slice(-2) ? (
-                      <ScTitle color={sc.color}>{sc.title}</ScTitle>
-                    ) : (
-                      <></>
-                    )}
-                  </div>;
+                  return (
+                    <div key={idx}>
+                      {/* 범위 안에 */}
+                      {Number(sc.start_date.slice(-2)) <=
+                        Number(("00" + item).slice(-2)) &&
+                      Number(("00" + item).slice(-2)) <=
+                        Number(sc.end_date.slice(-2)) ? (
+                        //하루치
+                        sc.start_date.slice(-2) === sc.end_date.slice(-2) ? (
+                          <>
+                            <ScTitle color={sc.color}>
+                              <p>{sc.title}</p>
+                            </ScTitle>
+                          </>
+                        ) : // 달라
+                        sc.start_date.slice(-2) !== ("00" + item).slice(-2) &&
+                          sc.end_date.slice(-2) !== ("00" + item).slice(-2) ? (
+                          //가운데
+                          <>
+                            <ScTitle3 color={sc.color}>
+                              <p></p>
+                            </ScTitle3>
+                          </>
+                        ) : sc.start_date.slice(-2) ===
+                          ("00" + item).slice(-2) ? (
+                          // 시작
+                          <>
+                            <ScTitle2 a={"start"} color={sc.color}>
+                              <p a={"start"}>{sc.title}</p>
+                            </ScTitle2>
+                          </>
+                        ) : (
+                          //끝
+                          <>
+                            <ScTitle2 a={"end"} color={sc.color}>
+                              <p></p>
+                            </ScTitle2>
+                          </>
+                        )
+                      ) : (
+                        <></>
+                      )}
+                      {/* {sc.start_date.slice(-2) === ("00" + item).slice(-2) ? (
+                        <>
+                          <ScTitle color={sc.color}>
+                            <p>{sc.title}</p>
+                          </ScTitle>
+                        </>
+                      ) : (
+                        <></>
+                      )} */}
+                    </div>
+                  );
                 })}
               </ScheduleBox>
             </OnMonthDay>
@@ -535,18 +580,69 @@ const ScheduleBox = styled.div`
     height: 60px;
   }
   height: ${(props) => (props.howweek === 5 ? "10vh" : "8vh")};
+  overflow: hidden;
 `;
 const ScTitle = styled.div`
-  color: ${(props) => props.color};
+  margin: 4px auto;
+  background-color: ${(props) => props.color};
   border: none;
   border-radius: 5px;
   height: 16px;
-  width: 100%;
-  font-size: 14px;
+  width: 13vw;
+  font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
+  p {
+    margin: auto 2px;
+    width: calc(13vw - 4px);
+    text-overflow: hidden;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+`;
+const ScTitle3 = styled.div`
+  margin: 4px auto;
+  background-color: ${(props) => props.color};
+  border: none;
+  height: 16px;
+  width: calc(13vw + 4px);
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  /* text-overflow: ellipsis; */
+  p {
+    margin: auto 2px;
+    width: calc(13vw - 4px);
+    text-overflow: hidden;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+`;
+const ScTitle2 = styled.div`
+  margin: ${(props) =>
+    props.a === "start" ? "4px 0 4px 4px" : "4px 4px 4px 0px"};
+  background-color: ${(props) => props.color};
+  border: none;
+  border-radius: ${(props) =>
+    props.a === "start" ? "5px 0 0 5px" : "0 5px 5px 0"};
+  height: 16px;
+  width: 13vw;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  z-index: ${(props) => (props.a === "start" ? 10 : 5)};
+  p {
+    margin: auto 2px;
+    width: 200%;
+    text-overflow: ${(props) => (props.a === "start" ? "visible" : "hidden")};
+    overflow: ${(props) => (props.a === "start" ? "visible" : "hidden")};
+    white-space: nowrap;
+  }
 `;
 const MinMargin = styled.div`
   height: 64px;
