@@ -31,7 +31,7 @@ const NotFoundWrapper = styled.div`
 
 const NotFoundImageWrapper = styled.div`
   min-width: 300px;
-  width: 50%;
+  width: 100%;
   height: 90%;
   max-width: 800px;
   max-height: 800px;
@@ -54,8 +54,9 @@ const MainLink = styled.div`
   text-decoration: none;
   color: black;
   bottom: 5%;
-  left: 50%;
-  transform: translate(-50%, 0);
+  left: 50% !important;
+  transform: translate(-50%);
+
   font-weight: 700;
   @media screen and (max-width: 1320px) {
     left: 30%;
