@@ -399,7 +399,6 @@ const MonthlyCalendar = (props) => {
       setEditContent({...content});
   }
   const editSave = () => {
-    console.log(editContent);
     const data = new FormData();
     data.append("title", editContent.title);
     data.append("color", editContent.color);
