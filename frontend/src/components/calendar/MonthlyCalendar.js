@@ -4,11 +4,13 @@ import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import Modal from "react-modal";
-import { IoIosClose } from "react-icons/io";
+import { IoIosClose, IoIosArrowBack } from "react-icons/io";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa";
 import CreateSchedule from "./CreateSchedule";
+import DetailSchedule from "./DetailSchedule";
+import Draggable from "react-draggable"; 
 
 const fadeIn = keyframes`
   0% {
@@ -35,16 +37,25 @@ const ModalBox = styled.div`
 `;
 const CloseIcon = styled.div`
   margin: 5% 5% 0;
-  display: flex;
+  display: ${(props) => (props.state === "view" ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 0;
   left: 0;
 `;
-const DeleteIcon = styled.div`
+const BackIcon = styled.div`
+  margin: 7% 6% 0;
+  display: ${(props) => (props.state !== "view" ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+const EditSaveIcon = styled.div`
   margin: 5% 5% 0;
-  display: ${(props) => (props.state === "read" ? "flex" : "none")};
+  display: ${(props) => (props.state === "detail" ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -68,6 +79,30 @@ const PlusIcon = styled.div`
   position: absolute;
   bottom: 0;
   right: 0;
+  font-size: 1.8em;
+  font-weight: bold;
+  div {
+    background: linear-gradient(45deg, #ff787f, #fec786);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 30px;
+    color: white;
+    font-size: 1.8em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+const DeleteIcon = styled.div`
+  margin: 0 0 5% 5%;
+  display: ${(props) => (props.state === "detail" ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   font-size: 1.8em;
   font-weight: bold;
   div {
@@ -144,7 +179,7 @@ const DateValue = styled.div`
 `;
 
 const MonthlyCalendar = (props) => {
-  const { year, month, setYearAndMonth, monthSchedules } = props;
+  const { year, month, setYearAndMonth, monthSchedules, remonth, emit } = props;
   const [monthSchedule, setMonthSchedule] = useState([...monthSchedules]);
 
   useEffect(()=>{
@@ -226,7 +261,7 @@ const MonthlyCalendar = (props) => {
   const [modalDate, setModalDate] = useState("");
 
   // 모달 설정
-  // view=list read=한개 create=create
+  // view=list detail=한개 create=create
   const [state, setState] = useState("view");
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState({
@@ -240,6 +275,7 @@ const MonthlyCalendar = (props) => {
   });
   const openModal = (date) => {
     setShowModal(true);
+    setState("view")
     const zerodate = ("00" + date).slice(-2);
     const zeromonth = ("00" + (presDate.getMonth()+1)).slice(-2);
     setModalDate(
@@ -250,8 +286,8 @@ const MonthlyCalendar = (props) => {
         );
   };
   const closeModal = () => {
+    remonth(!emit);
     setState("view");
-    
     setShowModal(false);
     setDailySchedule([]);
   };
@@ -301,8 +337,29 @@ const MonthlyCalendar = (props) => {
     getDailySchedule();
   }, [state, modalDate.slice(-2)]);
 
-  const deleteSchedule = () => {};
+  const deleteSchedule = () => {
+    if (window.confirm("정말 삭제하시겠습니까?")){
+      axios({
+        method: "DELETE",
+        url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/detail/${editContent.id}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        if (res.status === 204) {
+          alert('성공적으로 삭제되었습니다!');
+          setState("view")
+        }
+      });
+    } else {
 
+    }
+  };
+
+  
+  const backView = () => {
+    setState("view");
+  }
   const saveSchedule = () => {
     const data = new FormData();
     data.append("title", content.title);
@@ -333,6 +390,39 @@ const MonthlyCalendar = (props) => {
   const schedules = (data) => {
     setContent({ ...data });
   };
+  const editSchedules = (data) => {
+    setEditContent({ ...data });
+  };
+  const [editContent, setEditContent] = useState({});
+  const detailModal = (content) => {
+      setState("detail");
+      setEditContent({...content});
+  }
+  const editSave = () => {
+    console.log(editContent);
+    const data = new FormData();
+    data.append("title", editContent.title);
+    data.append("color", editContent.color);
+    data.append("important_mark", editContent.important_mark);
+    data.append("writer", editContent.writer);
+    data.append("start_date", editContent.start_date);
+    data.append("end_date", editContent.end_date);
+    data.append("family", editContent.family);
+    axios({
+      method: "PUT",
+      url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/detail/${editContent.id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: data,
+    }).then((res) => {
+      if (res.status === 200) {
+        alert("일정이 성공적으로 수정되었습니다!");
+        setState("view");
+        // setMonthSchedule(monthSchedule.concat(res.data));
+      }
+    });
+  }
 
   return (
     <>
@@ -345,20 +435,34 @@ const MonthlyCalendar = (props) => {
         dailyschedule={dailyschedule}
       >
         <ModalBox show={showModal}>
-          <CloseIcon onClick={closeModal}>
+          {/* close */}
+          <CloseIcon onClick={closeModal} state={state}>
             <IoIosClose size={32} color="#888888" />
           </CloseIcon>
-          <DeleteIcon onClick={() => deleteSchedule()} state={state}>
-            <RiDeleteBinLine size={28} color="#888888" />
-          </DeleteIcon>
+          {/* back */}
+          <BackIcon onClick={backView} state={state}>
+            <IoIosArrowBack size={24} color="#888888" />
+          </BackIcon>
+          {/* 수정 저장 */}
+          <EditSaveIcon onClick={() => editSave()} state={state}>
+            <BsCheck size={32} color="#888888" />
+          </EditSaveIcon>
+          {/* 새로운 등록 저장 */}
           <SaveIcon onClick={() => saveSchedule()} state={state}>
             <BsCheck size={32} color="#888888" />
           </SaveIcon>
+          {/* 플러스 버튼 */}
           <PlusIcon onClick={() => addSchedule()} state={state}>
             <div>
               <FaPlus size={32} />
             </div>
           </PlusIcon>
+          {/* 휴지통 버튼 */}
+          <DeleteIcon onClick={() => deleteSchedule()} state={state}>
+            <div>
+              <RiDeleteBinLine size={32} />
+            </div>
+          </DeleteIcon>
           <ModalDateBox>
             <ModalDate>{modalDate}</ModalDate>
           </ModalDateBox>
@@ -372,41 +476,52 @@ const MonthlyCalendar = (props) => {
             ) : state === "view" ? (
               <>
                 {dailyschedule.length === 0 ? (
-                  <div style={{color: "#666666"}}>
+                  <div style={{ color: "#666666" }}>
                     이날의 일정이 없습니다.
                   </div>
-                ) : 
-                <>
-                {dailyschedule.map((item, id) => {
-                  return (
-                    <DailyScheduleWrapper dailyschedule key={id}>
-                      <ColorBox style={{ backgroundColor: `${item.color}` }} />
-                      <div style={{ display: "block" }}>
-                        {item.title}
-                        <DailyDateWrapper>
-                          {item.start_date === item.end_date ? (
-                            <div>
-                              {item.start_date.slice(5, 7)}/
-                              {item.start_date.slice(8, 10)}
+                ) : (
+                  <>
+                    {dailyschedule.map((item, id) => {
+                      return (
+                          <DailyScheduleWrapper
+                            dailyschedule
+                            key={id}
+                            onClick={() => detailModal(item)}
+                          >
+                            <ColorBox
+                              style={{ backgroundColor: `${item.color}` }}
+                            />
+                            <div style={{ display: "block" }}>
+                              {item.title}
+                              <DailyDateWrapper>
+                                {item.start_date === item.end_date ? (
+                                  <div>
+                                    {item.start_date.slice(5, 7)}/
+                                    {item.start_date.slice(8, 10)}
+                                  </div>
+                                ) : (
+                                  <div>
+                                    {item.start_date.slice(5, 7)}/
+                                    {item.start_date.slice(8, 10)} ~{" "}
+                                    {item.end_date.slice(5, 7)}/
+                                    {item.end_date.slice(8, 10)}
+                                  </div>
+                                )}
+                              </DailyDateWrapper>
                             </div>
-                          ) : (
-                            <div>
-                              {item.start_date.slice(5, 7)}/
-                              {item.start_date.slice(8, 10)} ~{" "}
-                              {item.end_date.slice(5, 7)}/
-                              {item.end_date.slice(8, 10)}
-                            </div>
-                          )}
-                        </DailyDateWrapper>
-                      </div>
-                    </DailyScheduleWrapper>
-                  );
-                })}
-                </>
-                }
+                          </DailyScheduleWrapper>
+                      );
+                    })}
+                  </>
+                )}
               </>
             ) : (
-              <>{/* one들어가야함 */}</>
+              <DetailSchedule
+                editSchedules={editSchedules}
+                date={modalDate}
+                state={state}
+                content={editContent}
+              ></DetailSchedule>
             )}
           </ModalContents>
         </ModalBox>
@@ -644,6 +759,7 @@ const DailyScheduleWrapper = styled.div`
   display: flex;
   margin-left: 6px;
   margin-bottom: 20px;
+  border-radius: 10px;
 `;
 
 const DailyDateWrapper = styled.div`

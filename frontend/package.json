@@ -33,6 +33,7 @@
     "react-datepicker": "^4.8.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
     "react-icons": "^4.6.0",
     "react-kakao-login": "^2.1.1",
     "react-modal": "^3.16.1",

@@ -23,6 +23,11 @@ const Calendar = () => {
 
   const token = useAppSelector((state) => state.token.access)
   const [monthSchedule, setMonthSchedule] = useState([]); // 이번 달 일정 채우기
+  const [emit, setEmit] = useState(false);
+
+  const remonth = (data) => {
+    setEmit(data);
+  }
 
     // 월별 일정 조회 api 요청
     const getMonthSchedule = () => {
@@ -38,7 +43,7 @@ const Calendar = () => {
     };
     useEffect(() => {
       getMonthSchedule();
-    }, [date.month])
+    }, [date.month, emit])
 
   return(
     <>
@@ -48,6 +53,8 @@ const Calendar = () => {
         day={date.day}
         setYearAndMonth={setYearAndMonth}
         monthSchedules={monthSchedule}
+        remonth={remonth}
+        emit={emit}
       />
     </>
   )
