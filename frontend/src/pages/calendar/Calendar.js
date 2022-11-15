@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MonthlyCalendar from "../../components/calendar/MonthlyCalendar";
+import axios from "axios";
+import { useAppSelector } from "../../app/hooks";
 
 const Calendar = () => {
   
@@ -19,6 +21,26 @@ const Calendar = () => {
     setDate({ year: y, month: m, day: d });
   };
 
+  const token = useAppSelector((state) => state.token.access)
+  const [monthSchedule, setMonthSchedule] = useState([]); // 이번 달 일정 채우기
+
+    // 월별 일정 조회 api 요청
+    const getMonthSchedule = () => {
+      axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${date.year}-${date.month}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        setMonthSchedule(res.data);
+      });
+    };
+    console.log(monthSchedule);
+    useEffect(() => {
+      getMonthSchedule();
+    }, [date.month])
+
   return(
     <>
       <MonthlyCalendar
@@ -26,6 +48,7 @@ const Calendar = () => {
         month={date.month}
         day={date.day}
         setYearAndMonth={setYearAndMonth}
+        monthSchedule={monthSchedule}
       />
     </>
   )

@@ -144,7 +144,7 @@ const DateValue = styled.div`
 `;
 
 const MonthlyCalendar = (props) => {
-  const { year, month, setYearAndMonth, backgroundColor } = props;
+  const { year, month, setYearAndMonth, backgroundColor, monthSchedule } = props;
 
   // redux 값 불러오는 곳
   const userId = useAppSelector((state) => state.user.id);
@@ -157,22 +157,22 @@ const MonthlyCalendar = (props) => {
   const [calendar, setCalendar] = useState([]); // 현재 달 날짜 채우기
   const [before, setBefore] = useState([]); // 이전 달 날짜 채우기
   const [after, setAfter] = useState([]); // 다음 달 날짜 채우기
-  const [monthSchedule, setMonthSchedule] = useState([]); // 이번 달 일정 채우기
+  // const [monthSchedule, setMonthSchedule] = useState([]); // 이번 달 일정 채우기
   const [howday, setHowday] = useState(0);
 
-  // 월별 일정 조회 api 요청
-  const getMonthSchedule = () => {
-    axios({
-      method: "GET",
-      url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${year}-${month}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((res) => {
-      setMonthSchedule(res.data);
-    });
-  };
-  console.log(monthSchedule);
+  // // 월별 일정 조회 api 요청
+  // const getMonthSchedule = () => {
+  //   axios({
+  //     method: "GET",
+  //     url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${year}-${month}`,
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }).then((res) => {
+  //     setMonthSchedule(res.data);
+  //   });
+  // };
+  // console.log(monthSchedule);
 
   // 오늘 날짜 찾기
   const [today, setToday] = useState(0);
@@ -182,7 +182,7 @@ const MonthlyCalendar = (props) => {
   };
 
   useEffect(() => {
-    getMonthSchedule();
+    // getMonthSchedule();
     getCalendar();
     setYearAndMonth(presDate.getFullYear(), presDate.getMonth() + 1);
     goToday();
@@ -309,12 +309,10 @@ const MonthlyCalendar = (props) => {
   useEffect(() => {
     getDailySchedule();
   }, [state, modalDate.slice(-2)]);
-  console.log(`${modalDate.slice(-2)}일 일정`, dailyschedule);
 
   const deleteSchedule = () => {};
 
   const saveSchedule = () => {
-    console.log();
     const data = new FormData();
     data.append("title", content.title);
     data.append("color", content.color);
