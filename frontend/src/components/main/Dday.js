@@ -2,44 +2,72 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
-import axios from "axios";
-import { useAppSelector } from "../../app/hooks";
 
 const Dday = ({groupSchedule, date}) => {
   const Weekly = ['일', '월', '화', '수', '목', '금', '토']
-  const [toggle, setToggle] = useState(false);
-  // console.log(ddaySchedule);
-  // console.log(ddaySchedule[0].Dday, ddaySchedule[0].title);
+  const [toggle, setToggle] = useState(true);
+  console.log(groupSchedule);
+  // console.log(groupSchedule[0].Dday, groupSchedule[0].title);
 
 
   return(
     <>
-      <Container>
+      <Container>                 
         <TitleBox>
           <DateToggleWrapper>
             <DateWrapper>
               {date.month}월 {date.day}일 ({Weekly[date.yoil]})
             </DateWrapper>
-            <MdKeyboardArrowDown onClick={() => {setToggle(!toggle)}}/>
+            <div onClick={() => {setToggle(!toggle)}}>
+              {toggle === true? (
+                <>
+                  <MdKeyboardArrowUp />
+                </>
+              ): (
+                <>
+                  <MdKeyboardArrowDown />
+                </>
+              )}
+            </div>
           </DateToggleWrapper>
           <div>
             {toggle === true ? (
               <>
                 {groupSchedule.map((item, index) => (
-                  <div key={index}>
+                  <ContentWrapper key={index}>
+                    <DdayWrapper>
                       D- {item.Dday}
-                    {item.title}
-                    <div style={{color: "#666666", fontSize: "small"}}>
-                      {item.start_date.slice(5, 7)}월 {item.start_date.slice(8, 10)}일
-                    </div>
-                  </div>
+                    </DdayWrapper>
+                    <DdayTextWrapper>
+                      {item.title}
+                      <DdayDateWrapper>
+                        {item.start_date.slice(5, 7)}월 {item.start_date.slice(8, 10)}일
+                      </DdayDateWrapper>
+                    </DdayTextWrapper>
+                  </ContentWrapper>
                 ))}
               </>
             ) : (
               <>
-                {/* D- {groupSchedule[0].Dday}
-                 {groupSchedule[0].title} */}
-                 <BsThreeDots />
+                <ContentWrapper>
+                  {groupSchedule.length === 0 ? (
+                    <>
+                      등록된 일정이 없습니다.
+                    </>
+                  ): (
+                    <>
+                      <DdayWrapper>
+                        D- {groupSchedule[0].Dday}
+                      </DdayWrapper>
+                      <DdayTextWrapper>
+                        {groupSchedule[0].title}
+                      </DdayTextWrapper>
+                    </>
+                  )}
+                </ContentWrapper>
+                <DotsWrapper>
+                  <BsThreeDots />
+                </DotsWrapper>
               </>
             )}
           </div>
@@ -72,8 +100,31 @@ const Dday = ({groupSchedule, date}) => {
   `
 
   const DateWrapper = styled.div`
+    margin-top: 0.5%;
     margin-right: 50%;
+    margin-bottom: 0.5%;
+    margin-left: 0.5%;
   `
 
+  const ContentWrapper = styled.div`
+    display: flex;
+  `
+
+  const DdayWrapper = styled.div`
+    color: #ff787f;
+    padding-right: 4px;
+  `
+
+  const DdayTextWrapper = styled.div`
+  `
+
+  const DdayDateWrapper = styled.div`
+    color: #666666;
+    font-size: small;
+  `
+
+  const DotsWrapper = styled.div`
+    text-align: center;
+  `
 
 export default Dday;
