@@ -16,6 +16,11 @@ const EContainer = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   &::-webkit-scrollbar {
     width: auto;
     height: 5px;

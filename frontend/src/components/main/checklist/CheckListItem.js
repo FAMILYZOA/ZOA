@@ -2,12 +2,15 @@ import styled from "styled-components";
 import { FaCheckSquare, FaRegSquare } from "react-icons/fa";
 import axios from "axios";
 import { useAppSelector } from "../../../app/hooks";
+import { useState } from "react";
 
 const Container = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
   margin-bottom: 4px;
+  opacity: ${(props) => (props.isDisplay ? 1 : 0)};
+  transition: opacity 0.5s;
 `;
 
 const IconBox = styled.div`
@@ -24,6 +27,7 @@ const TextBox = styled.p`
 `;
 
 const CheckListItem = ({item, checked}) => {
+  const [isDisplay, setIsDisplay] = useState(true);
   // 체크 했을 때 스타일 설정
   let itemTextColor = "#000000";
   let textDecorationLine = "";
@@ -37,22 +41,25 @@ const CheckListItem = ({item, checked}) => {
 
   // 체크리스트 완료 api
   const onPutCheckList = () => {
-    axios({
-      method: "put",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${item.id}`,
-      data: {
-        status: !item.status,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(()=>{
-      checked();
-    })
+    setIsDisplay(false);
+    setTimeout(() => {
+      axios({
+        method: "put",
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${item.id}`,
+        data: {
+          status: !item.status,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(()=>{
+        checked();
+      })
+    }, 600)
   };
 
   return (
-    <Container>
+    <Container isDisplay={isDisplay}>
       <IconBox
         onClick={() => {
           onPutCheckList(item.id);
