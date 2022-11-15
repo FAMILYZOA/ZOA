@@ -19,7 +19,10 @@ class SearchSDdayAPIView(GenericAPIView):
     serializer_class = DdaySerializer
     def get (self, request, date):
         result = []
-        schedules = Schedule.objects.filter(Q(start_date__gte=date) & Q(important_mark='True')).order_by('start_date')[:3]
+        schedules = Schedule.objects.filter(
+            Q(start_date__gte=date) & 
+            Q(important_mark='True')
+        ).order_by('start_date')[:3]
         for schedule in schedules:
             Dday = schedule.start_date - date
             context = {
@@ -38,10 +41,8 @@ class SearchScheduleAPIView(GenericAPIView):
     serializer_class = ScheduleSerializer
     def get(self, request, month):
         schedule = Schedule.objects.filter(
-            Q(end_date__year__gte=month.year) &
-            Q(end_date__month__gte=month.month) &
-            Q(start_date__year__lte=month.year) &
-            Q(start_date__month__lte=month.month) & 
+            Q(Q(end_date__year=month.year) & Q(end_date__month=month.month) |
+            Q(start_date__year=month.year) & Q(start_date__month=month.month)) & 
             Q(family_id=request.user.family_id)
         ).order_by('start_date')
         result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
