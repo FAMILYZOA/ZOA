@@ -235,11 +235,14 @@ const MonthlyCalendar = (props) => {
   });
   const openModal = (date) => {
     setShowModal(true);
-    getDailySchedule();
     const zerodate = ("00" + date).slice(-2);
+    const zeromonth = ("00" + (presDate.getMonth()+1)).slice(-2);
     setModalDate(
-      `${presDate.getFullYear()}. ${presDate.getMonth() + 1}. ${zerodate}`
-    );
+      `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
+      );
+      getDailySchedule(
+        `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
+        );
   };
   const closeModal = () => {
     setState("view");
@@ -281,13 +284,10 @@ const MonthlyCalendar = (props) => {
           Authorization: `Bearer ${token}`,
         },
       }).then((res) => {
-        if (res.status === 404) {
-          setDailySchedule([]);
-        }
         if (res.status === 200) {
           setDailySchedule(res.data);
         }
-      });
+      })
     }
   };
 
