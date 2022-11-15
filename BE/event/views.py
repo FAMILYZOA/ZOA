@@ -43,12 +43,6 @@ class FCMLoginView(CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=self.request.user, active=True)
-            device_list = get_group_user_token(self.request.user.family_id)
-            title = 'title test'
-            body = 'body test'
-            deep_link = 'familyzoa.com'
-            for device in device_list :
-                send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
