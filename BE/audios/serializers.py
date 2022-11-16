@@ -21,7 +21,7 @@ class AudioListSerializer(serializers.ModelSerializer) :
     set_name = serializers.SerializerMethodField()
     class Meta :
         model = Audio
-        fields = ('id','image','name','set_name','audio','created_at',)
+        fields = ('id','image','name','set_name','audio','created_at', 'second')
 
     def get_set_name(self,obj) :
         from_user = obj.from_user_id

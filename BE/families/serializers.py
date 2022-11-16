@@ -86,3 +86,9 @@ class CodeFamilySerializer(serializers.ModelSerializer):
     class Meta:
         model = InvitationCodeFamily
         fields = ('invitationcode',)
+
+
+class FamilySecessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('family_id',)
