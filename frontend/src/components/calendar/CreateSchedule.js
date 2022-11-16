@@ -70,10 +70,11 @@ const ColorBox = styled.div`
       : "none"};
 `;
 
-const EndToggleContainer = styled.div`
+const ToggleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 40px;
 `;
 
 const EndDateBox = styled.div`
@@ -118,6 +119,7 @@ function CreateSchedule({ date, schedules, state }) {
   const [color, setColor] = useState("#fad7d4");
   const [selectedColor, setSelectedColor] = useState("");
   const [endtoggle, setEndtoggle] = useState(false);
+  const [ddaytoggle, setDdaytoggle] = useState(false);
   const [enddate, setEnddate] = useState(thisdate);
 
   const theme = createTheme({
@@ -135,7 +137,7 @@ function CreateSchedule({ date, schedules, state }) {
         title: "제목없음",
         color: color,
         end_date: enddate,
-        important_mark: false,
+        important_mark: ddaytoggle,
         writer: userId,
         start_date: thisdate,
         family: familyId,
@@ -145,13 +147,13 @@ function CreateSchedule({ date, schedules, state }) {
         title: title,
         color: color,
         end_date: enddate,
-        important_mark: false,
+        important_mark: ddaytoggle,
         writer: userId,
         start_date: thisdate,
         family: familyId,
       });
     }
-  }, [title, color, enddate]);
+  }, [title, color, enddate, ddaytoggle]);
 
   const onChangeTitle = (e) => {
     setTitle(e.currentTarget.value);
@@ -162,6 +164,9 @@ function CreateSchedule({ date, schedules, state }) {
   };
   const onChangeToggle = () => {
     setEndtoggle(!endtoggle);
+  };
+  const onChangeDdayToggle = () => {
+    setDdaytoggle(!ddaytoggle);
   };
   const onChangeEnddate = (e) => {
     const year = e.getFullYear();
@@ -195,7 +200,7 @@ function CreateSchedule({ date, schedules, state }) {
         ))}
       </ColorsList>
 
-      <EndToggleContainer>
+      <ToggleContainer>
         <p>종료날짜 설정</p>
         <ThemeProvider theme={theme}>
           <Switch
@@ -204,7 +209,7 @@ function CreateSchedule({ date, schedules, state }) {
             color="neutral"
           ></Switch>
         </ThemeProvider>
-      </EndToggleContainer>
+      </ToggleContainer>
 
       {endtoggle ? (
         <EndDateBox>
@@ -222,7 +227,7 @@ function CreateSchedule({ date, schedules, state }) {
             <DatePicker
               onChange={(date) => onChangeEnddate(date)}
               startDate={thisdate}
-              minDate = {new Date(thisdate)}
+              minDate={new Date(thisdate)}
               locale={ko}
               placeholder={thisdate}
               customInput={
@@ -237,6 +242,16 @@ function CreateSchedule({ date, schedules, state }) {
       ) : (
         <></>
       )}
+      <ToggleContainer>
+        <p>디데이 활성화</p>
+        <ThemeProvider theme={theme}>
+          <Switch
+            onChange={onChangeDdayToggle}
+            inputProps={{ "aria-label": "controlled" }}
+            color="neutral"
+          ></Switch>
+        </ThemeProvider>
+      </ToggleContainer>
     </Container>
   );
 }

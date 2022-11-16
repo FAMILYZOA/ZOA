@@ -59,7 +59,7 @@ const ColorBox = styled.div`
       : "none"};
 `;
 
-const EndToggleContainer = styled.div`
+const ToggleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -112,6 +112,7 @@ function DetailSchedule({date, editSchedules, state, content}){
   const [enddate, setEnddate] = useState(thisdate);
   const [editing, setEditing] = useState(false);
   const [edittoggle, setEdittoggle] = useState(false);
+  const [ddaytoggle, setDdaytoggle] = useState(false);
 
   useEffect(()=> {
     setTitle(content.title)
@@ -124,6 +125,7 @@ function DetailSchedule({date, editSchedules, state, content}){
     }
     setStartdate(content.start_date)
     setEnddate(content.end_date)
+    setDdaytoggle(content.important_mark);
   },[])
 
   const theme = createTheme({
@@ -143,7 +145,7 @@ function DetailSchedule({date, editSchedules, state, content}){
             title: "제목없음",
             color: color,
             end_date: enddate,
-            important_mark: false,
+            important_mark: ddaytoggle,
             writer: userId,
             start_date: thisdate,
             family: familyId,
@@ -154,7 +156,7 @@ function DetailSchedule({date, editSchedules, state, content}){
             title: title,
             color: color,
             end_date: enddate,
-            important_mark: false,
+            important_mark: ddaytoggle,
             writer: userId,
             start_date: thisdate,
             family: familyId,
@@ -178,6 +180,11 @@ function DetailSchedule({date, editSchedules, state, content}){
       setEndtoggle(!endtoggle);
       setEditing(true);
       setEdittoggle(!edittoggle);
+  };
+  const onChangeDdayToggle = () => {
+    setDdaytoggle(!ddaytoggle);
+    setEditing(true);
+    setEdittoggle(!edittoggle);
   };
   const onChangeEnddate = (e) => {
       const year = e.getFullYear();
@@ -221,17 +228,17 @@ function DetailSchedule({date, editSchedules, state, content}){
         ))}
       </ColorsList>
 
-      <EndToggleContainer>
+      <ToggleContainer>
         <p>종료날짜 설정</p>
         <ThemeProvider theme={theme}>
           <Switch
-          checked={endtoggle}
+            checked={endtoggle}
             onChange={onChangeToggle}
             inputProps={{ "aria-label": "controlled" }}
             color="neutral"
           ></Switch>
         </ThemeProvider>
-      </EndToggleContainer>
+      </ToggleContainer>
 
       {endtoggle ? (
         <EndDateBox>
@@ -274,6 +281,17 @@ function DetailSchedule({date, editSchedules, state, content}){
       ) : (
         <></>
       )}
+      <ToggleContainer>
+        <p>디데이 활성화</p>
+        <ThemeProvider theme={theme}>
+          <Switch
+            checked={ddaytoggle}
+            onChange={onChangeDdayToggle}
+            inputProps={{ "aria-label": "controlled" }}
+            color="neutral"
+          ></Switch>
+        </ThemeProvider>
+      </ToggleContainer>
     </Container>
   );
 }
