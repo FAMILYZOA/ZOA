@@ -71,10 +71,6 @@ const HeaderLabel = styled.div`
   line-height: 56px;
 `;
 
-const UnviewedVoices = () => {
-  
-}
-
 const Header = () => {
   const navigate = useNavigate();
   const moveToCreate = () => {
@@ -110,6 +106,8 @@ const VoiceView = () => {
     second: number,
   }[]>([]);
   const [isLeft, setIsLeft] = useState<boolean>(true);
+  const [unViewLength, setUnViewLength] = useState<number>(0);
+  const [keptLength, setKeptLength] = useState<number>(0);
   const accessToken = useAppSelector(state => state.token.access)
 
   const getVoice = () => {
@@ -122,6 +120,7 @@ const VoiceView = () => {
     })
       .then((res) => {
         setUnViewedMessage(res.data);
+        setUnViewLength(res.data.length);
       })
       .catch((err) => {
         console.error(err);
@@ -135,6 +134,7 @@ const VoiceView = () => {
     })
       .then((res) => {
         setKeptMessage(res.data);
+        setKeptLength(res.data.length);
       })
       .catch((err) => {
         console.error(err);
@@ -150,28 +150,14 @@ const VoiceView = () => {
       const tempVoice = unViewedMessage
       tempVoice.splice(index, 1);
       setUnViewedMessage([...tempVoice]);
-      setKeptMessage([{
-        id: -1,
-        image: '',
-        set_name: '',
-        audio: '',
-        created_at: '',
-        name: '',
-        second: 0,
-      } ,...keptMessage]);
+      setUnViewLength(unViewLength - 1);
+      setKeptLength(keptLength + 1);
     } else {
       const tempVoice = keptMessage
       tempVoice.splice(index, 1);
-      setUnViewedMessage([{
-        id: -1,
-        image: '',
-        set_name: '',
-        audio: '',
-        created_at: '',
-        name: '',
-        second: 0,
-      },...unViewedMessage]);
       setKeptMessage([...tempVoice]);
+      setKeptLength(keptLength - 1);
+      setUnViewLength(unViewLength + 1);
     }
   };
 
@@ -179,8 +165,8 @@ const VoiceView = () => {
     <>
       <Header />
       <SelectViewDiv>
-        <SelectViewItem onClick={() => {setIsLeft(true); getVoice();}}>{`받은 메시지(${unViewedMessage.length})`}</SelectViewItem>
-        <SelectViewItem onClick={() => {setIsLeft(false); getVoice();}}>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
+        <SelectViewItem onClick={() => {setIsLeft(true); getVoice();}}>{`받은 메시지(${unViewLength})`}</SelectViewItem>
+        <SelectViewItem onClick={() => {setIsLeft(false); getVoice();}}>{`보관함 메시지(${keptLength})`}</SelectViewItem>
         <SelectHighlight isLeft={isLeft}/>
       </SelectViewDiv>
       <VoiceMessageDiv>
