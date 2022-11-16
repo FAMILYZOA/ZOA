@@ -331,39 +331,17 @@ function KakaoSignup() {
         setPwarn(false);
         setBwarn(true);
       } else {
-        if (String(month).length === 1 && String(day).length === 1) {
-          const birth =
-            String(year) + "-0" + String(month) + "-0" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-          console.log('1', birth);
-        } else if (String(month).length === 1) {
-          const birth = String(year) + "-0" + String(month) + "-" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-          console.log("2", birth);
-        } else if (String(day).length === 1) {
-          const birth = String(year) + "-" + String(month) + "-0" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-          console.log("3", birth);
-        } else{
-          const birth = String(year) + "-" + String(month) + "-" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-          console.log("4", birth);
-        }
-        if (info.birth.length === 10) {
           const data = new FormData();
           data.append("kakao_id", info.kakao_id);
           data.append("name", info.name);
           data.append("image", info.image);
           data.append("phone", info.phone.replaceAll("-", ""));
-          data.append("birth", info.birth);
+          data.append(
+            "birth",
+            year +
+              ("00" + month.toString()).slice(-2) +
+              ("00" + day.toString).slice(-2)
+          );
           axios({
             method: "POST",
             url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
@@ -384,7 +362,6 @@ function KakaoSignup() {
             });
         }
       }
-    }
   };
   return (
     <div>
