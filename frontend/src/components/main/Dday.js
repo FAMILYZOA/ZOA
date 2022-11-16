@@ -1,14 +1,11 @@
-import styled from "styled-components";
+import styled, { keyframes} from "styled-components";
 import React, { useState, useEffect } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 
 const Dday = ({groupSchedule, date}) => {
   const Weekly = ['일', '월', '화', '수', '목', '금', '토']
-  const [toggle, setToggle] = useState(true);
-  console.log(groupSchedule);
-  // console.log(groupSchedule[0].Dday, groupSchedule[0].title);
-
+  const [toggle, setToggle] = useState(false);
 
   return(
     <>
@@ -97,13 +94,15 @@ const Dday = ({groupSchedule, date}) => {
 
   const DateToggleWrapper = styled.div`
     display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
   `
 
   const DateWrapper = styled.div`
     margin-top: 0.5%;
-    margin-right: 50%;
+    /* margin-right: 50%; */
     margin-bottom: 0.5%;
-    margin-left: 0.5%;
+    /* margin-left: 0.5%; */
   `
 
   const ContentWrapper = styled.div`
