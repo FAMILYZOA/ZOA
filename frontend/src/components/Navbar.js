@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaRegSmile, FaRegUser } from "react-icons/fa";
+import { RiChatVoiceFill } from "react-icons/ri";
 import { BiCalendarAlt } from "react-icons/bi";
 
 const Container = styled.div`
@@ -133,6 +134,17 @@ function Navbar() {
           ) : (
             <UnSelectBox>
               <FaRegSmile size={28} color={"#BEBEBE"} />
+            </UnSelectBox>
+          )}
+        </StyledLink>
+        <StyledLink to="/voice">
+          {location.pathname.includes("/voice") ? (
+            <SelectBox>
+              <RiChatVoiceFill size={28} color={"white"} />
+            </SelectBox>
+          ) : (
+            <UnSelectBox>
+              <RiChatVoiceFill size={28} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
         </StyledLink>
