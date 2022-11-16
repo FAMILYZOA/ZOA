@@ -1,6 +1,7 @@
 from firebase_admin import messaging, auth
 from accounts.models import User
 from .models import Device
+
 def send_to_firebase_cloud_messaging(token, title, body, deep_link):
     registration_token = token
     message = messaging.Message(
