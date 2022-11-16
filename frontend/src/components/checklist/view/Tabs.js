@@ -168,11 +168,11 @@ function TodoContents({ currentId }) {
             //마지막 페이지
             endRef.current = true;
           }
-  
+
           //   setList((prev) => [...prev, ...res.data.results].map((item) => (
           //     item ? {...item, active:false} : list
           //   ))); // 리스트 추가
-          if (target === currentId){
+          if (target === currentId) {
             setList(list.concat(res.data.results)); // 리스트 추가
           } else {
             setTarget(currentId);
@@ -264,7 +264,9 @@ function TodoContents({ currentId }) {
                   color="#FF787F"
                   onClick={() => {check(li.id, index)}}
                 />
-                <p onClick={() => clickItem(li.id)}>{li.text}</p>
+                <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
+                  {li.text}
+                </p>
               </NoToggle>
               <Toggle id={li.id} current={click} photo={li.photo}>
                 <ToggleContainer>
@@ -357,7 +359,7 @@ function CompleteContents({ currentId }) {
           //   setList((prev) => [...prev, ...res.data.results].map((item) => (
           //     item ? {...item, active:false} : list
           //   ))); // 리스트 추가
-          if (target === currentId){
+          if (target === currentId) {
             setList(list.concat(res.data.results));
           } else {
             setTarget(currentId);
@@ -448,7 +450,9 @@ function CompleteContents({ currentId }) {
                 <IconBox onClick={() => {check(li.id, index)}}>
                   <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
                 </IconBox>
-                <p onClick={() => clickItem(li.id)}>{li.text}</p>
+                <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
+                  {li.text}
+                </p>
               </NoToggle>
               <Toggle id={li.id} current={click} photo={li.photo}>
                 <ToggleContainer>
