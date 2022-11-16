@@ -54,8 +54,8 @@ class FCMLogoutAPIView(GenericAPIView):
 
 class FCMSendMessageAPIView(GenericAPIView):
     def post(self, request) :
-        title = request.data['title']
         body = request.data['body']
+        title = "FamilyZoa"
         deep_link = 'familyzoa.com'
         device_list = get_group_user_token(request.user.family_id)
         for device in device_list :
