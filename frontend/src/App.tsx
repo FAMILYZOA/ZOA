@@ -15,6 +15,7 @@ import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
 import FamilyJoin from "./pages/family/FamilyJoin";
+import Calendar from "./pages/calendar/Calendar";
 import ScrumDetail from "./pages/scrum/ScrumDetail";
 
 import Navbar from "./components/Navbar";
@@ -42,6 +43,8 @@ import { AuthRefresh } from "./api/customAxios";
 import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
+import { VoiceView } from "./pages/voice";
+import VoiceRecord from './pages/voice/VoiceRecord';
 import NotFound from "./pages/error/NotFound";
 import { detect, detectOS } from "detect-browser";
 
@@ -240,6 +243,10 @@ function App() {
           <Route path="/family/select" element={<FamilyJoinSelect />}></Route>
           <Route path="/family/code" element={<FamilyCodeJoin />}></Route>
 
+          <Route path="/voice" element={<VoiceView />}></Route>
+          <Route path="/voice/record" element={<VoiceRecord />}></Route>
+
+
           <Route path="/" element={<Main />} />
 
           <Route path="/hello/" element={<ScrumHome />}></Route>
@@ -248,6 +255,8 @@ function App() {
 
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
+
+          <Route path="/calendar" element={<Calendar />} />
 
           <Route path="/settings" element={<Settings />} />
 

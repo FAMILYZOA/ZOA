@@ -19,10 +19,13 @@ const IconBox = styled.div`
 
 const TextBox = styled.p`
   text-decoration: ${(props) =>
-    props.active ? "line-through #808080" : "line-through transparent"};
+    props.active
+      ? "line-through rgba(108, 108, 108, 1.0)"
+      : "line-through rgba(108, 108, 108, 0.0)"};
   color: ${(props) => (props.active ? "#808080" : "black")};
   margin: auto 8px;
-  transition: color 0.5s;
+  transition-property: color, text-decoration;
+  transition-duration: 0.5s;
 `;
 
 const CheckListItem = ({ item, checked }) => {
