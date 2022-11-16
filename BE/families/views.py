@@ -5,7 +5,7 @@ from rest_framework import mixins,permissions
 from accounts.models import User
 from accounts.permissions import InFamilyorBadResponsePermission
 from families.models import Family, FamilyInteractionName, InvitationCodeFamily
-from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer, InvitationCodeFamilySerializer, CodeFamilySerializer
+from .serializers import FamilyNameSetSerializer, FamilyRetriveSerializer, FamilySerializer, FamilyUnAuthorizedRetriveSerializer, FamilyUpdateSerializer, InvitationCodeFamilySerializer, CodeFamilySerializer, FamilySecessionSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -203,3 +203,18 @@ class InviteCodeSignFamilyAPIView(GenericAPIView):
             else :
                 family.users.add(request.user)
                 return Response(f"{family}에 가입되었습니다", status=status.HTTP_200_OK)
+
+
+class FamilySecessionAPIView(UpdateAPIView):
+    serializer_class = FamilySecessionSerializer
+    def put(self, request):
+        user = get_object_or_404(User, id=request.user.id)
+        serializer = self.serializer_class(instance=user, data={'family_id' : None})
+        if request.user.family_id:
+            family = get_object_or_404(Family, id=request.user.family_id.id)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            if family.users:
+                family.delete()
+            return Response("family에서 탈퇴하였습니다.", status=status.HTTP_200_OK)
+        return Response("family에 가입되어 있지 않습니다.", status=status.HTTP_403_FORBIDDEN) 
