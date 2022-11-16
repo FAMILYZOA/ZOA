@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import { VoiceMessage } from "../../components/voice"
+import { FiPlus } from "react-icons/fi";
 
 interface highLightProps {
   isLeft?: boolean;
@@ -12,14 +12,18 @@ interface highLightProps {
 
 const SelectViewDiv = styled.div`
   display: flex;
+  align-items: center;
   position: relative;
   height: 2.4em;
   background-color: #fff;
 `
 const SelectViewItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  line-height: 2.4em;
   flex: 1;
+  font-size: 0.9em;
 `
 const SelectHighlight = styled.div<highLightProps>`
   width: 50vw;
@@ -56,6 +60,9 @@ const HeaderBox = styled.div`
 const IconBox = styled.div`
   margin: auto;
   line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const HeaderLabel = styled.div`
   font-size: 1em;
@@ -76,7 +83,7 @@ const Header = () => {
   return (
     <HeaderBox>
       <IconBox onClick={moveToCreate}>
-        <FaPlus size={"24"} />
+        <FiPlus size={"24"} />
       </IconBox>
       <HeaderLabel>{"음성메시지"}</HeaderLabel>
     </HeaderBox>
@@ -172,7 +179,7 @@ const VoiceView = () => {
     <>
       <Header />
       <SelectViewDiv>
-        <SelectViewItem onClick={() => {setIsLeft(true); getVoice();}}>{`미확인 메시지(${unViewedMessage.length})`}</SelectViewItem>
+        <SelectViewItem onClick={() => {setIsLeft(true); getVoice();}}>{`받은 메시지(${unViewedMessage.length})`}</SelectViewItem>
         <SelectViewItem onClick={() => {setIsLeft(false); getVoice();}}>{`보관함 메시지(${keptMessage.length})`}</SelectViewItem>
         <SelectHighlight isLeft={isLeft}/>
       </SelectViewDiv>

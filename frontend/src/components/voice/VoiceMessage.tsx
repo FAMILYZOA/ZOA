@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 import { FaPlay, FaPause } from "react-icons/fa"
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 
 const VoiceMessageDiv = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2.5fr 1fr;
   align-items: center;
 `
 const VoiceSenderDiv = styled.div`
@@ -25,18 +26,20 @@ const VoiceDiv = styled.div`
   position: relative;
   align-items: center;
   height: 40px;
-  width: 168px;
+  width: 100%;
   background-color: #fdaf97;
   border-radius: 20px;
 `
 const VoiceIconDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 32px;
   width: 32px;
   margin: 4px 16px 4px 4px;
   border-radius: 16px;
   background-color: #fff;
   text-align: center;
-  line-height: 36px;
   color: #FEC786;
 `
 const VoiceTimeDiv = styled.div`
@@ -55,14 +58,30 @@ const SenderName = styled.div`
   text-align: center;
   font-size: 0.7em;
 `
+
+const ico_like = keyframes`
+  0%{transform:scale(.2);}
+  40%{transform:scale(1.2);}
+  100%{transform:scale(1);}
+`;
+const ico_like_out = keyframes`
+  0%{transform:scale(1.4);}
+  100%{transform:scale(1);}
+`;
+
+
 const FavoriteIconDiv = styled.div`
-  width: 32px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   height: 32px;
-  margin-left: 20px;
   text-align: center;
-  line-height: 36px;
   color: #FF787F;
-`
+  /* animation: ${ico_like} 1s ; */
+  margin: 0 auto;
+  
+`;
 
 type VoiceMessageProps = {
   id: number,
@@ -141,7 +160,6 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
       return '오늘'
     }
   }
-
   const handleFavorite = () => {
     axios({
       method: "PUT",
@@ -165,22 +183,72 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
     <>
       <VoiceMessageDiv>
         <VoiceSenderDiv>
-          <VoiceSenderImg src={image}/>
+          <VoiceSenderImg src={image} />
         </VoiceSenderDiv>
         <VoiceDiv>
           <VoiceIconDiv onClick={togglePlay}>
-            {isPlaying ? <FaPause /> : <FaPlay /> }
+            {isPlaying ? <FaPause /> : <FaPlay />}
           </VoiceIconDiv>
-          <VoiceTimeDiv>{`${String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime) % 60))).slice(-2)}` !== 'NaN : aN' ? `${String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime)/60))} : ${ ("00" + String(Math.floor((voiceDuration < voicePlayingTime ? 0 : voiceDuration - voicePlayingTime) % 60))).slice(-2)}` : '0 : 00'}</VoiceTimeDiv>
-          <VoiceTimeDifference>{timeDifference(new Date(created_at))}</VoiceTimeDifference>
+          <VoiceTimeDiv>
+            {`${String(
+              Math.floor(
+                (voiceDuration < voicePlayingTime
+                  ? 0
+                  : voiceDuration - voicePlayingTime) / 60
+              )
+            )} : ${(
+              "00" +
+              String(
+                Math.floor(
+                  (voiceDuration < voicePlayingTime
+                    ? 0
+                    : voiceDuration - voicePlayingTime) % 60
+                )
+              )
+            ).slice(-2)}` !== "NaN : aN"
+              ? `${String(
+                  Math.floor(
+                    (voiceDuration < voicePlayingTime
+                      ? 0
+                      : voiceDuration - voicePlayingTime) / 60
+                  )
+                )} : ${(
+                  "00" +
+                  String(
+                    Math.floor(
+                      (voiceDuration < voicePlayingTime
+                        ? 0
+                        : voiceDuration - voicePlayingTime) % 60
+                    )
+                  )
+                ).slice(-2)}`
+              : "0 : 00"}
+          </VoiceTimeDiv>
+          <VoiceTimeDifference>
+            {timeDifference(new Date(created_at))}
+          </VoiceTimeDifference>
         </VoiceDiv>
-        <FavoriteIconDiv onClick={() => {handleFavorite()}}>
-          {type ? <AiFillHeart /> : <AiOutlineHeart /> }
+        <FavoriteIconDiv
+          onClick={() => {
+            handleFavorite();
+          }}
+        >
+          {type ? (
+            <AiFillHeart style={{ margin: "16px" }} />
+          ) : (
+            <AiOutlineHeart style={{ margin: "16px" }} />
+          )}
         </FavoriteIconDiv>
       </VoiceMessageDiv>
       <SenderName>{set_name ? set_name : name}</SenderName>
     </>
-  )
+  );
 }
+
+
+
+
+
+
 
 export default VoiceMessage;

@@ -234,7 +234,7 @@ function App() {
           <Route path="/family/code" element={<FamilyCodeJoin />}></Route>
 
           <Route path="/voice" element={<VoiceView />}></Route>
-          <Route path="/voiceRecord" element={<VoiceRecord />}></Route>
+          <Route path="/voice/record" element={<VoiceRecord />}></Route>
 
 
           <Route path="/" element={<Main />} />
