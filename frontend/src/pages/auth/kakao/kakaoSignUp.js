@@ -317,14 +317,12 @@ function KakaoSignup() {
         }
       });
   };
-  
+
 
   const push = () => {
-    console.log('push 들어옴');
     if (cerCheck === false) {
       setNwarn(true);
     } else {
-      console.log("push 들어옴2");
       if (info.phone === "") {
         setNconfirm(false);
         setPwarn(true);
@@ -338,25 +336,21 @@ function KakaoSignup() {
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
-          console.log("birth1", birth);
         } else if (String(month).length === 1) {
           const birth = String(year) + "-0" + String(month) + "-" + String(day);
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
-          console.log("birth2", birth);
         } else if (String(day).length === 1) {
           const birth = String(year) + "-" + String(month) + "-0" + String(day);
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
-          console.log("birth3", birth);
         } else{
           const birth = String(year) + "-" + String(month) + "-" + String(day);
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
-          console.log("birth4", birth);
         }
         
         if (info.birth.length === 10) {
@@ -378,7 +372,6 @@ function KakaoSignup() {
               }
             })
             .catch((err) => {
-              console.log(err);
               if (err.response.status === 400) {
                 alert("이미 가입된 회원입니다. 로그인을 해주세요.");
                 navigate("/intro");
