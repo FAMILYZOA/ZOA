@@ -12,6 +12,7 @@ def send_to_firebase_cloud_messaging(token, title, body, deep_link):
         token=registration_token,
         data={
             "url": deep_link,
+            "icon": "https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/favicon.ico"
         },
     )
     try:
