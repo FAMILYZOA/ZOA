@@ -317,6 +317,7 @@ function KakaoSignup() {
         }
       });
   };
+  
 
   const push = () => {
     if (cerCheck === false) {
