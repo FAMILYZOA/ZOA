@@ -385,7 +385,7 @@ function KakaoSignup() {
         }
       }
     }
-  };
+
   return (
     <div>
       <Header>
