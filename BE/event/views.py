@@ -6,10 +6,8 @@ from event.models import PhoneAuthentication
 from django.shortcuts import get_object_or_404
 from event.serializers import PhoneAuthenticationAcceptSerializer, PhoneAuthenticationSerializer, FCMLoginSerializer
 from datetime import datetime,timedelta
-from .fcm import send_to_firebase_cloud_messaging, get_group_user_token
 from .models import Device
-# Create your views here.
-
+from .fcm import send_to_firebase_cloud_messaging, get_group_user_token
 
 
 class PhoneAuthenticationView(CreateAPIView) :
@@ -52,3 +50,14 @@ class FCMLogoutAPIView(GenericAPIView):
         if FCM_token.user == request.user:
             FCM_token.delete()
             return Response({"로그아웃 되었습니다."}, status=status.HTTP_204_NO_CONTENT)  
+
+
+class FCMSendMessageAPIView(GenericAPIView):
+    def post(self, request) :
+        title = request.data['title']
+        body = request.data['body']
+        deep_link = 'familyzoa.com'
+        device_list = get_group_user_token(request.user.family_id)
+        for device in device_list :
+            send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
+        return Response("푸시 알림을 전송하였습니다")
