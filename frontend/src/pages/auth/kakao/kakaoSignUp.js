@@ -320,9 +320,11 @@ function KakaoSignup() {
 
 
   const push = () => {
+    console.log('push 들어옴');
     if (cerCheck === false) {
       setNwarn(true);
     } else {
+      console.log("push 들어옴2");
       if (info.phone === "") {
         setNconfirm(false);
         setPwarn(true);
@@ -336,23 +338,28 @@ function KakaoSignup() {
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
+          console.log('1', birth);
         } else if (String(month).length === 1) {
           const birth = String(year) + "-0" + String(month) + "-" + String(day);
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
+          console.log("2", birth);
         } else if (String(day).length === 1) {
           const birth = String(year) + "-" + String(month) + "-0" + String(day);
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
+          console.log("3", birth);
         } else{
           const birth = String(year) + "-" + String(month) + "-" + String(day);
           setInfo((pre) => {
             return { ...pre, birth: birth };
           });
+          console.log("4", birth);
         }
-        
+      
+        }
         if (info.birth.length === 10) {
           const data = new FormData();
           data.append("kakao_id", info.kakao_id);
@@ -380,7 +387,7 @@ function KakaoSignup() {
         }
       }
     }
-  };
+
   return (
     <div>
       <Header>
