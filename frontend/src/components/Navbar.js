@@ -20,7 +20,7 @@ const Container = styled.div`
   border-radius: 20px 20px 0 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   display: ${(props) => (props.active === true ? "none" : "grid")};
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   align-items: center;
 `;
 
