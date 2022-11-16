@@ -569,8 +569,97 @@ const MonthlyCalendar = (props) => {
                 {monthSchedule.map((sc, idx) => {
                   return (
                     <div key={idx}>
-                      {/* 시작 종료 다른달 */}
-                      {sc.start_date.slice(5, 7) !== sc.end_date.slice(5, 7) ? (
+                      {/* 시작 종료 다른 년도 */}
+                      {sc.start_date.slice(0, 4) !== sc.end_date.slice(0, 4) ? (
+                        Number(sc.start_date.slice(0, 4)) ===
+                        Number(presDate.getFullYear()) ? (
+                          //시작과 같은 연도
+                          // 시작과 같은 달
+                          Number(sc.start_date.slice(5, 7)) ===
+                          Number(presDate.getMonth() + 1) ? (
+                            //시작날짜가 현재 날짜보다 전이니?
+                            Number(sc.start_date.slice(-2)) <=
+                            Number(("00" + item).slice(-2)) ? (
+                              sc.start_date.slice(-2) ===
+                              ("00" + item).slice(-2) ? (
+                                // 시작 날짜
+                                <>
+                                  <ScTitle2 a={"start"} color={sc.color}>
+                                    <p a={"start"}>{sc.title}</p>
+                                  </ScTitle2>
+                                </>
+                              ) : (
+                                //중간날짜
+                                <ScTitle3 color={sc.color}>
+                                  <p></p>
+                                </ScTitle3>
+                              )
+                            ) : (
+                              <></>
+                            )
+                          ) : //중간달
+                          Number(sc.start_date.slice(5, 7)) <=
+                            Number(presDate.getMonth() + 1) ? (
+                            //현재 달이 시작 달보다 뒤 맞지?
+                            <>
+                              <ScTitle3 color={sc.color}>
+                                <p></p>
+                              </ScTitle3>
+                            </>
+                          ) : (
+                            <></>
+                          )
+                        ) : Number(sc.end_date.slice(0, 4)) ===
+                          Number(presDate.getFullYear()) ? (
+                          // 종료와 같은 연도
+                          Number(sc.end_date.slice(5, 7)) ===
+                          Number(presDate.getMonth() + 1) ? (
+                            // 종료와 같은 달
+                            Number(("00" + item).slice(-2)) <=
+                            Number(sc.end_date.slice(-2)) ? (
+                              // 종료날짜 전날들
+                              ("00" + item).slice(-2) ===
+                              sc.end_date.slice(-2) ? (
+                                //종료날짜
+                                <>
+                                  <ScTitle2 a={"end"} color={sc.color}>
+                                    <p></p>
+                                  </ScTitle2>
+                                </>
+                              ) : (
+                                //중간날짜
+                                <>
+                                  <ScTitle3 color={sc.color}>
+                                    <p></p>
+                                  </ScTitle3>
+                                </>
+                              )
+                            ) : (
+                              //종료날짜 다음날
+                              <></>
+                            )
+                          ) : // 종료 같은연도 다른 달
+                          //중간달
+                            Number(presDate.getMonth() + 1) <=
+                            Number(sc.end_date.slice(5, 7)) ? (
+                            //현재 달이 시작 달보다 뒤 맞지?
+                            <>
+                              <ScTitle3 color={sc.color}>
+                                <p></p>
+                              </ScTitle3>
+                            </>
+                          ) : (
+                            <></>
+                          )
+                        ) : (
+                          //중간에 낀 연도
+                          <ScTitle3 color={sc.color}>
+                            <p></p>
+                          </ScTitle3>
+                        )
+                      ) : // 시작 종료 같은 연도
+                      // {/* 시작 종료 다른달 */}
+                      sc.start_date.slice(5, 7) !== sc.end_date.slice(5, 7) ? (
                         // 시작과 같은 달
                         Number(sc.start_date.slice(5, 7)) ===
                         Number(presDate.getMonth() + 1) ? (
