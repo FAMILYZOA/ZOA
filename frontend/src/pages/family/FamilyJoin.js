@@ -118,7 +118,7 @@ function FamilyJoin() {
           navigate("/");
         }
     }
-  }, [haveFam]);
+  }, []);
 
   return (
     <div>
