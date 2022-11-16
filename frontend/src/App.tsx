@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Main from "./pages/main/main";
 import Prelogin from "./pages/auth/prelogin";
 import { Settings } from "./pages/settings";
-import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FamilyManage } from "./pages/family";
 import ScrumCreate from "./pages/scrum/scrumCreate";
 import FamilyCreate from "./pages/family/FamilyCreate";
@@ -15,6 +15,8 @@ import KakaoLoding from "./pages/auth/kakao/KakaoLoading";
 import { ReadChecklist, CreateChecklist } from "./pages/checklist";
 import ScrumHome from "./pages/scrum/ScrumHome";
 import FamilyJoin from "./pages/family/FamilyJoin";
+import Calendar from "./pages/calendar/Calendar";
+import ScrumDetail from "./pages/scrum/ScrumDetail";
 
 import Navbar from "./components/Navbar";
 
@@ -43,6 +45,8 @@ import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
 import { VoiceView } from "./pages/voice";
 import VoiceRecord from './pages/voice/VoiceRecord';
+import NotFound from "./pages/error/NotFound";
+import { detect, detectOS } from "detect-browser";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -139,9 +143,11 @@ function App() {
   }, [accessToken]);
 
   // =================================================== 모바일 연동 ==============================================
+  const os = detect()?.os;
   // React Native에서 메시지를 보내면 할 행동
   const getMessageFromDevice = (e: any) => {
     const data = JSON.parse(e.data);
+    console.log(data);
     // 사진일 경우 BackEnd에 수정 요청 보내기
     if (data.photo) {
       // 프로필사진 수정
@@ -200,7 +206,11 @@ function App() {
   window.__WEBVIEW_BRIDGE__ = {
     init() {
       try {
-        document.addEventListener("message", getMessageFromDevice);
+        if(os === 'android'){
+         document.addEventListener("message", getMessageFromDevice);
+        }else if(os === 'iOS'){
+          window.addEventListener("message", getMessageFromDevice);
+        }
       } catch (err) {
       }
     },
@@ -241,11 +251,16 @@ function App() {
 
           <Route path="/hello/" element={<ScrumHome />}></Route>
           <Route path="/hello/create" element={<ScrumCreate />}></Route>
+          <Route path="/hello/detail" element={<ScrumDetail />}></Route>
 
           <Route path="/checklist" element={<ReadChecklist />} />
           <Route path="/checklist/create" element={<CreateChecklist />} />
 
+          <Route path="/calendar" element={<Calendar />} />
+
           <Route path="/settings" element={<Settings />} />
+
+          <Route path="/*" element={<NotFound />} />
         </Routes>
         <Navbar></Navbar>
       </BrowserRouter>

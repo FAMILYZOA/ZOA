@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
 import logo from "../../assets/white-logo.png";
-import { useDispatch } from "react-redux";
 import { setFamilyId } from "../../features/family/familySlice";
 
 const Header = styled.div`
@@ -78,22 +77,23 @@ const Btn = styled.div`
 function FamilyJoin() {
   const navigate = useNavigate();
   const params = useParams();
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
   const familyId = params.familyId;
-  const access = useAppSelector((state) => state.token.access);
+  const accessToken = useAppSelector((state) => state.token.access);
   const [family, setFamily] = useState("");
+  const haveFam = useAppSelector((state)=>state.family.id);
 
   const clickYes = () => {
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_BACK_HOST}/family/sign/${familyId}/`,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => {
       dispatch(setFamilyId(localStorage.getItem("familyId")));
       localStorage.removeItem("familyId");
+      alert(`${family.name}에 성공적으로 가입되었습니다! 메인페이지로 이동합니다.`)
       navigate("/");
     });
   };
@@ -103,17 +103,22 @@ function FamilyJoin() {
     if (!localStorage.getItem("access_token")) {
       navigate("/intro");
     } else {
-      axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACK_HOST}/family/get/${familyId}/`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }).then((res) => {
-        setFamily(res.data);
-      });
+        axios({
+          method: "GET",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/get/${familyId}/`,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }).then((res) => {
+          setFamily(res.data);
+        });
+        if (haveFam > 0) {
+          localStorage.removeItem("familyId");
+          alert("이미 가족에 가입되어있습니다. 메인페이지로 이동합니다!");
+          navigate("/");
+        }
     }
-  }, []);
+  }, [haveFam]);
 
   return (
     <div>
@@ -143,7 +148,11 @@ function FamilyJoin() {
               <Btn active={true} onClick={clickYes}>
                 네
               </Btn>
-              <Btn active={false} onClick={() => navigate("/family/create")}>
+              <Btn active={false} onClick={() => {
+                alert(`${family.name}가입을 거절하셨습니다. 가족 생성 페이지로 이동합니다.`)
+                localStorage.removeItem("familyId");
+                navigate("/family/create");
+              }}>
                 아니오
               </Btn>
             </BtnBox>

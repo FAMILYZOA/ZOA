@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaRegSmile, FaRegUser } from "react-icons/fa";
 import { RiChatVoiceFill } from "react-icons/ri";
+import { BiCalendarAlt } from "react-icons/bi";
 
 const Container = styled.div`
   height: 64px;
@@ -28,7 +29,7 @@ const StyledLink = styled(Link)`
 `;
 
 const SelectBox = styled.div`
-  width: 60%;
+  width: 80%;
   height: 44px;
   display: flex;
   justify-content: center;
@@ -111,6 +112,17 @@ function Navbar() {
           ) : (
             <UnSelectBox>
               <AiOutlineHome size={28} color={"#BEBEBE"} />
+            </UnSelectBox>
+          )}
+        </StyledLink>
+        <StyledLink to="/calendar">
+          {location.pathname.includes("/calendar") ? (
+            <SelectBox>
+              <BiCalendarAlt size={28} color={"white"} />
+            </SelectBox>
+          ) : (
+            <UnSelectBox>
+              <BiCalendarAlt size={28} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
         </StyledLink>

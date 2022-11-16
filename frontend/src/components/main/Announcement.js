@@ -14,7 +14,7 @@ const Text = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 18px;
+  font-size: 0.9em;
 `;
 const From = styled.p`
   text-align: end;
