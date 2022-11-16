@@ -22,6 +22,7 @@ const LogoutStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 80%;
 `;
 
 const LogouTitleStyle = styled.div`
@@ -62,7 +63,7 @@ const LogoutBtnStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 35vw;
+  width: 35%;
   height: 2.2em;
 
   font-family: "Inter";

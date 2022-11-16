@@ -20,7 +20,7 @@ import Header from "../../components/header";
 import TextBox from "../../components/textBox";
 
 const DateSelectorStyle = styled.div`
-  margin: 16px auto 24px;
+  margin: 32px auto 32px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -47,6 +47,7 @@ const EmojiSelectorStyle = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin: 24px 0;
 `;
 
 const EmojiOuterStyle = styled.div`
@@ -68,8 +69,7 @@ const RegistStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 32px auto;
 `;
 
 const RegistBtnStyle = styled.button`
@@ -184,7 +184,7 @@ const EmojiSelector = (props: EmojiProps) => {
         <Emoji
           unified={props.selectedEmoji}
           emojiStyle={EmojiStyle.APPLE}
-          size={72}
+          size={80}
         />
       </EmojiOuterStyle>
       <Modal
@@ -209,7 +209,7 @@ const EmojiSelector = (props: EmojiProps) => {
 
 const YesterdayWork = (props: InputProps) => {
   return (
-    <div>
+    <div style={{margin: "16px 0"}}>
       <DescStyle>
         <Emoji unified="1f644" emojiStyle={EmojiStyle.APPLE} size={24} />
         <DescTextStyle>어제 뭐 했더라?</DescTextStyle>
@@ -220,6 +220,7 @@ const YesterdayWork = (props: InputProps) => {
         setter={props.setter}
         emojiCode={"1f60e"}
         preview={"어제 한 일"}
+        maxLength={25}
       ></TextBox>
     </div>
   );
@@ -227,7 +228,7 @@ const YesterdayWork = (props: InputProps) => {
 
 const Today = (props: InputProps) => {
   return (
-    <div>
+    <div style={{ margin: "16px 0" }}>
       <DescStyle>
         <Emoji unified="1f64b" emojiStyle={EmojiStyle.APPLE} size={24} />
         <DescTextStyle>가족들에게 한 마디!</DescTextStyle>
@@ -238,6 +239,7 @@ const Today = (props: InputProps) => {
         setter={props.setter}
         emojiCode={"1f4e2"}
         preview={"가족에게 한 마디"}
+        maxLength={25}
       ></TextBox>
     </div>
   );

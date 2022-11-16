@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { detect } from "detect-browser";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import { setFamilyUsers } from "../../features/family/familySlice";
 import { AuthRefresh } from "../../api/customAxios";
 import { setUserImage } from "../../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -18,11 +19,11 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 2.5vh;
+  right: 1em;
 `;
 
 const ModalContentDiv = styled.div`
-  width: 85vw;
+  width: 85%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,13 +48,15 @@ const TempShowImage = styled.img`
 const ButtonDiv = styled.div`
   display: flex;
   margin-top: 0.8em;
+  width: 100%;
+  justify-content: center;
 `;
 const ConfirmButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 35vw;
+  width: 35%;
   height: 2em;
 
   color: #fff;
@@ -66,7 +69,7 @@ const CancelButton = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 35vw;
+  width: 35%;
   height: 2.2em;
 
   box-sizing: border-box;
@@ -84,6 +87,7 @@ const FontModal = (props: modalType) => {
   const navigate = useNavigate();
   const accessToken = useAppSelector((state) => state.token.access);
   const refreshToken = useAppSelector((state) => state.token.refresh);
+  const familyId = useAppSelector(state => state.family.id);
 
   // 모바일 연동
   const getOS = () => {
@@ -97,16 +101,14 @@ const FontModal = (props: modalType) => {
 
   const modalStyle = {
     content: {
-      top: "27.5vh",
-      bottom: "27.5vh",
-      left: "4vw",
-      right: "4vw",
+      inset: "30% 5%",
+      width: "80%",
       borderRadius: "2vh",
       border: "none",
       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       display: "flex",
       justifyContent: "center",
-      padding: "3.5vw",
+      padding: "28px",
     },
   };
 
@@ -154,6 +156,18 @@ const FontModal = (props: modalType) => {
       })
         .then((res) => {
           dispatch(setUserImage(res.data.image));
+          if (familyId >= 0){
+            axios({
+              method: "get",
+              url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+              .then((res) => {
+                dispatch(setFamilyUsers(res.data.users));
+              })
+          }
         })
         .catch(async (err) => {
           switch (err.response.status) {
