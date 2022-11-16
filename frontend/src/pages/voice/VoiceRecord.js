@@ -21,7 +21,6 @@ const VoiceRecDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(95vh - 396px);
   padding: 0.9em;
 `;
 
@@ -29,12 +28,15 @@ const VoiceRecBtnDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   flex: 1;
   position: relative;
+  margin: 32px auto;
 `;
 
 const VoiceRecBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   height: 11em;
   width: 11em;
@@ -43,9 +45,8 @@ const VoiceRecBtn = styled.div`
   background: linear-gradient(133.61deg, #ff787f 15.58%, #fec786 85.74%);
   box-sizing: border-box;
   text-align: center;
-  line-height: 19em;
   z-index: 3;
-  opacity: ${(props) => (props.isRecord === false ? 0.8 : 1)};
+  opacity: ${(props) => (props.isRecord=== true ? 1 : 0.5)};
   transition: opacity 0.5s;
 `;
 
@@ -53,15 +54,18 @@ const BtnBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  bottom: 76px;
+  margin: 32px auto;
 `;
 
 const Btn = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
   justify-content: center;
   align-items: center;
-  width: 14em;
+  width: 90vw;
+  @media screen and (min-width: 720px){
+    width: 576px;
+  }
   height: 64px;
   margin: auto;
   background: linear-gradient(45deg, #fec786, #fe9b7c);
@@ -74,9 +78,11 @@ const Btn = styled.div`
 `;
 
 const BtnIcon = styled.div`
-  width: 3em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  line-height: 0.5em;
 `;
 
 const BtnAnimation = styled.div`
@@ -268,6 +274,7 @@ function VoiceRecord() {
             <VoiceRecBtn
               onClick={onRec ? onRecAudio : offRecAudio}
               isRecord={isRecord}
+              url={audioUrl}
             >
               <Icon path={mdiMicrophonePlus} size={"8em"} color="#fff" />
             </VoiceRecBtn>
@@ -282,7 +289,14 @@ function VoiceRecord() {
               <BtnIcon>
                 <Icon path={mdiMicrophonePlus} size={"2em"} color="#FF787F" />
               </BtnIcon>
-              <div style={{ flex: "1", textAlign: "center" }}>
+              <div
+                style={{
+                  flex: "1",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+              >
                 {"음성메시지 보내기"}
               </div>
             </Btn>

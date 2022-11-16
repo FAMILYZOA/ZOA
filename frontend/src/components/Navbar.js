@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaRegSmile, FaRegUser } from "react-icons/fa";
+import { RiChatVoiceFill } from "react-icons/ri";
 
 const Container = styled.div`
   height: 64px;
@@ -18,7 +19,7 @@ const Container = styled.div`
   border-radius: 20px 20px 0 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   display: ${(props) => (props.active === true ? "none" : "grid")};
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
 `;
 
@@ -121,6 +122,17 @@ function Navbar() {
           ) : (
             <UnSelectBox>
               <FaRegSmile size={28} color={"#BEBEBE"} />
+            </UnSelectBox>
+          )}
+        </StyledLink>
+        <StyledLink to="/voice">
+          {location.pathname.includes("/voice") ? (
+            <SelectBox>
+              <RiChatVoiceFill size={28} color={"white"} />
+            </SelectBox>
+          ) : (
+            <UnSelectBox>
+              <RiChatVoiceFill size={28} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
         </StyledLink>

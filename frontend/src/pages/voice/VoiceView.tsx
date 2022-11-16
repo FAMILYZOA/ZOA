@@ -78,7 +78,7 @@ const UnviewedVoices = () => {
 const Header = () => {
   const navigate = useNavigate();
   const moveToCreate = () => {
-    navigate("/voice/create");
+    navigate("/voice/record");
   };
   return (
     <HeaderBox>
