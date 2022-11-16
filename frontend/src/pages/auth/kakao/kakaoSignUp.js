@@ -339,8 +339,8 @@ function KakaoSignup() {
           data.append("phone", info.phone.replaceAll("-", ""));
           data.append(
             "birth",
-            year +
-              ("00" + month.toString()).slice(-2) +
+            year +"-"
+              ("00" + month.toString()).slice(-2) +"-"
               ("00" + day.toString).slice(-2)
           );
           axios({
