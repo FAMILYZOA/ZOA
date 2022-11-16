@@ -1,3 +1,4 @@
+import calendar
 from .models import Schedule
 from accounts.models import User  
 from accounts.permissions import IsFamilyorBadResponsePermission
@@ -6,12 +7,26 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
+from datetime import datetime
 from drf_yasg.utils import swagger_auto_schema
 from . serializers import (
     DdaySerializer,
     ScheduleSerializer,
     UpdateScheduleSerializer,
 )
+
+
+def in_month_year(month, year):
+    d_fmt = "{0:>02}.{1:>02}.{2}"
+    date_from = datetime.strptime(
+        d_fmt.format(1, month, year), '%d.%m.%Y').date()
+    last_day_of_month = calendar.monthrange(year, month)[1]
+    date_to = datetime.strptime(
+        d_fmt.format(last_day_of_month, month, year), '%d.%m.%Y').date()
+    return Schedule.objects.filter(
+        Q(start_date__gte=date_from, start_date__lte=date_to)
+         |
+        Q(start_date__lt=date_from, end_date__gte=date_from)).order_by('start_date', 'end_date')
 
 
 class SearchSDdayAPIView(GenericAPIView):
@@ -40,11 +55,9 @@ class SearchScheduleAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = ScheduleSerializer
     def get(self, request, month):
-        schedule = Schedule.objects.filter(
-            Q(Q(end_date__year=month.year) & Q(end_date__month=month.month) |
-            Q(start_date__year=month.year) & Q(start_date__month=month.month)) & 
-            Q(family_id=request.user.family_id)
-        ).order_by('start_date')
+        year = month.year
+        month = month.month
+        schedule = in_month_year(month, year)
         result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
         serializer = ScheduleSerializer(result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
