@@ -358,8 +358,6 @@ function KakaoSignup() {
           });
           console.log("4", birth);
         }
-      
-        }
         if (info.birth.length === 10) {
           const data = new FormData();
           data.append("kakao_id", info.kakao_id);
