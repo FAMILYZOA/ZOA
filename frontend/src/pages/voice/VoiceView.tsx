@@ -26,7 +26,7 @@ const SelectViewItem = styled.div`
   font-size: 0.9em;
 `
 const SelectHighlight = styled.div<highLightProps>`
-  width: 50vw;
+  width: 50%;
   height: 3px;
   position: absolute;
   background-color: #FE9B7C;
@@ -46,6 +46,8 @@ const SelectHighlight = styled.div<highLightProps>`
 `
 const VoiceMessageDiv = styled.div`
   margin: 0.8em;
+  height: calc(100vh - 180px);
+  overflow-y: scroll;
 `
 const HeaderBox = styled.div`
   display: grid;

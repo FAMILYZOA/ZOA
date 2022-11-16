@@ -46,7 +46,7 @@ const VoiceRecBtn = styled.div`
   box-sizing: border-box;
   text-align: center;
   z-index: 3;
-  opacity: ${(props) => (props.isRecord=== true ? 1 : 0.5)};
+  opacity: ${(props) => (props.isRecord === true ? 1 : 0.5)};
   transition: opacity 0.5s;
 `;
 
@@ -63,7 +63,7 @@ const Btn = styled.div`
   justify-content: center;
   align-items: center;
   width: 90vw;
-  @media screen and (min-width: 720px){
+  @media screen and (min-width: 720px) {
     width: 576px;
   }
   height: 64px;
@@ -248,6 +248,7 @@ function VoiceRecord() {
     data.append("second", Math.floor((endTime - startTime) / 1000));
     data.append("to_user_id", info.to_user_id);
     console.log(URL.createObjectURL(sound));
+    console.log(Math.floor((endTime - startTime) / 1000));
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_BACK_HOST}/audio/`,
