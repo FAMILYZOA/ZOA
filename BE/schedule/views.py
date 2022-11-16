@@ -41,8 +41,8 @@ class SearchScheduleAPIView(GenericAPIView):
     serializer_class = ScheduleSerializer
     def get(self, request, month):
         schedule = Schedule.objects.filter(
-            Q(Q(end_date__year=month.year) & Q(end_date__month=month.month) |
-            Q(start_date__year=month.year) & Q(start_date__month=month.month)) & 
+            Q(start_date__lte=month) & 
+            Q(end_date__gte=month) & 
             Q(family_id=request.user.family_id)
         ).order_by('start_date')
         result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
