@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import { VoiceMessage } from "../../components/voice";
 import { FiPlus } from "react-icons/fi";
+import { BsFillTrashFill } from "react-icons/bs";
 
 interface highLightProps {
   isLeft?: boolean;
@@ -13,6 +14,38 @@ interface highLightProps {
 interface modalBackProps {
   toggle?: boolean;
 }
+
+interface deleteProps {
+  isDelete?: boolean;
+}
+
+const DeleteButton = styled.div<deleteProps>`
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 48px;
+  width: 48px;
+  border-radius: 24px;
+  transition: border 0.3s, background-color 0.3s, color 0.3s;
+  ${({ isDelete }) => {
+    if (isDelete) {
+      return css`
+        border: 2px solid #6fdecb;
+        background-color: #fff;
+        color: #6fdecb;
+      `;
+    } else {
+      return css`
+        background-color: #6fdecb;
+        color: #fff;
+      `;
+    }
+  }}
+`
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
@@ -268,6 +301,7 @@ const VoiceView = () => {
   const [deleteId, setDeleteId] = useState<number>(-1);
   const [isModal, setIsModal] = useState<boolean>(false);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
 
   const getVoice = () => {
     axios({
@@ -382,6 +416,7 @@ const VoiceView = () => {
                 playingId={playingId}
                 setPlayingId={setPlayingId}
                 getDelete={getDelete}
+                isDelete={isDelete}
               />
             ))}
           </>
@@ -403,11 +438,19 @@ const VoiceView = () => {
                 playingId={playingId}
                 setPlayingId={setPlayingId}
                 getDelete={getDelete}
+                isDelete={isDelete}
               />
             ))}
           </>
         )}
       </VoiceMessageDiv>
+      <DeleteButton 
+        isDelete={isDelete}
+        onClick={() => {
+        setIsDelete(!isDelete);
+      }}>
+        <BsFillTrashFill size={24}/>
+      </DeleteButton>
     </>
   );
 };

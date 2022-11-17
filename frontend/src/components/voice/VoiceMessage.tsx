@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components"
-import { FaPlay, FaPause } from "react-icons/fa"
+import { FaPlay, FaPause, FaRegSquare } from "react-icons/fa"
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
@@ -83,6 +83,11 @@ const ico_like_out = keyframes`
   100%{transform:scale(1);}
 `;
 
+const CheckIconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const FavoriteIconDiv = styled.div`
   width: 100%;
@@ -111,6 +116,7 @@ type VoiceMessageProps = {
   playingId: number,
   setPlayingId: (id: number) => void,
   getDelete: (id: number) => void,
+  isDelete: boolean,
 }
 
 const VoiceMessage = ({
@@ -126,7 +132,8 @@ const VoiceMessage = ({
     second, 
     setPlayingId, 
     playingId, 
-    getDelete
+    getDelete,
+    isDelete
   }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
@@ -236,6 +243,9 @@ const VoiceMessage = ({
   return (
     <>
       <VoiceMessageDiv>
+        {isDelete && <CheckIconBox>
+            <FaRegSquare />
+          </CheckIconBox>}
         <VoiceSenderDiv>
           <VoiceSenderImg src={image} />
         </VoiceSenderDiv>
