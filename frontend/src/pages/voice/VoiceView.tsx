@@ -10,6 +10,153 @@ interface highLightProps {
   isLeft?: boolean;
 }
 
+interface modalBackProps {
+  toggle?: boolean;
+}
+
+const ModalBack = styled.div<modalBackProps>`
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 56px);
+  z-index: 2;
+  background-color: rgba(102, 102, 102, 0.5);
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const ModalDiv = styled.div`
+  position: absolute;
+  padding: 20px;
+  width: 70%;
+  height: 22vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  border-radius: 12px;
+  background-color: #fff;
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const ModalContent = styled.div`
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const Modal24 = styled.div`
+  font-weight: 600;
+  margin-bottom: 20px;
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+`;
+
+const ConfirmButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35%;
+  height: 2em;
+
+  color: #fff;
+  background-color: #ff787f;
+  border-radius: 0.4em;
+  margin-right: 0.4em;
+`;
+
+const CancelButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35%;
+  height: 2.2em;
+
+  box-sizing: border-box;
+
+  color: #aaa;
+  border: 2px solid #aaa;
+  border-radius: 0.4em;
+`;
+
 const SelectViewDiv = styled.div`
   display: flex;
   align-items: center;
@@ -118,6 +265,9 @@ const VoiceView = () => {
   const [keptLength, setKeptLength] = useState<number>(0);
   const accessToken = useAppSelector((state) => state.token.access);
   const [playingId, setPlayingId] = useState<number>(-1);
+  const [deleteId, setDeleteId] = useState<number>(-1);
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
   const getVoice = () => {
     axios({
@@ -158,9 +308,46 @@ const VoiceView = () => {
     getVoice();
   };
 
+  const getDelete = (id: number) => {
+    setDeleteId(id);
+    setIsModal(true);
+  }
+
+  const confirmDelete = () => {
+    if (deleteId >= 0) {
+      axios({
+        method: "DELETE",
+        url: `${process.env.REACT_APP_BACK_HOST}/audio/${deleteId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then(() => {
+          setIsConfirmed(true);
+          setTimeout(() => {
+            getVoice();
+            setIsModal(false);
+            setIsConfirmed(false);
+          }, 2000);
+        })
+    }
+  }
+
   return (
     <>
       <Header />
+      {isModal && <ModalBack onClick={() => setIsModal(false)} />}
+      {isModal && (
+        <ModalDiv>
+          <ModalContent>
+            <Modal24> {isConfirmed ? "삭제되었습니다." :"정말 삭제하시겠습니까?"} </Modal24>
+            {!isConfirmed && (<ButtonDiv>
+              <ConfirmButton onClick={confirmDelete}>확인</ConfirmButton>
+              <CancelButton onClick={() => {setIsModal(false)}}>취소</CancelButton>
+            </ButtonDiv>)}
+          </ModalContent>
+        </ModalDiv>
+      )}
       <SelectViewDiv>
         <SelectViewItem
           onClick={() => {
@@ -194,6 +381,7 @@ const VoiceView = () => {
                 second={message.second}
                 playingId={playingId}
                 setPlayingId={setPlayingId}
+                getDelete={getDelete}
               />
             ))}
           </>
@@ -214,6 +402,7 @@ const VoiceView = () => {
                 second={message.second}
                 playingId={playingId}
                 setPlayingId={setPlayingId}
+                getDelete={getDelete}
               />
             ))}
           </>
