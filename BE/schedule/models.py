@@ -3,17 +3,6 @@ from accounts.models import User
 from families.models import Family
 
 
-class RepeatPeriod(models.Model):
-    REPEAT_CHOICE = (
-        ('D', 'day'),
-        ('W', 'week'),
-        ('M', 'month'),
-        ('Y', 'year'),
-    )
-    id = models.BigAutoField(primary_key=True)
-    period = models.CharField(max_length=1, choices=REPEAT_CHOICE)
-
-
 class Schedule(models.Model) :
     id = models.BigAutoField(primary_key=True)
     start_date = models.DateField(null=True)
