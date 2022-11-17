@@ -189,6 +189,7 @@ function App() {
       })
         .then((res) => {
           dispatch(setFcmTokenId(res.data.id));
+          localStorage.setItem('fcmID', res.data.id);
           dispatch(isFcmRegister(true));
         })
         .catch((err) => {
@@ -196,6 +197,14 @@ function App() {
         });
     }
   }, [isFcmRegist])
+
+  // 만약 등록이 되어 있다면 로컬 스토리지에서 불러오기
+  useEffect(() => {
+    const fcmId = localStorage.getItem('fcmID');
+    if(fcmId){
+      dispatch(setFcmTokenId(fcmId));
+    }
+  },[])
 
   // 변경한 프로필 이미지 업로드
   const uploadUserImage = (baseString: string) => {
