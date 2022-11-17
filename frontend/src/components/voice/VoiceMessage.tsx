@@ -4,6 +4,7 @@ import { FaPlay, FaPause } from "react-icons/fa"
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
+import { IoMdClose } from "react-icons/io";
 
 const VoiceMessageDiv = styled.div`
   position: relative;
@@ -43,6 +44,18 @@ const VoiceIconDiv = styled.div`
   text-align: center;
   color: #FEC786;
 `
+const VoiceDeleteIcon = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: end;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  margin: 4px 8px 4px auto;
+  text-align: center;
+  color: #fc7e58;
+`
+
 const VoiceTimeDiv = styled.div`
   color: #fff;
 `
@@ -97,17 +110,27 @@ type VoiceMessageProps = {
   getIndex: (index: number, type: boolean) => void,
   playingId: number,
   setPlayingId: (id: number) => void,
+  getDelete: (id: number) => void,
 }
 
-const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex, second, setPlayingId, playingId }: VoiceMessageProps) => {
+const VoiceMessage = ({
+    id,
+    image,
+    set_name,
+    audio,
+    created_at, 
+    name, 
+    type, 
+    index, 
+    getIndex, 
+    second, 
+    setPlayingId, 
+    playingId, 
+    getDelete
+  }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const dragComponentRef = useRef<HTMLDivElement>(null);
-  const [originPos, setOriginPos] = useState<number>(0);
-  const [clientPos, setClientPos] = useState<number>(0);
-  const [pos, setPos] = useState<number>(0);
   const voiceDuration = second;
   const accessToken = useAppSelector(state => state.token.access);
 
@@ -162,6 +185,10 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
       // 정지
       setIsPlaying(false);
     }
+  }
+
+  const deleteVoice = () => {
+    getDelete(id);
   }
 
   const timeDifference = (time: Date) => {
@@ -251,10 +278,13 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
                 ).slice(-2)}`
               : "0 : 00"}
           </VoiceTimeDiv>
+          <VoiceDeleteIcon onClick={deleteVoice}>
+            <IoMdClose />
+          </VoiceDeleteIcon>
           <VoiceTimeDifference>
             {timeDifference(new Date(created_at))}
           </VoiceTimeDifference>
-        </VoiceDiv>
+        </VoiceDiv> 
         <FavoriteIconDiv
           onClick={() => {
             handleFavorite();
