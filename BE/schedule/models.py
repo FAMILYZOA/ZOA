@@ -3,6 +3,17 @@ from accounts.models import User
 from families.models import Family
 
 
+class RepeatPeriod(models.Model):
+    REPEAT_CHOICE = (
+        ('D', 'day'),
+        ('W', 'week'),
+        ('M', 'month'),
+        ('Y', 'year'),
+    )
+    id = models.BigAutoField(primary_key=True)
+    period = models.CharField(max_length=1, choices=REPEAT_CHOICE)
+
+
 class Schedule(models.Model) :
     id = models.BigAutoField(primary_key=True)
     start_date = models.DateField(null=True)
@@ -12,4 +23,4 @@ class Schedule(models.Model) :
     important_mark = models.BooleanField(default=False)
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="calendar_user")
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name="calendar_family")
-
+    repeatperiod = models.OneToOneField(RepeatPeriod, on_delete=models.SET_NULL, null=True, related_name="schedule")
