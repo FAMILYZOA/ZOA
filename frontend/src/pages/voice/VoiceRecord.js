@@ -314,10 +314,11 @@ function VoiceRecord() {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
-        const mediaRecorder = new MediaRecorder(stream);
         console.log(stream);
+        const mediaRecorder = new MediaRecorder(stream);
         console.log(mediaRecorder);
         mediaRecorder.start();
+        console.log('ok');
         setIsRecord(true);
         setStream(stream);
         setMedia(mediaRecorder);
