@@ -45,6 +45,8 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Select a photo from library for profile image or making a new checklist</string>
+	<key>NSMicrophoneUsageDescription</key>
+  	<string>Use microphone to record voice to family</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
