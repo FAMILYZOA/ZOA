@@ -51,7 +51,7 @@ class AudioSaveAPIView(ListCreateAPIView):
         is_query  =self.request.GET.getlist('search')
         if not is_query  :
             return Response('query를 입력해주세요 0 or 1',status=status.HTTP_400_BAD_REQUEST)
-        queryset = self.filter_queryset(Audio.objects.filter(to_user_id=request.user).order_by('created_at'))
+        queryset = self.filter_queryset(Audio.objects.filter(to_user_id=request.user)).order_by('-pk')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
