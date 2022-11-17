@@ -1,4 +1,4 @@
-from .models import Schedule, RepeatPeriod
+from .models import Schedule
 from families.models import Family
 from rest_framework import serializers
 
@@ -16,7 +16,7 @@ class DdaySerializer(serializers.Serializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = ('id', 'title', 'color', 'important_mark', 'writer', 'start_date', 'end_date', 'family', 'repeatperiod')
+        fields = ('id', 'title', 'color', 'important_mark', 'writer', 'start_date', 'end_date', 'family',)
 
 
 class UpdateScheduleSerializer(serializers.ModelSerializer):
