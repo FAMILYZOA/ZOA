@@ -202,7 +202,7 @@ const MonthlyCalendar = (props) => {
   // 오늘 날짜 찾기
   const [today, setToday] = useState(0);
   const goToday = () => {
-    let TODAY = new Date().getDate();
+    let TODAY = new Date();
     setToday(TODAY);
   };
 
@@ -564,7 +564,15 @@ const MonthlyCalendar = (props) => {
         {calendar.map((item, index) => {
           return (
             <OnMonthDay key={index} onClick={() => openModal(item)}>
-              <CalendarDate howweek={howday}>{item}</CalendarDate>
+              {presDate.getFullYear() === today.getFullYear() &&
+              presDate.getMonth() === today.getMonth() &&
+              item === today.getDate() ? (
+                <CalendarDate2 howweek={howday}>
+                  <span>{item}</span>
+                </CalendarDate2>
+              ) : (
+                <CalendarDate howweek={howday}>{item}</CalendarDate>
+              )}
               <ScheduleBox howweek={howday}>
                 {monthSchedule.map((sc, idx) => {
                   return (
@@ -640,7 +648,7 @@ const MonthlyCalendar = (props) => {
                             )
                           ) : // 종료 같은연도 다른 달
                           //중간달
-                            Number(presDate.getMonth() + 1) <=
+                          Number(presDate.getMonth() + 1) <=
                             Number(sc.end_date.slice(5, 7)) ? (
                             //현재 달이 시작 달보다 뒤 맞지?
                             <>
@@ -808,6 +816,23 @@ const CalendarDate = styled.div`
   display: flex;
   justify-content: center;
   color: ${(props) => props.color};
+
+`;
+const CalendarDate2 = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  span{
+    background-color: rgba(255,120,127,0.7);
+    width: 40px;
+    height: auto;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
 `;
 const ScheduleBox = styled.div`
   @media screen and (max-height: 700px) {
