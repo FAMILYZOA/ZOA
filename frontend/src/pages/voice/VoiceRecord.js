@@ -310,6 +310,8 @@ function VoiceRecord() {
       analyser.connect(audioCtx.destination);
     };
 
+    console.log(navigator);
+    
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
