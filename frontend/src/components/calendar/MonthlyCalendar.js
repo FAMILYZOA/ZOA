@@ -202,7 +202,7 @@ const MonthlyCalendar = (props) => {
   // 오늘 날짜 찾기
   const [today, setToday] = useState(0);
   const goToday = () => {
-    let TODAY = new Date().getDate();
+    let TODAY = new Date();
     setToday(TODAY);
   };
 
@@ -564,7 +564,9 @@ const MonthlyCalendar = (props) => {
         {calendar.map((item, index) => {
           return (
             <OnMonthDay key={index} onClick={() => openModal(item)}>
-              {item === today ? (
+              {presDate.getFullYear() === today.getFullYear() &&
+              presDate.getMonth() === today.getMonth() &&
+              item === today.getDate() ? (
                 <CalendarDate2 howweek={howday}>
                   <span>{item}</span>
                 </CalendarDate2>
