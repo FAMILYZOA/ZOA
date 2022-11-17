@@ -136,6 +136,8 @@ const VoiceMessage = ({
 
   const voicePlay = () => {
     setPlayingId(id);
+    console.dir(audio);
+    console.dir(voice);
     voice.play();
   }
 

@@ -326,13 +326,8 @@ function VoiceRecord() {
         };
       })
       .catch((err) => {
-        console.log(err);
+        // notReadableError 발생 -> 실기기 테스트 필요
         console.dir(err);
-        console.err(err);
-        console.info(err);
-        console.log(err.code);
-        console.log(err.message);
-        console.log(err.name);
       });
   };
 
