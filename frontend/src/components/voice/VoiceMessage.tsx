@@ -94,17 +94,39 @@ type VoiceMessageProps = {
   index: number,
   second: number,
   getIndex: (index: number, type: boolean) => void,
+  playingId: number,
+  setPlayingId: (id: number) => void,
 }
 
-const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex, second }: VoiceMessageProps) => {
+const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex, second, setPlayingId, playingId }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
   const voiceDuration = second;
   const accessToken = useAppSelector(state => state.token.access);
 
+  const voicePlay = () => {
+    setPlayingId(id);
+    voice.play();
+  }
+
+  const voicePause = () => {
+    if (playingId === id) {
+      setPlayingId(-1);
+    } else {
+      voice.currentTime = 0;
+    }
+    voice.pause();
+  }
+
   useEffect(() => {
-      isPlaying ? voice.play() : voice.pause();
+    if (playingId !== id) {
+      setIsPlaying(false);
+    }
+  }, [playingId])
+
+  useEffect(() => {
+      isPlaying ? voicePlay() : voicePause();
     },
     [isPlaying]
   );
@@ -118,7 +140,6 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
       });
     };
   }, []);
-
 
   const togglePlay = () => {
     if (!isPlaying) {
