@@ -126,7 +126,7 @@ function Comment({ id, comments }) {
         console.log(res);
         // [안녕] ___ 님이 '안녕'을 작성하셨습니다. 지금 들어가서 확인해보세요!
         const messageBody = `[댓글] ${userName}님이 댓글을 작성하셨습니다. 지금 들어가서 확인해보세요`;
-        messageData.append("writer",res.data.user_id);
+        messageData.append("writer",res.data.writer);
         messageData.append("body", messageBody);
         console.log(res);
         customAxios
