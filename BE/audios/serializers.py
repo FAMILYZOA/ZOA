@@ -34,7 +34,7 @@ class AudioListSerializer(serializers.ModelSerializer) :
     def get_image(self,obj) :
         from_user = obj.from_user_id 
         if 'kakao' in from_user.image.url :
-            res = from_user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            res = from_user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','https://')
             return res
         return from_user.image.url
 
