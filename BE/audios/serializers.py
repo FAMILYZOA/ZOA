@@ -24,8 +24,8 @@ class AudioListSerializer(serializers.ModelSerializer) :
         fields = ('id','image','name','set_name','status','audio','created_at', 'second')
 
     def get_set_name(self,obj) :
-        from_user = obj.from_user_id
-        to_user = self.context.get('request').user
+        to_user = obj.from_user_id
+        from_user = self.context.get('request').user
         
         if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
