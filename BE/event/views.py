@@ -54,7 +54,6 @@ class FCMLogoutAPIView(GenericAPIView):
 
 class FCMSendMessageAPIView(GenericAPIView):
     def post(self, request) :
-        print(len(request.data))
         if len(request.data) == 2 :
             writer = request.data["writer"]
             body = request.data['body']
