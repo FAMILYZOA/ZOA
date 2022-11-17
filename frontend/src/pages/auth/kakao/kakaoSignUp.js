@@ -320,11 +320,9 @@ function KakaoSignup() {
 
 
   const push = () => {
-    console.log('push 들어옴');
     if (cerCheck === false) {
       setNwarn(true);
     } else {
-      console.log("push 들어옴2");
       if (info.phone === "") {
         setNconfirm(false);
         setPwarn(true);
@@ -339,8 +337,7 @@ function KakaoSignup() {
           data.append("phone", info.phone.replaceAll("-", ""));
           data.append(
             "birth",
-            `${year}-${("00" + month.toString()).slice(-2)}-
-              ${("00" + day.toString).slice(-2)}`
+            `${year}-${("00" + month.toString()).slice(-2)}-${("00" + day.toString()).slice(-2)}`
           );
           axios({
             method: "POST",

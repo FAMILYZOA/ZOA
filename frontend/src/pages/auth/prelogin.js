@@ -112,7 +112,8 @@ function Btns() {
 
   const clickKakaoLogin = () => {
     Kakao.Auth.authorize({
-      redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
+      // redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
+      redirectUri: `http://localhost:3000/kakaoLoading/`,
     });
   };
 
