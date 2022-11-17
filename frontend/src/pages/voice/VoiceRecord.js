@@ -11,7 +11,6 @@ import { mdiMicrophonePlus } from "@mdi/js";
 import { useAppSelector } from "../../app/hooks";
 import { set } from "lodash";
 
-
 const Container = styled.div`
   height: calc(95vh - 120px);
   margin: 5% 0;
@@ -312,20 +311,23 @@ function VoiceRecord() {
 
     console.log(navigator);
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream);
-      console.log(stream);
-      console.log(mediaRecorder);
-      mediaRecorder.start();
-      setIsRecord(true);
-      setStream(stream);
-      setMedia(mediaRecorder);
-      makeSound(stream);
-      setStartTime(new Date().getTime());
-      analyser.onaudioprocess = function (e) {
-        setOnRec(false);
-      };
-    });
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        console.log(stream);
+        console.log(mediaRecorder);
+        mediaRecorder.start();
+        setIsRecord(true);
+        setStream(stream);
+        setMedia(mediaRecorder);
+        makeSound(stream);
+        setStartTime(new Date().getTime());
+        analyser.onaudioprocess = function (e) {
+          setOnRec(false);
+        };
+      })
+      .catch((err) => console.log(err));
   };
 
   const offRecAudio = () => {
@@ -377,7 +379,7 @@ function VoiceRecord() {
         setTimeout(() => {
           setIsModal(false);
           navigate("/voice");
-        }, 1500)
+        }, 1500);
       })
       .catch((err) => {
         console.error(err);
@@ -395,7 +397,8 @@ function VoiceRecord() {
               <Modal24>음성메시지가 전송되었습니다!</Modal24>
             </div>
           </ModalContent>
-        </ModalDiv>)}
+        </ModalDiv>
+      )}
       <Container>
         <Receiver receivers={receivers}></Receiver>
         <VoiceRecDiv>
