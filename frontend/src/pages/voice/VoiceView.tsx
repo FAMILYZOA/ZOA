@@ -98,6 +98,7 @@ const VoiceView = () => {
       created_at: string;
       name: string;
       second: number;
+      status: boolean;
     }[]
   >([]);
   const [keptMessage, setKeptMessage] = useState<
@@ -109,6 +110,7 @@ const VoiceView = () => {
       created_at: string;
       name: string;
       second: number;
+      status: boolean;
     }[]
   >([]);
   const [isLeft, setIsLeft] = useState<boolean>(true);
@@ -120,7 +122,7 @@ const VoiceView = () => {
   const getVoice = () => {
     axios({
       method: "GET",
-      url: `${process.env.REACT_APP_BACK_HOST}/audio/?search=0`,
+      url: `${process.env.REACT_APP_BACK_HOST}/audio/?type=0`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -134,7 +136,7 @@ const VoiceView = () => {
       });
     axios({
       method: "GET",
-      url: `${process.env.REACT_APP_BACK_HOST}/audio/?search=1`,
+      url: `${process.env.REACT_APP_BACK_HOST}/audio/?type=1`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -153,19 +155,7 @@ const VoiceView = () => {
   }, [isLeft]);
 
   const getIndex = (index: number, type: boolean) => {
-    if (!type) {
-      const tempVoice = unViewedMessage;
-      tempVoice.splice(index, 1);
-      setUnViewedMessage([...tempVoice]);
-      setUnViewLength(unViewLength - 1);
-      setKeptLength(keptLength + 1);
-    } else {
-      const tempVoice = keptMessage;
-      tempVoice.splice(index, 1);
-      setKeptMessage([...tempVoice]);
-      setKeptLength(keptLength - 1);
-      setUnViewLength(unViewLength + 1);
-    }
+    getVoice();
   };
 
   return (
@@ -198,7 +188,7 @@ const VoiceView = () => {
                 created_at={message.created_at}
                 key={message.id}
                 name={message.name}
-                type={false}
+                type={message.status}
                 index={index}
                 getIndex={getIndex}
                 second={message.second}
@@ -218,7 +208,7 @@ const VoiceView = () => {
                 created_at={message.created_at}
                 key={message.id}
                 name={message.name}
-                type={true}
+                type={message.status}
                 index={index}
                 getIndex={getIndex}
                 second={message.second}
