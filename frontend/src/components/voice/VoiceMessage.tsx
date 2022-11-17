@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components"
 import { FaPlay, FaPause } from "react-icons/fa"
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -6,6 +6,7 @@ import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 
 const VoiceMessageDiv = styled.div`
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 2.5fr 1fr;
   align-items: center;
@@ -94,17 +95,44 @@ type VoiceMessageProps = {
   index: number,
   second: number,
   getIndex: (index: number, type: boolean) => void,
+  playingId: number,
+  setPlayingId: (id: number) => void,
 }
 
-const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex, second }: VoiceMessageProps) => {
+const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, index, getIndex, second, setPlayingId, playingId }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dragComponentRef = useRef<HTMLDivElement>(null);
+  const [originPos, setOriginPos] = useState<number>(0);
+  const [clientPos, setClientPos] = useState<number>(0);
+  const [pos, setPos] = useState<number>(0);
   const voiceDuration = second;
   const accessToken = useAppSelector(state => state.token.access);
 
+  const voicePlay = () => {
+    setPlayingId(id);
+    voice.play();
+  }
+
+  const voicePause = () => {
+    if (playingId === id) {
+      setPlayingId(-1);
+    } else {
+      voice.currentTime = 0;
+    }
+    voice.pause();
+  }
+
   useEffect(() => {
-      isPlaying ? voice.play() : voice.pause();
+    if (playingId !== id) {
+      setIsPlaying(false);
+    }
+  }, [playingId])
+
+  useEffect(() => {
+      isPlaying ? voicePlay() : voicePause();
     },
     [isPlaying]
   );
@@ -118,7 +146,6 @@ const VoiceMessage = ({ id, image, set_name, audio, created_at, name, type, inde
       });
     };
   }, []);
-
 
   const togglePlay = () => {
     if (!isPlaying) {
