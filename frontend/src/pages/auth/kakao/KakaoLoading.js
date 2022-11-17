@@ -8,6 +8,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "../../../features/token/tokenSlice";
+import { isFcmRegister } from "../../../features/mobile/mobileSlice";
 
 export const Background = styled.div`
   height: 100vh;
@@ -67,6 +68,7 @@ function Loading() {
               if (result.status === 200) {
                 dispatch(setAccessToken(result.data.token.access));
                 dispatch(setRefreshToken(result.data.token.refresh));
+                dispatch(isFcmRegister(false));
                 navigate("/", { replace: true });
               }
             })
