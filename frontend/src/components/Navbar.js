@@ -151,11 +151,11 @@ function Navbar() {
         <StyledLink to="/settings">
           {location.pathname.includes("/settings") ? (
             <SelectBox>
-              <FaRegUser size={28} color={"white"} />
+              <FaRegUser size={24} color={"white"} />
             </SelectBox>
           ) : (
             <UnSelectBox>
-              <FaRegUser size={28} color={"#BEBEBE"} />
+              <FaRegUser size={24} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
         </StyledLink>
