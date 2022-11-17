@@ -33,6 +33,29 @@ class CommentSerializer(ImageSerializer) :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
         else :
             return False
+
+
+class CommentSerializer(ImageSerializer) :
+    user_id = serializers.IntegerField(source='user.id',read_only=True)
+    name = serializers.CharField(source='user.name',read_only=True)
+    writer_id = serializers.IntegerField(source='scrum.user.id',read_only=True)
+    set_name = serializers.SerializerMethodField()
+
+    class Meta :
+        model = Comment
+        fields = ('id','user_id','name','image','content','created_at','set_name','writer_id',)
+
+    def get_set_name(self,obj) :
+        from_user = self.context.get('request').user
+        to_user = obj.user
+        if to_user == from_user :
+            return '나'
+        
+        if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
+            return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
+        else :
+            return False
+            
 class ScrumSerializer(ImageSerializer) :
 
     user_id = serializers.IntegerField(source='user.id',read_only=True)
