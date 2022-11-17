@@ -128,7 +128,9 @@ const LogoutModal = (props: modalType) => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }).then((res) => {}).catch((err) => {
+      }).then((res) => {
+        localStorage.removeItem('fcmID');
+      }).catch((err) => {
         console.log(err);
       })
       navigate("/intro", { replace: true });
