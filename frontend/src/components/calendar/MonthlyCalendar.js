@@ -281,9 +281,9 @@ const MonthlyCalendar = (props) => {
     setModalDate(
       `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
       );
-      getDailySchedule(
-        `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
-        );
+    getDailySchedule(
+      `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
+      );
   };
   const closeModal = () => {
     remonth(!emit);
@@ -316,12 +316,12 @@ const MonthlyCalendar = (props) => {
   const [dailyschedule, setDailySchedule] = useState([]);
   // 일별 일정 조회
   const getDailySchedule = () => {
-    if (state === "view") {
+    if (state === "view" && modalDate.length !== 0) {
       axios({
         method: "GET",
         url: `${
           process.env.REACT_APP_BACK_HOST
-        }/calendar/schedule/${year}-${month}-${modalDate.slice(-2)}`,
+        }/calendar/schedule/date/${year}-${month}-${modalDate.slice(-2)}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -334,7 +334,9 @@ const MonthlyCalendar = (props) => {
   };
 
   useEffect(() => {
-    getDailySchedule();
+    if(modalDate !== ""){
+      getDailySchedule();
+    }
   }, [state, modalDate.slice(-2)]);
 
   const deleteSchedule = () => {
