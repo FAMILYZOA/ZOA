@@ -354,6 +354,7 @@ function KakaoSignup() {
               }
             })
             .catch((err) => {
+              console.log(err);
               if (err.response.status === 400) {
                 alert("이미 가입된 회원입니다. 로그인을 해주세요.");
                 navigate("/intro");
