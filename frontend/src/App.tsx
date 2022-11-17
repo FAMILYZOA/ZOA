@@ -36,14 +36,19 @@ import {
   setFamilyUsers,
 } from "./features/family/familySlice";
 import axios from "axios";
-import { setChecklistPhoto } from "./features/mobile/mobileSlice";
+import {
+  setChecklistPhoto,
+  setFcmToken,
+  setFcmTokenId,
+  isFcmRegister,
+} from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 import { AuthRefresh } from "./api/customAxios";
 import { setAccessToken, setRefreshToken } from "./features/token/tokenSlice";
 import FamilyJoinSelect from "./pages/family/FamilyJoinSelect";
 import FamilyCodeJoin from "./pages/family/FamilyCodeJoin";
 import NotFound from "./pages/error/NotFound";
-import { detect, detectOS } from "detect-browser";
+import { detect } from "detect-browser";
 
 function App() {
   const accessToken = useAppSelector((state) => state.token.access);
@@ -51,6 +56,11 @@ function App() {
   const userId = useAppSelector((state) => state.user.id);
   const familyId = useAppSelector((state) => state.family.id);
   const fontSize = useAppSelector((state) => state.setting.fontSize);
+
+  const fcmToken = useAppSelector((state) => state.mobile.fcmToken);
+  const isFcmRegist = useAppSelector((state) => state.mobile.isFcmRegist);
+  const userName = useAppSelector((state) => state.user.name);
+
   const dispatch = useAppDispatch();
   const [, updateState] = useState<{}>();
   const forceUpdate = useCallback(() => updateState({}), []);
@@ -98,34 +108,32 @@ function App() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      })
-        .then((res) => {
-          dispatch(setUserId(res.data.id));
-          dispatch(setUserPhone(res.data.phone));
-          dispatch(setUserKakaoId(-1));
-          dispatch(setUserFamilyId(res.data.family_id));
-          dispatch(setUserBirth(res.data.birth));
-          dispatch(setUserImage(res.data.image));
-          dispatch(setUserName(res.data.name));
-          forceUpdate();
-          if (familyId < 0 && res.data.family_id) {
-            // 가족 정보가 없으면, 가족 정보 불러오기
-            axios({
-              method: "get",
-              url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            })
-              .then((res) => {
-                dispatch(setFamilyId(res.data.id));
-                dispatch(setFamilyName(res.data.name));
-                dispatch(setFamilyCreatedAt(res.data.created_at));
-                dispatch(setFamilyUsers(res.data.users));
-                forceUpdate();
-              })
-          }
-        })
+      }).then((res) => {
+        dispatch(setUserId(res.data.id));
+        dispatch(setUserPhone(res.data.phone));
+        dispatch(setUserKakaoId(-1));
+        dispatch(setUserFamilyId(res.data.family_id));
+        dispatch(setUserBirth(res.data.birth));
+        dispatch(setUserImage(res.data.image));
+        dispatch(setUserName(res.data.name));
+        forceUpdate();
+        if (familyId < 0 && res.data.family_id) {
+          // 가족 정보가 없으면, 가족 정보 불러오기
+          axios({
+            method: "get",
+            url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }).then((res) => {
+            dispatch(setFamilyId(res.data.id));
+            dispatch(setFamilyName(res.data.name));
+            dispatch(setFamilyCreatedAt(res.data.created_at));
+            dispatch(setFamilyUsers(res.data.users));
+            forceUpdate();
+          });
+        }
+      });
     }
   };
 
@@ -144,7 +152,6 @@ function App() {
   // React Native에서 메시지를 보내면 할 행동
   const getMessageFromDevice = (e: any) => {
     const data = JSON.parse(e.data);
-    console.log(data);
     // 사진일 경우 BackEnd에 수정 요청 보내기
     if (data.photo) {
       // 프로필사진 수정
@@ -154,8 +161,38 @@ function App() {
       if (data.from === "checklist") {
         dispatch(setChecklistPhoto(data.photo));
       }
+    } else if (data.token) {
+      dispatch(setFcmToken(data.token));
     }
   };
+
+  // fcm 토큰 등록
+  useEffect(() => {
+    if(!isFcmRegist){
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_BACK_HOST}/event/FCM/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          user: {
+            name: userName,
+            family_id: familyId,
+          },
+          fcmToken: fcmToken,
+          active: true,
+        },
+      })
+        .then((res) => {
+          dispatch(setFcmTokenId(res.data.id));
+          dispatch(isFcmRegister(true));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFcmRegist])
 
   // 변경한 프로필 이미지 업로드
   const uploadUserImage = (baseString: string) => {
@@ -203,13 +240,13 @@ function App() {
   window.__WEBVIEW_BRIDGE__ = {
     init() {
       try {
-        if(os === 'android'){
-         document.addEventListener("message", getMessageFromDevice);
-        }else if(os === 'iOS'){
+        console.log(os);
+        if (os === "android" || os === "Android OS") {
+          document.addEventListener("message", getMessageFromDevice);
+        } else if (os === "iOS") {
           window.addEventListener("message", getMessageFromDevice);
         }
-      } catch (err) {
-      }
+      } catch (err) {}
     },
   };
 
