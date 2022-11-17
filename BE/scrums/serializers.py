@@ -16,11 +16,12 @@ class ImageSerializer(serializers.ModelSerializer) :
 class CommentSerializer(ImageSerializer) :
     user_id = serializers.IntegerField(source='user.id',read_only=True)
     name = serializers.CharField(source='user.name',read_only=True)
+    writer_id = serializers.IntegerField(source='scrum.user.id',read_only=True)
     set_name = serializers.SerializerMethodField()
 
     class Meta :
         model = Comment
-        fields = ('id','user_id','name','image','content','created_at','set_name')
+        fields = ('id','user_id','name','image','content','created_at','set_name','writer',)
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
