@@ -2,7 +2,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { customAxios, AuthRefresh } from "../../api/customAxios";
+import { useNavigate } from "react-router-dom";
+import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
 import { confirmAlert } from "react-confirm-alert";
 import "./react-confirm-alert.css";
 
@@ -21,7 +24,7 @@ const CommentList = styled.div`
 const Blank = styled.div`
   opacity: 0;
   height: 56px;
-`
+`;
 const CommentBox = styled.div`
   display: flex;
   margin-bottom: 8px;
@@ -97,6 +100,12 @@ function Comment({ id, comments }) {
   const token = useAppSelector((state)=> state.token.access);
   const [content, setContent] = useState("");
   const [list, setList] = useState(comments);
+  const userName = useAppSelector((state) => state.user.name);
+  const access_token = useAppSelector((state) => state.token.access);
+  const refresh_token = useAppSelector((state) => state.token.refresh);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const onChange = (e) => {
     setContent(e.target.value);
   };
@@ -115,6 +124,41 @@ function Comment({ id, comments }) {
       }).then((res) => {
         setList(list.concat(res.data));
         setContent("");
+        const messageData = new FormData();
+        const config = {
+          headers: { Authorization: `Bearer ${access_token}` },
+        };
+        console.log(config);
+        // [안녕] ___ 님이 '안녕'을 작성하셨습니다. 지금 들어가서 확인해보세요!
+        const messageBody = `[댓글] ${userName}님이 댓글을 작성하셨습니다. 지금 들어가서 확인해보세요`;
+        messageData.append("writer",res.data.user_id);
+        messageData.append("body", messageBody);
+        customAxios
+          .post("/event/FCM/send/", messageData, config)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch(async (err) => {
+            switch (err.response.status) {
+              case 401:
+                const code = err.response.data.code;
+                if (code === "token_not_valid") {
+                  const tokens = await AuthRefresh(refresh_token);
+                  if (tokens) {
+                    dispatch(setAccessToken(tokens.access));
+                    dispatch(setRefreshToken(tokens.refresh));
+                  } else {
+                    dispatch(setAccessToken(""));
+                    dispatch(setRefreshToken(""));
+  
+                    navigate("/login", { replace: true });
+                  }
+                }
+                break;
+              default:
+                break;
+            }
+          });
       });
     }
   };

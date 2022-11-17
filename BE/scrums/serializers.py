@@ -10,7 +10,7 @@ class ImageSerializer(serializers.ModelSerializer) :
     def get_image(self,obj) :
         user = obj.user
         if 'kakao' in user.image.url :
-            res = user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            res = user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','https://')
             return res
         return user.image.url
 class CommentSerializer(ImageSerializer) :
