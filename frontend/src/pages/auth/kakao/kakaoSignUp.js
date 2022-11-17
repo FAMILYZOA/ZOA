@@ -290,7 +290,6 @@ function KakaoSignup() {
   };
 
   const clickCheck = (certifiNum) => {
-    console.log(disphone);
     const data = new FormData();
     data.append("phone", phone.replaceAll("-", ""));
     data.append("certification", certifiNum);
