@@ -1,4 +1,4 @@
-from .models import Schedule, RepeatPeriod
+from .models import Schedule
 from families.models import Family
 from rest_framework import serializers
 
