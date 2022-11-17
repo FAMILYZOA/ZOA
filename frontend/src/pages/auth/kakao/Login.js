@@ -4,13 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { customAxios } from "./../../../api/customAxios";
 import {
   setAccessToken,
   setRefreshToken,
 } from "../../../features/token/tokenSlice";
 import logo from "../../../assets/white-logo.png";
+import { isFcmRegister } from "../../../features/mobile/mobileSlice";
 /*global Kakao*/
 
 const Header = styled.div`
@@ -113,6 +114,7 @@ function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  //adf
   const [phone, setPhone] = useState("");
   const [pw, setPw] = useState("");
   const [warn, setWarn] = useState(false);
@@ -141,6 +143,8 @@ function Login() {
       .then((res) => {
         dispatch(setAccessToken(res.data.token.access));
         dispatch(setRefreshToken(res.data.token.refresh));
+
+        dispatch(isFcmRegister(false));
         navigate("/", { replace: true });
       })
       .catch((err) => {
@@ -151,6 +155,7 @@ function Login() {
     Kakao.Auth.authorize({
       redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
     });
+    dispatch(isFcmRegister(false));
   };
   const onEnter = (e) => {
     if (e.key == "Enter") {
