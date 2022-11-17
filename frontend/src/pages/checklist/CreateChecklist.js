@@ -85,7 +85,6 @@ function CreateChecklist() {
           },
           data: data,
         }).then((res) => {
-          console.log(res)
           const messageData = new FormData();
           messageData.append("body", `[할 일] ${userName}님이 할 일을 작성하셨습니다. 지금 들어가서 확인해보세요`);
           messageData.append("writer", res.data[0].to_users_id);
