@@ -188,12 +188,16 @@ function App() {
         },
       })
         .then((res) => {
+          console.log('fcm registered')
           dispatch(setFcmTokenId(res.data.id));
           localStorage.setItem('fcmID', res.data.id);
           dispatch(isFcmRegister(true));
         })
         .catch((err) => {
-          console.log(err);
+          // 이미 기기 토큰이 등록된 경우
+          if(err.response.status === 400){
+            console.log('이미 토큰이 등록되어 있습니다.')
+          }
         });
     }
   }, [isFcmRegist])
@@ -203,6 +207,7 @@ function App() {
     const fcmId = localStorage.getItem('fcmID');
     if(fcmId){
       dispatch(setFcmTokenId(fcmId));
+      console.log('fcm loaded');
     }
   },[])
 

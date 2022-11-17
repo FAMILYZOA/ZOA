@@ -314,11 +314,8 @@ function VoiceRecord() {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
-        console.log(stream);
         const mediaRecorder = new MediaRecorder(stream);
-        console.log(mediaRecorder);
         mediaRecorder.start();
-        console.log('ok');
         setIsRecord(true);
         setStream(stream);
         setMedia(mediaRecorder);
@@ -328,7 +325,15 @@ function VoiceRecord() {
           setOnRec(false);
         };
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        console.dir(err);
+        console.err(err);
+        console.info(err);
+        console.log(err.code);
+        console.log(err.message);
+        console.log(err.name);
+      });
   };
 
   const offRecAudio = () => {
