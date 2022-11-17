@@ -373,7 +373,7 @@ const MonthlyCalendar = (props) => {
     data.append("family", content.family);
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${content.start_date}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/date/${content.start_date}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -170,8 +170,8 @@ function CreateSchedule({ date, schedules, state }) {
   };
   const onChangeEnddate = (e) => {
     const year = e.getFullYear();
-    const month = e.getMonth() + 1;
-    const day = e.getDate();
+    const month = ((e.getMonth() + 1).toString()).slice(-2);
+    const day = ((e.getDate()).toString().slice(-2));
     setEnddate(year.toString() + "-" + month.toString() + "-" + day.toString());
   };
   return (
