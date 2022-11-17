@@ -36,7 +36,7 @@ const Icon = styled.div`
 `;
 
 const HeaderLabel = styled.div`
-  font-size: 1.25em;
+  font-size: 1em;
   font-weight: bold;
   text-align: center;
   line-height: 56px;

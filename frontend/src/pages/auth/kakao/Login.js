@@ -37,6 +37,7 @@ const Container = styled.div`
 `;
 
 const Info = styled.p`
+  font-size: 0.9em;
   margin: 32px 0;
 `;
 

@@ -19,11 +19,11 @@ type modalType = {
 
 const CloseBtnStyle = styled(GrClose)`
   position: absolute;
-  right: 2.5vh;
+  right: 1em;
 `;
 
 const ModalContentDiv = styled.div`
-  width: 85vw;
+  width: 85%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,13 +48,15 @@ const TempShowImage = styled.img`
 const ButtonDiv = styled.div`
   display: flex;
   margin-top: 0.8em;
+  width: 100%;
+  justify-content: center;
 `;
 const ConfirmButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 35vw;
+  width: 35%;
   height: 2em;
 
   color: #fff;
@@ -67,7 +69,7 @@ const CancelButton = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 35vw;
+  width: 35%;
   height: 2.2em;
 
   box-sizing: border-box;
@@ -99,16 +101,14 @@ const FontModal = (props: modalType) => {
 
   const modalStyle = {
     content: {
-      top: "27.5vh",
-      bottom: "27.5vh",
-      left: "4vw",
-      right: "4vw",
+      inset: "30% 5%",
+      width: "80%",
       borderRadius: "2vh",
       border: "none",
       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       display: "flex",
       justifyContent: "center",
-      padding: "3.5vw",
+      padding: "28px",
     },
   };
 

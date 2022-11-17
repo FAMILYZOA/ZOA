@@ -3,6 +3,7 @@ import Header from "../../components/main/Header";
 import Emojis from "../../components/main/Emoji";
 import Announcement from "../../components/main/Announcement";
 import CheckList from "../../components/main/checklist/CheckList";
+import Dday from "../../components/main/Dday";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 import { AuthRefresh } from "../../api/customAxios";
@@ -20,6 +21,7 @@ function Main() {
   const refresh = useAppSelector((state) => state.token.refresh);
   const family = useAppSelector((state) => state.family.id);
   const [scrum, setScrum] = useState([]);
+  const [groupSchedule, setGroupSchedule] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("familyId")) {
@@ -35,6 +37,27 @@ function Main() {
       }
     }
   }, []);
+
+  // 디데이 날짜 설정
+  const [date, setDate] = useState({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate(),
+    yoil: new Date().getDay(),
+  });
+  
+  // 디데이 api 요청
+  const getGroupSchedule = () => {
+    axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_BACK_HOST}/calendar/Dday/${date.year}-${date.month}-${date.day}`,
+      headers: {
+        Authorization: `Bearer ${access}`
+      },
+    }).then((res) => {
+      setGroupSchedule([...res.data])
+    })
+  };
 
   useEffect(() => {
     axios({
@@ -76,12 +99,15 @@ function Main() {
       });
   }, [family]);
 
-  
+  useEffect(() => {
+    getGroupSchedule();
+  }, []);
 
   return (
     <div>
       <Header></Header>
       <Emojis scrum={scrum}></Emojis>
+      <Dday groupSchedule={groupSchedule} date={date}/>
       <Announcement scrum={scrum}></Announcement>
       <CheckList />
     </div>

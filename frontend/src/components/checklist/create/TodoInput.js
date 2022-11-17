@@ -22,10 +22,11 @@ const InputTag = styled.textarea`
   border: none;
   outline: none;
   background: none;
-  margin: 15px 3%;
+  margin: 10px 3%;
   width: 94%;
   height: 60px;
-  font-size: 0.7em;
+  font-size: 0.8em;
+  font-family: 'Pretendard';
   resize: none;
 `;
 
