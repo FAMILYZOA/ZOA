@@ -297,6 +297,8 @@ const RegistBtn = (props: registBtnPRops) => {
           }
         })
         .catch(async (err) => {
+          console.log(err);
+          
           switch (err.response.status) {
             case 400:
               alert("스크럼은 하루에 한개만 작성 가능합니다.");
