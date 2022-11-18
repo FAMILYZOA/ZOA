@@ -312,6 +312,11 @@ function VoiceRecord() {
     console.log(navigator);
 
     navigator.mediaDevices
+      .enumerateDevices()
+      .then((res) => console.dir(res))
+      .catch((err) => console.dir(err));
+
+    navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
         const mediaRecorder = new MediaRecorder(stream);
