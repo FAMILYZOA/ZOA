@@ -431,6 +431,7 @@ const VoiceView = () => {
                 isDelete={isDelete}
                 addDeleteList={addDeleteList}
                 filterDeleteList={filterDeleteList}
+                deleteList={deleteList}
               />
             ))}
           </>
@@ -454,6 +455,7 @@ const VoiceView = () => {
                 isDelete={isDelete}
                 addDeleteList={addDeleteList}
                 filterDeleteList={filterDeleteList}
+                deleteList={deleteList}
               />
             ))}
           </>

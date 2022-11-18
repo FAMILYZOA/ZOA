@@ -111,6 +111,7 @@ type VoiceMessageProps = {
   isDelete: boolean,
   addDeleteList: (id: number) => void,
   filterDeleteList: (id: number) => void,
+  deleteList: number[],
 }
 
 const VoiceMessage = ({
@@ -129,13 +130,13 @@ const VoiceMessage = ({
     isDelete,
     addDeleteList,
     filterDeleteList,
+    deleteList,
   }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
   const voiceDuration = second;
   const accessToken = useAppSelector(state => state.token.access);
-  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const voicePlay = () => {
     setPlayingId(id);
@@ -236,9 +237,9 @@ const VoiceMessage = ({
     <>
       <VoiceMessageDiv isDelete={isDelete}>
         {isDelete && <CheckIconBox>
-            {isChecked ? 
-            <FaCheckSquare color={"#ff787f"} onClick={() => {setIsChecked(false); filterDeleteList(id)}}/>
-            :<FaRegSquare color={"#ff787f"} onClick={() => {setIsChecked(true); addDeleteList(id)}}/>}
+            {deleteList.includes(id) ? 
+            <FaCheckSquare color={"#ff787f"} onClick={() => {filterDeleteList(id)}}/>
+            :<FaRegSquare color={"#ff787f"} onClick={() => {addDeleteList(id)}}/>}
           </CheckIconBox>}
         <VoiceSenderDiv>
           <VoiceSenderImg src={image} />
