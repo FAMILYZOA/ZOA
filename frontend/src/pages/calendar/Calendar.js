@@ -3,9 +3,19 @@ import styled from "styled-components";
 import MonthlyCalendar from "../../components/calendar/MonthlyCalendar";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 const Calendar = () => {
-  
+
+  const navigate = useNavigate();
+  const familyId = useAppSelector(state => state.family.id);
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
+
   // 날짜 지정
   const [date, setDate] = useState({
     year: new Date().getFullYear(),

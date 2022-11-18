@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/header";
 import Receiver from "../../components/checklist/create/Receiver";
 import TodoInput from "../../components/checklist/create/TodoInput";
@@ -22,6 +22,13 @@ function CreateChecklist() {
   const [allow, setAllow] = useState(true);
   const userID = useAppSelector((state) => state.user.id);
   const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  const familyId = useAppSelector(state => state.family.id);
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   const [info, setInfo] = useState(
     {

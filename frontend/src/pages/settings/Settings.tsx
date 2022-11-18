@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Switch from "@mui/material/Switch";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { TbLogout } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
@@ -239,6 +239,12 @@ const Settings = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   const handleNameEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditName(e.target.value);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
@@ -244,6 +244,7 @@ const FamilyManage = () => {
   const userName = useAppSelector((state) => state.user.name);
   const dispatch = useAppDispatch(); // token값 변경을 위해 사용되는 메서드
   const [isModal, setIsModal] = useState(false);
+  const navigate = useNavigate();
 
   // android 딥링크 설정 필요 -> firebase dynamic link 설정되면 사용
   const inviteLink: string = `${process.env.REACT_APP_FE_HOST}/join/${id}`;
@@ -252,7 +253,12 @@ const FamilyManage = () => {
 ${userName}님과 함께하세요!
 ${inviteLink}`;
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (id < 0) {
+      navigate("/");
+    }
+  }, [])
+
   const navigateToEdit = () => {
     navigate("/family/edit");
   };
