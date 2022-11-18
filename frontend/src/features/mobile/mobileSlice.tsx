@@ -12,7 +12,7 @@ interface MobileState {
 const initialState: MobileState = {
     checklistPhoto: plus,
     fcmToken: '',
-    fcmTokenId: '',
+    fcmTokenId: localStorage.getItem("fcmID") || "",
     isFcmRegist: true,
 }
 
@@ -28,6 +28,7 @@ export const mobileSlice = createSlice({
         },
         setFcmTokenId: (state:any, action: PayloadAction<string>) => {
             state.fcmTokenId = action.payload;
+            localStorage.setItem('fcmID', action.payload);
         },
         isFcmRegister: (state: any, action: PayloadAction<boolean>) => {
             state.isFcmRegist = action.payload;
