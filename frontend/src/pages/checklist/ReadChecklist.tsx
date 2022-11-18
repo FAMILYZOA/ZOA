@@ -176,6 +176,7 @@ function ReadChecklist() {
   const userId = useAppSelector((state) => state.user.id);
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
+  const familyId = useAppSelector(state => state.family.id);
   const [isModal, setIsModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
@@ -208,6 +209,12 @@ function ReadChecklist() {
     setUnSelectedMember(tempMember);
     setIsModal(false);
   };
+  
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   useEffect(() => {
     let index: number = 0;
