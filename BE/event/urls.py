@@ -1,6 +1,5 @@
 from django.urls import path
-from event import views
-from event.views import AuthenticationAcceptAPIView, PhoneAuthenticationView, FCMLoginView, FCMLogoutAPIView
+from event.views import AuthenticationAcceptAPIView, PhoneAuthenticationView, FCMLoginView, FCMLogoutAPIView, FCMSendMessageAPIView
 
 app_name = 'event'
 
@@ -13,5 +12,5 @@ urlpatterns = [
 
     path('FCM/<int:FCM_id>/', FCMLogoutAPIView.as_view(), name="FCM_delete"),
 
-    path('FCM/send/', views.FCMSendMessageView, name="FCM_send"),
+    path('FCM/send/', FCMSendMessageAPIView.as_view(), name="FCM_send"),
 ]
