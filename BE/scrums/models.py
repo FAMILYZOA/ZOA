@@ -10,7 +10,7 @@ from families.models import Family
 class Scrum(models.Model) :
 
     id = models.BigAutoField(primary_key=True)
-    emoji = models.CharField(max_length=7,verbose_name='오늘의 기분')
+    emoji = models.CharField(max_length=50,verbose_name='오늘의 기분')
     yesterday = models.CharField(max_length=25,verbose_name='어제 나는',null=True,blank=True)
     today = models.CharField(max_length=25,verbose_name='오늘 나는',null=True,blank=True)
     created_at = models.DateField(auto_now_add=True)
