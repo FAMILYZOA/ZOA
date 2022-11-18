@@ -11,7 +11,6 @@ import { MdRecordVoiceOver } from "react-icons/md";
 import { BsMicFill } from "react-icons/bs";
 import { useAppSelector } from "../../app/hooks";
 
-
 const Container = styled.div`
   height: calc(95vh - 120px);
   margin: 5% 0;
@@ -310,18 +309,26 @@ function VoiceRecord() {
       analyser.connect(audioCtx.destination);
     };
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.start();
-      setIsRecord(true);
-      setStream(stream);
-      setMedia(mediaRecorder);
-      makeSound(stream);
-      setStartTime(new Date().getTime());
-      analyser.onaudioprocess = function (e) {
-        setOnRec(false);
-      };
-    });
+    console.log(navigator);
+
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+        setIsRecord(true);
+        setStream(stream);
+        setMedia(mediaRecorder);
+        makeSound(stream);
+        setStartTime(new Date().getTime());
+        analyser.onaudioprocess = function (e) {
+          setOnRec(false);
+        };
+      })
+      .catch((err) => {
+        // notReadableError 발생 -> 실기기 테스트 필요
+        console.dir(err);
+      });
   };
 
   const offRecAudio = () => {
@@ -373,7 +380,7 @@ function VoiceRecord() {
         setTimeout(() => {
           setIsModal(false);
           navigate("/voice");
-        }, 1500)
+        }, 1500);
       })
       .catch((err) => {
         console.error(err);

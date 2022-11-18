@@ -16,7 +16,7 @@ from . serializers import (
 )
 
 
-def in_month_year(month, year):
+def in_month_year(month, year, family):
     d_fmt = "{0:>02}.{1:>02}.{2}"
     date_from = datetime.strptime(
         d_fmt.format(1, month, year), '%d.%m.%Y').date()
@@ -24,10 +24,12 @@ def in_month_year(month, year):
     date_to = datetime.strptime(
         d_fmt.format(last_day_of_month, month, year), '%d.%m.%Y').date()
     return Schedule.objects.filter(
-        Q(start_date__gte=date_from, start_date__lte=date_to)
-         |
-        Q(start_date__lt=date_from, end_date__gte=date_from)).order_by('start_date', 'end_date')
-
+        Q(
+            Q(start_date__gte=date_from, start_date__lte=date_to) |
+            Q(start_date__lt=date_from, end_date__gte=date_from)
+        ) &
+        Q(family_id=family)
+        ).order_by('start_date', 'end_date')
 
 class SearchSDdayAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
@@ -36,7 +38,8 @@ class SearchSDdayAPIView(GenericAPIView):
         result = []
         schedules = Schedule.objects.filter(
             Q(start_date__gte=date) & 
-            Q(important_mark='True')
+            Q(important_mark='True') &
+            Q(family_id=request.user.family_id)
         ).order_by('start_date')[:3]
         for schedule in schedules:
             Dday = schedule.start_date - date
@@ -57,7 +60,7 @@ class SearchScheduleAPIView(GenericAPIView):
     def get(self, request, month):
         year = month.year
         month = month.month
-        schedule = in_month_year(month, year)
+        schedule = in_month_year(month, year, request.user.family_id)
         result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
         serializer = ScheduleSerializer(result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
