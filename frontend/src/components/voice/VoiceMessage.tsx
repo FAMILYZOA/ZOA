@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components"
-import { FaPlay, FaPause, FaRegSquare } from "react-icons/fa"
+import { FaPlay, FaPause, FaRegSquare, FaCheckSquare } from "react-icons/fa"
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 
-const VoiceMessageDiv = styled.div`
+interface voiceProps {
+  isDelete?: boolean;
+}
+
+const VoiceMessageDiv = styled.div<voiceProps>`
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 2.5fr 1fr;
+  grid-template-columns: ${(props) => (props.isDelete ? '1fr 2fr 4fr 2fr' : '1fr 2.5fr 1fr') };
   align-items: center;
 `
 const VoiceSenderDiv = styled.div`
@@ -44,17 +48,6 @@ const VoiceIconDiv = styled.div`
   text-align: center;
   color: #FEC786;
 `
-const VoiceDeleteIcon = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: end;
-  align-items: center;
-  height: 32px;
-  width: 32px;
-  margin: 4px 8px 4px auto;
-  text-align: center;
-  color: #fc7e58;
-`
 
 const VoiceTimeDiv = styled.div`
   color: #fff;
@@ -66,9 +59,9 @@ const VoiceTimeDifference = styled.div`
   right: 16px;
   color: #444;
 `
-const SenderName = styled.div`
+const SenderName = styled.div<voiceProps>`
   width: 64px;
-  margin: 8px 0 16px;
+  margin: ${(props) => (props.isDelete ? '8px 11% 16px' : '8px 0 16px')};
   text-align: center;
   font-size: 0.7em;
 `
@@ -115,8 +108,9 @@ type VoiceMessageProps = {
   getIndex: (index: number, type: boolean) => void,
   playingId: number,
   setPlayingId: (id: number) => void,
-  getDelete: (id: number) => void,
   isDelete: boolean,
+  addDeleteList: (id: number) => void,
+  filterDeleteList: (id: number) => void,
 }
 
 const VoiceMessage = ({
@@ -132,14 +126,16 @@ const VoiceMessage = ({
     second, 
     setPlayingId, 
     playingId, 
-    getDelete,
-    isDelete
+    isDelete,
+    addDeleteList,
+    filterDeleteList,
   }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
   const voiceDuration = second;
   const accessToken = useAppSelector(state => state.token.access);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const voicePlay = () => {
     setPlayingId(id);
@@ -194,10 +190,6 @@ const VoiceMessage = ({
     }
   }
 
-  const deleteVoice = () => {
-    getDelete(id);
-  }
-
   const timeDifference = (time: Date) => {
     const tempTime = new Date().getTime();
     const createTime = time.getTime();
@@ -242,9 +234,11 @@ const VoiceMessage = ({
 
   return (
     <>
-      <VoiceMessageDiv>
+      <VoiceMessageDiv isDelete={isDelete}>
         {isDelete && <CheckIconBox>
-            <FaRegSquare />
+            {isChecked ? 
+            <FaCheckSquare color={"#ff787f"} onClick={() => {setIsChecked(false); filterDeleteList(id)}}/>
+            :<FaRegSquare color={"#ff787f"} onClick={() => {setIsChecked(true); addDeleteList(id)}}/>}
           </CheckIconBox>}
         <VoiceSenderDiv>
           <VoiceSenderImg src={image} />
@@ -288,9 +282,6 @@ const VoiceMessage = ({
                 ).slice(-2)}`
               : "0 : 00"}
           </VoiceTimeDiv>
-          <VoiceDeleteIcon onClick={deleteVoice}>
-            <IoMdClose />
-          </VoiceDeleteIcon>
           <VoiceTimeDifference>
             {timeDifference(new Date(created_at))}
           </VoiceTimeDifference>
@@ -307,7 +298,7 @@ const VoiceMessage = ({
           )}
         </FavoriteIconDiv>
       </VoiceMessageDiv>
-      <SenderName>{set_name ? set_name : name}</SenderName>
+      <SenderName isDelete={isDelete}>{set_name ? set_name : name}</SenderName>
     </>
   );
 }
