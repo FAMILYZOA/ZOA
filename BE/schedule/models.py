@@ -12,4 +12,3 @@ class Schedule(models.Model) :
     important_mark = models.BooleanField(default=False)
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="calendar_user")
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name="calendar_family")
-

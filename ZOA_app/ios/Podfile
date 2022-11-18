@@ -13,6 +13,14 @@ target 'ZOA_app' do
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
   pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  $RNFirebaseAsStaticFramework = true
+
+  use_flipper!()
 
   # Flags change depending on the env values.
   flags = get_default_flags()
