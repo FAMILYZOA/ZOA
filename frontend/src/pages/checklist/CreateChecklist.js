@@ -20,7 +20,8 @@ const Container = styled.div`
 function CreateChecklist() {
   const navigate = useNavigate();
   const [allow, setAllow] = useState(true);
-  const userName = useAppSelector((state) => state.user.name);
+  const userID = useAppSelector((state) => state.user.id);
+  const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
 
   const [info, setInfo] = useState(
     {
