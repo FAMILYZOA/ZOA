@@ -31,6 +31,7 @@ import SendIntentAndroid from 'react-native-send-intent';
 import NetInfo from '@react-native-community/netinfo';
 import LinearGradient from 'react-native-linear-gradient';
 import {request, PERMISSIONS} from 'react-native-permissions';
+import messaging from '@react-native-firebase/messaging';
 import {useRef, useState, useEffect} from 'react';
 
 const App = () => {
@@ -39,7 +40,7 @@ const App = () => {
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
-  const url = {uri: 'http://familyzoa.com'};
+  const url = {uri: 'https://k7b103.p.ssafy.io'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -308,7 +309,7 @@ true;
       return true;
     } else if (os === 'ios') {
       if (event.url.includes('kakaolink')) {
-        console.log(event.url);
+        //console.log(event.url);
         Linking.openURL(event.url);
         return false;
       }
@@ -324,6 +325,37 @@ true;
     });
     setOs(Platform.OS);
   }, []);
+
+  const sendToken = () => {
+    const FCM = async () => {
+      //await messaging().registerDeviceForRemoteMessages();
+      const token = await messaging().getToken();
+
+      //console.log(token);
+
+      webViewRef.current.postMessage(
+        JSON.stringify({from: 'fcmToken', token: token}),
+      );
+    };
+
+    const FCM_iOS = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        FCM();
+      } else {
+        console.log('refused');
+      }
+    };
+    if (os === 'ios') {
+      FCM_iOS();
+    } else {
+      FCM();
+    }
+  };
 
   return (
     <Fragment>
@@ -345,6 +377,7 @@ true;
             scrollEnabled={false}
             onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
             allowsBackForwardNavigationGestures={true}
+            onLoadEnd={sendToken}
           />
         ) : (
           <LinearGradient
