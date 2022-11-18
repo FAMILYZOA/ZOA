@@ -348,24 +348,26 @@ const VoiceView = () => {
     const tempDeleteList = [...deleteList];
     tempDeleteList.push(id);
     setDeleteList(tempDeleteList);
-    console.log(tempDeleteList);
   }
 
   const filterDeleteList = (id: number) => {
     const tempDeleteList = [...deleteList];
     let filteredTempList = tempDeleteList.filter((element) => element !== id)
     setDeleteList(filteredTempList);
-    console.log(filteredTempList);
   }
 
   const confirmDelete = () => {
     if (deleteList.length > 0) {
+      console.log(deleteList)
       axios({
         method: "DELETE",
-        url: `${process.env.REACT_APP_BACK_HOST}/audio/${deleteId}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/audio/delete/`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        data: {
+          id: deleteList,
+        }
       })
         .then(() => {
           setIsConfirmed(true);
