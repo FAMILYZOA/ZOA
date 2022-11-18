@@ -39,7 +39,6 @@ class AudioListSerializer(serializers.ModelSerializer) :
         return from_user.image.url
 
 class AudioUpdateSerializer(serializers.ModelSerializer) :
-
     class Meta :
         model = Audio
         fields = ('id','status')

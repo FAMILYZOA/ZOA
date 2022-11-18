@@ -78,6 +78,7 @@ class AudioUpdateAPIView(GenericAPIView,mixins.UpdateModelMixin) :
 class AudioDeleteAPIView(GenericAPIView):
     permission_classes = [IsObjectorBadResponsePermission,]
     def delete(self, request):
-        audio = Audio.objects.filter(id__in=request.data.getlist('id'))
+        data = request.data['id']
+        audio = Audio.objects.filter(id__in=data)
         audio.delete()
         return Response("삭제되었습니다.", status=status.HTTP_204_NO_CONTENT)
