@@ -16,7 +16,7 @@ class DdaySerializer(serializers.Serializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = ('id', 'title', 'color', 'important_mark', 'writer', 'start_date', 'end_date', 'family',)
+        fields = ('id', 'title', 'color', 'important_mark', 'writer', 'start_date', 'end_date', 'family', 'period',)
 
 
 class UpdateScheduleSerializer(serializers.ModelSerializer):
