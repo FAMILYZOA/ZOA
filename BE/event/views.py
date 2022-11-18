@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from event.serializers import PhoneAuthenticationAcceptSerializer, PhoneAuthenticationSerializer, FCMLoginSerializer
 from datetime import datetime,timedelta
 from .models import Device
+from rest_framework.decorators import api_view
 from .fcm import send_to_firebase_cloud_messaging, get_group_user_token, get_user_token
 
 
@@ -52,22 +53,22 @@ class FCMLogoutAPIView(GenericAPIView):
             return Response({"로그아웃 되었습니다."}, status=status.HTTP_204_NO_CONTENT)  
 
 
-class FCMSendMessageAPIView(GenericAPIView):
-    def post(self, request) :
-        if len(request.data) == 2 :
-            writer = request.data["writer"]
-            body = request.data['body']
-            title = "FamilyZoa"
-            deep_link = 'familyzoa.com'
-            device_list = get_user_token(writer)
-            for device in device_list :
-                send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
-            return Response("푸시 알림을 전송하였습니다")
-        else:
-            body = request.data['body']
-            title = "FamilyZoa"
-            deep_link = 'familyzoa.com'
-            device_list = get_group_user_token(request.user.family_id)
-            for device in device_list :
-                send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
-            return Response("푸시 알림을 전송하였습니다")
+@api_view(['POST'])
+def FCMSendMessageView(self, request) :
+    if len(request.data) == 2 :
+        writer = request.data["writer"]
+        body = request.data['body']
+        title = "FamilyZoa"
+        deep_link = 'familyzoa.com'
+        device_list = get_user_token(writer)
+        for device in device_list :
+            send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
+        return Response("푸시 알림을 전송하였습니다")
+    else:
+        body = request.data['body']
+        title = "FamilyZoa"
+        deep_link = 'familyzoa.com'
+        device_list = get_group_user_token(request.user.family_id)
+        for device in device_list :
+            send_to_firebase_cloud_messaging(device.fcmToken, title, body, deep_link)
+        return Response("푸시 알림을 전송하였습니다")
