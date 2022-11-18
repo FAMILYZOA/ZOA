@@ -10,6 +10,7 @@ from datetime import datetime
 from rest_framework import filters
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import mixins
+from django.db.models import Q
 
 # Create your views here.
 
@@ -42,7 +43,7 @@ class ScrumAPIView(ListCreateAPIView) :
 
     def create(self, request, *args, **kwargs):
         today = datetime.today().strftime("%Y-%m-%d")
-        if Scrum.objects.filter(created_at=today,user=self.request.user).exists() :
+        if Scrum.objects.filter(Q(created_at=today) & Q(user=self.request.user)).exists() :
             return Response({"스크럼은 하루에 한 개만 작성 가능합니다."},status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
