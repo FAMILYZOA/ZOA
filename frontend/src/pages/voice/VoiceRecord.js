@@ -1,15 +1,15 @@
 import React, { useCallback } from "react";
 import { useState } from "react";
 import Header from "../../components/header";
-import Button from "../../components/Button";
 import Receiver from "../../components/voice/Record/Receiver";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { Icon } from "@mdi/react";
 import { mdiMicrophonePlus } from "@mdi/js";
+import { MdRecordVoiceOver } from "react-icons/md";
+import { BsMicFill } from "react-icons/bs";
 import { useAppSelector } from "../../app/hooks";
-import { set } from "lodash";
 
 
 const Container = styled.div`
@@ -391,7 +391,8 @@ function VoiceRecord() {
               <Modal24>음성메시지가 전송되었습니다!</Modal24>
             </div>
           </ModalContent>
-        </ModalDiv>)}
+        </ModalDiv>
+      )}
       <Container>
         <Receiver receivers={receivers}></Receiver>
         <VoiceRecDiv>
@@ -401,7 +402,8 @@ function VoiceRecord() {
               isRecord={isRecord}
               url={audioUrl}
             >
-              <Icon path={mdiMicrophonePlus} size={"8em"} color="#fff" />
+              <BsMicFill size={"7em"} color="#fff" />
+              {/* <Icon path={mdiMicrophonePlus} size={"8em"} color="#fff" /> */}
             </VoiceRecBtn>
             {isRecord && <BtnAnimation />}
           </VoiceRecBtnDiv>
