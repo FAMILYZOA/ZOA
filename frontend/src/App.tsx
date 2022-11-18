@@ -190,7 +190,6 @@ function App() {
         .then((res) => {
           console.log('fcm registered')
           dispatch(setFcmTokenId(res.data.id));
-          localStorage.setItem('fcmID', res.data.id);
           dispatch(isFcmRegister(true));
         })
         .catch((err) => {

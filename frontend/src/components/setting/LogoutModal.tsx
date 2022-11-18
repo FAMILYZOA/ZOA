@@ -9,6 +9,7 @@ import {
   setRefreshToken,
 } from "../../features/token/tokenSlice";
 import axios from "axios";
+import { setFcmTokenId } from "../../features/mobile/mobileSlice";
 
 type modalType = {
   isOpen: boolean;
@@ -122,7 +123,6 @@ const LogoutModal = (props: modalType) => {
       dispatch(setAccessToken("")); // 로그아웃 하기
       dispatch(setRefreshToken(""));
       props.toggle(false);
-      console.log(fcmTokenId);
       axios({
         method: "DELETE",
         url: `${process.env.REACT_APP_BACK_HOST}/event/FCM/${fcmTokenId}/`,
@@ -130,7 +130,7 @@ const LogoutModal = (props: modalType) => {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((res) => {
-        localStorage.removeItem('fcmID');
+        dispatch(setFcmTokenId(""));
       }).catch((err) => {
         console.log(err);
       })
