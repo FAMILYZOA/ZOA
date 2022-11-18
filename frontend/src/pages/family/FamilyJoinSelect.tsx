@@ -36,7 +36,7 @@ const Guide = styled.div`
   width: 80%;
   margin: 0 auto 1.6em;
   font-size: 0.8em;
-
+  text-align: center;
   color: #707070;
   line-height: 1.3em;
 `
@@ -48,6 +48,7 @@ const JoinContents = styled.div`
   margin: 20vh 0 0;
 `
 const BtnBox = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
   margin-bottom: 1em;
@@ -85,7 +86,7 @@ const FamilyJoinSelect = () => {
         <img src={logo} alt="" />
       </Header>
       <JoinContents>
-        <div style={{width: "100vw"}}>
+        <div style={{width: "100%"}}>
           <Greetings>어서오세요!</Greetings>
           <Guide>가족 생성/참여하여 <br /> 구성원들과 하루를 공유해보세요!</Guide>
           <BtnBox>
