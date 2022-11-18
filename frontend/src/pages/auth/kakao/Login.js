@@ -10,7 +10,24 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "../../../features/token/tokenSlice";
+import {
+  setUserFamilyId,
+  setUserId,
+  setUserKakaoId,
+  setUserPhone,
+  setUserBirth,
+  setUserImage,
+  setUserName,
+} from "../../../features/user/userSlice";
+import {
+  setFamilyCreatedAt,
+  setFamilyId,
+  setFamilyName,
+  setFamilyUsers,
+} from "../../../features/family/familySlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import logo from "../../../assets/white-logo.png";
+import axios from "axios";
 import { isFcmRegister } from "../../../features/mobile/mobileSlice";
 /*global Kakao*/
 
@@ -113,6 +130,7 @@ const KakaoLogin = styled.div`
 function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const familyId = useAppSelector((state) => state.family.id);
 
   //adf
   const [phone, setPhone] = useState("");
@@ -141,16 +159,48 @@ function Login() {
     customAxios
       .post("accounts/login/", data)
       .then((res) => {
-        dispatch(setAccessToken(res.data.token.access));
-        dispatch(setRefreshToken(res.data.token.refresh));
-
+        const accessToken = res.data.token.access;
+        const refreshToken = res.data.token.refresh;
+        dispatch(setAccessToken(accessToken));
+        dispatch(setRefreshToken(refreshToken));
         dispatch(isFcmRegister(false));
+        axios({
+          method: "get",
+          url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          dispatch(setUserId(res.data.id));
+          dispatch(setUserPhone(res.data.phone));
+          dispatch(setUserKakaoId(-1));
+          dispatch(setUserFamilyId(res.data.family_id));
+          dispatch(setUserBirth(res.data.birth));
+          dispatch(setUserImage(res.data.image));
+          dispatch(setUserName(res.data.name));
+          if (familyId < 0 && res.data.family_id) {
+            // 가족 정보가 없으면, 가족 정보 불러오기
+            axios({
+              method: "get",
+              url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.family_id}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+              .then((res) => {
+                dispatch(setFamilyId(res.data.id));
+                dispatch(setFamilyName(res.data.name));
+                dispatch(setFamilyCreatedAt(res.data.created_at));
+                dispatch(setFamilyUsers(res.data.users));
+              })
+          }
         navigate("/", { replace: true });
       })
       .catch((err) => {
         activeWarn();
       });
-  };
+  })};
   const clickKakaoLogin = () => {
     Kakao.Auth.authorize({
       redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
