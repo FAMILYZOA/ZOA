@@ -117,7 +117,8 @@ const LogoutModal = (props: modalType) => {
     })
       .then(() => {
         dispatch(setAccessToken("")); // 로그아웃 하기
-        dispatch(setRefreshToken(""))
+        dispatch(setRefreshToken(""));
+        localStorage.removeItem("token");
         props.toggle(false);
         navigate("/intro", { replace: true });
       })
