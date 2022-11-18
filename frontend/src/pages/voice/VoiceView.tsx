@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import { VoiceMessage } from "../../components/voice";
 import { FiPlus } from "react-icons/fi";
-import { BsFillTrashFill } from "react-icons/bs";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 interface highLightProps {
   isLeft?: boolean;
@@ -467,7 +467,7 @@ const VoiceView = () => {
         }
         setIsDelete(!isDelete);
       }}>
-        <BsFillTrashFill size={24}/>
+        <RiDeleteBinLine size={24}/>
         {isDelete && <div style={{marginLeft: "8px"}}>
             {`삭제하기 (${deleteList.length})`}
           </div>}
