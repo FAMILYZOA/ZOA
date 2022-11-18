@@ -4,8 +4,12 @@ import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import {
+  setAccessToken,
+  setRefreshToken,
+} from "../../features/token/tokenSlice";
 import axios from "axios";
+import { setFcmTokenId } from "../../features/mobile/mobileSlice";
 
 type modalType = {
   isOpen: boolean;
@@ -84,8 +88,9 @@ const LogoutModal = (props: modalType) => {
   const [isModal, toggleModal] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector(state => state.token.access);
-  const refreshToken = useAppSelector(state => state.token.refresh);
+  const accessToken = useAppSelector((state) => state.token.access);
+  const refreshToken = useAppSelector((state) => state.token.refresh);
+  const fcmTokenId = useAppSelector((state) => state.mobile.fcmTokenId);
 
   const modalStyle = {
     content: {
@@ -112,16 +117,27 @@ const LogoutModal = (props: modalType) => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: {
-        refresh: `${refreshToken}`
-      }
-    })
-      .then(() => {
-        dispatch(setAccessToken("")); // 로그아웃 하기
-        dispatch(setRefreshToken(""));
-        localStorage.removeItem("token");
-        props.toggle(false);
-        navigate("/intro", { replace: true });
+        refresh: `${refreshToken}`,
+      },
+    }).then(() => {
+      dispatch(setAccessToken("")); // 로그아웃 하기
+      dispatch(setRefreshToken(""));
+      localStorage.removeItem("token");
+      props.toggle(false);
+      axios({
+        method: "DELETE",
+        url: `${process.env.REACT_APP_BACK_HOST}/event/FCM/${fcmTokenId}/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res) => {
+        dispatch(setFcmTokenId(""));
+      }).catch((err) => {
+        console.log(err);
       })
+      navigate("/intro", { replace: true });
+    });
+    
   };
 
   return (

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
 import { MdOutlineLock } from "react-icons/md";
 import { RiKakaoTalkFill } from "react-icons/ri";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { customAxios } from "./../../../api/customAxios";
 import {
   setAccessToken,
@@ -27,6 +28,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import logo from "../../../assets/white-logo.png";
 import axios from "axios";
+import { isFcmRegister } from "../../../features/mobile/mobileSlice";
 /*global Kakao*/
 
 const Header = styled.div`
@@ -130,6 +132,7 @@ function Login() {
   const navigate = useNavigate();
   const familyId = useAppSelector((state) => state.family.id);
 
+  //adf
   const [phone, setPhone] = useState("");
   const [pw, setPw] = useState("");
   const [warn, setWarn] = useState(false);
@@ -160,6 +163,7 @@ function Login() {
         const refreshToken = res.data.token.refresh;
         dispatch(setAccessToken(accessToken));
         dispatch(setRefreshToken(refreshToken));
+        dispatch(isFcmRegister(false));
         axios({
           method: "get",
           url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
@@ -201,6 +205,7 @@ function Login() {
     Kakao.Auth.authorize({
       redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
     });
+    dispatch(isFcmRegister(false));
   };
   const onEnter = (e) => {
     if (e.key == "Enter") {

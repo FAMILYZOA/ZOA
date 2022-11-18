@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer) :
 
     def get_image(self,obj) :
         if 'kakao' in obj.image.url :
-            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','https://')
             return res
         return obj.image.url
     def get_set_name(self,obj) :
@@ -59,7 +59,7 @@ class UserUnAuthorizedSerializer(serializers.ModelSerializer) :
 
     def get_image(self,obj) :
         if 'kakao' in obj.image.url :
-            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            res = obj.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','https://')
             return res
         return obj.image.url
 class FamilyUnAuthorizedRetriveSerializer(serializers.ModelSerializer) :

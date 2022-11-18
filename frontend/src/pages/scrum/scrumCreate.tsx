@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -209,7 +209,7 @@ const EmojiSelector = (props: EmojiProps) => {
 
 const YesterdayWork = (props: InputProps) => {
   return (
-    <div style={{margin: "16px 0"}}>
+    <div style={{ margin: "16px 0" }}>
       <DescStyle>
         <Emoji unified="1f644" emojiStyle={EmojiStyle.APPLE} size={24} />
         <DescTextStyle>어제 뭐 했더라?</DescTextStyle>
@@ -250,6 +250,9 @@ const RegistBtn = (props: registBtnPRops) => {
   const [isRegist, toggleResigt] = useState<boolean>(true);
   const access: string = useAppSelector((state) => state.token.access);
   const refresh: string = useAppSelector((state) => state.token.refresh);
+  const userID = useAppSelector((state) => state.user.id);
+  const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+
   useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
       toggleResigt(true);
@@ -276,8 +279,21 @@ const RegistBtn = (props: registBtnPRops) => {
         .post("scrums/", scrumData, config)
         .then((res: AxiosResponse) => {
           if (res.status === 201) {
-            // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
             navigate("/hello/", { replace: true });
+            
+            // 가족들에게 새로운 등록 알림 보내기
+            const messageData = new FormData();
+            // [안녕] ___ 님이 '안녕'을 작성하셨습니다. 지금 들어가서 확인해보세요!
+            const messageBody = `[안녕] ${userName}님이 안녕을 작성하셨습니다. 지금 들어가서 확인해보세요`;
+            messageData.append("body", messageBody);
+            customAxios
+              .post("/event/FCM/send/", messageData, config)
+              .then((res: AxiosResponse) => {
+                console.log(res);
+              })
+              .catch((err: AxiosError) => {
+                console.log(err);
+              });
           }
         })
         .catch(async (err) => {
@@ -323,7 +339,7 @@ const RegistBtn = (props: registBtnPRops) => {
 
 const ScrumCreate = () => {
   return (
-    <div style={{paddingBottom:"64px"}}>
+    <div style={{ paddingBottom: "64px" }}>
       <Header label="안녕" back={true}></Header>
       <div>
         <DateSelector></DateSelector>
