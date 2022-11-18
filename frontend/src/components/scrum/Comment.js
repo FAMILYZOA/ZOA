@@ -100,8 +100,9 @@ function Comment({ id, comments }) {
   const token = useAppSelector((state)=> state.token.access);
   const [content, setContent] = useState("");
   const [list, setList] = useState(comments);
-  const userID = useAppSelector((state) => state.user.id);
-  const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  // const userID = useAppSelector((state) => state.user.id);
+  // const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  const userName = useAppSelector((state) => state.user.name);
   const access_token = useAppSelector((state) => state.token.access);
   const refresh_token = useAppSelector((state) => state.token.refresh);
   const dispatch = useAppDispatch();
