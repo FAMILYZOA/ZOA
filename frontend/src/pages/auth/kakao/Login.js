@@ -25,7 +25,6 @@ import {
   setFamilyName,
   setFamilyUsers,
 } from "../../../features/family/familySlice";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import logo from "../../../assets/white-logo.png";
 import axios from "axios";
 import { isFcmRegister } from "../../../features/mobile/mobileSlice";
