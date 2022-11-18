@@ -37,7 +37,7 @@ const InputBox = styled.div`
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 60%;
   height: 40px;
   border: none;
   background: none;
@@ -45,7 +45,7 @@ const Input = styled.input`
   outline: none;
 `;
 const CheckText = styled.p`
-  font-size: 0.7em;
+  font-size: 14px;
   font-weight: bold;
   margin: 0;
 `;

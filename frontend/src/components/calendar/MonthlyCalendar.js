@@ -202,7 +202,7 @@ const MonthlyCalendar = (props) => {
   // 오늘 날짜 찾기
   const [today, setToday] = useState(0);
   const goToday = () => {
-    let TODAY = new Date().getDate();
+    let TODAY = new Date();
     setToday(TODAY);
   };
 
@@ -281,9 +281,9 @@ const MonthlyCalendar = (props) => {
     setModalDate(
       `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
       );
-      getDailySchedule(
-        `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
-        );
+    getDailySchedule(
+      `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
+      );
   };
   const closeModal = () => {
     remonth(!emit);
@@ -316,12 +316,12 @@ const MonthlyCalendar = (props) => {
   const [dailyschedule, setDailySchedule] = useState([]);
   // 일별 일정 조회
   const getDailySchedule = () => {
-    if (state === "view") {
+    if (state === "view" && modalDate.length !== 0) {
       axios({
         method: "GET",
         url: `${
           process.env.REACT_APP_BACK_HOST
-        }/calendar/schedule/${year}-${month}-${modalDate.slice(-2)}`,
+        }/calendar/schedule/date/${year}-${month}-${modalDate.slice(-2)}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -334,7 +334,9 @@ const MonthlyCalendar = (props) => {
   };
 
   useEffect(() => {
-    getDailySchedule();
+    if(modalDate !== ""){
+      getDailySchedule();
+    }
   }, [state, modalDate.slice(-2)]);
 
   const deleteSchedule = () => {
@@ -371,7 +373,7 @@ const MonthlyCalendar = (props) => {
     data.append("family", content.family);
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/${content.start_date}`,
+      url: `${process.env.REACT_APP_BACK_HOST}/calendar/schedule/date/${content.start_date}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -564,7 +566,15 @@ const MonthlyCalendar = (props) => {
         {calendar.map((item, index) => {
           return (
             <OnMonthDay key={index} onClick={() => openModal(item)}>
-              <CalendarDate howweek={howday}>{item}</CalendarDate>
+              {presDate.getFullYear() === today.getFullYear() &&
+              presDate.getMonth() === today.getMonth() &&
+              item === today.getDate() ? (
+                <CalendarDate2 howweek={howday}>
+                  <span>{item}</span>
+                </CalendarDate2>
+              ) : (
+                <CalendarDate howweek={howday}>{item}</CalendarDate>
+              )}
               <ScheduleBox howweek={howday}>
                 {monthSchedule.map((sc, idx) => {
                   return (
@@ -640,7 +650,7 @@ const MonthlyCalendar = (props) => {
                             )
                           ) : // 종료 같은연도 다른 달
                           //중간달
-                            Number(presDate.getMonth() + 1) <=
+                          Number(presDate.getMonth() + 1) <=
                             Number(sc.end_date.slice(5, 7)) ? (
                             //현재 달이 시작 달보다 뒤 맞지?
                             <>
@@ -808,6 +818,23 @@ const CalendarDate = styled.div`
   display: flex;
   justify-content: center;
   color: ${(props) => props.color};
+
+`;
+const CalendarDate2 = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  span{
+    background-color: rgba(255,120,127,0.7);
+    width: 40px;
+    height: auto;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
 `;
 const ScheduleBox = styled.div`
   @media screen and (max-height: 700px) {

@@ -10,17 +10,19 @@ class ImageSerializer(serializers.ModelSerializer) :
     def get_image(self,obj) :
         user = obj.user
         if 'kakao' in user.image.url :
-            res = user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            res = user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','https://')
             return res
         return user.image.url
+
 class CommentSerializer(ImageSerializer) :
     user_id = serializers.IntegerField(source='user.id',read_only=True)
     name = serializers.CharField(source='user.name',read_only=True)
+    writer_id = serializers.IntegerField(source='scrum.user.id',read_only=True)
     set_name = serializers.SerializerMethodField()
 
     class Meta :
         model = Comment
-        fields = ('id','user_id','name','image','content','created_at','set_name')
+        fields = ('id','user_id','name','image','content','created_at','set_name','writer_id',)
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
@@ -32,6 +34,7 @@ class CommentSerializer(ImageSerializer) :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
         else :
             return False
+            
 class ScrumSerializer(ImageSerializer) :
 
     user_id = serializers.IntegerField(source='user.id',read_only=True)

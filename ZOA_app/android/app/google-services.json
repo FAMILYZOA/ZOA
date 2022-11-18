@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "851532470992",
+    "project_id": "familyzoa",
+    "storage_bucket": "familyzoa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851532470992:android:44a6aff09dbdc402789cd5",
+        "android_client_info": {
+          "package_name": "com.zoa_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851532470992-kdqjn03gqcpnprrl2tfu9ahnl7jc6jj9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zoa_app",
+            "certificate_hash": "264f757907924d196b70f98689a88b869e65cd0a"
+          }
+        },
+        {
+          "client_id": "851532470992-slcf0o6d51pfmv13ao741jel60fugk1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOx55K09tSybA8VRhckTLn-3-iRhK_I4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851532470992-slcf0o6d51pfmv13ao741jel60fugk1l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

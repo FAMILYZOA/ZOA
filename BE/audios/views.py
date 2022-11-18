@@ -10,14 +10,18 @@ from rest_framework.parsers import MultiPartParser
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.filters import SearchFilter
+from drf_yasg import openapi
+
+
+
+audio_param = openapi.Parameter('type', openapi.IN_QUERY, description="조회할 데이터 종류를 입력해주세요", type=openapi.TYPE_INTEGER,required=True)
 
 
 class AudioSaveAPIView(ListCreateAPIView):
     serializer_class = AudioListSerializer
     permission_classes = [IsFamilyorBadResponsePermission,]
     parser_classes = [MultiPartParser, ]
-    filter_backends = [SearchFilter,]
-    search_fields = ['status']
+
     @swagger_auto_schema(request_body=AudioSerializer)
     def post(self, request, *args, **kwargs):
 
@@ -47,15 +51,21 @@ class AudioSaveAPIView(ListCreateAPIView):
         serializer.save(from_user_id=self.request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+    @swagger_auto_schema(operation_summary="음성메시지 리스트 조회",manual_parameters=[audio_param],operation_description='전체를 조회하려면 0, 저장한 음성은 1을 입력해주세요')
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
     def list(self,request, *args,**kwagrs) :
-        is_query  =self.request.GET.getlist('search')
+        is_query  =self.request.GET.getlist('type')
         if not is_query  :
             return Response('query를 입력해주세요 0 or 1',status=status.HTTP_400_BAD_REQUEST)
-        queryset = self.filter_queryset(Audio.objects.filter(to_user_id=request.user).order_by('created_at'))
+        if request.GET['type'] == '1' :
+            queryset = Audio.objects.filter(to_user_id=request.user,status=True).order_by('-pk')
+        else :
+            queryset = Audio.objects.filter(to_user_id=request.user).order_by('-pk')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-class AudioDeleteAPIView(GenericAPIView,mixins.UpdateModelMixin,mixins.DestroyModelMixin,) :
+class AudioUpdateAPIView(GenericAPIView,mixins.UpdateModelMixin) :
     permission_classes = [IsObjectorBadResponsePermission,]
     queryset = Audio.objects.all()
     lookup_field = 'id'
@@ -64,9 +74,10 @@ class AudioDeleteAPIView(GenericAPIView,mixins.UpdateModelMixin,mixins.DestroyMo
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class AudioDeleteAPIView(GenericAPIView):
+    permission_classes = [IsObjectorBadResponsePermission,]
+    def delete(self, request):
+        audio = Audio.objects.filter(id__in=request.data.getlist('id'))
+        audio.delete()
+        return Response("삭제되었습니다.", status=status.HTTP_204_NO_CONTENT)

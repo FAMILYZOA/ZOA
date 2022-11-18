@@ -8,6 +8,7 @@ import Button from "../../components/Button";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { useAppSelector } from "../../app/hooks";
 
 const Container = styled.div`
   height: calc(95vh - 120px);
@@ -19,6 +20,7 @@ const Container = styled.div`
 function CreateChecklist() {
   const navigate = useNavigate();
   const [allow, setAllow] = useState(true);
+  const userName = useAppSelector((state) => state.user.name);
 
   const [info, setInfo] = useState(
     {
@@ -82,10 +84,22 @@ function CreateChecklist() {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
           data: data,
-        })
-          .then((res) => {
-            navigate("/checklist");
+        }).then((res) => {
+          const messageData = new FormData();
+          messageData.append("body", `[할 일] ${userName}님이 할 일을 작성하셨습니다. 지금 들어가서 확인해보세요`);
+          messageData.append("writer", res.data[0].to_users_id);
+          axios({
+            method: "POST",
+            url: `${process.env.REACT_APP_BACK_HOST}/event/FCM/send/`,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+            data: messageData
           })
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+          navigate("/checklist");
+        });
       }
     }
   };

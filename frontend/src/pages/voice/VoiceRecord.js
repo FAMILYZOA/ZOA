@@ -9,12 +9,119 @@ import styled from "styled-components";
 import { Icon } from "@mdi/react";
 import { mdiMicrophonePlus } from "@mdi/js";
 import { useAppSelector } from "../../app/hooks";
+import { set } from "lodash";
 
 const Container = styled.div`
   height: calc(95vh - 120px);
   margin: 5% 0;
   /* overflow-y: scroll; */
   overflow-x: hidden;
+`;
+
+const ModalBack = styled.div`
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 56px);
+  z-index: 4;
+  background-color: rgba(102, 102, 102, 0.5);
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const ModalDiv = styled.div`
+  position: absolute;
+  padding: 20px;
+  width: 70%;
+  height: 22vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  border-radius: 12px;
+  background-color: #fff;
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  -webkit-animation: fadein 0.5s;
+  -o-animation: fadein 0.5s;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const ModalContent = styled.div`
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Modal24 = styled.div`
+  font-weight: 600;
 `;
 
 const VoiceRecDiv = styled.div`
@@ -168,6 +275,7 @@ function VoiceRecord() {
   const [isRecord, setIsRecord] = useState(false);
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
+  const [isModal, setIsModal] = useState(false);
   const accessToken = useAppSelector((state) => state.token.access);
   const userName = useAppSelector((state) => state.user.name);
 
@@ -192,7 +300,6 @@ function VoiceRecord() {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const analyser = audioCtx.createScriptProcessor(0, 1, 1);
     setAnalyser(analyser);
-    setIsRecord(true);
 
     const makeSound = (stream) => {
       const source = audioCtx.createMediaStreamSource(stream);
@@ -202,17 +309,26 @@ function VoiceRecord() {
       analyser.connect(audioCtx.destination);
     };
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.start();
-      setStream(stream);
-      setMedia(mediaRecorder);
-      makeSound(stream);
-      setStartTime(new Date().getTime());
-      analyser.onaudioprocess = function (e) {
-        setOnRec(false);
-      };
-    });
+    console.log(navigator);
+
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+        setIsRecord(true);
+        setStream(stream);
+        setMedia(mediaRecorder);
+        makeSound(stream);
+        setStartTime(new Date().getTime());
+        analyser.onaudioprocess = function (e) {
+          setOnRec(false);
+        };
+      })
+      .catch((err) => {
+        // notReadableError 발생 -> 실기기 테스트 필요
+        console.dir(err);
+      });
   };
 
   const offRecAudio = () => {
@@ -257,8 +373,14 @@ function VoiceRecord() {
       },
       data: data,
     })
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
+        setAudioUrl();
+        setIsRecord(false);
+        setIsModal(true);
+        setTimeout(() => {
+          setIsModal(false);
+          navigate("/voice");
+        }, 1500);
       })
       .catch((err) => {
         console.error(err);
@@ -268,6 +390,16 @@ function VoiceRecord() {
   return (
     <>
       <Header label="음성메시지" back="true"></Header>
+      {isModal && <ModalBack onClick={() => setIsModal(false)} />}
+      {isModal && (
+        <ModalDiv>
+          <ModalContent onClick={() => setIsModal(false)}>
+            <div>
+              <Modal24>음성메시지가 전송되었습니다!</Modal24>
+            </div>
+          </ModalContent>
+        </ModalDiv>
+      )}
       <Container>
         <Receiver receivers={receivers}></Receiver>
         <VoiceRecDiv>

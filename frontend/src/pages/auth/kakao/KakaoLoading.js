@@ -8,6 +8,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "../../../features/token/tokenSlice";
+import { isFcmRegister } from "../../../features/mobile/mobileSlice";
 
 export const Background = styled.div`
   height: 100vh;
@@ -38,7 +39,7 @@ function Loading() {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `grant_type=authorization_code&client_id=${"931a81a6fdb9751f2858ca6f2f46b377"}&redirect_uri=${`${process.env.REACT_APP_FE_HOST}/kakaoLoading/`}&code=${kakao_code}`,
+      body: `grant_type=authorization_code&client_id=${"931a81a6fdb9751f2858ca6f2f46b377"}&redirect_uri=${process.env.REACT_APP_FE_HOST}/kakaoLoading/&code=${kakao_code}`,
       //prompt={none}(?) 추가하면 자동로그인 된다 함
     })
       .then((res) => res.json())
@@ -67,6 +68,7 @@ function Loading() {
               if (result.status === 200) {
                 dispatch(setAccessToken(result.data.token.access));
                 dispatch(setRefreshToken(result.data.token.refresh));
+                dispatch(isFcmRegister(false));
                 navigate("/", { replace: true });
               }
             })
