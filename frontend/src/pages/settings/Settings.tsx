@@ -12,9 +12,51 @@ import ImageModal from "../../components/setting/ImageModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
-import { setFamilyUsers } from "../../features/family/familySlice";
+import { setFamilyCreatedAt, setFamilyId, setFamilyName, setFamilyUsers } from "../../features/family/familySlice";
 import axios from "axios";
 import { MdOutlineEmojiPeople } from "react-icons/md";
+import { ModalBack, ModalContent, ModalDiv } from "../../components";
+import { useNavigate } from "react-router-dom";
+
+const Modal24 = styled.div`
+  font-weight: 600;
+  margin-bottom: 20px;
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+`;
+
+const ConfirmButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35%;
+  height: 2em;
+
+  color: #fff;
+  background-color: #ff787f;
+  border-radius: 0.4em;
+  margin-right: 0.4em;
+`;
+
+const CancelButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35%;
+  height: 2.2em;
+
+  box-sizing: border-box;
+
+  color: #aaa;
+  border: 2px solid #aaa;
+  border-radius: 0.4em;
+`;
 
 const SettingsHeader = styled.div`
   display: flex;
@@ -119,6 +161,9 @@ const SettingCopyright = styled.div`
   font-size: 16px;
 `;
 const SettingIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 28px;
   width: 28px;
   font-size: 1.4em;
@@ -180,6 +225,8 @@ const Settings = () => {
   const [isImageModal, toggleImageModal] = useState<boolean>(false);
   const [isFontModal, toggleFontModal] = useState<boolean>(false);
   const [isLogoutModal, toggleLogoutModal] = useState<boolean>(false);
+  const [isFamilyModal, setIsFamilyModal] = useState<boolean>(false);
+  const [isFamilyConfirmed, setIsFamilyConfirmed] = useState<boolean>(false);
   const [editName, setEditName] = useState<string>("");
   const fontLetter = ["작게", "보통", "크게"];
 
@@ -191,6 +238,7 @@ const Settings = () => {
   const isPush = useAppSelector((state) => state.setting.push);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleNameEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditName(e.target.value);
@@ -232,12 +280,63 @@ const Settings = () => {
         });
     }
   };
+  const confirmFamily = () => {
+    if (familyId >= 0) {
+      axios({
+        method: "PUT",
+        url: `${process.env.REACT_APP_BACK_HOST}/family/secession/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          family_id: familyId
+        }
+      })
+        .then(() => {
+          setIsFamilyConfirmed(true);
+          setTimeout(() => {
+            dispatch(setFamilyId(-1));
+            dispatch(setFamilyName(""));
+            dispatch(setFamilyCreatedAt(""));
+            dispatch(
+              setFamilyUsers([
+                {
+                  id: -1,
+                  name: "",
+                  image: "",
+                  set_name: "",
+                },
+              ])
+            );
+            setIsFamilyModal(false);
+            setIsFamilyConfirmed(false);
+            navigate("/");
+          }, 2000)
+        })
+    }
+  }
 
   return (
     <>
       <SettingsHeader>
         <SettingLabel>설정</SettingLabel>
       </SettingsHeader>
+      {isFamilyModal && <ModalBack onClick={() => setIsFamilyModal(false)}/>}
+      {isFamilyModal && (
+        <ModalDiv>
+          <ModalContent>
+            <Modal24> {isFamilyConfirmed ? "가족 탈퇴되었습니다." : "정말 가족을 탈퇴하시겠습니까?"} </Modal24>
+            {!isFamilyConfirmed && (
+              <ButtonDiv>
+                <ConfirmButton onClick={confirmFamily}>확인</ConfirmButton>
+                <CancelButton onClick={() => {
+                  setIsFamilyModal(false);
+                }}>취소</CancelButton>
+              </ButtonDiv>
+            )}
+          </ModalContent>
+        </ModalDiv>
+      )}
       <SettingsBody>
         <ProfileImgDiv>
           <ProfileImgCover>
@@ -304,14 +403,16 @@ const Settings = () => {
               </SettingIcon>
             </SettingItemContent>
           </SettingItem>
-          <SettingItem onClick={() => {}}>
-            <SettingItemTitle>가족 탈퇴</SettingItemTitle>
-            <SettingItemContent>
-              <SettingIcon>
-                <MdOutlineEmojiPeople />
-              </SettingIcon>
-            </SettingItemContent>
-          </SettingItem>
+          { familyId >= 0 && (
+            <SettingItem onClick={() => {setIsFamilyModal(true)}}>
+              <SettingItemTitle>가족 탈퇴</SettingItemTitle>
+              <SettingItemContent>
+                <SettingIcon>
+                  <MdOutlineEmojiPeople />
+                </SettingIcon>
+              </SettingItemContent>
+            </SettingItem>
+          )}
         </SettingMenu>
       </SettingsBody>
       {isImageModal ? (
