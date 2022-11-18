@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import { VoiceMessage } from "../../components/voice";
 import { FiPlus } from "react-icons/fi";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 interface highLightProps {
   isLeft?: boolean;
@@ -13,6 +14,39 @@ interface highLightProps {
 interface modalBackProps {
   toggle?: boolean;
 }
+
+interface deleteProps {
+  isDelete?: boolean;
+}
+
+const DeleteButton = styled.div<deleteProps>`
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 48px;
+  border-radius: 24px;
+  transition: border 0.3s, background-color 0.3s, color 0.3s, width 0.3s;
+  ${({ isDelete }) => {
+    if (isDelete) {
+      return css`
+        border: 2px solid #6fdecb;
+        background-color: #fff;
+        color: #6fdecb;
+        width: 200px;
+      `;
+    } else {
+      return css`
+        background-color: #6fdecb;
+        color: #fff;
+        width: 48px;
+      `;
+    }
+  }}
+`
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
@@ -268,6 +302,8 @@ const VoiceView = () => {
   const [deleteId, setDeleteId] = useState<number>(-1);
   const [isModal, setIsModal] = useState<boolean>(false);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [deleteList, setDeleteList] = useState<number[]>([]);
 
   const getVoice = () => {
     axios({
@@ -308,19 +344,30 @@ const VoiceView = () => {
     getVoice();
   };
 
-  const getDelete = (id: number) => {
-    setDeleteId(id);
-    setIsModal(true);
+  const addDeleteList = (id: number) => {
+    const tempDeleteList = [...deleteList];
+    tempDeleteList.push(id);
+    setDeleteList(tempDeleteList);
+  }
+
+  const filterDeleteList = (id: number) => {
+    const tempDeleteList = [...deleteList];
+    let filteredTempList = tempDeleteList.filter((element) => element !== id)
+    setDeleteList(filteredTempList);
   }
 
   const confirmDelete = () => {
-    if (deleteId >= 0) {
+    if (deleteList.length > 0) {
+      console.log(deleteList)
       axios({
         method: "DELETE",
-        url: `${process.env.REACT_APP_BACK_HOST}/audio/${deleteId}`,
+        url: `${process.env.REACT_APP_BACK_HOST}/audio/delete/`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        data: {
+          id: deleteList,
+        }
       })
         .then(() => {
           setIsConfirmed(true);
@@ -343,7 +390,9 @@ const VoiceView = () => {
             <Modal24> {isConfirmed ? "삭제되었습니다." :"정말 삭제하시겠습니까?"} </Modal24>
             {!isConfirmed && (<ButtonDiv>
               <ConfirmButton onClick={confirmDelete}>확인</ConfirmButton>
-              <CancelButton onClick={() => {setIsModal(false)}}>취소</CancelButton>
+              <CancelButton onClick={() => {
+                setIsModal(false);
+              }}>취소</CancelButton>
             </ButtonDiv>)}
           </ModalContent>
         </ModalDiv>
@@ -381,7 +430,10 @@ const VoiceView = () => {
                 second={message.second}
                 playingId={playingId}
                 setPlayingId={setPlayingId}
-                getDelete={getDelete}
+                isDelete={isDelete}
+                addDeleteList={addDeleteList}
+                filterDeleteList={filterDeleteList}
+                deleteList={deleteList}
               />
             ))}
           </>
@@ -402,12 +454,28 @@ const VoiceView = () => {
                 second={message.second}
                 playingId={playingId}
                 setPlayingId={setPlayingId}
-                getDelete={getDelete}
+                isDelete={isDelete}
+                addDeleteList={addDeleteList}
+                filterDeleteList={filterDeleteList}
+                deleteList={deleteList}
               />
             ))}
           </>
         )}
       </VoiceMessageDiv>
+      <DeleteButton 
+        isDelete={isDelete}
+        onClick={() => {
+        if (deleteList.length > 0 && isDelete){
+          setIsModal(true);
+        }
+        setIsDelete(!isDelete);
+      }}>
+        <RiDeleteBinLine size={24}/>
+        {isDelete && <div style={{marginLeft: "8px"}}>
+            {`삭제하기 (${deleteList.length})`}
+          </div>}
+      </DeleteButton>
     </>
   );
 };
