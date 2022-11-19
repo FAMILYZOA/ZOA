@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled, { keyframes } from "styled-components"
-import { FaPlay, FaPause } from "react-icons/fa"
+import styled, { keyframes } from "styled-components";
+import { FaPlay, FaPause } from "react-icons/fa";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
@@ -11,18 +11,18 @@ const VoiceMessageDiv = styled.div`
   display: grid;
   grid-template-columns: 1fr 2.5fr 1fr;
   align-items: center;
-`
+`;
 const VoiceSenderDiv = styled.div`
   width: 64px;
   height: 64px;
   margin-right: 16px;
-`
+`;
 const VoiceSenderImg = styled.img`
   width: 64px;
   height: 64px;
   border-radius: 32px;
   object-fit: fill;
-`
+`;
 const VoiceDiv = styled.div`
   display: flex;
   position: relative;
@@ -31,7 +31,7 @@ const VoiceDiv = styled.div`
   width: 100%;
   background-color: #fdaf97;
   border-radius: 20px;
-`
+`;
 const VoiceIconDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -42,8 +42,8 @@ const VoiceIconDiv = styled.div`
   border-radius: 16px;
   background-color: #fff;
   text-align: center;
-  color: #FEC786;
-`
+  color: #fec786;
+`;
 const VoiceDeleteIcon = styled.div`
   display: flex;
   flex: 1;
@@ -54,24 +54,24 @@ const VoiceDeleteIcon = styled.div`
   margin: 4px 8px 4px auto;
   text-align: center;
   color: #fc7e58;
-`
+`;
 
 const VoiceTimeDiv = styled.div`
   color: #fff;
-`
+`;
 const VoiceTimeDifference = styled.div`
   position: absolute;
   font-size: 0.6rem;
   bottom: -16px;
   right: 16px;
   color: #444;
-`
+`;
 const SenderName = styled.div`
   width: 64px;
   margin: 8px 0 16px;
   text-align: center;
   font-size: 0.7em;
-`
+`;
 
 const ico_like = keyframes`
   0%{transform:scale(.2);}
@@ -83,7 +83,6 @@ const ico_like_out = keyframes`
   100%{transform:scale(1);}
 `;
 
-
 const FavoriteIconDiv = styled.div`
   width: 100%;
   display: flex;
@@ -91,55 +90,60 @@ const FavoriteIconDiv = styled.div`
   align-items: center;
   height: 32px;
   text-align: center;
-  color: #FF787F;
+  color: #ff787f;
   /* animation: ${ico_like} 1s ; */
   margin: 0 auto;
-  
 `;
 
 type VoiceMessageProps = {
-  id: number,
-  image: string,
-  set_name: string,
-  audio: string, // url
-  created_at: string, // date
-  name: string,
-  type: boolean,
-  index: number,
-  second: number,
-  getIndex: (index: number, type: boolean) => void,
-  playingId: number,
-  setPlayingId: (id: number) => void,
-  getDelete: (id: number) => void,
-}
+  id: number;
+  image: string;
+  set_name: string;
+  audio: string; // url
+  created_at: string; // date
+  name: string;
+  type: boolean;
+  index: number;
+  second: number;
+  getIndex: (index: number, type: boolean) => void;
+  playingId: number;
+  setPlayingId: (id: number) => void;
+  getDelete: (id: number) => void;
+};
 
 const VoiceMessage = ({
-    id,
-    image,
-    set_name,
-    audio,
-    created_at, 
-    name, 
-    type, 
-    index, 
-    getIndex, 
-    second, 
-    setPlayingId, 
-    playingId, 
-    getDelete
-  }: VoiceMessageProps) => {
+  id,
+  image,
+  set_name,
+  audio,
+  created_at,
+  name,
+  type,
+  index,
+  getIndex,
+  second,
+  setPlayingId,
+  playingId,
+  getDelete,
+}: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
-  const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
+  const [voicePlayingTime, setVoicePlayingTime] = useState<number>(
+    voice.currentTime
+  );
   const voiceDuration = second;
-  const accessToken = useAppSelector(state => state.token.access);
+  const accessToken = useAppSelector((state) => state.token.access);
 
   const voicePlay = () => {
     setPlayingId(id);
-    console.dir(audio);
-    console.dir(voice);
-    voice.play();
-  }
+
+    voice
+      .play()
+      .then((res) => {
+        console.log("play");
+      })
+      .catch((err) => console.dir(err));
+  };
 
   const voicePause = () => {
     if (playingId === id) {
@@ -148,24 +152,22 @@ const VoiceMessage = ({
       voice.currentTime = 0;
     }
     voice.pause();
-  }
+  };
 
   useEffect(() => {
     if (playingId !== id) {
       setIsPlaying(false);
     }
-  }, [playingId])
+  }, [playingId]);
 
   useEffect(() => {
-      isPlaying ? voicePlay() : voicePause();
-    },
-    [isPlaying]
-  );
+    isPlaying ? voicePlay() : voicePause();
+  }, [isPlaying]);
 
   useEffect(() => {
-    voice.addEventListener('ended', () => setIsPlaying(false));
+    voice.addEventListener("ended", () => setIsPlaying(false));
     return () => {
-      voice.removeEventListener('ended', () => {
+      voice.removeEventListener("ended", () => {
         setIsPlaying(false);
         setVoicePlayingTime(0);
       });
@@ -187,11 +189,11 @@ const VoiceMessage = ({
       // 정지
       setIsPlaying(false);
     }
-  }
+  };
 
   const deleteVoice = () => {
     getDelete(id);
-  }
+  };
 
   const timeDifference = (time: Date) => {
     const tempTime = new Date().getTime();
@@ -199,23 +201,23 @@ const VoiceMessage = ({
     const timeDif = (tempTime - createTime) / 1000;
 
     if (timeDif > 12 * 30 * 24 * 3600) {
-      return String(Math.floor(timeDif / (12 * 30 * 24 * 3600))) + '년 전'
+      return String(Math.floor(timeDif / (12 * 30 * 24 * 3600))) + "년 전";
     } else if (timeDif > 30 * 24 * 3600) {
-      return String(Math.floor(timeDif / (30 * 24 * 3600))) + '개월 전'
+      return String(Math.floor(timeDif / (30 * 24 * 3600))) + "개월 전";
     } else if (timeDif > 7 * 24 * 3600) {
-      return String(Math.floor(timeDif / (7 * 24 * 3600))) + '주 전'
+      return String(Math.floor(timeDif / (7 * 24 * 3600))) + "주 전";
     } else if (timeDif > 24 * 3600) {
-      return String(Math.floor(timeDif / (24 * 3600))) + '일 전'
-    } 
+      return String(Math.floor(timeDif / (24 * 3600))) + "일 전";
+    }
     // else if (timeDif > 3600) {
     //   return String(Math.floor(timeDif / (3600))) + '시간 전'
     // } else if (timeDif > 60) {
     //   return String(Math.floor(timeDif / (60))) + '분 전'
-    // } 
+    // }
     else {
-      return '오늘'
+      return "오늘";
     }
-  }
+  };
   const handleFavorite = () => {
     axios({
       method: "PUT",
@@ -225,15 +227,15 @@ const VoiceMessage = ({
       },
       data: {
         status: !type,
-      }
+      },
     })
       .then(() => {
         getIndex(index, type);
       })
       .catch((err) => {
         console.error(err);
-      })
-  }
+      });
+  };
 
   return (
     <>
@@ -286,7 +288,7 @@ const VoiceMessage = ({
           <VoiceTimeDifference>
             {timeDifference(new Date(created_at))}
           </VoiceTimeDifference>
-        </VoiceDiv> 
+        </VoiceDiv>
         <FavoriteIconDiv
           onClick={() => {
             handleFavorite();
@@ -302,12 +304,6 @@ const VoiceMessage = ({
       <SenderName>{set_name ? set_name : name}</SenderName>
     </>
   );
-}
-
-
-
-
-
-
+};
 
 export default VoiceMessage;
