@@ -265,6 +265,12 @@ const RegistBtn = (props: registBtnPRops) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
+
   const regist = () => {
     // 0. token 파싱
     const accessToken = `Bearer ${access}`;
