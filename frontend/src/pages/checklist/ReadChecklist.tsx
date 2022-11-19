@@ -96,7 +96,14 @@ const ModalDiv = styled.div`
   position: absolute;
   top: 13vh;
   right: 2vh;
+  height: 75vh;
+  overflow-y: scroll;
   z-index: 3;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const ModalItem = styled.div<modalItemProps>`
   display: flex;
@@ -169,6 +176,7 @@ function ReadChecklist() {
   const userId = useAppSelector((state) => state.user.id);
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
+  const familyId = useAppSelector(state => state.family.id);
   const [isModal, setIsModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
@@ -201,6 +209,12 @@ function ReadChecklist() {
     setUnSelectedMember(tempMember);
     setIsModal(false);
   };
+  
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   useEffect(() => {
     let index: number = 0;
@@ -223,7 +237,7 @@ function ReadChecklist() {
 
   const navigate = useNavigate();
   const navigateToHome = () => {
-    navigate("/family/manage");
+    navigate(-1);
   };
   const navigateToCreate = () => {
     navigate("/checklist/create");

@@ -13,6 +13,8 @@
     "@expo/react-native-action-sheet": "^4.0.0",
     "@react-native-community/audio-toolkit": "^2.0.3",
     "@react-native-community/netinfo": "^9.3.6",
+    "@react-native-firebase/app": "^16.4.4",
+    "@react-native-firebase/messaging": "^16.4.4",
     "react": "18.1.0",
     "react-native": "^0.70.0",
     "react-native-actions-sheet": "^0.8.10",

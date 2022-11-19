@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 const CheckListWrapper = styled.div`
   border-radius: 12px;
   width: 90%;
-  height: calc(100vh - 450px);
+  height: calc(100vh - 500px);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin: 0 auto;
   display: flex;
@@ -25,7 +25,7 @@ const ListBox = styled.div`
 const ListScrollBox = styled.div`
   overflow-y: scroll;
   height: auto;
-  max-height: calc(100vh - 510px);
+  max-height: calc(100vh - 560px);
   width: 100%;
 `;
 const ViewMoreBox = styled.div`
@@ -111,7 +111,7 @@ const CheckListList = () => {
           {list.length !== 0 ? (
             <div>
               {list.map((item, idx) => (
-                <CheckListItem item={item} checked={checked} key={idx} />
+                <CheckListItem item={item} checked={checked} key={item.id} />
               ))}
             </div>
           ) : (

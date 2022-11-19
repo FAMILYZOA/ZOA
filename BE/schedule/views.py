@@ -1,3 +1,4 @@
+import calendar
 from .models import Schedule
 from accounts.models import User  
 from accounts.permissions import IsFamilyorBadResponsePermission
@@ -6,6 +7,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
+from datetime import datetime
 from drf_yasg.utils import swagger_auto_schema
 from . serializers import (
     DdaySerializer,
@@ -14,12 +16,31 @@ from . serializers import (
 )
 
 
+def in_month_year(month, year, family):
+    d_fmt = "{0:>02}.{1:>02}.{2}"
+    date_from = datetime.strptime(
+        d_fmt.format(1, month, year), '%d.%m.%Y').date()
+    last_day_of_month = calendar.monthrange(year, month)[1]
+    date_to = datetime.strptime(
+        d_fmt.format(last_day_of_month, month, year), '%d.%m.%Y').date()
+    return Schedule.objects.filter(
+        Q(
+            Q(start_date__gte=date_from, start_date__lte=date_to) |
+            Q(start_date__lt=date_from, end_date__gte=date_from)
+        ) &
+        Q(family_id=family)
+        ).order_by('start_date', 'end_date')
+
 class SearchSDdayAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = DdaySerializer
     def get (self, request, date):
         result = []
-        schedules = Schedule.objects.filter(Q(start_date__gte=date) & Q(important_mark='True')).order_by('start_date')[:3]
+        schedules = Schedule.objects.filter(
+            Q(start_date__gte=date) & 
+            Q(important_mark='True') &
+            Q(family_id=request.user.family_id)
+        ).order_by('start_date')[:3]
         for schedule in schedules:
             Dday = schedule.start_date - date
             context = {
@@ -37,14 +58,11 @@ class SearchScheduleAPIView(GenericAPIView):
     permission_classes = [IsFamilyorBadResponsePermission]
     serializer_class = ScheduleSerializer
     def get(self, request, month):
-        schedule = Schedule.objects.filter(
-            Q(end_date__year__gte=month.year) &
-            Q(end_date__month__gte=month.month) &
-            Q(start_date__year__lte=month.year) &
-            Q(start_date__month__lte=month.month) & 
-            Q(family_id=request.user.family_id)
-        ).order_by('start_date')
-        serializer = ScheduleSerializer(schedule, many=True)
+        year = month.year
+        month = month.month
+        schedule = in_month_year(month, year, request.user.family_id)
+        result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
+        serializer = ScheduleSerializer(result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -57,12 +75,10 @@ class CreateSearchScheduleAPIView(GenericAPIView):
             Q(start_date__lte=date) & 
             Q(end_date__gte=date) & 
             Q(family_id=request.user.family_id)
-        )
-        serializer = ScheduleSerializer(schedule, many=True)
-        if serializer.data:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response("스케줄이 없습니다.", status=status.HTTP_404_NOT_FOUND)
+        ).order_by('start_date')
+        result = sorted(schedule, key=lambda x:x.start_date!=x.end_date, reverse=True)
+        serializer = ScheduleSerializer(result, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_summary="date 입력 양식: YYYY-MM-DD, end_date 입력안하면 date값으로 입력됨", request_body=ScheduleSerializer)
     def post(self, request, date):

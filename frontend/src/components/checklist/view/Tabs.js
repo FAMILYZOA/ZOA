@@ -5,8 +5,21 @@ import { useAppSelector } from "../../../app/hooks";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { BiCheckbox } from "react-icons/bi";
 import Spinner from "../../../assets/Spinner.gif";
+import Modal from "react-modal";
 
 const Container = styled.div``;
+
+const CheckItem = styled.div`
+  opacity: ${(props) => (props.isDisplay ? 1 : 0)};
+  transition: opacity 0.5s;
+`;
+
+const ImgTag = styled.img`
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+`;
 
 const TabBox = styled.div`
   display: grid;
@@ -106,6 +119,7 @@ function TodoContents({ currentId }) {
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
+  const [select, setSelect] = useState(-1);
 
   const [click, setClick] = useState(-1);
 
@@ -154,11 +168,11 @@ function TodoContents({ currentId }) {
             //마지막 페이지
             endRef.current = true;
           }
-  
+
           //   setList((prev) => [...prev, ...res.data.results].map((item) => (
           //     item ? {...item, active:false} : list
           //   ))); // 리스트 추가
-          if (target === currentId){
+          if (target === currentId) {
             setList(list.concat(res.data.results)); // 리스트 추가
           } else {
             setTarget(currentId);
@@ -180,35 +194,79 @@ function TodoContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    const tempList = [...list];
-    const data = new FormData();
-    data.append("status", 1);
-    axios({
-      method: "PUT",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-      data: data,
-    }).then((res) => {
-      tempList.splice(index, 1);
-      setList(tempList);
-    });
+    setSelect(index);
+    setTimeout(() => {
+      const tempList = [...list];
+      const data = new FormData();
+      data.append("status", 1);
+      axios({
+        method: "PUT",
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        data: data,
+      }).then((res) => {
+        setSelect(-1);
+        tempList.splice(index, 1);
+        setList(tempList);
+      });
+    },600)
+  };
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalimg, setImg] = useState("");
+  const openModal = (imgurl) => {
+    setShowModal(true);
+    setImg(imgurl);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyle = {
+    overlay: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    content: {
+      inset: "auto 10%",
+      width: "80%",
+      height: "auto",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0",
+      margin: "auto"
+    },
   };
 
   return (
     <ContentsContainer>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+        onClick={closeModal}
+      >
+        <ImgTag src={modalimg} alt="" onClick={closeModal} />
+      </Modal>
       {list && (
         <>
-          {list.map((li, index) => (
-            <div key={index}>
+          {list.map((li, index) => {
+            return(
+            <CheckItem key={index} isDisplay={select !== index}>
               <NoToggle>
                 <BiCheckbox
                   size={32}
                   color="#FF787F"
-                  onClick={() => check(li.id, index)}
+                  onClick={() => {check(li.id, index)}}
                 />
-                <p onClick={() => clickItem(li.id)}>{li.text}</p>
+                <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
+                  {li.text}
+                </p>
               </NoToggle>
               <Toggle id={li.id} current={click} photo={li.photo}>
                 <ToggleContainer>
@@ -219,25 +277,25 @@ function TodoContents({ currentId }) {
                   </span>
                   {li.photo !== null ? (
                     <ImgBox>
-                      <img src={li.photo.image} />
+                      <img src={li.photo.image} alt="" onClick={()=>{openModal(li.photo.image)}}/>
                     </ImgBox>
                   ) : (
                     <></>
                   )}
                 </ToggleContainer>
               </Toggle>
-            </div>
-          ))}
+            </CheckItem>
+          )})}
         </>
       )}
       {load ? (
         <div>
-          <img src={Spinner} />
+          <img src={Spinner} alt="" />
         </div>
       ) : (
         <></>
       )}
-      <div ref={obsRef} style={{height: "20px"}}></div>
+      <div ref={obsRef} style={{ height: "20px" }}></div>
     </ContentsContainer>
   );
 }
@@ -251,6 +309,7 @@ function CompleteContents({ currentId }) {
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
+  const [select, setSelect] = useState(-1);
 
   const [click, setClick] = useState(-1);
 
@@ -300,7 +359,7 @@ function CompleteContents({ currentId }) {
           //   setList((prev) => [...prev, ...res.data.results].map((item) => (
           //     item ? {...item, active:false} : list
           //   ))); // 리스트 추가
-          if (target === currentId){
+          if (target === currentId) {
             setList(list.concat(res.data.results));
           } else {
             setTarget(currentId);
@@ -322,50 +381,108 @@ function CompleteContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    const data = new FormData();
-    const tempList = [...list];
-    data.append("status", 0);
-    axios({
-      method: "PUT",
-      url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-      data: data,
-    }).then((res) => {
-      tempList.splice(index, 1);
-      setList(tempList);
-    });
+    setSelect(index);
+    setTimeout(() => {
+      const data = new FormData();
+      const tempList = [...list];
+      data.append("status", 0);
+      axios({
+        method: "PUT",
+        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        data: data,
+      }).then((res) => {
+        setSelect(-1);
+        tempList.splice(index, 1);
+        setList(tempList);
+      });
+    }, 600)
   };
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalimg, setImg] = useState("");
+    const openModal = (imgurl) => {
+      setShowModal(true);
+      setImg(imgurl);
+    };
+    const closeModal = () => {
+      setShowModal(false);
+    };
+    const modalStyle = {
+      overlay: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      content: {
+        inset: "auto 10%",
+        width: "80%",
+        height: "auto",
+        border: "none",
+        backgroundColor: "rgba(0,0,0,0)",
+        display: "flex",
+        justifyContent: "center",
+        padding: "0",
+        margin: "auto",
+      },
+    };
+
 
   return (
     <ContentsContainer>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+        onClick={closeModal}
+      >
+        <ImgTag src={modalimg} alt="" onClick={closeModal} />
+      </Modal>
       {list && (
         <>
-          {list.map((li, index) => (
-            <div key={index}>
+          {list.map((li, index) => {
+            return (
+            <CheckItem key={index} isDisplay={select !== index}>
               <NoToggle>
-                <IconBox onClick={() => check(li.id, index)}>
+                <IconBox onClick={() => {check(li.id, index)}}>
                   <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
                 </IconBox>
-                <p onClick={() => clickItem(li.id)}>{li.text}</p>
+                <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
+                  {li.text}
+                </p>
               </NoToggle>
-              <Toggle id={li.id} current={click}>
-                <div>
-                  <p>From. {li.to_users_id.name}</p>
+              <Toggle id={li.id} current={click} photo={li.photo}>
+                <ToggleContainer>
+                  <p>From. {li.from_user_id.name}</p>
                   <span>
                     {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
                     {li.created_at.slice(8, 10)}
                   </span>
-                </div>
+                  {li.photo !== null ? (
+                    <ImgBox>
+                      <img
+                        src={li.photo.image}
+                        alt=""
+                        onClick={() => {
+                          openModal(li.photo.image);
+                        }}
+                      />
+                    </ImgBox>
+                  ) : (
+                    <></>
+                  )}
+                </ToggleContainer>
               </Toggle>
-            </div>
-          ))}
+            </CheckItem>
+          )})}
         </>
       )}
       {load ? (
         <div>
-          <img src={Spinner} />
+          <img src={Spinner} alt="" />
         </div>
       ) : (
         <></>

@@ -290,7 +290,6 @@ function KakaoSignup() {
   };
 
   const clickCheck = (certifiNum) => {
-    console.log(disphone);
     const data = new FormData();
     data.append("phone", phone.replaceAll("-", ""));
     data.append("certification", certifiNum);
@@ -318,6 +317,7 @@ function KakaoSignup() {
       });
   };
 
+
   const push = () => {
     if (cerCheck === false) {
       setNwarn(true);
@@ -329,34 +329,15 @@ function KakaoSignup() {
         setPwarn(false);
         setBwarn(true);
       } else {
-        if (String(month).length === 1 && String(day).length === 1) {
-          const birth =
-            String(year) + "-0" + String(month) + "-0" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-        } else if (String(month).length === 1) {
-          const birth = String(year) + "-0" + String(month) + "-" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-        } else if (String(day).length === 1) {
-          const birth = String(year) + "-" + String(month) + "-0" + String(day);
-          setInfo((pre) => {
-            return { ...pre, birth: birth };
-          });
-        }
-        const birth = String(year) + "-" + String(month) + "-" + String(day);
-        setInfo((pre) => {
-          return { ...pre, birth: birth };
-        });
-        if (info.birth.length === 10) {
           const data = new FormData();
           data.append("kakao_id", info.kakao_id);
           data.append("name", info.name);
           data.append("image", info.image);
           data.append("phone", info.phone.replaceAll("-", ""));
-          data.append("birth", birth);
+          data.append(
+            "birth",
+            `${year}-${("00" + month.toString()).slice(-2)}-${("00" + day.toString()).slice(-2)}`
+          );
           axios({
             method: "POST",
             url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
@@ -369,6 +350,7 @@ function KakaoSignup() {
               }
             })
             .catch((err) => {
+              console.log(err);
               if (err.response.status === 400) {
                 alert("이미 가입된 회원입니다. 로그인을 해주세요.");
                 navigate("/intro");
@@ -377,7 +359,7 @@ function KakaoSignup() {
         }
       }
     }
-  };
+
   return (
     <div>
       <Header>

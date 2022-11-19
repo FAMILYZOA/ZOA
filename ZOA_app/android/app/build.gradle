@@ -1,6 +1,8 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
+
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -137,13 +139,12 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
 
-
     defaultConfig {
         applicationId "com.zoa_app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.1"
+        versionCode 5
+        versionName '1.4'
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -265,11 +266,14 @@ dependencies {
 
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "androidx.multidex:multidex:2.0.1"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     //implementation project(':react-native-splash-screen')
     implementation project(':react-native-send-intent')
+    implementation platform('com.google.firebase:firebase-bom:28.2.1')
+    implementation 'com.google.firebase:firebase-analytics'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
