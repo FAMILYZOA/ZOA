@@ -30,7 +30,7 @@ import {selectContactPhone} from 'react-native-select-contact';
 import SendIntentAndroid from 'react-native-send-intent';
 import NetInfo from '@react-native-community/netinfo';
 import LinearGradient from 'react-native-linear-gradient';
-import {request, PERMISSIONS} from 'react-native-permissions';
+import {request, PERMISSIONS, check} from 'react-native-permissions';
 import messaging from '@react-native-firebase/messaging';
 import {useRef, useState, useEffect} from 'react';
 
@@ -152,6 +152,25 @@ const App = () => {
       }
     } catch (err) {
       console.warn(err);
+    }
+  };
+
+  const requestAudioPermission = async () => {
+    let granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      {
+        title: 'Audio Permission',
+        message: 'App needs access to your audio / microphone',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('You can use the Microphone');
+    } else {
+      console.log('Microphone permission denied');
     }
   };
 
@@ -324,6 +343,7 @@ true;
       }
     });
     setOs(Platform.OS);
+    //requestAudioPermission();
   }, []);
 
   const sendToken = () => {
@@ -378,6 +398,8 @@ true;
             onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
             allowsBackForwardNavigationGestures={true}
             onLoadEnd={sendToken}
+            mediaPlaybackRequiresUserAction={false}
+            allowInlineMediaPlayback={true}
           />
         ) : (
           <LinearGradient

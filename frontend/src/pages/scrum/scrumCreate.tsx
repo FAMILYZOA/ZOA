@@ -250,9 +250,9 @@ const RegistBtn = (props: registBtnPRops) => {
   const [isRegist, toggleResigt] = useState<boolean>(true);
   const access: string = useAppSelector((state) => state.token.access);
   const refresh: string = useAppSelector((state) => state.token.refresh);
-  const userID = useAppSelector((state) => state.user.id);
-  const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
-  const familyId = useAppSelector(state => state.family.id);
+  //const userID = useAppSelector((state) => state.user.id);
+  //const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  const userName = useAppSelector((state) => state.user.name);
 
   useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
