@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import FamilyMemberEdit from "../../components/family/FamilyMemberEdit";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import { useAppSelector } from "../../app/hooks";
 
 const HeaderBox = styled.div`
   display: grid;
@@ -48,6 +50,14 @@ function FamilyNameEdit() {
   const navigateToHome = () => {
     navigate("/family/manage");
   };
+  const familyId = useAppSelector(state => state.family.id);
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
+  
   return (
     <>
       <HeaderBox>

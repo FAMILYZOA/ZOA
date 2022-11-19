@@ -304,6 +304,8 @@ const VoiceView = () => {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [deleteList, setDeleteList] = useState<number[]>([]);
+  const familyId = useAppSelector(state => state.family.id);
+  const navigate = useNavigate();
 
   const getVoice = () => {
     axios({
@@ -335,6 +337,12 @@ const VoiceView = () => {
         console.error(err);
       });
   };
+  
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   useEffect(() => {
     getVoice();
