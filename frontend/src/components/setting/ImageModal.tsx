@@ -97,7 +97,7 @@ const FontModal = (props: modalType) => {
     }
   }
 
-  const [os, setOS] = useState(getOS());
+  const [os] = useState(getOS());
 
   const modalStyle = {
     content: {
