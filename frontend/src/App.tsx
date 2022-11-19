@@ -66,7 +66,6 @@ function App() {
 
   const dispatch = useAppDispatch();
   const [, updateState] = useState<{}>();
-  const forceUpdate = useCallback(() => updateState({}), []);
 
   const fontArray = ["16px", "20px", "24px"];
 
@@ -119,8 +118,7 @@ function App() {
         dispatch(setUserBirth(res.data.birth));
         dispatch(setUserImage(res.data.image));
         dispatch(setUserName(res.data.name));
-        forceUpdate();
-        if (familyId < 0 && res.data.family_id) {
+        if (familyId < 0 && res.data.family_id >= 0) {
           // 가족 정보가 없으면, 가족 정보 불러오기
           axios({
             method: "get",
@@ -129,11 +127,12 @@ function App() {
               Authorization: `Bearer ${accessToken}`,
             },
           }).then((res) => {
-            dispatch(setFamilyId(res.data.id));
-            dispatch(setFamilyName(res.data.name));
-            dispatch(setFamilyCreatedAt(res.data.created_at));
-            dispatch(setFamilyUsers(res.data.users));
-            forceUpdate();
+            if (res.data.id >= 0) {
+              dispatch(setFamilyId(res.data.id));
+              dispatch(setFamilyName(res.data.name));
+              dispatch(setFamilyCreatedAt(res.data.created_at));
+              dispatch(setFamilyUsers(res.data.users));
+            }
           });
         }
       });

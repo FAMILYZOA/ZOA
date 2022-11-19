@@ -142,9 +142,13 @@ const VoiceMessage = ({
   const voicePlay = () => {
     setPlayingId(id);
 
+    console.log(audio);
+    console.log(voice);
+
     voice
       .play()
       .then((res) => {
+        console.log(res);
         console.log("play");
       })
       .catch((err) => console.dir(err));
