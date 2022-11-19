@@ -93,11 +93,7 @@ const FamilyCodeJoin = () => {
         invitationcode: `${code}`,
       }
     })
-      .then((res) => {
-        dispatch(setFamilyId(res.data.id));
-        dispatch(setFamilyName(res.data.name));
-        dispatch(setFamilyCreatedAt(res.data.created_at));
-        dispatch(setFamilyUsers(res.data.users));
+      .then(() => {
         navigate("/", { replace: true });
       })
       .catch(() => {
