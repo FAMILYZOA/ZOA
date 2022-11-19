@@ -118,7 +118,7 @@ function App() {
         dispatch(setUserBirth(res.data.birth));
         dispatch(setUserImage(res.data.image));
         dispatch(setUserName(res.data.name));
-        if (familyId < 0 && res.data.family_id >= 0) {
+        if ( res.data.family_id >= 0) {
           // 가족 정보가 없으면, 가족 정보 불러오기
           axios({
             method: "get",
