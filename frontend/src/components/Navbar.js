@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaRegSmile, FaRegUser } from "react-icons/fa";
+import { RiChatVoiceFill } from "react-icons/ri";
+import { BiCalendarAlt } from "react-icons/bi";
 
 const Container = styled.div`
   height: 64px;
@@ -18,7 +20,7 @@ const Container = styled.div`
   border-radius: 20px 20px 0 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   display: ${(props) => (props.active === true ? "none" : "grid")};
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   align-items: center;
 `;
 
@@ -27,7 +29,7 @@ const StyledLink = styled(Link)`
 `;
 
 const SelectBox = styled.div`
-  width: 60%;
+  width: 80%;
   height: 44px;
   display: flex;
   justify-content: center;
@@ -83,7 +85,7 @@ function Navbar() {
       location.pathname === "/kakaoLoading" ||
       location.pathname === "/family/manage" ||
       location.pathname === "/family/create" ||
-      location.pathname === "/family/select" ||
+      location.pathname === "/family/select/" ||
       location.pathname === "/family/code" ||
       location.pathname === "/family/edit" ||
       location.pathname === "/login" ||
@@ -113,6 +115,17 @@ function Navbar() {
             </UnSelectBox>
           )}
         </StyledLink>
+        <StyledLink to="/calendar">
+          {location.pathname.includes("/calendar") ? (
+            <SelectBox>
+              <BiCalendarAlt size={28} color={"white"} />
+            </SelectBox>
+          ) : (
+            <UnSelectBox>
+              <BiCalendarAlt size={28} color={"#BEBEBE"} />
+            </UnSelectBox>
+          )}
+        </StyledLink>
         <StyledLink to="/hello">
           {location.pathname.includes("/hello") ? (
             <SelectBox>
@@ -124,14 +137,25 @@ function Navbar() {
             </UnSelectBox>
           )}
         </StyledLink>
-        <StyledLink to="/settings">
-          {location.pathname.includes("/settings") ? (
+        <StyledLink to="/voice">
+          {location.pathname.includes("/voice") ? (
             <SelectBox>
-              <FaRegUser size={28} color={"white"} />
+              <RiChatVoiceFill size={28} color={"white"} />
             </SelectBox>
           ) : (
             <UnSelectBox>
-              <FaRegUser size={28} color={"#BEBEBE"} />
+              <RiChatVoiceFill size={28} color={"#BEBEBE"} />
+            </UnSelectBox>
+          )}
+        </StyledLink>
+        <StyledLink to="/settings">
+          {location.pathname.includes("/settings") ? (
+            <SelectBox>
+              <FaRegUser size={24} color={"white"} />
+            </SelectBox>
+          ) : (
+            <UnSelectBox>
+              <FaRegUser size={24} color={"#BEBEBE"} />
             </UnSelectBox>
           )}
         </StyledLink>

@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import EmojiPicker, {
   Emoji,
   EmojiStyle,
@@ -20,7 +20,7 @@ import Header from "../../components/header";
 import TextBox from "../../components/textBox";
 
 const DateSelectorStyle = styled.div`
-  margin: 16px auto 24px;
+  margin: 32px auto 32px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -47,6 +47,7 @@ const EmojiSelectorStyle = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin: 24px 0;
 `;
 
 const EmojiOuterStyle = styled.div`
@@ -68,8 +69,7 @@ const RegistStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 32px auto;
 `;
 
 const RegistBtnStyle = styled.button`
@@ -184,7 +184,7 @@ const EmojiSelector = (props: EmojiProps) => {
         <Emoji
           unified={props.selectedEmoji}
           emojiStyle={EmojiStyle.APPLE}
-          size={72}
+          size={80}
         />
       </EmojiOuterStyle>
       <Modal
@@ -209,7 +209,7 @@ const EmojiSelector = (props: EmojiProps) => {
 
 const YesterdayWork = (props: InputProps) => {
   return (
-    <div>
+    <div style={{ margin: "16px 0" }}>
       <DescStyle>
         <Emoji unified="1f644" emojiStyle={EmojiStyle.APPLE} size={24} />
         <DescTextStyle>어제 뭐 했더라?</DescTextStyle>
@@ -220,6 +220,7 @@ const YesterdayWork = (props: InputProps) => {
         setter={props.setter}
         emojiCode={"1f60e"}
         preview={"어제 한 일"}
+        maxLength={25}
       ></TextBox>
     </div>
   );
@@ -227,7 +228,7 @@ const YesterdayWork = (props: InputProps) => {
 
 const Today = (props: InputProps) => {
   return (
-    <div>
+    <div style={{ margin: "16px 0" }}>
       <DescStyle>
         <Emoji unified="1f64b" emojiStyle={EmojiStyle.APPLE} size={24} />
         <DescTextStyle>가족들에게 한 마디!</DescTextStyle>
@@ -238,6 +239,7 @@ const Today = (props: InputProps) => {
         setter={props.setter}
         emojiCode={"1f4e2"}
         preview={"가족에게 한 마디"}
+        maxLength={25}
       ></TextBox>
     </div>
   );
@@ -248,6 +250,11 @@ const RegistBtn = (props: registBtnPRops) => {
   const [isRegist, toggleResigt] = useState<boolean>(true);
   const access: string = useAppSelector((state) => state.token.access);
   const refresh: string = useAppSelector((state) => state.token.refresh);
+  //const userID = useAppSelector((state) => state.user.id);
+  //const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  const familyId = useAppSelector(state => state.family.id);
+  const userName = useAppSelector((state) => state.user.name);
+
   useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
       toggleResigt(true);
@@ -258,6 +265,12 @@ const RegistBtn = (props: registBtnPRops) => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   const regist = () => {
     // 0. token 파싱
@@ -274,11 +287,26 @@ const RegistBtn = (props: registBtnPRops) => {
         .post("scrums/", scrumData, config)
         .then((res: AxiosResponse) => {
           if (res.status === 201) {
-            // 현재는 메인 화면으로 돌아감, 추후에 머지 되면 스크럼 목록 화면으로 돌아갈 예정
             navigate("/hello/", { replace: true });
+            
+            // 가족들에게 새로운 등록 알림 보내기
+            const messageData = new FormData();
+            // [안녕] ___ 님이 '안녕'을 작성하셨습니다. 지금 들어가서 확인해보세요!
+            const messageBody = `[안녕] ${userName}님이 안녕을 작성하셨습니다. 지금 들어가서 확인해보세요`;
+            messageData.append("body", messageBody);
+            customAxios
+              .post("/event/FCM/send/", messageData, config)
+              .then((res: AxiosResponse) => {
+                console.log(res);
+              })
+              .catch((err: AxiosError) => {
+                console.log(err);
+              });
           }
         })
         .catch(async (err) => {
+          console.log(err);
+          
           switch (err.response.status) {
             case 400:
               alert("스크럼은 하루에 한개만 작성 가능합니다.");
@@ -319,7 +347,7 @@ const RegistBtn = (props: registBtnPRops) => {
 
 const ScrumCreate = () => {
   return (
-    <div style={{paddingBottom:"64px"}}>
+    <div style={{ paddingBottom: "64px" }}>
       <Header label="안녕" back={true}></Header>
       <div>
         <DateSelector></DateSelector>

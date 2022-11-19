@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>851532470992-k8khfqch852jcs2pb68vieaq6bfbu7k3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.851532470992-k8khfqch852jcs2pb68vieaq6bfbu7k3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>851532470992-kdqjn03gqcpnprrl2tfu9ahnl7jc6jj9.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC5NESPoGZTTLm7wfly4jJOwMSIWzCmX8g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>851532470992</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.ZOA-app</string>
+	<key>PROJECT_ID</key>
+	<string>familyzoa</string>
+	<key>STORAGE_BUCKET</key>
+	<string>familyzoa.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:851532470992:ios:b6a54a5c22a7d8dd789cd5</string>
+</dict>
+</plist>

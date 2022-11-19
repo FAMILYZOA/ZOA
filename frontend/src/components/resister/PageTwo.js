@@ -44,7 +44,7 @@ const InputBox = styled.div`
 `;
 
 const Input = styled.input`
-  width: 60%;
+  width: 100%;
   height: 40px;
   border: none;
   background: none;
@@ -248,20 +248,6 @@ function PageTwo({ twoInfo, activeBtn }) {
     }
   }, [year, month, day]);
 
-  // const nextBtn = () => {
-  //   if (
-  //     pwWarn === false &&
-  //     pwConfirm === true &&
-  //     pwCheck === true &&
-  //     confirmPwWarn === false
-  //   ) {
-  //     const birth = String(year) + "-" + String(month) + "-" + String(day);
-  //     twoInfo({
-  //       password: pw,
-  //       birth: birth,
-  //     });
-  //   }
-  // };
 
   useEffect(()=>{
     if (
@@ -270,31 +256,10 @@ function PageTwo({ twoInfo, activeBtn }) {
       pwCheck === true &&
       confirmPwWarn === false
     ) {
-      if(String(month).length === 1 && String(day).length === 1) {
-        const birth = String(year) + "-0" + String(month) + "-0" + String(day);
-        twoInfo({
-          password: pw,
-          birth: birth,
-        });
-      } else if (String(month).length === 1){
-        const birth = String(year) + "-0" + String(month) + "-" + String(day);
-        twoInfo({
-          password: pw,
-          birth: birth,
-        });
-      } else if (String(day).length === 1){
-        const birth = String(year) + "-" + String(month) + "-0" + String(day);
-        twoInfo({
-          password: pw,
-          birth: birth,
-        });
-      } else {
-        const birth = String(year) + "-" + String(month) + "-" + String(day);
-        twoInfo({
-          password: pw,
-          birth: birth,
-        });
-      }
+      twoInfo({
+        password: pw,
+        birth: `${year}-${("00" + month.toString()).slice(-2)}-${("00" + day.toString()).slice(-2)}`,
+      });
     }
   },[pw, confirmPw, year, month, day ])
 
@@ -331,7 +296,7 @@ function PageTwo({ twoInfo, activeBtn }) {
           ></Input>
           <CheckText></CheckText>
         </InputBox>
-        <Warning active={confirmPwWarn}>비밀번호가 다릅니다.</Warning>
+        <Warning active={confirmPwWarn}>비밀번호를 확인해주세요.</Warning>
         <Confirm active={pwCheck}>비밀번호가 확인되었습니다.</Confirm>
       </Container>
 
@@ -340,20 +305,28 @@ function PageTwo({ twoInfo, activeBtn }) {
         <AgeSelectors>
           <AgeSelector onChange={selectYear}>
             <option value="">연도</option>
-            {yearArr.map((y) => {
-              return <option value={y.toString()}>{y}년</option>;
+            {yearArr.map((y, index) => {
+              return <option key={index} value={y.toString()}>{y}년</option>;
             })}
           </AgeSelector>
           <AgeSelector onChange={selectMonth}>
             <option value="">월</option>
-            {monthArr.map((m) => {
-              return <option value={m.toString()}>{m}월</option>;
+            {monthArr.map((m, index) => {
+              return (
+                <option key={index} value={m.toString()}>
+                  {m}월
+                </option>
+              );
             })}
           </AgeSelector>
           <AgeSelector onChange={selectDay}>
             <option value="">일</option>
-            {dayArr.map((d) => {
-              return <option value={d.toString()}>{d}일</option>;
+            {dayArr.map((d, index) => {
+              return (
+                <option key={index} value={d.toString()}>
+                  {d}일
+                </option>
+              );
             })}
           </AgeSelector>
         </AgeSelectors>

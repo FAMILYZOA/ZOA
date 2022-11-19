@@ -45,7 +45,7 @@ const Input = styled.input`
   outline: none;
 `;
 const CheckText = styled.p`
-  font-size: 0.7em;
+  font-size: 14px;
   font-weight: bold;
   margin: 0;
 `;

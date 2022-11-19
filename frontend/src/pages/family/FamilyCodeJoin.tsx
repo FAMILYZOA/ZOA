@@ -42,7 +42,7 @@ const NameEditInput = styled.input`
   border-right-width: 0;
   border-top-width: 0;
   border-bottom: 1;
-  width: 80vw;
+  width: 80%;
   height: 1em;
   background-color: transparent;
   border-color: #ffd5d7;
@@ -94,10 +94,20 @@ const FamilyCodeJoin = () => {
       }
     })
       .then((res) => {
-        dispatch(setFamilyId(res.data.id));
-        dispatch(setFamilyName(res.data.name));
-        dispatch(setFamilyCreatedAt(res.data.created_at));
-        dispatch(setFamilyUsers(res.data.users));
+        axios({
+          method: "get",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }).then((res) => {
+          if (res.data.id >= 0) {
+            dispatch(setFamilyId(res.data.id));
+            dispatch(setFamilyName(res.data.name));
+            dispatch(setFamilyCreatedAt(res.data.created_at));
+            dispatch(setFamilyUsers(res.data.users));
+          }
+        });
         navigate("/", { replace: true });
       })
       .catch(() => {

@@ -16,15 +16,16 @@ class AudioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AudioListSerializer(serializers.ModelSerializer) :
-    image = serializers.CharField(source='from_user_id.image',read_only=True)
+    name = serializers.CharField(source='from_user_id.name',read_only=True)
+    image = serializers.SerializerMethodField()
     set_name = serializers.SerializerMethodField()
     class Meta :
         model = Audio
-        fields = ('id','image','set_name','audio','created_at',)
+        fields = ('id','image','name','set_name','status','audio','created_at', 'second')
 
     def get_set_name(self,obj) :
-        from_user = obj.from_user_id
-        to_user = self.context.get('request').user
+        to_user = obj.from_user_id
+        from_user = self.context.get('request').user
         
         if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
             return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
@@ -33,12 +34,11 @@ class AudioListSerializer(serializers.ModelSerializer) :
     def get_image(self,obj) :
         from_user = obj.from_user_id 
         if 'kakao' in from_user.image.url :
-            res = from_user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','http://')
+            res = from_user.image.url.replace('https://zoa-bucket.s3.ap-northeast-2.amazonaws.com/http%3A/','https://')
             return res
         return from_user.image.url
 
 class AudioUpdateSerializer(serializers.ModelSerializer) :
-
     class Meta :
         model = Audio
         fields = ('id','status')

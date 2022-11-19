@@ -22,4 +22,4 @@ class ScheduleSerializer(serializers.ModelSerializer):
 class UpdateScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = ('id', 'title', 'color', 'important_mark',)
+        fields = ('id', 'title', 'color', 'important_mark', 'start_date', 'end_date')
