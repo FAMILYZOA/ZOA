@@ -179,6 +179,14 @@ const VoiceMessage = ({
   }, []);
 
   const togglePlay = () => {
+    // 테스트 코드 -> 추후 삭제 예정
+    voice
+      .play()
+      .then((res) => {
+        console.log(res);
+        console.log("play");
+      })
+      .catch((err) => console.dir(err));
     if (!isPlaying) {
       // 재생
       setIsPlaying(true);

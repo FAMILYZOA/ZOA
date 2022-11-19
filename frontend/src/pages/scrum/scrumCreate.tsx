@@ -281,7 +281,7 @@ const RegistBtn = (props: registBtnPRops) => {
         .then((res: AxiosResponse) => {
           if (res.status === 201) {
             navigate("/hello/", { replace: true });
-            
+
             // 가족들에게 새로운 등록 알림 보내기
             const messageData = new FormData();
             // [안녕] ___ 님이 '안녕'을 작성하셨습니다. 지금 들어가서 확인해보세요!
@@ -329,7 +329,18 @@ const RegistBtn = (props: registBtnPRops) => {
   return (
     <RegistStyle>
       {/* 현재 disable 상태일 떄 css가 변화하지 않음 */}
-      <RegistBtnStyle onClick={regist} disabled={isRegist}>
+      <RegistBtnStyle
+        onClick={
+          props.emoji && props.yesterday && props.today
+            ? regist
+            : () => {
+                alert(
+                  "이모지, 어제 있었던 일 혹은 가족에게 할 말이 없습니다."
+                );
+              }
+        }
+        disabled={isRegist}
+      >
         등록하기
       </RegistBtnStyle>
     </RegistStyle>
