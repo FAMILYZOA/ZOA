@@ -197,12 +197,14 @@ class InviteCodeSignFamilyAPIView(GenericAPIView):
         invitationcode1 = get_object_or_404(InvitationCodeFamily, invitationcode=invitationcode)
         family_id = invitationcode1.family_id.id
         family = get_object_or_404(Family,id=family_id)
+        
         if request.user.is_authenticated :
             if request.user.family_id :
                 return Response(f'{request.user.name}님은 이미 가족에 가입되어 있습니다.',status=status.HTTP_400_BAD_REQUEST)
             else :
                 family.users.add(request.user)
-                return Response(f"{family}에 가입되었습니다", status=status.HTTP_200_OK)
+                serializer = FamilyUpdateSerializer(family)
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class FamilySecessionAPIView(UpdateAPIView):
