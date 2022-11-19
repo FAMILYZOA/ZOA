@@ -15,18 +15,18 @@ const VoiceMessageDiv = styled.div<voiceProps>`
   display: grid;
   grid-template-columns: ${(props) => (props.isDelete ? '1fr 2fr 4fr 2fr' : '1fr 2.5fr 1fr') };
   align-items: center;
-`
+`;
 const VoiceSenderDiv = styled.div`
   width: 64px;
   height: 64px;
   margin-right: 16px;
-`
+`;
 const VoiceSenderImg = styled.img`
   width: 64px;
   height: 64px;
   border-radius: 32px;
   object-fit: fill;
-`
+`;
 const VoiceDiv = styled.div`
   display: flex;
   position: relative;
@@ -35,7 +35,7 @@ const VoiceDiv = styled.div`
   width: 100%;
   background-color: #fdaf97;
   border-radius: 20px;
-`
+`;
 const VoiceIconDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -51,7 +51,7 @@ const VoiceIconDiv = styled.div`
 
 const VoiceTimeDiv = styled.div`
   color: #fff;
-`
+`;
 const VoiceTimeDifference = styled.div`
   position: absolute;
   font-size: 0.6rem;
@@ -64,7 +64,7 @@ const SenderName = styled.div<voiceProps>`
   margin: ${(props) => (props.isDelete ? '8px 11% 16px' : '8px 0 16px')};
   text-align: center;
   font-size: 0.7em;
-`
+`;
 
 const ico_like = keyframes`
   0%{transform:scale(.2);}
@@ -89,10 +89,9 @@ const FavoriteIconDiv = styled.div`
   align-items: center;
   height: 32px;
   text-align: center;
-  color: #FF787F;
+  color: #ff787f;
   /* animation: ${ico_like} 1s ; */
   margin: 0 auto;
-  
 `;
 
 type VoiceMessageProps = {
@@ -134,16 +133,22 @@ const VoiceMessage = ({
   }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
-  const [voicePlayingTime, setVoicePlayingTime] = useState<number>(voice.currentTime);
+  const [voicePlayingTime, setVoicePlayingTime] = useState<number>(
+    voice.currentTime
+  );
   const voiceDuration = second;
-  const accessToken = useAppSelector(state => state.token.access);
+  const accessToken = useAppSelector((state) => state.token.access);
 
   const voicePlay = () => {
     setPlayingId(id);
-    console.dir(audio);
-    console.dir(voice);
-    voice.play();
-  }
+
+    voice
+      .play()
+      .then((res) => {
+        console.log("play");
+      })
+      .catch((err) => console.dir(err));
+  };
 
   const voicePause = () => {
     if (playingId === id) {
@@ -152,24 +157,22 @@ const VoiceMessage = ({
       voice.currentTime = 0;
     }
     voice.pause();
-  }
+  };
 
   useEffect(() => {
     if (playingId !== id) {
       setIsPlaying(false);
     }
-  }, [playingId])
+  }, [playingId]);
 
   useEffect(() => {
-      isPlaying ? voicePlay() : voicePause();
-    },
-    [isPlaying]
-  );
+    isPlaying ? voicePlay() : voicePause();
+  }, [isPlaying]);
 
   useEffect(() => {
-    voice.addEventListener('ended', () => setIsPlaying(false));
+    voice.addEventListener("ended", () => setIsPlaying(false));
     return () => {
-      voice.removeEventListener('ended', () => {
+      voice.removeEventListener("ended", () => {
         setIsPlaying(false);
         setVoicePlayingTime(0);
       });
@@ -191,7 +194,7 @@ const VoiceMessage = ({
       // 정지
       setIsPlaying(false);
     }
-  }
+  };
 
   const timeDifference = (time: Date) => {
     const tempTime = new Date().getTime();
@@ -199,23 +202,23 @@ const VoiceMessage = ({
     const timeDif = (tempTime - createTime) / 1000;
 
     if (timeDif > 12 * 30 * 24 * 3600) {
-      return String(Math.floor(timeDif / (12 * 30 * 24 * 3600))) + '년 전'
+      return String(Math.floor(timeDif / (12 * 30 * 24 * 3600))) + "년 전";
     } else if (timeDif > 30 * 24 * 3600) {
-      return String(Math.floor(timeDif / (30 * 24 * 3600))) + '개월 전'
+      return String(Math.floor(timeDif / (30 * 24 * 3600))) + "개월 전";
     } else if (timeDif > 7 * 24 * 3600) {
-      return String(Math.floor(timeDif / (7 * 24 * 3600))) + '주 전'
+      return String(Math.floor(timeDif / (7 * 24 * 3600))) + "주 전";
     } else if (timeDif > 24 * 3600) {
-      return String(Math.floor(timeDif / (24 * 3600))) + '일 전'
-    } 
+      return String(Math.floor(timeDif / (24 * 3600))) + "일 전";
+    }
     // else if (timeDif > 3600) {
     //   return String(Math.floor(timeDif / (3600))) + '시간 전'
     // } else if (timeDif > 60) {
     //   return String(Math.floor(timeDif / (60))) + '분 전'
-    // } 
+    // }
     else {
-      return '오늘'
+      return "오늘";
     }
-  }
+  };
   const handleFavorite = () => {
     axios({
       method: "PUT",
@@ -225,15 +228,15 @@ const VoiceMessage = ({
       },
       data: {
         status: !type,
-      }
+      },
     })
       .then(() => {
         getIndex(index, type);
       })
       .catch((err) => {
         console.error(err);
-      })
-  }
+      });
+  };
 
   return (
     <>
@@ -288,7 +291,7 @@ const VoiceMessage = ({
           <VoiceTimeDifference>
             {timeDifference(new Date(created_at))}
           </VoiceTimeDifference>
-        </VoiceDiv> 
+        </VoiceDiv>
         <FavoriteIconDiv
           onClick={() => {
             handleFavorite();
@@ -304,12 +307,6 @@ const VoiceMessage = ({
       <SenderName isDelete={isDelete}>{set_name ? set_name : name}</SenderName>
     </>
   );
-}
-
-
-
-
-
-
+};
 
 export default VoiceMessage;
