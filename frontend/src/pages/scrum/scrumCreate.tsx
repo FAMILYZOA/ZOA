@@ -252,6 +252,7 @@ const RegistBtn = (props: registBtnPRops) => {
   const refresh: string = useAppSelector((state) => state.token.refresh);
   const userID = useAppSelector((state) => state.user.id);
   const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  const familyId = useAppSelector(state => state.family.id);
 
   useEffect(() => {
     if (!props.emoji || !props.yesterday || !props.today) {
@@ -263,6 +264,12 @@ const RegistBtn = (props: registBtnPRops) => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
 
   const regist = () => {
     // 0. token 파싱

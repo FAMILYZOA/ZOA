@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
@@ -150,6 +150,7 @@ const onHandleAfterDate = () => {
   // redux 값 불러오는 곳
   const token = useAppSelector((state) => state.token.access);
   const myId = useAppSelector((state)=> state.user.id);
+  const familyId = useAppSelector(state => state.family.id);
   
   // 스크럼 수정
   const [edit, setEdit] = useState(false);
@@ -161,6 +162,15 @@ const onHandleAfterDate = () => {
   // 해당날짜, 해당 id 스크럼 요청
   const [scrum, setScrum] = useState({});
   const [blank, setBlank] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, [])
+
   useEffect(() => {
     axios({
       method: "GET",

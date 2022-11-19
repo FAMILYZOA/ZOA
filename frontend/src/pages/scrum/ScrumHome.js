@@ -138,6 +138,12 @@ const ScrumHome = () => {
   }, [token]);
 
   useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  }, []);
+
+  useEffect(() => {
     axios({
       method: "get",
       url: `${process.env.REACT_APP_BACK_HOST}/scrums/?search=${day}`,
