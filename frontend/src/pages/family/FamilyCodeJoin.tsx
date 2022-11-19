@@ -93,7 +93,21 @@ const FamilyCodeJoin = () => {
         invitationcode: `${code}`,
       }
     })
-      .then(() => {
+      .then((res) => {
+        axios({
+          method: "get",
+          url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }).then((res) => {
+          if (res.data.id >= 0) {
+            dispatch(setFamilyId(res.data.id));
+            dispatch(setFamilyName(res.data.name));
+            dispatch(setFamilyCreatedAt(res.data.created_at));
+            dispatch(setFamilyUsers(res.data.users));
+          }
+        });
         navigate("/", { replace: true });
       })
       .catch(() => {
