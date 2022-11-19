@@ -14,6 +14,7 @@ import { setUserName } from "../../features/user/userSlice";
 import { setPush } from "../../features/setting/settingSlice";
 import { setFamilyUsers } from "../../features/family/familySlice";
 import axios from "axios";
+import { MdOutlineEmojiPeople } from "react-icons/md";
 
 const SettingsHeader = styled.div`
   display: flex;
@@ -117,7 +118,7 @@ const SettingCopyright = styled.div`
   align-items: center;
   font-size: 16px;
 `;
-const SettingLogoutIcon = styled.div`
+const SettingIcon = styled.div`
   height: 28px;
   width: 28px;
   font-size: 1.4em;
@@ -298,9 +299,17 @@ const Settings = () => {
           <SettingItem onClick={() => toggleLogoutModal(true)}>
             <SettingItemTitle>로그아웃</SettingItemTitle>
             <SettingItemContent>
-              <SettingLogoutIcon>
+              <SettingIcon>
                 <TbLogout />
-              </SettingLogoutIcon>
+              </SettingIcon>
+            </SettingItemContent>
+          </SettingItem>
+          <SettingItem onClick={() => {}}>
+            <SettingItemTitle>가족 탈퇴</SettingItemTitle>
+            <SettingItemContent>
+              <SettingIcon>
+                <MdOutlineEmojiPeople />
+              </SettingIcon>
             </SettingItemContent>
           </SettingItem>
         </SettingMenu>

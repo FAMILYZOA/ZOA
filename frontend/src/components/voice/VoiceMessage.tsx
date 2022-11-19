@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled, { keyframes } from "styled-components";
-import { FaPlay, FaPause } from "react-icons/fa";
+import styled, { keyframes } from "styled-components"
+import { FaPlay, FaPause, FaRegSquare, FaCheckSquare } from "react-icons/fa"
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useAppSelector } from "../../app/hooks";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 
-const VoiceMessageDiv = styled.div`
+interface voiceProps {
+  isDelete?: boolean;
+}
+
+const VoiceMessageDiv = styled.div<voiceProps>`
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 2.5fr 1fr;
+  grid-template-columns: ${(props) => (props.isDelete ? '1fr 2fr 4fr 2fr' : '1fr 2.5fr 1fr') };
   align-items: center;
 `;
 const VoiceSenderDiv = styled.div`
@@ -42,19 +46,8 @@ const VoiceIconDiv = styled.div`
   border-radius: 16px;
   background-color: #fff;
   text-align: center;
-  color: #fec786;
-`;
-const VoiceDeleteIcon = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: end;
-  align-items: center;
-  height: 32px;
-  width: 32px;
-  margin: 4px 8px 4px auto;
-  text-align: center;
-  color: #fc7e58;
-`;
+  color: #FEC786;
+`
 
 const VoiceTimeDiv = styled.div`
   color: #fff;
@@ -65,10 +58,10 @@ const VoiceTimeDifference = styled.div`
   bottom: -16px;
   right: 16px;
   color: #444;
-`;
-const SenderName = styled.div`
+`
+const SenderName = styled.div<voiceProps>`
   width: 64px;
-  margin: 8px 0 16px;
+  margin: ${(props) => (props.isDelete ? '8px 11% 16px' : '8px 0 16px')};
   text-align: center;
   font-size: 0.7em;
 `;
@@ -81,6 +74,12 @@ const ico_like = keyframes`
 const ico_like_out = keyframes`
   0%{transform:scale(1.4);}
   100%{transform:scale(1);}
+`;
+
+const CheckIconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FavoriteIconDiv = styled.div`
@@ -96,36 +95,42 @@ const FavoriteIconDiv = styled.div`
 `;
 
 type VoiceMessageProps = {
-  id: number;
-  image: string;
-  set_name: string;
-  audio: string; // url
-  created_at: string; // date
-  name: string;
-  type: boolean;
-  index: number;
-  second: number;
-  getIndex: (index: number, type: boolean) => void;
-  playingId: number;
-  setPlayingId: (id: number) => void;
-  getDelete: (id: number) => void;
-};
+  id: number,
+  image: string,
+  set_name: string,
+  audio: string, // url
+  created_at: string, // date
+  name: string,
+  type: boolean,
+  index: number,
+  second: number,
+  getIndex: (index: number, type: boolean) => void,
+  playingId: number,
+  setPlayingId: (id: number) => void,
+  isDelete: boolean,
+  addDeleteList: (id: number) => void,
+  filterDeleteList: (id: number) => void,
+  deleteList: number[],
+}
 
 const VoiceMessage = ({
-  id,
-  image,
-  set_name,
-  audio,
-  created_at,
-  name,
-  type,
-  index,
-  getIndex,
-  second,
-  setPlayingId,
-  playingId,
-  getDelete,
-}: VoiceMessageProps) => {
+    id,
+    image,
+    set_name,
+    audio,
+    created_at, 
+    name, 
+    type, 
+    index, 
+    getIndex, 
+    second, 
+    setPlayingId, 
+    playingId, 
+    isDelete,
+    addDeleteList,
+    filterDeleteList,
+    deleteList,
+  }: VoiceMessageProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [voice] = useState(new Audio(audio));
   const [voicePlayingTime, setVoicePlayingTime] = useState<number>(
@@ -191,10 +196,6 @@ const VoiceMessage = ({
     }
   };
 
-  const deleteVoice = () => {
-    getDelete(id);
-  };
-
   const timeDifference = (time: Date) => {
     const tempTime = new Date().getTime();
     const createTime = time.getTime();
@@ -239,7 +240,12 @@ const VoiceMessage = ({
 
   return (
     <>
-      <VoiceMessageDiv>
+      <VoiceMessageDiv isDelete={isDelete}>
+        {isDelete && <CheckIconBox>
+            {deleteList.includes(id) ? 
+            <FaCheckSquare color={"#ff787f"} onClick={() => {filterDeleteList(id)}}/>
+            :<FaRegSquare color={"#ff787f"} onClick={() => {addDeleteList(id)}}/>}
+          </CheckIconBox>}
         <VoiceSenderDiv>
           <VoiceSenderImg src={image} />
         </VoiceSenderDiv>
@@ -282,9 +288,6 @@ const VoiceMessage = ({
                 ).slice(-2)}`
               : "0 : 00"}
           </VoiceTimeDiv>
-          <VoiceDeleteIcon onClick={deleteVoice}>
-            <IoMdClose />
-          </VoiceDeleteIcon>
           <VoiceTimeDifference>
             {timeDifference(new Date(created_at))}
           </VoiceTimeDifference>
@@ -301,7 +304,7 @@ const VoiceMessage = ({
           )}
         </FavoriteIconDiv>
       </VoiceMessageDiv>
-      <SenderName>{set_name ? set_name : name}</SenderName>
+      <SenderName isDelete={isDelete}>{set_name ? set_name : name}</SenderName>
     </>
   );
 };

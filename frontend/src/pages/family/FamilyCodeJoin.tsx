@@ -42,7 +42,7 @@ const NameEditInput = styled.input`
   border-right-width: 0;
   border-top-width: 0;
   border-bottom: 1;
-  width: 80vw;
+  width: 80%;
   height: 1em;
   background-color: transparent;
   border-color: #ffd5d7;

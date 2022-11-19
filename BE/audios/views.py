@@ -65,7 +65,7 @@ class AudioSaveAPIView(ListCreateAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-class AudioDeleteAPIView(GenericAPIView,mixins.UpdateModelMixin,mixins.DestroyModelMixin,) :
+class AudioUpdateAPIView(GenericAPIView,mixins.UpdateModelMixin) :
     permission_classes = [IsObjectorBadResponsePermission,]
     queryset = Audio.objects.all()
     lookup_field = 'id'
@@ -74,9 +74,11 @@ class AudioDeleteAPIView(GenericAPIView,mixins.UpdateModelMixin,mixins.DestroyMo
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class AudioDeleteAPIView(GenericAPIView):
+    permission_classes = [IsObjectorBadResponsePermission,]
+    def delete(self, request):
+        data = request.data['id']
+        audio = Audio.objects.filter(id__in=data)
+        audio.delete()
+        return Response("삭제되었습니다.", status=status.HTTP_204_NO_CONTENT)
