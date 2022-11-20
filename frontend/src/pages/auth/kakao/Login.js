@@ -169,8 +169,7 @@ function Login() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        })
-        .then((res) => {
+        }).then((res) => {
           console.log(res.data);
           dispatch(setUserId(res.data.id));
           dispatch(setUserPhone(res.data.phone));
@@ -187,23 +186,23 @@ function Login() {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },
-            })
-              .then((res) => {
-                console.log(res.data);
-                dispatch(setFamilyId(res.data.id));
-                dispatch(setFamilyName(res.data.name));
-                dispatch(setFamilyCreatedAt(res.data.created_at));
-                dispatch(setFamilyUsers(res.data.users));
-                navigate("/", { replace: true });
-              })
+            }).then((res) => {
+              console.log(res.data);
+              dispatch(setFamilyId(res.data.id));
+              dispatch(setFamilyName(res.data.name));
+              dispatch(setFamilyCreatedAt(res.data.created_at));
+              dispatch(setFamilyUsers(res.data.users));
+              navigate("/", { replace: true });
+            });
           } else {
             navigate("/", { replace: true });
           }
+        });
       })
       .catch((err) => {
         activeWarn();
       });
-  })};
+};
   const clickKakaoLogin = () => {
     Kakao.Auth.authorize({
       redirectUri: `${process.env.REACT_APP_FE_HOST}/kakaoLoading/`,
