@@ -22,6 +22,7 @@ import {
   Image,
   StatusBar,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -40,7 +41,7 @@ const App = () => {
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
-  const url = {uri: 'https://k7b103.p.ssafy.io'};
+  const url = {uri: 'https://familyzoa.com'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -79,6 +80,7 @@ const App = () => {
   };
 
   const getMessage = async event => {
+    console.dir(event);
     if (event.nativeEvent.data.includes(',')) {
       const messages = event.nativeEvent.data.split(',');
       setMessage(messages[0]);
@@ -92,6 +94,8 @@ const App = () => {
   };
 
   useEffect(() => {
+    console.log(message);
+    console.log(command);
     switch (message) {
       case 'imagePicker':
         actionSheetRef.current.show();
@@ -155,26 +159,8 @@ const App = () => {
     }
   };
 
-  const requestAudioPermission = async () => {
-    let granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      {
-        title: 'Audio Permission',
-        message: 'App needs access to your audio / microphone',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use the Microphone');
-    } else {
-      console.log('Microphone permission denied');
-    }
-  };
-
   const getPhotoFromCamera = async () => {
+    console.log('camera on');
     if (os === 'ios') {
       request(PERMISSIONS.IOS.CAMERA).then(result => {
         launchCamera(camOpt, res => {
@@ -192,6 +178,7 @@ const App = () => {
         });
       });
     } else {
+      console.log('A');
       launchCamera(camOpt, res => {
         if (res.didCancel) {
           actionSheetRef.current.hide();
@@ -203,6 +190,7 @@ const App = () => {
           actionSheetRef.current.hide();
         }
       });
+      console.log('done');
     }
   };
 
@@ -383,24 +371,28 @@ true;
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         {os === 'ios' ? <StatusBar color={'#ffcdbe'} /> : <View />}
         {connection ? (
-          <WebView
-            ref={webViewRef}
-            onLoadStart={() =>
-              webViewRef.current.injectJavaScript(INJECTED_CODE)
-            }
-            originWhitelist={['*']}
-            renderLoading={loadingSpinner}
-            startInLoadingState={true}
-            style={{flex: 1}}
-            source={url}
-            onMessage={getMessage}
-            scrollEnabled={false}
-            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-            allowsBackForwardNavigationGestures={true}
-            onLoadEnd={sendToken}
-            mediaPlaybackRequiresUserAction={false}
-            allowInlineMediaPlayback={true}
-          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{flex: 1}}>
+            <WebView
+              ref={webViewRef}
+              onLoadStart={() =>
+                webViewRef.current.injectJavaScript(INJECTED_CODE)
+              }
+              originWhitelist={['*']}
+              renderLoading={loadingSpinner}
+              startInLoadingState={true}
+              style={{flex: 1}}
+              source={url}
+              onMessage={getMessage}
+              scrollEnabled={true}
+              onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+              allowsBackForwardNavigationGestures={true}
+              onLoadEnd={sendToken}
+              mediaPlaybackRequiresUserAction={false}
+              allowInlineMediaPlayback={true}
+            />
+          </KeyboardAvoidingView>
         ) : (
           <LinearGradient
             colors={['#FFEBE5', '#D8F1ED']}

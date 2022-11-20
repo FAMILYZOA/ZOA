@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.pagination import PageNumberPagination
+
+from families.models import FamilyInteractionName
 from .models import Checklist, Photo
 from accounts.models import User
 from .serializers import ChecklistSerializer, ChecklistDetailSerializer, ChecklistStateChangeSerializer, ChecklistCreateSerializer, MainChecklistSerializer
@@ -76,12 +78,11 @@ class ChecklistSearchAPIView(ListAPIView):
             id = self.request.parser_context['kwargs']['to_users_id']
             me = User.objects.get(id=id).family_id
             you = User.objects.get(id=self.request.user.id).family_id
-            if me == you:
+            if me == you :
                 return Checklist.objects.filter(to_users_id=id).order_by('created_at')
             raise Http404
         except:
             raise Http404
-
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
