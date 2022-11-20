@@ -114,12 +114,12 @@ const EmptyNotice = styled.div`
   text-align: center;
 `
 
-function TodoContents({ currentId }) {
+function TodoContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
-  const [load, setLoad] = useState(1);
+  const [load, setLoad] = useState(true);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
@@ -180,14 +180,15 @@ function TodoContents({ currentId }) {
               setList(res.data.results);
             }
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
           .catch(() => {
             endRef.current = true;
             setList([]);
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
       }
-      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 
@@ -219,6 +220,8 @@ function TodoContents({ currentId }) {
           setList(tempList);
         });
       },600)
+    } else {
+      setIsWarn(true);
     }
   };
 
@@ -261,7 +264,7 @@ function TodoContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
-      {list.length === 0 && (
+      {list.length === 0 && load === false && (
         <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
       )}
       {list && (
@@ -311,12 +314,12 @@ function TodoContents({ currentId }) {
   );
 }
 
-function CompleteContents({ currentId }) {
+function CompleteContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
-  const [load, setLoad] = useState(1);
+  const [load, setLoad] = useState(true);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
@@ -374,14 +377,15 @@ function CompleteContents({ currentId }) {
               setList(res.data.results);
             }
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
           .catch(() => {
             endRef.current = true;
             setList([]);
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
       }
-      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 
@@ -413,6 +417,8 @@ function CompleteContents({ currentId }) {
           setList(tempList);
         });
       }, 600)
+    } else {
+      setIsWarn(true);
     }
   };
 
@@ -456,7 +462,7 @@ function CompleteContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
-      {list.length === 0 && (
+      {list.length === 0 && load === false && (
         <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
       )}
       {list && (
@@ -510,7 +516,7 @@ function CompleteContents({ currentId }) {
   );
 }
 
-function Tabs({ current }) {
+function Tabs({ current, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [todoTab, setTodoTab] = useState(true);
   const [completeTab, setCompleteTab] = useState(false);
@@ -567,9 +573,9 @@ function Tabs({ current }) {
       </TabBox>
       <ContentsBox>
         {todoTab === true ? (
-          <TodoContents currentId={current}></TodoContents>
+          <TodoContents currentId={current} setIsWarn={setIsWarn}></TodoContents>
         ) : (
-          <CompleteContents currentId={current}></CompleteContents>
+          <CompleteContents currentId={current} setIsWarn={setIsWarn}></CompleteContents>
         )}
       </ContentsBox>
     </Container>

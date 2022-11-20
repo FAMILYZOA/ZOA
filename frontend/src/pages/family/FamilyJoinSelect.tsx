@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 import logo from "../../assets/white-logo.png";
+import greeting from "../../assets/zoa_greetings.png"
 
 const HeaderStyle = styled.div`
   display: flex;
@@ -28,10 +29,11 @@ const Header = styled.div`
   }
 `;
 const Greetings = styled.div`
+  width: 100%;
   text-align: center;
   font-size: 2.4em;
-  margin-bottom: 1em;
   font-weight: 700;
+  object-fit: contain;
 `
 const Guide = styled.div`
   width: 80%;
@@ -46,7 +48,7 @@ const JoinContents = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 20vh 0 0;
+  margin: 3em 0 0;
 `
 const BtnBox = styled.div`
   width: 100%;
@@ -96,7 +98,9 @@ const FamilyJoinSelect = () => {
       </Header>
       <JoinContents>
         <div style={{width: "100%"}}>
-          <Greetings>어서오세요!</Greetings>
+          <Greetings>
+            <img style={{objectFit: "contain", width: "80%"}} src={greeting} alt="어서오세요!"/>
+          </Greetings>
           <Guide>가족 생성/참여하여 <br /> 구성원들과 하루를 공유해보세요!</Guide>
           <BtnBox>
             <FamilyCreateBtn onClick={() => {navigate("/family/create")}}>
