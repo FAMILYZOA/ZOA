@@ -22,6 +22,7 @@ import {
   Image,
   StatusBar,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -40,7 +41,7 @@ const App = () => {
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
-  const url = {uri: 'https://k7b1031.p.ssafy.io'};
+  const url = {uri: 'https://familyzoa.com'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 
@@ -370,24 +371,28 @@ true;
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         {os === 'ios' ? <StatusBar color={'#ffcdbe'} /> : <View />}
         {connection ? (
-          <WebView
-            ref={webViewRef}
-            onLoadStart={() =>
-              webViewRef.current.injectJavaScript(INJECTED_CODE)
-            }
-            originWhitelist={['*']}
-            renderLoading={loadingSpinner}
-            startInLoadingState={true}
-            style={{flex: 1}}
-            source={url}
-            onMessage={getMessage}
-            scrollEnabled={false}
-            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-            allowsBackForwardNavigationGestures={true}
-            onLoadEnd={sendToken}
-            mediaPlaybackRequiresUserAction={false}
-            allowInlineMediaPlayback={true}
-          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{flex: 1}}>
+            <WebView
+              ref={webViewRef}
+              onLoadStart={() =>
+                webViewRef.current.injectJavaScript(INJECTED_CODE)
+              }
+              originWhitelist={['*']}
+              renderLoading={loadingSpinner}
+              startInLoadingState={true}
+              style={{flex: 1}}
+              source={url}
+              onMessage={getMessage}
+              scrollEnabled={true}
+              onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+              allowsBackForwardNavigationGestures={true}
+              onLoadEnd={sendToken}
+              mediaPlaybackRequiresUserAction={false}
+              allowInlineMediaPlayback={true}
+            />
+          </KeyboardAvoidingView>
         ) : (
           <LinearGradient
             colors={['#FFEBE5', '#D8F1ED']}

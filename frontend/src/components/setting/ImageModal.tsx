@@ -132,9 +132,7 @@ const FontModal = (props: modalType) => {
 
   const photoInput = useRef<any>();
   const handleClick = () => {
-    console.log('send Message to A');
     if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
-      console.log('send Message to B');
       window.ReactNativeWebView.postMessage("imagePicker,profile");
       console.log('here');
       
