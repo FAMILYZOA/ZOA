@@ -10,7 +10,11 @@ import { BsCheck } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa";
 import CreateSchedule from "./CreateSchedule";
 import DetailSchedule from "./DetailSchedule";
-import Draggable from "react-draggable"; 
+import Draggable from "react-draggable";
+import one from "../../assets/calendar_main_guide.png";
+import two from "../../assets/calendar_list_guide.png";
+import three from "../../assets/calendar_create_guide.png";
+import { BsQuestionCircleFill } from "react-icons/bs";
 
 const fadeIn = keyframes`
   0% {
@@ -264,6 +268,7 @@ const MonthlyCalendar = (props) => {
   // view=list detail=한개 create=create
   const [state, setState] = useState("view");
   const [showModal, setShowModal] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
   const [content, setContent] = useState({
     title: "",
     color: "",
@@ -285,11 +290,27 @@ const MonthlyCalendar = (props) => {
       `${presDate.getFullYear()}. ${zeromonth}. ${zerodate}`
       );
   };
+  const openGuideModal = () => {
+    setShowGuideModal(true);
+    setState("one")
+  }
   const closeModal = () => {
     remonth(!emit);
     setState("view");
     setShowModal(false);
     setDailySchedule([]);
+  };
+  const closeGuideModal = () => {
+    remonth(!emit);
+    setState("view");
+    setShowGuideModal(false);
+    setDailySchedule([]);
+  };
+  const moveSecondGuideModal = () => {
+    setState("two");
+  };
+  const moveThirdGuideModal = () => {
+    setState("three");
   };
   const modalStyle = {
     overlay: {
@@ -310,6 +331,18 @@ const MonthlyCalendar = (props) => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+    },
+  };
+  const guideModalStyle = {
+    content: {
+      inset:" 2% 2%",
+      width: "96%",
+      height: "96%",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0"
     },
   };
 
@@ -420,13 +453,41 @@ const MonthlyCalendar = (props) => {
       if (res.status === 200) {
         alert("일정이 성공적으로 수정되었습니다!");
         setState("view");
-        // setMonthSchedule(monthSchedule.concat(res.data));
       }
     });
-  }
+  };
+
+  const ImgTag = styled.img`
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  `
+
+  const Icon = styled.div`
+    margin: auto;
+    display: flex;
+    align-items: center;
+  `;
 
   return (
     <>
+      <Modal
+        isOpen={showGuideModal}
+        ariaHideApp={false}
+        onRequestClose={closeGuideModal}
+        style={guideModalStyle}
+        onClick={closeGuideModal}
+        state={state}
+      >
+        {state === "one" ? (
+          <ImgTag src={one} onClick={moveSecondGuideModal} alt=""/>
+        ): state === "two" ? (
+          <ImgTag src={two} state={two} onClick={moveThirdGuideModal} alt="" />
+        ): (
+          <ImgTag src={three} state={three} alt="" onClick={closeGuideModal} />
+        )}
+      </Modal>
       <Modal
         isOpen={showModal}
         onRequestClose={closeModal}
@@ -530,7 +591,9 @@ const MonthlyCalendar = (props) => {
       <HeaderBox>
         <div></div>
         <HeaderLabel>가족 캘린더</HeaderLabel>
-        <></>
+        <Icon onClick={openGuideModal}>
+          <BsQuestionCircleFill size="24" color="#ff787f" />
+        </Icon>
       </HeaderBox>
       {/* 연, 월 이동 */}
       <DateBox>

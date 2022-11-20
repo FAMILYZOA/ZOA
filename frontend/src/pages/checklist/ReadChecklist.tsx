@@ -7,6 +7,9 @@ import Tabs from "../../components/checklist/view/Tabs";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
+import guide from "../../assets/check_list_guide.png";
+import Modal from "react-modal";
+import { BsQuestionCircleFill } from "react-icons/bs";
 import { ModalContent, ModalDiv as ModalDiv2, ModalBack as ModalBack2 } from "../../components/";
 
 interface modalBackProps {
@@ -50,6 +53,13 @@ const CheckListTitle = styled.div`
   font-size: 1em;
   font-weight: bold;
 `;
+
+const ImgTag = styled.img`
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+`
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
@@ -271,15 +281,49 @@ function ReadChecklist() {
     navigate("/checklist/create");
   };
 
+  // 모달 설정
+  const [showModal, setShowModal] = useState(false);  
+  const openModal = () => {
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyle = {
+    content: {
+      inset:" 2% 2%",
+      width: "96%",
+      height: "96%",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0"
+    },
+  };
+
   return (
     <div>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+      >
+        <ImgTag src={guide} alt="" onClick={closeModal} />
+      </Modal>
       <HeaderBox>
         <Icon onClick={navigateToHome}>
           <IoIosArrowBack size="24" />
         </Icon>
         <HeaderLabel>할 일 목록</HeaderLabel>
-        <Icon onClick={navigateToCreate}>
-          <FiPlus size="24" />
+        <Icon onClick={openModal}>
+          <div style={{margin: "0 8px"}}>
+            <BsQuestionCircleFill size="24" color="#ff787f" />
+          </div>
+          <div onClick={navigateToCreate}>
+            <FiPlus size="24" />
+          </div>
         </Icon>
       </HeaderBox>
       {isModal && <ModalBack onClick={() => setIsModal(false)} />}
