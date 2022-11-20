@@ -1,15 +1,19 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GrClose } from "react-icons/gr";
 import Modal from "react-modal";
 import styled from "styled-components";
 import { detect } from "detect-browser";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setAccessToken, setRefreshToken } from "../../features/token/tokenSlice";
+import {
+  setAccessToken,
+  setRefreshToken,
+} from "../../features/token/tokenSlice";
 import { setFamilyUsers } from "../../features/family/familySlice";
 import { AuthRefresh } from "../../api/customAxios";
 import { setUserImage } from "../../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { toggleUpload } from "../../features/mobile/mobileSlice";
 
 type modalType = {
   isOpen: boolean;
@@ -87,15 +91,16 @@ const FontModal = (props: modalType) => {
   const navigate = useNavigate();
   const accessToken = useAppSelector((state) => state.token.access);
   const refreshToken = useAppSelector((state) => state.token.refresh);
-  const familyId = useAppSelector(state => state.family.id);
+  const familyId = useAppSelector((state) => state.family.id);
+  const isUpload = useAppSelector((state) => state.mobile.isUpload);
 
   // 모바일 연동
   const getOS = () => {
     const browser = detect();
-    if(browser){
+    if (browser) {
       return browser.os;
     }
-  }
+  };
 
   const [os] = useState(getOS());
 
@@ -127,10 +132,11 @@ const FontModal = (props: modalType) => {
 
   const photoInput = useRef<any>();
   const handleClick = () => {
-    if((os === 'Android OS' || os === 'iOS') && window.ReactNativeWebView){
-        window.ReactNativeWebView.postMessage("imagePicker,profile");
-        props.toggle(false);
-    }else{
+    if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage("imagePicker,profile");
+      dispatch(toggleUpload(true));
+      props.toggle(false);
+    } else {
       photoInput.current.click();
     }
   };
@@ -156,17 +162,16 @@ const FontModal = (props: modalType) => {
       })
         .then((res) => {
           dispatch(setUserImage(res.data.image));
-          if (familyId >= 0){
+          if (familyId >= 0) {
             axios({
               method: "get",
               url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },
-            })
-              .then((res) => {
-                dispatch(setFamilyUsers(res.data.users));
-              })
+            }).then((res) => {
+              dispatch(setFamilyUsers(res.data.users));
+            });
           }
         })
         .catch(async (err) => {
@@ -202,24 +207,31 @@ const FontModal = (props: modalType) => {
       onRequestClose={closeModal}
     >
       <CloseBtnStyle fontSize={16} color={"#888888"} onClick={closeModal} />
-      <ModalContentDiv>
-        <ImageTitleDiv>프로필 이미지 변경</ImageTitleDiv>
-        <ImageBodyDiv>
-          <TempShowImage src={tempImage} alt="" onClick={handleClick} />
-          <input
-            type="file"
-            name="imgUpload"
-            accept="image/*"
-            onChange={saveFile}
-            style={{ display: "none" }}
-            ref={photoInput}
-          />
-        </ImageBodyDiv>
-        <ButtonDiv>
-          <ConfirmButton onClick={confirmModal}>확인</ConfirmButton>
-          <CancelButton onClick={closeModal}>취소</CancelButton>
-        </ButtonDiv>
-      </ModalContentDiv>
+      {isUpload ? (
+        <img
+          src={"../../assets/Spinner.gif"}
+          alt="profile loading spinner"
+        />
+      ) : (
+        <ModalContentDiv>
+          <ImageTitleDiv>프로필 이미지 변경</ImageTitleDiv>
+          <ImageBodyDiv>
+            <TempShowImage src={tempImage} alt="" onClick={handleClick} />
+            <input
+              type="file"
+              name="imgUpload"
+              accept="image/*"
+              onChange={saveFile}
+              style={{ display: "none" }}
+              ref={photoInput}
+            />
+          </ImageBodyDiv>
+          <ButtonDiv>
+            <ConfirmButton onClick={confirmModal}>확인</ConfirmButton>
+            <CancelButton onClick={closeModal}>취소</CancelButton>
+          </ButtonDiv>
+        </ModalContentDiv>
+      )}
     </Modal>
   );
 };

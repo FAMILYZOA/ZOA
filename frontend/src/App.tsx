@@ -42,6 +42,7 @@ import {
   setFcmToken,
   setFcmTokenId,
   isFcmRegister,
+  toggleUpload,
 } from "./features/mobile/mobileSlice";
 import { makeid, dataURLtoFile } from "./features/mobile/mobileUtil";
 import { AuthRefresh } from "./api/customAxios";
@@ -218,6 +219,8 @@ function App() {
     const data = new FormData();
     data.append("image", image);
 
+
+
     axios({
       method: "PUT",
       url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
@@ -228,6 +231,7 @@ function App() {
       data: data,
     })
       .then((res) => {
+        dispatch(toggleUpload(false));
         dispatch(setUserImage(res.data.image));
       })
       .catch(async (err) => {
