@@ -150,7 +150,7 @@ const FamilyCreate = () => {
       })
   };
   const moveToBack = () => {
-    navigate("/intro");
+    navigate("/family/select/");
   };
 
   return (

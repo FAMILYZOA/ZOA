@@ -5,25 +5,44 @@ import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import logo from "../../assets/white-logo.png";
 import { setFamilyId, setFamilyName, setFamilyUsers, setFamilyCreatedAt } from "../../features/family/familySlice"
+import { IoIosArrowBack } from "react-icons/io";
 
 interface buttonProps {
   isCode?: boolean;
 }
 
-const Header = styled.div`
+
+const HeaderBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0px;
+  background-color: #ffcdbe;
+  height: 56px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: 1;
+  
+`;
+
+const IconBox = styled.div`
+  margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: sticky;
-  top: 0px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  background-color: #ffcdbe;
-  height: 56px;
-  box-shadow: rgba(255, 255, 255, 0.3) 0px 1px 4px;
+`;
+
+const ImgBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   img {
     height: 32px;
   }
 `;
+
 const CodeJoinBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -122,31 +141,45 @@ const FamilyCodeJoin = () => {
     }
   },[])
 
+  const moveToBack = () => {
+    navigate("/family/select/")
+  };
+
 
   return (
     <>
-      <Header>
-        <img src={logo} alt="" />
-      </Header>
+      <HeaderBox>
+        <IconBox onClick={moveToBack}>
+          <IoIosArrowBack size="24" />
+        </IconBox>
+        <ImgBox>
+          <img src={logo} alt="" />
+        </ImgBox>
+        <div></div>
+      </HeaderBox>
       <CodeJoinBody>
-        <Guide>
-          초대시 받은 코드를 입력해주세요!
-        </Guide>
-        <div style={{marginBottom:"0.4em"}}>
-          <div style={{marginBottom:"0.4em"}}>
+        <Guide>초대시 받은 코드를 입력해주세요!</Guide>
+        <div style={{ marginBottom: "0.4em" }}>
+          <div style={{ marginBottom: "0.4em" }}>
             <NameEditInput
               placeholder="초대 코드"
               onChange={handleCodeChange}
             />
           </div>
-          <ValidMessage>{isValid ? "" : "유효한 코드가 아닙니다."}</ValidMessage>
+          <ValidMessage>
+            {isValid ? "" : "유효한 코드가 아닙니다."}
+          </ValidMessage>
         </div>
-        <FamilyParticipateBtn isCode={!!code} disabled={!code} onClick={handleSubmit}>
+        <FamilyParticipateBtn
+          isCode={!!code}
+          disabled={!code}
+          onClick={handleSubmit}
+        >
           참여하기
         </FamilyParticipateBtn>
       </CodeJoinBody>
     </>
-  )
+  );
 }
 
 export default FamilyCodeJoin;
