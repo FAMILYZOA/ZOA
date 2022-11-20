@@ -184,7 +184,6 @@ function TodoContents({ currentId }) {
           .catch(() => {
             endRef.current = true;
             setList([]);
-            console.log('empty');
             preventRef.current = true;
           })
       }
@@ -379,7 +378,6 @@ function CompleteContents({ currentId }) {
           .catch(() => {
             endRef.current = true;
             setList([]);
-            console.log('empty');
             preventRef.current = true;
           })
       }

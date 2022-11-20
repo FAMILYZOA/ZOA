@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAppSelector } from "../../app/hooks";
 import logo from "../../assets/white-logo.png";
 
 const HeaderStyle = styled.div`
@@ -80,6 +81,14 @@ const FamilyParticipateBtn = styled.button`
 
 const FamilyJoinSelect = () => {
   const navigate = useNavigate();
+  const familyId = useAppSelector(state => state.family.id);
+
+  useEffect(() => {
+    if (familyId >= 0) {
+      navigate("/");
+    }
+  }, [familyId])
+
   return (
     <>
       <Header>
