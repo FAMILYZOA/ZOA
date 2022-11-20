@@ -119,7 +119,7 @@ function TodoContents({ currentId }) {
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
-  const [load, setLoad] = useState(1);
+  const [load, setLoad] = useState(true);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
@@ -180,14 +180,15 @@ function TodoContents({ currentId }) {
               setList(res.data.results);
             }
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
           .catch(() => {
             endRef.current = true;
             setList([]);
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
       }
-      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 
@@ -261,7 +262,7 @@ function TodoContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
-      {list.length === 0 && (
+      {list.length === 0 && load === false && (
         <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
       )}
       {list && (
@@ -316,7 +317,7 @@ function CompleteContents({ currentId }) {
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
-  const [load, setLoad] = useState(1);
+  const [load, setLoad] = useState(true);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
@@ -374,14 +375,15 @@ function CompleteContents({ currentId }) {
               setList(res.data.results);
             }
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
           .catch(() => {
             endRef.current = true;
             setList([]);
             preventRef.current = true;
+            setLoad(false); //로딩 종료
           })
       }
-      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 
@@ -456,7 +458,7 @@ function CompleteContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
-      {list.length === 0 && (
+      {list.length === 0 && load === false && (
         <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
       )}
       {list && (
