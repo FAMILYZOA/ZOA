@@ -39,10 +39,11 @@ class UserSerializer(serializers.ModelSerializer) :
         if to_user == from_user :
             return '나'
         
-        if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
-            return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
-        else :
+        try : 
+            name= FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
+        except :
             return False
+        return name
     
 
 class FamilyRetriveSerializer(serializers.ModelSerializer) :
