@@ -7,6 +7,7 @@ import Tabs from "../../components/checklist/view/Tabs";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
+import { ModalContent, ModalDiv as ModalDiv2, ModalBack as ModalBack2 } from "../../components/";
 
 interface modalBackProps {
   toggle?: boolean;
@@ -174,6 +175,29 @@ const ModalItemImg = styled.img`
   border-radius: 1em;
   object-fit: fill;
 `;
+const Modal24 = styled.div`
+  font-weight: 600;
+  margin-bottom: 0.4em;
+`;
+const ButtonDiv = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.6em;
+`;
+const ConfirmButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35%;
+  height: 2em;
+
+  color: #fff;
+  background-color: #ff787f;
+  border-radius: 0.4em;
+  margin-right: 0.4em;
+`;
 
 function ReadChecklist() {
   const userId = useAppSelector((state) => state.user.id);
@@ -181,6 +205,7 @@ function ReadChecklist() {
   const userImage = useAppSelector((state) => state.user.image);
   const familyId = useAppSelector(state => state.family.id);
   const [isModal, setIsModal] = useState(false);
+  const [isWarn, setIsWarn] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
     name: string;
@@ -274,6 +299,18 @@ function ReadChecklist() {
           ))}
         </ModalDiv>
       )}
+      {isWarn && <ModalBack2 onClick={() => {setIsWarn(false)}} />}
+      {isWarn && (
+        <ModalDiv2>
+          <ModalContent>
+            <Modal24>{"다른 가족의 할 일을"}</Modal24>
+            <Modal24>{"체크할 수 없습니다!"}</Modal24>
+            <ButtonDiv>
+              <ConfirmButton onClick={() => {setIsWarn(false)}} >확인</ConfirmButton>
+            </ButtonDiv>
+          </ModalContent>
+        </ModalDiv2>
+      )}
       <CheckListViewBody>
         <SelectMember
           selectedMember={selectedMember}
@@ -290,7 +327,7 @@ function ReadChecklist() {
           )}
           님의 체크리스트
         </CheckListTitle>
-        <Tabs current={selectedMember.id}></Tabs>
+        <Tabs current={selectedMember.id} setIsWarn={setIsWarn}></Tabs>
       </CheckListViewBody>
     </div>
   );
