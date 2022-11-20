@@ -120,6 +120,7 @@ function TodoContents({ currentId }) {
   const obsRef = useRef(null);
   const endRef = useRef(false);
   const [select, setSelect] = useState(-1);
+  const userId = useAppSelector(state => state.user.id);
 
   const [click, setClick] = useState(-1);
 
@@ -194,24 +195,26 @@ function TodoContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    setSelect(index);
-    setTimeout(() => {
-      const tempList = [...list];
-      const data = new FormData();
-      data.append("status", 1);
-      axios({
-        method: "PUT",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-        data: data,
-      }).then((res) => {
-        setSelect(-1);
-        tempList.splice(index, 1);
-        setList(tempList);
-      });
-    },600)
+    if (userId === currentId) {
+      setSelect(index);
+      setTimeout(() => {
+        const tempList = [...list];
+        const data = new FormData();
+        data.append("status", 1);
+        axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+          data: data,
+        }).then((res) => {
+          setSelect(-1);
+          tempList.splice(index, 1);
+          setList(tempList);
+        });
+      },600)
+    }
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -261,7 +264,7 @@ function TodoContents({ currentId }) {
               <NoToggle>
                 <BiCheckbox
                   size={32}
-                  color="#FF787F"
+                  color={userId === currentId ? "#FF787F" : "#F2D2CE"}
                   onClick={() => {check(li.id, index)}}
                 />
                 <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
@@ -310,8 +313,8 @@ function CompleteContents({ currentId }) {
   const obsRef = useRef(null);
   const endRef = useRef(false);
   const [select, setSelect] = useState(-1);
-
   const [click, setClick] = useState(-1);
+  const userId = useAppSelector(state => state.user.id);
 
   useEffect(() => {
     const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
@@ -381,24 +384,26 @@ function CompleteContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    setSelect(index);
-    setTimeout(() => {
-      const data = new FormData();
-      const tempList = [...list];
-      data.append("status", 0);
-      axios({
-        method: "PUT",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-        data: data,
-      }).then((res) => {
-        setSelect(-1);
-        tempList.splice(index, 1);
-        setList(tempList);
-      });
-    }, 600)
+    if (userId === currentId) {
+      setSelect(index);
+      setTimeout(() => {
+        const data = new FormData();
+        const tempList = [...list];
+        data.append("status", 0);
+        axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+          data: data,
+        }).then((res) => {
+          setSelect(-1);
+          tempList.splice(index, 1);
+          setList(tempList);
+        });
+      }, 600)
+    }
   };
 
     const [showModal, setShowModal] = useState(false);
