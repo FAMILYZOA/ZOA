@@ -88,7 +88,6 @@ class FamliySignTestCase(TestCaseSetUp) :
         self.other_authenticate()
         response = self.client.post(reverse('families:join_family',kwargs={'family_id':family_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(response.data['success'],'이조아님이 family에 가입되었습니다.')
     #가족이 있을 때, 가입 요청 보낼 때
     def test_2_family_get_not_found(self) :
         self.create_family()
