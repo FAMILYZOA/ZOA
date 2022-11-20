@@ -7,6 +7,7 @@ interface MobileState {
     fcmToken: string,
     fcmTokenId: string,
     isFcmRegist: boolean,
+    isUpload: boolean,
 }
 
 const initialState: MobileState = {
@@ -14,6 +15,7 @@ const initialState: MobileState = {
     fcmToken: '',
     fcmTokenId: localStorage.getItem("fcmID") || "",
     isFcmRegist: true,
+    isUpload: false,
 }
 
 export const mobileSlice = createSlice({
@@ -32,14 +34,18 @@ export const mobileSlice = createSlice({
         },
         isFcmRegister: (state: any, action: PayloadAction<boolean>) => {
             state.isFcmRegist = action.payload;
+        },
+        toggleUpload: (state: any, action: PayloadAction<boolean>) => {
+            state.isUpload = action.payload;
         }
     }
 })
 
-export const {setChecklistPhoto, setFcmToken, setFcmTokenId, isFcmRegister} = mobileSlice.actions
+export const {setChecklistPhoto, setFcmToken, setFcmTokenId, isFcmRegister, toggleUpload} = mobileSlice.actions
 
 export const selectMobileChecklistPhoto = (state: RootState) => state.mobile.checklistPhoto;
 export const selectfcmToken = (state:RootState) => state.mobile.fcmToken;
 export const selectfcmTokenId = (state:RootState) => state.mobile.fcmTokenId;
+export const selectIsUpload = (state:RootState) => state.mobile.isUpload;
 
 export default mobileSlice.reducer
