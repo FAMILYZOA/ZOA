@@ -4,7 +4,12 @@ import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
 import logo from "../../assets/white-logo.png";
-import { setFamilyId } from "../../features/family/familySlice";
+import {
+  setFamilyId,
+  setFamilyName,
+  setFamilyUsers,
+  setFamilyCreatedAt,
+} from "../../features/family/familySlice";
 
 const Header = styled.div`
   display: flex;
@@ -82,44 +87,64 @@ function FamilyJoin() {
   const accessToken = useAppSelector((state) => state.token.access);
   const [family, setFamily] = useState("");
   const haveFam = useAppSelector((state)=>state.family.id);
-  const [change, setChange] = useState(false);
 
 
   const clickYes = () => {
     if (haveFam > 0 ) {
-      if (window.confirm("이미 가족에 가입되어 있습니다. 현재 가족을 탈퇴하고 새로운 가족에 가입할까요?")){
-        axios({
-          method: "PUT",
-          url: `${process.env.REACT_APP_BACK_HOST}/family/secession/`,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        })
-          .then(
-            axios({
-              method: "POST",
-              url: `${process.env.REACT_APP_BACK_HOST}/family/sign/${familyId}/`,
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            })
-          )
-          .then((res) => {
-            if (res.status === 200) {
-              setChange(true);
-              dispatch(setFamilyId(Number(localStorage.getItem("familyId"))));
-              localStorage.removeItem("familyId");
-              alert(
-                "새로운 가족에 성공적으로 가입되었습니다. 메인페이지로 이동합니다!"
-                );
-                navigate("/");
-            }
-          });
-      } else {
-       alert('현재 가족을 유지하고, 메인페이지로 이동합니다!')
-       localStorage.removeItem("familyId");
-       navigate("/")
-       
+      if (haveFam > 0 && Number(haveFam) === Number(familyId)) {
+          alert("이미 가입한 가족입니다. 메인페이지로 이동합니다!");
+          dispatch(setFamilyId(familyId));
+          localStorage.removeItem("familyId");
+          navigate("/");
+      } else{
+        if (window.confirm("이미 가족에 가입되어 있습니다. 현재 가족을 탈퇴하고 새로운 가족에 가입할까요?")){
+          axios({
+            method: "PUT",
+            url: `${process.env.REACT_APP_BACK_HOST}/family/secession/`,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          })
+            .then((result)=>
+              { if(result.status === 200) {
+                  axios({
+                  method: "POST",
+                  url: `${process.env.REACT_APP_BACK_HOST}/family/sign/${familyId}/`,
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                })
+                .then((res) => {
+                  if (res.status === 200) {
+                    axios({
+                      method: "GET",
+                      url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                      },
+                    }).then((res)=>{
+                      if (res.data.id >= 0) {
+                        dispatch(setFamilyId(res.data.id));
+                        dispatch(setFamilyName(res.data.name));
+                        dispatch(setFamilyCreatedAt(res.data.created_at));
+                        dispatch(setFamilyUsers(res.data.users));
+                      } 
+                      localStorage.removeItem("familyId");
+                      alert(
+                        "새로운 가족에 성공적으로 가입되었습니다. 메인페이지로 이동합니다!"
+                        );
+                        navigate("/");
+                    }
+                    )
+                  }
+                })}
+                }
+            )
+        } else {
+         alert('현재 가족을 유지하고, 메인페이지로 이동합니다!')
+         localStorage.removeItem("familyId");
+         navigate("/")  
+        }
       }
     }
     else{
@@ -129,36 +154,43 @@ function FamilyJoin() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }).then((res) => {
-        setChange(true);
-        dispatch(setFamilyId(Number(localStorage.getItem("familyId"))));
-        localStorage.removeItem("familyId");
-        alert(`${family.name}에 성공적으로 가입되었습니다! 메인페이지로 이동합니다.`)
-        navigate("/");
-      });
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            axios({
+              method: "GET",
+              url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }).then((res) => {
+              if (res.data.id >= 0) {
+                dispatch(setFamilyId(res.data.id));
+                dispatch(setFamilyName(res.data.name));
+                dispatch(setFamilyCreatedAt(res.data.created_at));
+                dispatch(setFamilyUsers(res.data.users));
+              }
+              localStorage.removeItem("familyId");
+              alert(
+                `${family.name}에 성공적으로 가입되었습니다! 메인페이지로 이동합니다.`
+              );
+              navigate("/");
+            });
+          }
+        })
     }
   };
 
-  useEffect(() => {
-    console.log(haveFam);
-  }, [haveFam])
 
   useEffect(() => {
     localStorage.setItem("familyId", familyId);
     if (!localStorage.getItem("access_token")) {
       navigate("/intro");
     } else {
-      console.log(haveFam, familyId);
       if (haveFam > 0 && Number(haveFam) === Number(familyId)) {
-        if(change === false){
           alert('이미 가입한 가족입니다. 메인페이지로 이동합니다!');
           localStorage.removeItem('familyId')
           navigate('/');
-        } else{
-          localStorage.removeItem("familyId");
-          console.log('here');
-          navigate('/')
-        }
       } else {
         axios({
           method: "GET",
@@ -172,7 +204,7 @@ function FamilyJoin() {
       }
         
     }
-  }, [change]);
+  }, [familyId]);
 
 
 

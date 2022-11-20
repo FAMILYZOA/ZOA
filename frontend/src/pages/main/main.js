@@ -131,7 +131,8 @@ function Main() {
               const familyId = localStorage.getItem("familyId");
               navigate(`/join/${familyId}`);
             } else {
-              setIsModal(true);
+              console.log(family);
+              // setIsModal(true);
             }
             break;
           default:
@@ -146,6 +147,7 @@ function Main() {
   }
 
   useEffect(() => {
+    setIsModal(false);
     getGroupSchedule();
   }, []);
 
