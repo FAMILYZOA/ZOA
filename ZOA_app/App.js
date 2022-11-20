@@ -79,6 +79,7 @@ const App = () => {
   };
 
   const getMessage = async event => {
+    console.dir(event);
     if (event.nativeEvent.data.includes(',')) {
       const messages = event.nativeEvent.data.split(',');
       setMessage(messages[0]);
@@ -92,6 +93,8 @@ const App = () => {
   };
 
   useEffect(() => {
+    console.log(message);
+    console.log(command);
     switch (message) {
       case 'imagePicker':
         actionSheetRef.current.show();
@@ -155,26 +158,8 @@ const App = () => {
     }
   };
 
-  const requestAudioPermission = async () => {
-    let granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      {
-        title: 'Audio Permission',
-        message: 'App needs access to your audio / microphone',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use the Microphone');
-    } else {
-      console.log('Microphone permission denied');
-    }
-  };
-
   const getPhotoFromCamera = async () => {
+    console.log('camera on');
     if (os === 'ios') {
       request(PERMISSIONS.IOS.CAMERA).then(result => {
         launchCamera(camOpt, res => {
@@ -192,6 +177,7 @@ const App = () => {
         });
       });
     } else {
+      console.log('A');
       launchCamera(camOpt, res => {
         if (res.didCancel) {
           actionSheetRef.current.hide();
@@ -203,6 +189,7 @@ const App = () => {
           actionSheetRef.current.hide();
         }
       });
+      console.log('done');
     }
   };
 
