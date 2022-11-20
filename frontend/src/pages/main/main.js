@@ -26,14 +26,26 @@ function Main() {
   useEffect(() => {
     if (localStorage.getItem("familyId")) {
       if (localStorage.getItem("access_token")) {
-        const familyId = localStorage.getItem("familyId");
-        navigate(`/join/${familyId}`);
+        if (family < 0){
+          const familyId = localStorage.getItem("familyId");
+          navigate(`/join/${familyId}`);
+        } else {
+          if (family === localStorage.getItem("familyId")) {
+            localStorage.removeItem("familyId");
+          } else {
+            const familyId = localStorage.getItem("familyId");
+            navigate(`/join/${familyId}`);
+          }
+        }
       } else {
         navigate("/intro");
       }
     } else {
       if (!localStorage.getItem("access_token")) {
         navigate("/intro");
+      } else if (family < 0) {
+        console.log(family);
+        navigate('family/select/')
       }
     }
   }, []);
