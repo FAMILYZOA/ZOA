@@ -86,8 +86,8 @@ def UserJoinFamily(request,family_id) :
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
         else :
             family.users.add(user)
-            context = {'success' : f'{user.name}님이 {family.name}에 가입되었습니다.'}
-            return Response(context,status=status.HTTP_200_OK)
+            serializer = FamilyUpdateSerializer(family)
+            return Response(serializer.data,status=status.HTTP_200_OK)
 
 class FamilyNameSetAPIView(CreateAPIView,UpdateAPIView) :
     
