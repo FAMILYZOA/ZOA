@@ -30,10 +30,11 @@ class CommentSerializer(ImageSerializer) :
         if to_user == from_user :
             return '나'
         
-        if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
-            return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
-        else :
+        try :
+            name = FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
+        except :
             return False
+        return name
             
 class ScrumSerializer(ImageSerializer) :
 
@@ -49,11 +50,12 @@ class ScrumSerializer(ImageSerializer) :
         to_user = obj.user
         if to_user == from_user :
             return '나'
-        #쿼리 호출 
-        if FamilyInteractionName.objects.filter(from_user=from_user,to_user=to_user).exists() :
-            return FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
-        else :
+        #쿼리 호출
+        try :
+            name = FamilyInteractionName.objects.get(from_user=from_user,to_user=to_user).name
+        except :
             return False
+        return name
 
 class ScrumDetailSerializer(ScrumSerializer) :
     emoji = serializers.CharField(max_length=50,required=False)
