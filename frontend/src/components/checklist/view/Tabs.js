@@ -114,7 +114,7 @@ const EmptyNotice = styled.div`
   text-align: center;
 `
 
-function TodoContents({ currentId }) {
+function TodoContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
@@ -220,6 +220,8 @@ function TodoContents({ currentId }) {
           setList(tempList);
         });
       },600)
+    } else {
+      setIsWarn(true);
     }
   };
 
@@ -312,7 +314,7 @@ function TodoContents({ currentId }) {
   );
 }
 
-function CompleteContents({ currentId }) {
+function CompleteContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
@@ -415,6 +417,8 @@ function CompleteContents({ currentId }) {
           setList(tempList);
         });
       }, 600)
+    } else {
+      setIsWarn(true);
     }
   };
 
@@ -512,7 +516,7 @@ function CompleteContents({ currentId }) {
   );
 }
 
-function Tabs({ current }) {
+function Tabs({ current, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [todoTab, setTodoTab] = useState(true);
   const [completeTab, setCompleteTab] = useState(false);
@@ -569,9 +573,9 @@ function Tabs({ current }) {
       </TabBox>
       <ContentsBox>
         {todoTab === true ? (
-          <TodoContents currentId={current}></TodoContents>
+          <TodoContents currentId={current} setIsWarn={setIsWarn}></TodoContents>
         ) : (
-          <CompleteContents currentId={current}></CompleteContents>
+          <CompleteContents currentId={current} setIsWarn={setIsWarn}></CompleteContents>
         )}
       </ContentsBox>
     </Container>
