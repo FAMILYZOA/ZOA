@@ -25,6 +25,7 @@ const HeaderBox = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: 3;
 `;
 
 const Icon = styled.div`
@@ -94,6 +95,8 @@ const ModalBack = styled.div<modalBackProps>`
 `;
 const ModalDiv = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
   top: 13vh;
   right: 2vh;
   height: 75vh;
@@ -112,14 +115,14 @@ const ModalItem = styled.div<modalItemProps>`
   z-index: 4;
   margin-bottom: 1vh;
   margin-left: auto;
-  animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+  animation: fadein-item 0.1s ease-in
+    ${(props) => String(0.1+ props.index * 0.1)}s;
   -moz-animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   -webkit-animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   -o-animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   animation-fill-mode: backwards;
   -webkit-animation-fill-mode: backwards;
   -o-animation-fill-mode: backwards;
