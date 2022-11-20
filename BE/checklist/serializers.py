@@ -23,22 +23,10 @@ class GetImageSerializer(serializers.ModelSerializer):
 
 class  ChecklistSerializer(serializers.ModelSerializer):
     photo = GetImageSerializer(read_only=True)
-    from_user_id = serializers.SerializerMethodField()
-    from_user_name = serializers.SerializerMethodField()
-    family_name = serializers.SerializerMethodField()
+    from_user_id = GetUserNameSerializer(read_only=True)
     class Meta: 
         model = Checklist
-        fields= ('id', 'text', 'status', 'created_at', 'from_user_id', 'from_user_name','family_name', 'photo')
-
-    def get_family_name(self,obj) :
-
-        return self.context['interaction_name']
-    def get_from_user_id(self,obj) :
-
-        return self.context['user_id']
-    def get_from_user_name(self,obj) :
-
-        return self.context['name']
+        fields= ('id', 'text', 'status', 'created_at', 'from_user_id', 'photo')
     
 class  MainChecklistSerializer(serializers.ModelSerializer):
     class Meta: 
