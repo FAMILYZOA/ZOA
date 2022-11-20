@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/header";
 import Receiver from "../../components/checklist/create/Receiver";
 import TodoInput from "../../components/checklist/create/TodoInput";
@@ -20,8 +20,9 @@ const Container = styled.div`
 function CreateChecklist() {
   const navigate = useNavigate();
   const [allow, setAllow] = useState(true);
-  const userID = useAppSelector((state) => state.user.id);
-  const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  // const userID = useAppSelector((state) => state.user.id);
+  // const userName = useAppSelector((state) => state.family.users.filter(user => user.id === userID)[0].set_name);
+  const userName = useAppSelector((state) => state.user.name);
 
   const [info, setInfo] = useState(
     {

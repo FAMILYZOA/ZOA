@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/header";
 import Receiver from "../../components/voice/Record/Receiver";
 import axios from "axios";
@@ -278,6 +278,13 @@ function VoiceRecord() {
   const [isModal, setIsModal] = useState(false);
   const accessToken = useAppSelector((state) => state.token.access);
   const userName = useAppSelector((state) => state.user.name);
+  const familyId = useAppSelector(state => state.family.id);
+  
+  useEffect(() => {
+    if (familyId < 0) {
+      navigate("/");
+    }
+  },[]);
 
   const [info, setInfo] = useState({
     audio: "",
@@ -310,6 +317,11 @@ function VoiceRecord() {
     };
 
     console.log(navigator);
+
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((res) => console.dir(res))
+      .catch((err) => console.dir(err));
 
     navigator.mediaDevices
       .getUserMedia({ audio: true })

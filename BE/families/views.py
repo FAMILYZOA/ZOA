@@ -211,10 +211,12 @@ class FamilySecessionAPIView(UpdateAPIView):
         user = get_object_or_404(User, id=request.user.id)
         serializer = self.serializer_class(instance=user, data={'family_id' : None})
         if request.user.family_id:
-            family = get_object_or_404(Family, id=request.user.family_id.id)
+            family_id = request.user.family_id.id
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-            if family.users:
+            family_user = User.objects.filter(family_id=family_id).exists()
+            if not family_user:
+                family = get_object_or_404(Family, id=request.user.family_id.id)
                 family.delete()
             return Response("family에서 탈퇴하였습니다.", status=status.HTTP_200_OK)
-        return Response("family에 가입되어 있지 않습니다.", status=status.HTTP_403_FORBIDDEN) 
+        return Response("family에 가입되어 있지 않습니다.", status=status.HTTP_403_FORBIDDEN)  
