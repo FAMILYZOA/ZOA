@@ -171,7 +171,6 @@ function Login() {
           },
         })
         .then((res) => {
-          console.log(res.data);
           dispatch(setUserId(res.data.id));
           dispatch(setUserPhone(res.data.phone));
           dispatch(setUserKakaoId(-1));
@@ -189,7 +188,6 @@ function Login() {
               },
             })
               .then((res) => {
-                console.log(res.data);
                 dispatch(setFamilyId(res.data.id));
                 dispatch(setFamilyName(res.data.name));
                 dispatch(setFamilyCreatedAt(res.data.created_at));
