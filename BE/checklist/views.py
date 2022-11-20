@@ -76,35 +76,13 @@ class ChecklistSearchAPIView(ListAPIView):
     def get_queryset(self):
         try:
             id = self.request.parser_context['kwargs']['to_users_id']
-            self.me = User.objects.get(id=id)
-            self.you = User.objects.get(id=self.request.user.id)
-            me = self.me.family_id
-            you = self.you.family_id
+            me = User.objects.get(id=id).family_id
+            you = User.objects.get(id=self.request.user.id).family_id
             if me == you :
                 return Checklist.objects.filter(to_users_id=id).order_by('created_at')
             raise Http404
         except:
             raise Http404
-
-    def get_serializer_context(self):
-        if self.me == self.you :
-            interaction_name = '나'
-        else :
-            if FamilyInteractionName.objects.filter(from_user=self.you,to_user=self.me).exists() :
-                interaction_name = FamilyInteractionName.objects.get(from_user=self.you,to_user=self.me).name
-            else :
-                interaction_name = False
-        """
-        Extra context provided to the serializer class.
-        """
-        return {
-            'request': self.request,
-            'format': self.format_kwarg,
-            'view': self,
-            'interaction_name' : interaction_name,
-            'user_id' : self.me.id,
-            'name' : self.me.name
-        }
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
