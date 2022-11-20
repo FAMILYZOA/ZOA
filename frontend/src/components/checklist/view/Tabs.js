@@ -110,16 +110,21 @@ const ContentsContainer = styled.div`
   margin: 5%;
 `;
 
-function TodoContents({ currentId }) {
+const EmptyNotice = styled.div`
+  text-align: center;
+`
+
+function TodoContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
-  const [load, setLoad] = useState(1);
+  const [load, setLoad] = useState(true);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
   const [select, setSelect] = useState(-1);
+  const userId = useAppSelector(state => state.user.id);
 
   const [click, setClick] = useState(-1);
 
@@ -156,32 +161,34 @@ function TodoContents({ currentId }) {
       //글 불러오기
       setLoad(true);
       if (currentId === target || page === 1) {
-        const res = await axios({
+        axios({
           method: "GET",
           url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
           headers: {
             Authorization: `Bearer ${access}`,
           },
-        });
-        if (res.data) {
-          if (res.data.next === null) {
-            //마지막 페이지
+        })
+          .then((res) => {
+            if (res.data.next === null) {
+              //마지막 페이지
+              endRef.current = true;
+            }
+            if (target === currentId) {
+              setList(list.concat(res.data.results)); // 리스트 추가
+            } else {
+              setTarget(currentId);
+              setList(res.data.results);
+            }
+            preventRef.current = true;
+            setLoad(false); //로딩 종료
+          })
+          .catch(() => {
             endRef.current = true;
-          }
-
-          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-          //     item ? {...item, active:false} : list
-          //   ))); // 리스트 추가
-          if (target === currentId) {
-            setList(list.concat(res.data.results)); // 리스트 추가
-          } else {
-            setTarget(currentId);
-            setList(res.data.results);
-          }
-          preventRef.current = true;
-        }
+            setList([]);
+            preventRef.current = true;
+            setLoad(false); //로딩 종료
+          })
       }
-      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 
@@ -194,24 +201,28 @@ function TodoContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    setSelect(index);
-    setTimeout(() => {
-      const tempList = [...list];
-      const data = new FormData();
-      data.append("status", 1);
-      axios({
-        method: "PUT",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-        data: data,
-      }).then((res) => {
-        setSelect(-1);
-        tempList.splice(index, 1);
-        setList(tempList);
-      });
-    },600)
+    if (userId === currentId) {
+      setSelect(index);
+      setTimeout(() => {
+        const tempList = [...list];
+        const data = new FormData();
+        data.append("status", 1);
+        axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+          data: data,
+        }).then((res) => {
+          setSelect(-1);
+          tempList.splice(index, 1);
+          setList(tempList);
+        });
+      },600)
+    } else {
+      setIsWarn(true);
+    }
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -253,6 +264,9 @@ function TodoContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
+      {list.length === 0 && load === false && (
+        <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
+      )}
       {list && (
         <>
           {list.map((li, index) => {
@@ -261,7 +275,7 @@ function TodoContents({ currentId }) {
               <NoToggle>
                 <BiCheckbox
                   size={32}
-                  color="#FF787F"
+                  color={userId === currentId ? "#FF787F" : "#F2D2CE"}
                   onClick={() => {check(li.id, index)}}
                 />
                 <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
@@ -289,7 +303,7 @@ function TodoContents({ currentId }) {
         </>
       )}
       {load ? (
-        <div>
+        <div style={{textAlign: "center"}}>
           <img src={Spinner} alt="" />
         </div>
       ) : (
@@ -300,18 +314,18 @@ function TodoContents({ currentId }) {
   );
 }
 
-function CompleteContents({ currentId }) {
+function CompleteContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
-  const [load, setLoad] = useState(1);
+  const [load, setLoad] = useState(true);
   const preventRef = useRef(true);
   const obsRef = useRef(null);
   const endRef = useRef(false);
   const [select, setSelect] = useState(-1);
-
   const [click, setClick] = useState(-1);
+  const userId = useAppSelector(state => state.user.id);
 
   useEffect(() => {
     const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
@@ -344,30 +358,33 @@ function CompleteContents({ currentId }) {
     if (currentId >= 0 && page !== 0) {
       setLoad(true);
       if (currentId === target || page === 1) {
-        const res = await axios({
+        axios({
           method: "GET",
           url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=1`,
           headers: {
             Authorization: `Bearer ${access}`,
           },
-        });
-        if (res.data) {
-          if (res.data.next === null) {
-            //마지막 페이지
+        })
+          .then((res) => {
+            if (res.data.next === null) {
+              //마지막 페이지
+              endRef.current = true;
+            }
+            if (target === currentId) {
+              setList(list.concat(res.data.results)); // 리스트 추가
+            } else {
+              setTarget(currentId);
+              setList(res.data.results);
+            }
+            preventRef.current = true;
+            setLoad(false); //로딩 종료
+          })
+          .catch(() => {
             endRef.current = true;
-          }
-          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-          //     item ? {...item, active:false} : list
-          //   ))); // 리스트 추가
-          if (target === currentId) {
-            setList(list.concat(res.data.results));
-          } else {
-            setTarget(currentId);
-            setList(res.data.results);
-          } // 리스트 추가
-          preventRef.current = true;
-        }
-        setLoad(false); //로딩 종료
+            setList([]);
+            preventRef.current = true;
+            setLoad(false); //로딩 종료
+          })
       }
     }
   }, [page, currentId]);
@@ -381,24 +398,28 @@ function CompleteContents({ currentId }) {
   };
 
   const check = (contentsId, index) => {
-    setSelect(index);
-    setTimeout(() => {
-      const data = new FormData();
-      const tempList = [...list];
-      data.append("status", 0);
-      axios({
-        method: "PUT",
-        url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-        data: data,
-      }).then((res) => {
-        setSelect(-1);
-        tempList.splice(index, 1);
-        setList(tempList);
-      });
-    }, 600)
+    if (userId === currentId) {
+      setSelect(index);
+      setTimeout(() => {
+        const data = new FormData();
+        const tempList = [...list];
+        data.append("status", 0);
+        axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_BACK_HOST}/checklist/detail/${contentsId}`,
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+          data: data,
+        }).then((res) => {
+          setSelect(-1);
+          tempList.splice(index, 1);
+          setList(tempList);
+        });
+      }, 600)
+    } else {
+      setIsWarn(true);
+    }
   };
 
     const [showModal, setShowModal] = useState(false);
@@ -441,6 +462,9 @@ function CompleteContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
+      {list.length === 0 && load === false && (
+        <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
+      )}
       {list && (
         <>
           {list.map((li, index) => {
@@ -492,7 +516,7 @@ function CompleteContents({ currentId }) {
   );
 }
 
-function Tabs({ current }) {
+function Tabs({ current, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
   const [todoTab, setTodoTab] = useState(true);
   const [completeTab, setCompleteTab] = useState(false);
@@ -549,9 +573,9 @@ function Tabs({ current }) {
       </TabBox>
       <ContentsBox>
         {todoTab === true ? (
-          <TodoContents currentId={current}></TodoContents>
+          <TodoContents currentId={current} setIsWarn={setIsWarn}></TodoContents>
         ) : (
-          <CompleteContents currentId={current}></CompleteContents>
+          <CompleteContents currentId={current} setIsWarn={setIsWarn}></CompleteContents>
         )}
       </ContentsBox>
     </Container>

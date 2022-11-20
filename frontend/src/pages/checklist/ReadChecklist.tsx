@@ -10,6 +10,7 @@ import { FiPlus } from "react-icons/fi";
 import guide from "../../assets/check_list_guide.png";
 import Modal from "react-modal";
 import { BsQuestionCircleFill } from "react-icons/bs";
+import { ModalContent, ModalDiv as ModalDiv2, ModalBack as ModalBack2 } from "../../components/";
 
 interface modalBackProps {
   toggle?: boolean;
@@ -28,6 +29,7 @@ const HeaderBox = styled.div`
   background-color: #ffcdbe;
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  z-index: 3;
 `;
 
 const Icon = styled.div`
@@ -104,6 +106,8 @@ const ModalBack = styled.div<modalBackProps>`
 `;
 const ModalDiv = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
   top: 13vh;
   right: 2vh;
   height: 75vh;
@@ -122,14 +126,14 @@ const ModalItem = styled.div<modalItemProps>`
   z-index: 4;
   margin-bottom: 1vh;
   margin-left: auto;
-  animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+  animation: fadein-item 0.1s ease-in
+    ${(props) => String(0.1+ props.index * 0.1)}s;
   -moz-animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   -webkit-animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   -o-animation: fadein-item 0.3s ease-in
-    ${(props) => String(0.3 + props.index * 0.2)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   animation-fill-mode: backwards;
   -webkit-animation-fill-mode: backwards;
   -o-animation-fill-mode: backwards;
@@ -181,6 +185,29 @@ const ModalItemImg = styled.img`
   border-radius: 1em;
   object-fit: fill;
 `;
+const Modal24 = styled.div`
+  font-weight: 600;
+  margin-bottom: 0.4em;
+`;
+const ButtonDiv = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.6em;
+`;
+const ConfirmButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35%;
+  height: 2em;
+
+  color: #fff;
+  background-color: #ff787f;
+  border-radius: 0.4em;
+  margin-right: 0.4em;
+`;
 
 function ReadChecklist() {
   const userId = useAppSelector((state) => state.user.id);
@@ -188,6 +215,7 @@ function ReadChecklist() {
   const userImage = useAppSelector((state) => state.user.image);
   const familyId = useAppSelector(state => state.family.id);
   const [isModal, setIsModal] = useState(false);
+  const [isWarn, setIsWarn] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
     name: string;
@@ -315,6 +343,18 @@ function ReadChecklist() {
           ))}
         </ModalDiv>
       )}
+      {isWarn && <ModalBack2 onClick={() => {setIsWarn(false)}} />}
+      {isWarn && (
+        <ModalDiv2>
+          <ModalContent>
+            <Modal24>{"다른 가족의 할 일을"}</Modal24>
+            <Modal24>{"체크할 수 없습니다!"}</Modal24>
+            <ButtonDiv>
+              <ConfirmButton onClick={() => {setIsWarn(false)}} >확인</ConfirmButton>
+            </ButtonDiv>
+          </ModalContent>
+        </ModalDiv2>
+      )}
       <CheckListViewBody>
         <SelectMember
           selectedMember={selectedMember}
@@ -331,7 +371,7 @@ function ReadChecklist() {
           )}
           님의 체크리스트
         </CheckListTitle>
-        <Tabs current={selectedMember.id}></Tabs>
+        <Tabs current={selectedMember.id} setIsWarn={setIsWarn}></Tabs>
       </CheckListViewBody>
     </div>
   );
