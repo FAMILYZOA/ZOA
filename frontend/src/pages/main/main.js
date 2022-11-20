@@ -77,7 +77,7 @@ function Main() {
         navigate('family/select/')
       }
     }
-  }, []);
+  }, [family]);
 
   // 디데이 날짜 설정
   const [date, setDate] = useState({
