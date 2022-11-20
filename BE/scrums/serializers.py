@@ -40,10 +40,9 @@ class ScrumSerializer(ImageSerializer) :
     user_id = serializers.IntegerField(source='user.id',read_only=True)
     name = serializers.CharField(source='user.name',read_only=True)
     set_name = serializers.SerializerMethodField()
-    family_created = serializers.DateField(source='family.created_at',read_only=True)
     class Meta: 
         model = Scrum
-        fields= ('id','user_id','emoji','yesterday','today','name','image','set_name','family_created')
+        fields= ('id','user_id','emoji','yesterday','today','name','image','set_name',)
 
     def get_set_name(self,obj) :
         from_user = self.context.get('request').user
