@@ -170,7 +170,6 @@ function Login() {
             Authorization: `Bearer ${accessToken}`,
           },
         }).then((res) => {
-          console.log(res.data);
           dispatch(setUserId(res.data.id));
           dispatch(setUserPhone(res.data.phone));
           dispatch(setUserKakaoId(-1));
@@ -178,7 +177,7 @@ function Login() {
           dispatch(setUserBirth(res.data.birth));
           dispatch(setUserImage(res.data.image));
           dispatch(setUserName(res.data.name));
-          if (res.data.family_id >= 0) {
+          if (res.data.family_id && Number(res.data.family_id) >= 0) {
             // 가족 정보가 없으면, 가족 정보 불러오기
             axios({
               method: "get",
@@ -187,17 +186,16 @@ function Login() {
                 Authorization: `Bearer ${accessToken}`,
               },
             }).then((res) => {
-              console.log(res.data);
               dispatch(setFamilyId(res.data.id));
               dispatch(setFamilyName(res.data.name));
               dispatch(setFamilyCreatedAt(res.data.created_at));
               dispatch(setFamilyUsers(res.data.users));
               navigate("/", { replace: true });
             });
-          } else {
+          } else if (!res.data.family_id || res.data.family_id < 0) {
             navigate("/", { replace: true });
           }
-        });
+        })
       })
       .catch((err) => {
         activeWarn();
