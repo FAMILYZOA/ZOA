@@ -21,18 +21,19 @@ class ScrumAPIView(ListCreateAPIView) :
     permission_classes = [IsFamilyorBadResponsePermission]
 
     def get_queryset(self):
-        return Scrum.objects.filter(family=self.request.user.family_id)
-    
+        return Scrum.objects.filter(family=self.family)
+
     @swagger_auto_schema(operation_summary="가족 스크럼 조회")
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        self.family = self.request.user.family_id
         if request.GET.get('search') :
             queryset = self.filter_queryset(self.get_queryset())
         else :
             #쿼리 호출 
-            queryset = Scrum.objects.filter(family=self.request.user.family_id,created_at=datetime.today().strftime("%Y-%m-%d"))
+            queryset = Scrum.objects.filter(family=self.family,created_at=datetime.today().strftime("%Y-%m-%d"))
         serializer = self.get_serializer(queryset, many=True)
 
         return Response(serializer.data)
