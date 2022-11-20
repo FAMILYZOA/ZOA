@@ -110,6 +110,10 @@ const ContentsContainer = styled.div`
   margin: 5%;
 `;
 
+const EmptyNotice = styled.div`
+  text-align: center;
+`
+
 function TodoContents({ currentId }) {
   const access = useAppSelector((state) => state.token.access);
   const [target, setTarget] = useState(currentId);
@@ -157,30 +161,32 @@ function TodoContents({ currentId }) {
       //글 불러오기
       setLoad(true);
       if (currentId === target || page === 1) {
-        const res = await axios({
+        axios({
           method: "GET",
           url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=0`,
           headers: {
             Authorization: `Bearer ${access}`,
           },
-        });
-        if (res.data) {
-          if (res.data.next === null) {
-            //마지막 페이지
+        })
+          .then((res) => {
+            if (res.data.next === null) {
+              //마지막 페이지
+              endRef.current = true;
+            }
+            if (target === currentId) {
+              setList(list.concat(res.data.results)); // 리스트 추가
+            } else {
+              setTarget(currentId);
+              setList(res.data.results);
+            }
+            preventRef.current = true;
+          })
+          .catch(() => {
             endRef.current = true;
-          }
-
-          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-          //     item ? {...item, active:false} : list
-          //   ))); // 리스트 추가
-          if (target === currentId) {
-            setList(list.concat(res.data.results)); // 리스트 추가
-          } else {
-            setTarget(currentId);
-            setList(res.data.results);
-          }
-          preventRef.current = true;
-        }
+            setList([]);
+            console.log('empty');
+            preventRef.current = true;
+          })
       }
       setLoad(false); //로딩 종료
     }
@@ -256,6 +262,9 @@ function TodoContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
+      {list.length === 0 && (
+        <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
+      )}
       {list && (
         <>
           {list.map((li, index) => {
@@ -292,7 +301,7 @@ function TodoContents({ currentId }) {
         </>
       )}
       {load ? (
-        <div>
+        <div style={{textAlign: "center"}}>
           <img src={Spinner} alt="" />
         </div>
       ) : (
@@ -347,31 +356,34 @@ function CompleteContents({ currentId }) {
     if (currentId >= 0 && page !== 0) {
       setLoad(true);
       if (currentId === target || page === 1) {
-        const res = await axios({
+        axios({
           method: "GET",
           url: `${process.env.REACT_APP_BACK_HOST}/checklist/${currentId}?page=${page}&search=1`,
           headers: {
             Authorization: `Bearer ${access}`,
           },
-        });
-        if (res.data) {
-          if (res.data.next === null) {
-            //마지막 페이지
+        })
+          .then((res) => {
+            if (res.data.next === null) {
+              //마지막 페이지
+              endRef.current = true;
+            }
+            if (target === currentId) {
+              setList(list.concat(res.data.results)); // 리스트 추가
+            } else {
+              setTarget(currentId);
+              setList(res.data.results);
+            }
+            preventRef.current = true;
+          })
+          .catch(() => {
             endRef.current = true;
-          }
-          //   setList((prev) => [...prev, ...res.data.results].map((item) => (
-          //     item ? {...item, active:false} : list
-          //   ))); // 리스트 추가
-          if (target === currentId) {
-            setList(list.concat(res.data.results));
-          } else {
-            setTarget(currentId);
-            setList(res.data.results);
-          } // 리스트 추가
-          preventRef.current = true;
-        }
-        setLoad(false); //로딩 종료
+            setList([]);
+            console.log('empty');
+            preventRef.current = true;
+          })
       }
+      setLoad(false); //로딩 종료
     }
   }, [page, currentId]);
 
@@ -446,6 +458,9 @@ function CompleteContents({ currentId }) {
       >
         <ImgTag src={modalimg} alt="" onClick={closeModal} />
       </Modal>
+      {list.length === 0 && (
+        <EmptyNotice> 할 일 목록이 비어 있습니다. </EmptyNotice>
+      )}
       {list && (
         <>
           {list.map((li, index) => {

@@ -20,6 +20,7 @@ const UnselectedGroup = styled.div`
   flex-wrap: nowrap;
   overflow-x: hidden;
   float: right;
+  flex-direction: row-reverse;
 `;
 
 const UnselectedMemberProfile = styled.div`
