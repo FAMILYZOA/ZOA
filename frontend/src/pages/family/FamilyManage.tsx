@@ -314,6 +314,7 @@ ${inviteLink}`;
       if (os === "iOS") {
         setTimeout(async () => await navigator.clipboard.writeText(text));
       } else if (os === "Android OS") {
+        setTimeout(async () => await navigator.clipboard.writeText(text));
       } else {
         await navigator.clipboard.writeText(text);
       }

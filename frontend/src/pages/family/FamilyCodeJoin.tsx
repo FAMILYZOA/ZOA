@@ -42,7 +42,7 @@ const NameEditInput = styled.input`
   border-right-width: 0;
   border-top-width: 0;
   border-bottom: 1;
-  width: 80%;
+  width: 90%;
   height: 1em;
   background-color: transparent;
   border-color: #ffd5d7;
@@ -51,6 +51,7 @@ const NameEditInput = styled.input`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 1.2em;
+  margin: auto 5%;
 `;
 const FamilyParticipateBtn = styled.button<buttonProps>`
   width: 90%;
