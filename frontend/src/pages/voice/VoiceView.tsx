@@ -6,6 +6,9 @@ import { useAppSelector } from "../../app/hooks";
 import { VoiceMessage } from "../../components/voice";
 import { FiPlus } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
+import guide from "../../assets/voice_mail_guide.png";
+import { BsQuestionCircleFill } from "react-icons/bs";
+import Modal from "react-modal";
 
 interface highLightProps {
   isLeft?: boolean;
@@ -254,18 +257,65 @@ const HeaderLabel = styled.div`
   line-height: 56px;
 `;
 
+const ImgTag = styled.img`
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+`
+
+const Icon = styled.div`
+  margin: auto;
+  display: flex;
+  align-items: center;
+`;
+
+
 const Header = () => {
+  // 모달 설정
+  const [showModal, setShowModal] = useState(false);  
+  const openModal = () => {
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyle = {
+    content: {
+      inset:" 2% 2%",
+      width: "96%",
+      height: "96%",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0"
+    },
+  };
   const navigate = useNavigate();
   const moveToCreate = () => {
     navigate("/voice/record");
   };
   return (
-    <HeaderBox>
-      <IconBox onClick={moveToCreate}>
-        <FiPlus size={"24"} />
-      </IconBox>
-      <HeaderLabel>{"음성메시지"}</HeaderLabel>
-    </HeaderBox>
+    <>
+      <Modal
+        isOpen={showModal}
+        ariaHideApp={false}
+        onRequestClose={closeModal}
+        style={modalStyle}
+      >
+        <ImgTag src={guide} alt="" onClick={closeModal} />
+      </Modal>
+      <HeaderBox>
+        <IconBox onClick={moveToCreate}>
+          <FiPlus size={"24"} />
+        </IconBox>
+        <HeaderLabel>{"음성메시지"}</HeaderLabel>
+        <Icon onClick={openModal}>
+          <BsQuestionCircleFill size="24" color="#ff787f" />
+        </Icon>
+      </HeaderBox>
+    </>
   );
 };
 
