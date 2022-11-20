@@ -40,7 +40,7 @@ const App = () => {
   const [command, setCommand] = useState('');
   const [connection, toggleConnection] = useState(false);
   const [os, setOs] = useState('');
-  const url = {uri: 'https://familyzoa.com'};
+  const url = {uri: 'https://k7b1031.p.ssafy.io'};
   const webViewRef = useRef();
   const actionSheetRef = useRef();
 

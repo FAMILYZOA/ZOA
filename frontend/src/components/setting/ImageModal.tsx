@@ -135,7 +135,7 @@ const FontModal = (props: modalType) => {
     if ((os === "Android OS" || os === "iOS") && window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage("imagePicker,profile");
       dispatch(toggleUpload(true));
-      props.toggle(false);
+      //props.toggle(false);
     } else {
       photoInput.current.click();
     }
@@ -149,53 +149,57 @@ const FontModal = (props: modalType) => {
   };
 
   const confirmModal = () => {
-    const data = new FormData();
-    if (photo !== undefined) {
-      data.append("image", photo);
-      axios({
-        method: "PUT",
-        url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: data,
-      })
-        .then((res) => {
-          dispatch(setUserImage(res.data.image));
-          if (familyId >= 0) {
-            axios({
-              method: "get",
-              url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }).then((res) => {
-              dispatch(setFamilyUsers(res.data.users));
-            });
-          }
-        })
-        .catch(async (err) => {
-          switch (err.response.status) {
-            case 401:
-              const code = err.response.data.code;
-              if (code === "token_not_valid") {
-                const tokens = await AuthRefresh(refreshToken);
-                if (tokens) {
-                  dispatch(setAccessToken(tokens.access));
-                  dispatch(setRefreshToken(tokens.refresh));
-                } else {
-                  dispatch(setAccessToken(""));
-                  dispatch(setRefreshToken(""));
-
-                  navigate("/login", { replace: true });
-                }
-              }
-              break;
-            default:
-              break;
-          }
-        });
+    if (os === "Android OS" || os === "iOS") {
       props.toggle(false);
+    } else {
+      const data = new FormData();
+      if (photo !== undefined) {
+        data.append("image", photo);
+        axios({
+          method: "PUT",
+          url: `${process.env.REACT_APP_BACK_HOST}/accounts/profile/`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: data,
+        })
+          .then((res) => {
+            dispatch(setUserImage(res.data.image));
+            if (familyId >= 0) {
+              axios({
+                method: "get",
+                url: `${process.env.REACT_APP_BACK_HOST}/family/${familyId}`,
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }).then((res) => {
+                dispatch(setFamilyUsers(res.data.users));
+              });
+            }
+          })
+          .catch(async (err) => {
+            switch (err.response.status) {
+              case 401:
+                const code = err.response.data.code;
+                if (code === "token_not_valid") {
+                  const tokens = await AuthRefresh(refreshToken);
+                  if (tokens) {
+                    dispatch(setAccessToken(tokens.access));
+                    dispatch(setRefreshToken(tokens.refresh));
+                  } else {
+                    dispatch(setAccessToken(""));
+                    dispatch(setRefreshToken(""));
+
+                    navigate("/login", { replace: true });
+                  }
+                }
+                break;
+              default:
+                break;
+            }
+          });
+        props.toggle(false);
+      }
     }
   };
 
@@ -208,10 +212,7 @@ const FontModal = (props: modalType) => {
     >
       <CloseBtnStyle fontSize={16} color={"#888888"} onClick={closeModal} />
       {isUpload ? (
-        <img
-          src={"../../assets/Spinner.gif"}
-          alt="profile loading spinner"
-        />
+        <img src={"../../assets/Spinner.gif"} alt="profile loading spinner" />
       ) : (
         <ModalContentDiv>
           <ImageTitleDiv>프로필 이미지 변경</ImageTitleDiv>

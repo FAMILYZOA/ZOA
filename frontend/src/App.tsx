@@ -230,10 +230,12 @@ function App() {
       data: data,
     })
       .then((res) => {
+        console.dir(res)
         dispatch(toggleUpload(false));
         dispatch(setUserImage(res.data.image));
       })
       .catch(async (err) => {
+        console.dir(err)
         switch (err.response.status) {
           case 401:
             const code = err.response.data.code;
