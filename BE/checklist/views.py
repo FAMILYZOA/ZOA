@@ -79,7 +79,7 @@ class ChecklistSearchAPIView(ListAPIView):
             me = User.objects.get(id=id).family_id
             you = User.objects.get(id=self.request.user.id).family_id
             if me == you :
-                return Checklist.objects.filter(to_users_id=id).order_by('created_at')
+                return Checklist.objects.select_related('from_user_id').select_related('photo').filter(to_users_id=id).order_by('created_at')
             raise Http404
         except:
             raise Http404
