@@ -6,9 +6,9 @@
 
   ## **☀️ 서비스 소개**
 
-  > :paintbrush: Figma ( [링크](https://www.figma.com/file/tYLK0m5qS5ZoQ9cSEIZhMI/%EC%9E%90%EC%9C%A8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=3%3A2&t=hZ5Niv7cLkONZYPy-1) ) / :cd: ERD ( [링크](./산출물/B103_ERD.pdf) )  / :page_facing_up: 기능명세서 ( [링크](./산출물/B103_기능명세서.pdf) )  / :file_folder: API명세서 ( [링크](./산출물/B103_API명세서.pdf) )
+  > :paintbrush: Figma ( [링크](https://www.figma.com/file/tYLK0m5qS5ZoQ9cSEIZhMI/%EC%9E%90%EC%9C%A8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=3%3A2&t=hZ5Niv7cLkONZYPy-1) ) / :cd: ERD ( [링크](./docs/B103_ERD.pdf) )  / :page_facing_up: 기능명세서 ( [링크](./docs/B103_기능명세서.pdf) )  / :file_folder: API명세서 ( [링크](./docs/B103_API명세서.pdf) )
   >
-  > :notebook_with_decorative_cover: 시연 시나리오 ( [링크](./exec/자율프로젝트_대전1반_B103_시연시나리오.pdf) ) / 
+  > :notebook_with_decorative_cover: 시연 시나리오 ( [링크](./exec/자율프로젝트_대전1반_B103_시연시나리오.pdf) ) / :film_projector: 발표 자료 ( [링크](./docs/자율PJT_대전_1반_B103_발표자료.pdf) ) / :tv: UCC  ( [링크](https://www.youtube.com/watch?v=k71O_0NrBNw) )
   
   ------
   
