@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import notFound from "../../assets/404.png";
+
+const notFound = 'https://user-images.githubusercontent.com/97648026/203670091-9321f2de-9794-42f5-8a2e-a3d0181e4e07.png';
 
 const NotFound = () => {
     const navigate = useNavigate();

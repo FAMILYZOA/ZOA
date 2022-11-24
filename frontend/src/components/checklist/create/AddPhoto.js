@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import plus from "../../../assets/plus.png";
 import { BsTrashFill } from "react-icons/bs";
 import { detect } from "detect-browser";
 import store from "../../../app/store";
 import { dataURLtoFile, makeid } from "../../../features/mobile/mobileUtil";
+
+const plus = 'https://user-images.githubusercontent.com/97648026/203668375-52410468-5a83-42cc-a062-a8f52ebdc83b.png'
 
 const Container = styled.div`
   margin: 0 5% 8px;

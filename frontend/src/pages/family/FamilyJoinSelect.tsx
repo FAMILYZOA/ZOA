@@ -2,10 +2,8 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
-import logo from "../../assets/white-logo.png";
-import greeting from "../../assets/zoa_greetings.png"
-import {  IoLogOut } from "react-icons/io5";
-import { useAppDispatch } from './../../app/hooks';
+import { IoLogOut } from "react-icons/io5";
+import { useAppDispatch } from "./../../app/hooks";
 import {
   setAccessToken,
   setRefreshToken,
@@ -13,6 +11,10 @@ import {
 import { setFcmTokenId } from "../../features/mobile/mobileSlice";
 import axios from "axios";
 
+const logo =
+  "https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png";
+const greeting =
+  "https://user-images.githubusercontent.com/97648026/203668446-aeea6d99-71d8-4968-b019-5b73253dc17a.png";
 const HeaderBox = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
@@ -48,7 +50,7 @@ const Greetings = styled.div`
   font-size: 2.4em;
   font-weight: 700;
   object-fit: contain;
-`
+`;
 const Guide = styled.div`
   width: 80%;
   margin: 0 auto 1.6em;
@@ -56,14 +58,14 @@ const Guide = styled.div`
   text-align: center;
   color: #707070;
   line-height: 1.3em;
-`
+`;
 const JoinContents = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 3em 0 0;
-`
+`;
 const BtnBox = styled.div`
   width: 100%;
   display: flex;
@@ -93,11 +95,9 @@ const FamilyParticipateBtn = styled.button`
   color: white;
 `;
 
-
-
 const FamilyJoinSelect = () => {
   const navigate = useNavigate();
-  const familyId = useAppSelector(state => state.family.id);
+  const familyId = useAppSelector((state) => state.family.id);
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.token.access);
   const refreshToken = useAppSelector((state) => state.token.refresh);
@@ -106,42 +106,41 @@ const FamilyJoinSelect = () => {
     if (familyId >= 0) {
       navigate("/");
     }
-  }, [familyId])
+  }, [familyId]);
 
-    const logout = () => {
-      if(window.confirm ("로그아웃 하시겠습니까?")){
+  const logout = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_BACK_HOST}/accounts/logout/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          refresh: `${refreshToken}`,
+        },
+      }).then(() => {
+        dispatch(setAccessToken("")); // 로그아웃 하기
+        dispatch(setRefreshToken(""));
+        localStorage.removeItem("token");
         axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_BACK_HOST}/accounts/logout/`,
+          method: "DELETE",
+          url: `${process.env.REACT_APP_BACK_HOST}/event/FCM/${fcmTokenId}/`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-          data: {
-            refresh: `${refreshToken}`,
-          },
-        }).then(() => {
-          dispatch(setAccessToken("")); // 로그아웃 하기
-          dispatch(setRefreshToken(""));
-          localStorage.removeItem("token");
-          axios({
-            method: "DELETE",
-            url: `${process.env.REACT_APP_BACK_HOST}/event/FCM/${fcmTokenId}/`,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+        })
+          .then((res) => {
+            dispatch(setFcmTokenId(""));
           })
-            .then((res) => {
-              dispatch(setFcmTokenId(""));
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          navigate("/intro", { replace: true });
-        });
-      } else{
-        
-      }
-    };
+          .catch((err) => {
+            console.log(err);
+          });
+        navigate("/intro", { replace: true });
+      });
+    } else {
+    }
+  };
 
   return (
     <>
@@ -151,7 +150,7 @@ const FamilyJoinSelect = () => {
           <img src={logo} alt="" />
         </ImgBox>
         <IconBox onClick={logout}>
-          <IoLogOut size="24" color="#ff787f"/>
+          <IoLogOut size="24" color="#ff787f" />
         </IconBox>
       </HeaderBox>
       <JoinContents>
@@ -188,6 +187,6 @@ const FamilyJoinSelect = () => {
       </JoinContents>
     </>
   );
-}
+};
 
 export default FamilyJoinSelect;

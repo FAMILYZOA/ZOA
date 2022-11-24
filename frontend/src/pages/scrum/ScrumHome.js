@@ -8,16 +8,17 @@ import axios from "axios";
 import { useAppSelector } from "../../app/hooks";
 import { Emoji } from "emoji-picker-react";
 import { BsQuestionCircleFill } from "react-icons/bs";
-import guide from "../../assets/hello_guide.png"
 import Modal from "react-modal";
 
+const guide =
+  "https://user-images.githubusercontent.com/97648026/203668356-4dbbdefa-4c03-452a-a7f5-3e3546abcecb.png";
 
 const ImgTag = styled.img`
   object-fit: fill;
   width: 100%;
   height: 100%;
   margin: 0;
-`
+`;
 
 const HeaderBox = styled.div`
   display: grid;
@@ -41,8 +42,6 @@ const HeaderLabel = styled.div`
   text-align: center;
   line-height: 56px;
 `;
-
-
 
 const DateBox = styled.div`
   width: 100%;
@@ -187,7 +186,7 @@ const ScrumHome = () => {
     }
   }
 
-  const [showModal, setShowModal] = useState(false);  
+  const [showModal, setShowModal] = useState(false);
   const openModal = () => {
     setShowModal(true);
   };
@@ -196,14 +195,14 @@ const ScrumHome = () => {
   };
   const modalStyle = {
     content: {
-      inset:" 2% 2%",
+      inset: " 2% 2%",
       width: "96%",
       height: "96%",
       border: "none",
       backgroundColor: "rgba(0,0,0,0)",
       display: "flex",
       justifyContent: "center",
-      padding: "0"
+      padding: "0",
     },
   };
 
@@ -397,7 +396,9 @@ const ScrumHome = () => {
           {familyId > 0 ? (
             famScrum
               .slice(0, -2)
-              .map((item, index) => <ScrumFamItem {...item} day={day} key={index} />)
+              .map((item, index) => (
+                <ScrumFamItem {...item} day={day} key={index} />
+              ))
           ) : (
             <></>
           )}

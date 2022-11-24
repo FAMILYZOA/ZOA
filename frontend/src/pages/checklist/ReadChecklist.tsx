@@ -7,10 +7,16 @@ import Tabs from "../../components/checklist/view/Tabs";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
-import guide from "../../assets/check_list_guide.png";
 import Modal from "react-modal";
 import { BsQuestionCircleFill } from "react-icons/bs";
-import { ModalContent, ModalDiv as ModalDiv2, ModalBack as ModalBack2 } from "../../components/";
+import {
+  ModalContent,
+  ModalDiv as ModalDiv2,
+  ModalBack as ModalBack2,
+} from "../../components/";
+
+const guide =
+  "https://user-images.githubusercontent.com/97648026/203668321-8a93cfee-50a0-40ef-aba8-84bcee05b876.png";
 
 interface modalBackProps {
   toggle?: boolean;
@@ -59,7 +65,7 @@ const ImgTag = styled.img`
   width: 100%;
   height: 100%;
   margin: 0;
-`
+`;
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
@@ -127,7 +133,7 @@ const ModalItem = styled.div<modalItemProps>`
   margin-bottom: 1vh;
   margin-left: auto;
   animation: fadein-item 0.1s ease-in
-    ${(props) => String(0.1+ props.index * 0.1)}s;
+    ${(props) => String(0.1 + props.index * 0.1)}s;
   -moz-animation: fadein-item 0.3s ease-in
     ${(props) => String(0.1 + props.index * 0.1)}s;
   -webkit-animation: fadein-item 0.3s ease-in
@@ -213,7 +219,7 @@ function ReadChecklist() {
   const userId = useAppSelector((state) => state.user.id);
   const userName = useAppSelector((state) => state.user.name);
   const userImage = useAppSelector((state) => state.user.image);
-  const familyId = useAppSelector(state => state.family.id);
+  const familyId = useAppSelector((state) => state.family.id);
   const [isModal, setIsModal] = useState(false);
   const [isWarn, setIsWarn] = useState(false);
   const [selectedMember, setSelectedMember] = useState<{
@@ -247,12 +253,12 @@ function ReadChecklist() {
     setUnSelectedMember(tempMember);
     setIsModal(false);
   };
-  
+
   useEffect(() => {
     if (familyId < 0) {
       navigate("/");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     let index: number = 0;
@@ -282,7 +288,7 @@ function ReadChecklist() {
   };
 
   // 모달 설정
-  const [showModal, setShowModal] = useState(false);  
+  const [showModal, setShowModal] = useState(false);
   const openModal = () => {
     setShowModal(true);
   };
@@ -291,14 +297,14 @@ function ReadChecklist() {
   };
   const modalStyle = {
     content: {
-      inset:" 2% 2%",
+      inset: " 2% 2%",
       width: "96%",
       height: "96%",
       border: "none",
       backgroundColor: "rgba(0,0,0,0)",
       display: "flex",
       justifyContent: "center",
-      padding: "0"
+      padding: "0",
     },
   };
 
@@ -318,7 +324,7 @@ function ReadChecklist() {
         </Icon>
         <HeaderLabel>할 일 목록</HeaderLabel>
         <Icon onClick={openModal}>
-          <div style={{margin: "0 8px"}}>
+          <div style={{ margin: "0 8px" }}>
             <BsQuestionCircleFill size="24" color="#ff787f" />
           </div>
           <div onClick={navigateToCreate}>
@@ -343,14 +349,26 @@ function ReadChecklist() {
           ))}
         </ModalDiv>
       )}
-      {isWarn && <ModalBack2 onClick={() => {setIsWarn(false)}} />}
+      {isWarn && (
+        <ModalBack2
+          onClick={() => {
+            setIsWarn(false);
+          }}
+        />
+      )}
       {isWarn && (
         <ModalDiv2>
           <ModalContent>
             <Modal24>{"다른 가족의 할 일을"}</Modal24>
             <Modal24>{"체크할 수 없습니다!"}</Modal24>
             <ButtonDiv>
-              <ConfirmButton onClick={() => {setIsWarn(false)}} >확인</ConfirmButton>
+              <ConfirmButton
+                onClick={() => {
+                  setIsWarn(false);
+                }}
+              >
+                확인
+              </ConfirmButton>
             </ButtonDiv>
           </ModalContent>
         </ModalDiv2>

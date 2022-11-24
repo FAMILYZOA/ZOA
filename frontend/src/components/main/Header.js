@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
-import guide from "../../assets/mainmain_guide.png";
 import Modal from "react-modal";
 import { BsQuestionCircleFill } from "react-icons/bs";
+
+const guide = "https://user-images.githubusercontent.com/97648026/203668288-b007313d-2156-4cea-aa81-0d3d403fc114.png"
 
 const HeaderBox = styled.div`
   display: flex;

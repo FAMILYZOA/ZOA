@@ -25,9 +25,11 @@ import {
   setFamilyName,
   setFamilyUsers,
 } from "../../../features/family/familySlice";
-import logo from "../../../assets/white-logo.png";
 import axios from "axios";
 import { isFcmRegister } from "../../../features/mobile/mobileSlice";
+
+const logo = 'https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png';
+
 /*global Kakao*/
 
 const Header = styled.div`

@@ -1,16 +1,22 @@
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import logo from "../../assets/white-logo.png";
-import { setFamilyId, setFamilyName, setFamilyUsers, setFamilyCreatedAt } from "../../features/family/familySlice"
+import {
+  setFamilyId,
+  setFamilyName,
+  setFamilyUsers,
+  setFamilyCreatedAt,
+} from "../../features/family/familySlice";
 import { IoIosArrowBack } from "react-icons/io";
+
+const logo =
+  "https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png";
 
 interface buttonProps {
   isCode?: boolean;
 }
-
 
 const HeaderBox = styled.div`
   display: grid;
@@ -23,7 +29,6 @@ const HeaderBox = styled.div`
   height: 56px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   z-index: 1;
-  
 `;
 
 const IconBox = styled.div`
@@ -85,22 +90,21 @@ const FamilyParticipateBtn = styled.button<buttonProps>`
   opacity: ${(props) => (props.isCode ? "1" : "0.5")};
 `;
 const ValidMessage = styled.div`
-  color: #FF787F;
+  color: #ff787f;
   height: 1.2em;
   font-size: 0.8em;
-`
-
+`;
 
 const FamilyCodeJoin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [code, setCode] = useState<string>("");
   const [isValid, setIsVaild] = useState<boolean>(true);
-  const accessToken = useAppSelector(state => state.token.access);
+  const accessToken = useAppSelector((state) => state.token.access);
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
-  }
+  };
   const handleSubmit = () => {
     console.log(code);
     axios({
@@ -111,7 +115,7 @@ const FamilyCodeJoin = () => {
       },
       data: {
         invitationcode: `${code}`,
-      }
+      },
     })
       .then((res) => {
         axios({
@@ -132,19 +136,18 @@ const FamilyCodeJoin = () => {
       })
       .catch(() => {
         setIsVaild(false);
-      })
-  }
-
-  useEffect(() => {
-    if(!localStorage.getItem("access_token")) {
-      navigate("/intro");
-    }
-  },[])
-
-  const moveToBack = () => {
-    navigate("/family/select/")
+      });
   };
 
+  useEffect(() => {
+    if (!localStorage.getItem("access_token")) {
+      navigate("/intro");
+    }
+  }, []);
+
+  const moveToBack = () => {
+    navigate("/family/select/");
+  };
 
   return (
     <>
@@ -180,6 +183,6 @@ const FamilyCodeJoin = () => {
       </CodeJoinBody>
     </>
   );
-}
+};
 
 export default FamilyCodeJoin;

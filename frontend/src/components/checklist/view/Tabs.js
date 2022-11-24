@@ -4,8 +4,10 @@ import axios from "axios";
 import { useAppSelector } from "../../../app/hooks";
 import { BsFillCheckSquareFill } from "react-icons/bs";
 import { BiCheckbox } from "react-icons/bi";
-import Spinner from "../../../assets/Spinner.gif";
 import Modal from "react-modal";
+
+const Spinner =
+  "https://user-images.githubusercontent.com/97648026/203671082-b52fcbc8-84d6-433e-be2f-f02800aef8ec.gif";
 
 const Container = styled.div``;
 
@@ -112,7 +114,7 @@ const ContentsContainer = styled.div`
 
 const EmptyNotice = styled.div`
   text-align: center;
-`
+`;
 
 function TodoContents({ currentId, setIsWarn }) {
   const access = useAppSelector((state) => state.token.access);
@@ -124,7 +126,7 @@ function TodoContents({ currentId, setIsWarn }) {
   const obsRef = useRef(null);
   const endRef = useRef(false);
   const [select, setSelect] = useState(-1);
-  const userId = useAppSelector(state => state.user.id);
+  const userId = useAppSelector((state) => state.user.id);
 
   const [click, setClick] = useState(-1);
 
@@ -187,7 +189,7 @@ function TodoContents({ currentId, setIsWarn }) {
             setList([]);
             preventRef.current = true;
             setLoad(false); //로딩 종료
-          })
+          });
       }
     }
   }, [page, currentId]);
@@ -219,7 +221,7 @@ function TodoContents({ currentId, setIsWarn }) {
           tempList.splice(index, 1);
           setList(tempList);
         });
-      },600)
+      }, 600);
     } else {
       setIsWarn(true);
     }
@@ -249,7 +251,7 @@ function TodoContents({ currentId, setIsWarn }) {
       display: "flex",
       justifyContent: "center",
       padding: "0",
-      margin: "auto"
+      margin: "auto",
     },
   };
 
@@ -270,40 +272,49 @@ function TodoContents({ currentId, setIsWarn }) {
       {list && (
         <>
           {list.map((li, index) => {
-            return(
-            <CheckItem key={index} isDisplay={select !== index}>
-              <NoToggle>
-                <BiCheckbox
-                  size={32}
-                  color={userId === currentId ? "#FF787F" : "#F2D2CE"}
-                  onClick={() => {check(li.id, index)}}
-                />
-                <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
-                  {li.text}
-                </p>
-              </NoToggle>
-              <Toggle id={li.id} current={click} photo={li.photo}>
-                <ToggleContainer>
-                  <p>From. {li.from_user_id.name}</p>
-                  <span>
-                    {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
-                    {li.created_at.slice(8, 10)}
-                  </span>
-                  {li.photo !== null ? (
-                    <ImgBox>
-                      <img src={li.photo.image} alt="" onClick={()=>{openModal(li.photo.image)}}/>
-                    </ImgBox>
-                  ) : (
-                    <></>
-                  )}
-                </ToggleContainer>
-              </Toggle>
-            </CheckItem>
-          )})}
+            return (
+              <CheckItem key={index} isDisplay={select !== index}>
+                <NoToggle>
+                  <BiCheckbox
+                    size={32}
+                    color={userId === currentId ? "#FF787F" : "#F2D2CE"}
+                    onClick={() => {
+                      check(li.id, index);
+                    }}
+                  />
+                  <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
+                    {li.text}
+                  </p>
+                </NoToggle>
+                <Toggle id={li.id} current={click} photo={li.photo}>
+                  <ToggleContainer>
+                    <p>From. {li.from_user_id.name}</p>
+                    <span>
+                      {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
+                      {li.created_at.slice(8, 10)}
+                    </span>
+                    {li.photo !== null ? (
+                      <ImgBox>
+                        <img
+                          src={li.photo.image}
+                          alt=""
+                          onClick={() => {
+                            openModal(li.photo.image);
+                          }}
+                        />
+                      </ImgBox>
+                    ) : (
+                      <></>
+                    )}
+                  </ToggleContainer>
+                </Toggle>
+              </CheckItem>
+            );
+          })}
         </>
       )}
       {load ? (
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
           <img src={Spinner} alt="" />
         </div>
       ) : (
@@ -325,7 +336,7 @@ function CompleteContents({ currentId, setIsWarn }) {
   const endRef = useRef(false);
   const [select, setSelect] = useState(-1);
   const [click, setClick] = useState(-1);
-  const userId = useAppSelector(state => state.user.id);
+  const userId = useAppSelector((state) => state.user.id);
 
   useEffect(() => {
     const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
@@ -384,7 +395,7 @@ function CompleteContents({ currentId, setIsWarn }) {
             setList([]);
             preventRef.current = true;
             setLoad(false); //로딩 종료
-          })
+          });
       }
     }
   }, [page, currentId]);
@@ -416,40 +427,39 @@ function CompleteContents({ currentId, setIsWarn }) {
           tempList.splice(index, 1);
           setList(tempList);
         });
-      }, 600)
+      }, 600);
     } else {
       setIsWarn(true);
     }
   };
 
-    const [showModal, setShowModal] = useState(false);
-    const [modalimg, setImg] = useState("");
-    const openModal = (imgurl) => {
-      setShowModal(true);
-      setImg(imgurl);
-    };
-    const closeModal = () => {
-      setShowModal(false);
-    };
-    const modalStyle = {
-      overlay: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-      content: {
-        inset: "auto 10%",
-        width: "80%",
-        height: "auto",
-        border: "none",
-        backgroundColor: "rgba(0,0,0,0)",
-        display: "flex",
-        justifyContent: "center",
-        padding: "0",
-        margin: "auto",
-      },
-    };
-
+  const [showModal, setShowModal] = useState(false);
+  const [modalimg, setImg] = useState("");
+  const openModal = (imgurl) => {
+    setShowModal(true);
+    setImg(imgurl);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const modalStyle = {
+    overlay: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    content: {
+      inset: "auto 10%",
+      width: "80%",
+      height: "auto",
+      border: "none",
+      backgroundColor: "rgba(0,0,0,0)",
+      display: "flex",
+      justifyContent: "center",
+      padding: "0",
+      margin: "auto",
+    },
+  };
 
   return (
     <ContentsContainer>
@@ -469,39 +479,44 @@ function CompleteContents({ currentId, setIsWarn }) {
         <>
           {list.map((li, index) => {
             return (
-            <CheckItem key={index} isDisplay={select !== index}>
-              <NoToggle>
-                <IconBox onClick={() => {check(li.id, index)}}>
-                  <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
-                </IconBox>
-                <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
-                  {li.text}
-                </p>
-              </NoToggle>
-              <Toggle id={li.id} current={click} photo={li.photo}>
-                <ToggleContainer>
-                  <p>From. {li.from_user_id.name}</p>
-                  <span>
-                    {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
-                    {li.created_at.slice(8, 10)}
-                  </span>
-                  {li.photo !== null ? (
-                    <ImgBox>
-                      <img
-                        src={li.photo.image}
-                        alt=""
-                        onClick={() => {
-                          openModal(li.photo.image);
-                        }}
-                      />
-                    </ImgBox>
-                  ) : (
-                    <></>
-                  )}
-                </ToggleContainer>
-              </Toggle>
-            </CheckItem>
-          )})}
+              <CheckItem key={index} isDisplay={select !== index}>
+                <NoToggle>
+                  <IconBox
+                    onClick={() => {
+                      check(li.id, index);
+                    }}
+                  >
+                    <BsFillCheckSquareFill size={18.6} color="#F2D2CE" />
+                  </IconBox>
+                  <p onClick={() => clickItem(li.id)} style={{ flex: "1" }}>
+                    {li.text}
+                  </p>
+                </NoToggle>
+                <Toggle id={li.id} current={click} photo={li.photo}>
+                  <ToggleContainer>
+                    <p>From. {li.from_user_id.name}</p>
+                    <span>
+                      {li.created_at.slice(0, 4)}.{li.created_at.slice(5, 7)}.
+                      {li.created_at.slice(8, 10)}
+                    </span>
+                    {li.photo !== null ? (
+                      <ImgBox>
+                        <img
+                          src={li.photo.image}
+                          alt=""
+                          onClick={() => {
+                            openModal(li.photo.image);
+                          }}
+                        />
+                      </ImgBox>
+                    ) : (
+                      <></>
+                    )}
+                  </ToggleContainer>
+                </Toggle>
+              </CheckItem>
+            );
+          })}
         </>
       )}
       {load ? (
@@ -573,9 +588,15 @@ function Tabs({ current, setIsWarn }) {
       </TabBox>
       <ContentsBox>
         {todoTab === true ? (
-          <TodoContents currentId={current} setIsWarn={setIsWarn}></TodoContents>
+          <TodoContents
+            currentId={current}
+            setIsWarn={setIsWarn}
+          ></TodoContents>
         ) : (
-          <CompleteContents currentId={current} setIsWarn={setIsWarn}></CompleteContents>
+          <CompleteContents
+            currentId={current}
+            setIsWarn={setIsWarn}
+          ></CompleteContents>
         )}
       </ContentsBox>
     </Container>

@@ -11,10 +11,11 @@ import { FaPlus } from "react-icons/fa";
 import CreateSchedule from "./CreateSchedule";
 import DetailSchedule from "./DetailSchedule";
 import Draggable from "react-draggable";
-import one from "../../assets/calendar_main_guide.png";
-import two from "../../assets/calendar_list_guide.png";
-import three from "../../assets/calendar_create_guide.png";
 import { BsQuestionCircleFill } from "react-icons/bs";
+
+const one = 'https://user-images.githubusercontent.com/97648026/203668293-91ce3a25-367c-451e-a9cf-d865297d5432.png';
+const two = 'https://user-images.githubusercontent.com/97648026/203668309-9cf67afa-8817-442f-a6b5-775c5cfd20fc.png';
+const three = 'https://user-images.githubusercontent.com/97648026/203668315-8fa57c80-be29-44ad-8744-b957b00af907.png';
 
 const fadeIn = keyframes`
   0% {

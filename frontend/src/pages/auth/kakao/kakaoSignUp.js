@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import logo from "../../../assets/white-logo.png";
+
+const logo =
+  "https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png";
 
 const Header = styled.div`
   display: flex;
@@ -317,7 +319,6 @@ function KakaoSignup() {
       });
   };
 
-
   const push = () => {
     if (cerCheck === false) {
       setNwarn(true);
@@ -329,36 +330,38 @@ function KakaoSignup() {
         setPwarn(false);
         setBwarn(true);
       } else {
-          const data = new FormData();
-          data.append("kakao_id", info.kakao_id);
-          data.append("name", info.name);
-          data.append("image", info.image);
-          data.append("phone", info.phone.replaceAll("-", ""));
-          data.append(
-            "birth",
-            `${year}-${("00" + month.toString()).slice(-2)}-${("00" + day.toString()).slice(-2)}`
-          );
-          axios({
-            method: "POST",
-            url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
-            data: data,
+        const data = new FormData();
+        data.append("kakao_id", info.kakao_id);
+        data.append("name", info.name);
+        data.append("image", info.image);
+        data.append("phone", info.phone.replaceAll("-", ""));
+        data.append(
+          "birth",
+          `${year}-${("00" + month.toString()).slice(-2)}-${(
+            "00" + day.toString()
+          ).slice(-2)}`
+        );
+        axios({
+          method: "POST",
+          url: `${process.env.REACT_APP_BACK_HOST}/accounts/kakao/sign/`,
+          data: data,
+        })
+          .then((res) => {
+            if (res.status === 201) {
+              alert("회원가입이 완료되었습니다. 로그인 후 이용해주세요.");
+              navigate("/");
+            }
           })
-            .then((res) => {
-              if (res.status === 201) {
-                alert("회원가입이 완료되었습니다. 로그인 후 이용해주세요.");
-                navigate("/");
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.response.status === 400) {
-                alert("이미 가입된 회원입니다. 로그인을 해주세요.");
-                navigate("/intro");
-              }
-            });
-        }
+          .catch((err) => {
+            console.log(err);
+            if (err.response.status === 400) {
+              alert("이미 가입된 회원입니다. 로그인을 해주세요.");
+              navigate("/intro");
+            }
+          });
       }
     }
+  };
 
   return (
     <div>
@@ -376,7 +379,7 @@ function KakaoSignup() {
               maxLength="13"
               onChange={onPhoneChange}
               value={phone}
-              disabled = {disphone}
+              disabled={disphone}
             ></PhoneInput>
             <CheckText onClick={() => pushNum(phone)}>인증번호 받기</CheckText>
           </PhoneInputBox>
