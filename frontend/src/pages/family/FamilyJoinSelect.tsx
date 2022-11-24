@@ -13,7 +13,7 @@ import axios from "axios";
 
 const logo =
   "https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png";
-const greetings =
+const greeting =
   "https://user-images.githubusercontent.com/97648026/203668446-aeea6d99-71d8-4968-b019-5b73253dc17a.png";
 const HeaderBox = styled.div`
   display: grid;
