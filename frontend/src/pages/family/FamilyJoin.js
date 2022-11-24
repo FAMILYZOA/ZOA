@@ -3,13 +3,14 @@ import styled from "styled-components";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
-import logo from "../../assets/white-logo.png";
 import {
   setFamilyId,
   setFamilyName,
   setFamilyUsers,
   setFamilyCreatedAt,
 } from "../../features/family/familySlice";
+
+const logo = 'https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png';
 
 const Header = styled.div`
   display: flex;

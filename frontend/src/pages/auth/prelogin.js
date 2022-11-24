@@ -1,16 +1,21 @@
 import * as React from "react";
 import styled from "styled-components";
-import symbol from "../../assets/symbol.png";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper";
-import img1 from "../../assets/prelogin1.jpg";
-import img2 from "../../assets/prelogin2.jpg";
-import img3 from "../../assets/prelogin3.jpg";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
+const symbol =
+  "https://user-images.githubusercontent.com/97648026/203668422-c3844060-7074-41a6-829a-cc1045333027.png";
+const img1 =
+  "https://user-images.githubusercontent.com/97648026/203669459-eab12ed3-4e4c-4db2-8fd4-a0e07b8543c9.jpg";
+const img2 =
+  "https://user-images.githubusercontent.com/97648026/203669470-e13e5d3b-58bf-4bb2-a42b-a49f3a9e3fb0.jpg";
+const img3 =
+  "https://user-images.githubusercontent.com/97648026/203669474-2ed6ef77-46e1-456d-990f-1c97a32e2ba1.jpg";
 
 SwiperCore.use([Navigation, Pagination, Autoplay]);
 

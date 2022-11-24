@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/white-logo.png";
 import { IoIosArrowBack } from "react-icons/io";
 import {
   setFamilyCreatedAt,
@@ -12,6 +11,7 @@ import {
   setFamilyUsers,
 } from "../../features/family/familySlice";
 
+const logo = 'https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png';
 
 const HeaderBox = styled.div`
   display: grid;

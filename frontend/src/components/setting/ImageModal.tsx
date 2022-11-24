@@ -214,7 +214,7 @@ const FontModal = (props: modalType) => {
     >
       <CloseBtnStyle fontSize={16} color={"#888888"} onClick={closeModal} />
       {isUpload ? (
-        <img src={"../../assets/Spinner.gif"} alt="profile loading spinner" />
+        <img src={"https://user-images.githubusercontent.com/97648026/203671082-b52fcbc8-84d6-433e-be2f-f02800aef8ec.gif"} alt="profile loading spinner" />
       ) : (
         <ModalContentDiv>
           <ImageTitleDiv>프로필 이미지 변경</ImageTitleDiv>

@@ -6,9 +6,11 @@ import { useAppSelector } from "../../app/hooks";
 import { VoiceMessage } from "../../components/voice";
 import { FiPlus } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
-import guide from "../../assets/voice_mail_guide.png";
 import { BsQuestionCircleFill } from "react-icons/bs";
 import Modal from "react-modal";
+
+const guide =
+  "https://user-images.githubusercontent.com/97648026/203668435-0f72abf0-3505-4640-8db2-6c21fc471787.png";
 
 interface highLightProps {
   isLeft?: boolean;
@@ -49,7 +51,7 @@ const DeleteButton = styled.div<deleteProps>`
       `;
     }
   }}
-`
+`;
 
 const ModalBack = styled.div<modalBackProps>`
   position: absolute;
@@ -262,7 +264,7 @@ const ImgTag = styled.img`
   width: 100%;
   height: 100%;
   margin: 0;
-`
+`;
 
 const Icon = styled.div`
   margin: auto;
@@ -270,10 +272,9 @@ const Icon = styled.div`
   align-items: center;
 `;
 
-
 const Header = () => {
   // 모달 설정
-  const [showModal, setShowModal] = useState(false);  
+  const [showModal, setShowModal] = useState(false);
   const openModal = () => {
     setShowModal(true);
   };
@@ -282,14 +283,14 @@ const Header = () => {
   };
   const modalStyle = {
     content: {
-      inset:" 2% 2%",
+      inset: " 2% 2%",
       width: "96%",
       height: "96%",
       border: "none",
       backgroundColor: "rgba(0,0,0,0)",
       display: "flex",
       justifyContent: "center",
-      padding: "0"
+      padding: "0",
     },
   };
   const navigate = useNavigate();
@@ -354,7 +355,7 @@ const VoiceView = () => {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [deleteList, setDeleteList] = useState<number[]>([]);
-  const familyId = useAppSelector(state => state.family.id);
+  const familyId = useAppSelector((state) => state.family.id);
   const navigate = useNavigate();
 
   const getVoice = () => {
@@ -387,12 +388,12 @@ const VoiceView = () => {
         console.error(err);
       });
   };
-  
+
   useEffect(() => {
     if (familyId < 0) {
       navigate("/");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     getVoice();
@@ -406,17 +407,17 @@ const VoiceView = () => {
     const tempDeleteList = [...deleteList];
     tempDeleteList.push(id);
     setDeleteList(tempDeleteList);
-  }
+  };
 
   const filterDeleteList = (id: number) => {
     const tempDeleteList = [...deleteList];
-    let filteredTempList = tempDeleteList.filter((element) => element !== id)
+    let filteredTempList = tempDeleteList.filter((element) => element !== id);
     setDeleteList(filteredTempList);
-  }
+  };
 
   const confirmDelete = () => {
     if (deleteList.length > 0) {
-      console.log(deleteList)
+      console.log(deleteList);
       axios({
         method: "DELETE",
         url: `${process.env.REACT_APP_BACK_HOST}/audio/delete/`,
@@ -425,18 +426,17 @@ const VoiceView = () => {
         },
         data: {
           id: deleteList,
-        }
-      })
-        .then(() => {
-          setIsConfirmed(true);
-          setTimeout(() => {
-            getVoice();
-            setIsModal(false);
-            setIsConfirmed(false);
-          }, 2000);
-        })
+        },
+      }).then(() => {
+        setIsConfirmed(true);
+        setTimeout(() => {
+          getVoice();
+          setIsModal(false);
+          setIsConfirmed(false);
+        }, 2000);
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -445,13 +445,22 @@ const VoiceView = () => {
       {isModal && (
         <ModalDiv>
           <ModalContent>
-            <Modal24> {isConfirmed ? "삭제되었습니다." :"정말 삭제하시겠습니까?"} </Modal24>
-            {!isConfirmed && (<ButtonDiv>
-              <ConfirmButton onClick={confirmDelete}>확인</ConfirmButton>
-              <CancelButton onClick={() => {
-                setIsModal(false);
-              }}>취소</CancelButton>
-            </ButtonDiv>)}
+            <Modal24>
+              {" "}
+              {isConfirmed ? "삭제되었습니다." : "정말 삭제하시겠습니까?"}{" "}
+            </Modal24>
+            {!isConfirmed && (
+              <ButtonDiv>
+                <ConfirmButton onClick={confirmDelete}>확인</ConfirmButton>
+                <CancelButton
+                  onClick={() => {
+                    setIsModal(false);
+                  }}
+                >
+                  취소
+                </CancelButton>
+              </ButtonDiv>
+            )}
           </ModalContent>
         </ModalDiv>
       )}
@@ -521,18 +530,21 @@ const VoiceView = () => {
           </>
         )}
       </VoiceMessageDiv>
-      <DeleteButton 
+      <DeleteButton
         isDelete={isDelete}
         onClick={() => {
-        if (deleteList.length > 0 && isDelete){
-          setIsModal(true);
-        }
-        setIsDelete(!isDelete);
-      }}>
-        <RiDeleteBinLine size={24}/>
-        {isDelete && <div style={{marginLeft: "8px"}}>
+          if (deleteList.length > 0 && isDelete) {
+            setIsModal(true);
+          }
+          setIsDelete(!isDelete);
+        }}
+      >
+        <RiDeleteBinLine size={24} />
+        {isDelete && (
+          <div style={{ marginLeft: "8px" }}>
             {`삭제하기 (${deleteList.length})`}
-          </div>}
+          </div>
+        )}
       </DeleteButton>
     </>
   );
