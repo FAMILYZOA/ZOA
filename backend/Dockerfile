@@ -6,9 +6,9 @@ RUN apt-get -y update
 
 RUN apt-get -y install vim
 
-COPY ./ /home/BE/
+COPY ./ /home/backend/
 
-WORKDIR /home/BE/
+WORKDIR /home/backend/
 
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
