@@ -18,7 +18,7 @@ DATABASES = {
 	'default': { 
     	'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'zoa', 
-        'USER': 'dev', 
+        'USER': 'root', 
         'PASSWORD': env('MYSQL_PASSWORD_2'), 
         'HOST': 'familyzoa.com', 
         'PORT': '3306', 
