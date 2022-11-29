@@ -10,8 +10,12 @@ import {
   setFamilyName,
   setFamilyUsers,
 } from "../../features/family/familySlice";
+import {
+  setUserFamilyId,
+} from "../../features/user/userSlice";
 
-const logo = 'https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png';
+const logo =
+  "https://user-images.githubusercontent.com/97648026/203668440-eb211853-8abe-4dc5-b0ee-8912e5cfefa3.png";
 
 const HeaderBox = styled.div`
   display: grid;
@@ -105,13 +109,13 @@ const Btn = styled.button`
 `;
 
 const FamilyCreate = () => {
-  const [familyName, setFamilyName] = useState("");
+  const [familyTempName, setFamilyTempName] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const handleFamilyNameInput = (e) => {
-    setFamilyName(e.target.value);
+    setFamilyTempName(e.target.value);
     if (e.target.value !== "") {
       setIsActive(true);
     } else {
@@ -129,25 +133,24 @@ const FamilyCreate = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: {
-        name: familyName,
+        name: familyTempName,
       },
-    })
-      .then((res) => {
-        axios({
-          method: "get",
-          url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((res) => {
-            dispatch(setFamilyId(res.data.id));
-            dispatch(setFamilyName(res.data.name));
-            dispatch(setFamilyCreatedAt(res.data.created_at));
-            dispatch(setFamilyUsers(res.data.users));
-          })
-        navigate("/", { replace: true });
-      })
+    }).then((res) => {
+      dispatch(setFamilyId(res.data.id));
+      dispatch(setUserFamilyId(res.data.id));
+      dispatch(setFamilyName(res.data.name));
+      dispatch(setFamilyCreatedAt(res.data.created_at));
+      axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BACK_HOST}/family/${res.data.id}/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res) => {
+        dispatch(setFamilyUsers(res.data.users));
+      });
+      navigate("/", { replace: true });
+    });
   };
   const moveToBack = () => {
     navigate("/family/select/");
